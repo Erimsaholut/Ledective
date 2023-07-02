@@ -41,6 +41,7 @@ class _NotesAppState extends State<NotesApp> {
             },
           ),
         );
+
       });
     } else {
       print("abc");
@@ -53,8 +54,10 @@ class _NotesAppState extends State<NotesApp> {
   void initState() {
     super.initState();
     loadJson().then((_) {
-      printJsonMassage("Note1");
-      //todo buraya print donkyionu koları gelecek ve for döngüsü ile toplam not sayısı alıncacak
+      for (var data in datalar) {
+        printJsonMassage("Note$noteNumber");
+        noteNumber++;
+      }
     });
   }
 
@@ -134,10 +137,7 @@ class _NotesAppState extends State<NotesApp> {
                                 child: TextButton(
                                   onPressed: () {
 
-                                    setState(() {
-                                      printJsonMassage("Note$noteNumber");
-                                      noteNumber++;
-                                    });
+                                      //todo add note
 
                                   },
 
@@ -156,9 +156,7 @@ class _NotesAppState extends State<NotesApp> {
                                     color: Colors.grey),
                                 child: TextButton(
                                   onPressed: () {
-                                    setState(() {
-                                      noteNumber=1;
-                                    });
+                                    //todo deleteNote
                                   },
                                   child: const Padding(
                                       padding: EdgeInsets.all(8),
