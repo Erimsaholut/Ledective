@@ -1,0 +1,24 @@
+{
+  "MatesÖzge": [
+    {
+      "isim": "Özge",
+      "kod": "TR-B1-1",
+      "message": "Amirim tatilde olduğunuzu biliyorum ama büyük bi cinayet olayı var"
+    },
+    {
+      "isim": "Özge",
+      "kod": "TR-B1-2",
+      "message": "Üstesinden gelemedik ve yardımınıza ihtiyacımız var"
+    },
+    {
+      "isim": "Özge",
+      "kod": "TR-B1-A1",
+      "message": "Amirim maktül intihar etmiş bu bir cinayet olayı olduğu için araştırmamız gerekiyor ama katille konuşamıyoruz. Maktülle beraber katil de ölmüş"
+    },
+    {
+      "isim": "Özge",
+      "kod": "TR-B1-A1",
+      "message": "Özür dileriz amirim ama gerçekten ciddi bir olay"
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ledective/apps/notes_app/notes_container.dart';
 import 'package:ledective/apps/tools/back_button.dart';
+import 'dart:convert' show json;
+import 'package:flutter/services.dart' show rootBundle;
 
 class NotesApp extends StatefulWidget {
   const NotesApp({Key? key}) : super(key: key);
@@ -11,6 +13,50 @@ class NotesApp extends StatefulWidget {
 
 class _NotesAppState extends State<NotesApp> {
   String currentNote = "Please Select Note";
+  int noteNumber = 1;
+  List<Widget> notesWidgets = [];
+  List<dynamic> datalar = [];
+
+  Future<void> loadJson() async {
+    print("loadladık");
+    String jsonData = await rootBundle.loadString('/Users/erimsaholut/StudioProjects/Ledective/lib/assets/notesAppNotes.json');
+    Map<String, dynamic> data = json.decode(jsonData);
+    datalar = data['notes'];
+  }
+
+  void printJsonMassage(String id) async {
+    print(id);
+    dynamic item = datalar.firstWhere((item) => item['isim'] == id, orElse: () => null);
+    if (item != null) {
+      String description = item['message'];
+      setState(() {
+        notesWidgets.add(
+          NotesContainer(
+            initialValue: currentNote,
+            myNote: description,
+            onChanged: (newNote) {
+              setState(() {
+                currentNote = newNote;
+              });
+            },
+          ),
+        );
+      });
+    } else {
+      print("abc");
+    }
+  }
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    loadJson().then((_) {
+      printJsonMassage("Note1");
+      //todo buraya print donkyionu koları gelecek ve for döngüsü ile toplam not sayısı alıncacak
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,33 +88,7 @@ class _NotesAppState extends State<NotesApp> {
                 padding: const EdgeInsets.all(6),
                 child: ListView(
                   children: [
-                    NotesContainer(
-                      initialValue: currentNote,
-                      myNote: "Behzat ç bir ankara polisiyesidir ve dünya dizi tarihinin gelmiş geçmiş en büyük yapımıdır...",
-                      onChanged: (newNote) {
-                        setState(() {
-                          currentNote = newNote;
-                        });
-                      },
-                    ),
-                    NotesContainer(
-                      initialValue: currentNote,
-                      myNote: "Baba Naber",
-                      onChanged: (newNote) {
-                        setState(() {
-                          currentNote = newNote;
-                        });
-                      },
-                    ),
-                    NotesContainer(
-                      initialValue: currentNote,
-                      myNote: "Sevgili Günlük",
-                      onChanged: (newNote) {
-                        setState(() {
-                          currentNote = newNote;
-                        });
-                      },
-                    ),
+                    ...notesWidgets
                   ],
                 ),
               ),
@@ -112,7 +132,15 @@ class _NotesAppState extends State<NotesApp> {
                                     borderRadius: BorderRadius.circular(16),
                                     color: Colors.grey),
                                 child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+
+                                    setState(() {
+                                      printJsonMassage("Note$noteNumber");
+                                      noteNumber++;
+                                    });
+
+                                  },
+
                                   child: const Padding(
                                       padding: EdgeInsets.all(8),
                                       child: Text(
@@ -127,7 +155,11 @@ class _NotesAppState extends State<NotesApp> {
                                     borderRadius: BorderRadius.circular(16),
                                     color: Colors.grey),
                                 child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      noteNumber=1;
+                                    });
+                                  },
                                   child: const Padding(
                                       padding: EdgeInsets.all(8),
                                       child: Text(

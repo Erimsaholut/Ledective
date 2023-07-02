@@ -21,12 +21,6 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.19.6 <3.0.0'
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
@@ -54,7 +48,7 @@ flutter:
   assets:
     - lib/assets/images/
     - lib/assets/pian_notes/
-    - lib/assets/note7.wav
+    - lib/assets/notesAppNotes.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

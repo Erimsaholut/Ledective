@@ -36,9 +36,6 @@ class _NotesContainerState extends State<NotesContainer> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: () {
-        _showEditDialog(context);
-      },
       child: Column(
         children: [
           TextButton(
@@ -75,41 +72,6 @@ class _NotesContainerState extends State<NotesContainer> {
           )
         ],
       ),
-    );
-  }
-
-  void _showEditDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Notu Düzenle'),
-          content: TextField(
-            controller: _textEditingController,
-            decoration: const InputDecoration(hintText: 'Not'),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Vazgeç'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Kaydet'),
-              onPressed: () {
-                String newNote = _textEditingController.text;
-                widget.onChanged(newNote);
-
-                setState(() {
-                  text = newNote;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }
