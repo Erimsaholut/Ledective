@@ -120,7 +120,7 @@ class DataDepo {
   List<Widget> contacts = [
     const MatesMessage(
       person: "Hayalet",
-      number: "0535 035 53 53",
+      number: "0535 031 53 53",
       isContactsMode: false,
     ),
     const MatesMessage(
