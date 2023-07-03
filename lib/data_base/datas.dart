@@ -104,17 +104,6 @@ class DataDepo {
 
   @JsonSerializable()
   List<Widget> galleryImages = [
-    const PhotoWidget(adress: 'lib/assets/images/1500x500.jpeg'),
-    const PhotoWidget(adress: 'lib/assets/images/my_foto2.jpg'),
-    const PhotoWidget(adress: 'lib/assets/images/my_foto4.jpg',scale: 1),
-    const PhotoWidget(adress: 'lib/assets/images/myCat.jpeg'),
-    const PhotoWidget(adress: 'lib/assets/images/benumit.jpeg'),
-    const PhotoWidget(adress: 'lib/assets/images/kadr.jpeg'),
-    const PhotoWidget(adress: 'lib/assets/images/kadr2.jpeg'),
-    const PhotoWidget(adress: 'lib/assets/images/benKedi.jpeg'),
-    const PhotoWidget(adress: 'lib/assets/images/my_foto1.jpg',scale: 0.6),
-    const PhotoWidget(adress: 'lib/assets/images/gungun.jpeg'),
-    const PhotoWidget(adress: 'lib/assets/images/babba.jpeg',scale: 0.9),
     const PhotoWidget(adress: 'assets/apps/photosApp/images/1500x500.jpeg'),
     const PhotoWidget(adress: 'assets/apps/photosApp/images/my_foto2.jpg'),
     const PhotoWidget(adress: 'assets/apps/photosApp/images/my_foto4.jpg',scale: 1),
@@ -127,6 +116,7 @@ class DataDepo {
     const PhotoWidget(adress: 'assets/apps/photosApp/images/gungun.jpeg'),
     const PhotoWidget(adress: 'assets/apps/photosApp/images/babba.jpeg',scale: 0.9),
   ];
+
   @JsonSerializable()
   List<Widget> contacts = [
     const MatesMessage(
