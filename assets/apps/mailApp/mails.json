@@ -1,0 +1,22 @@
+{
+  "mails": [
+    {
+      "name": "Mail1",
+      "title":"emniyet.gov.tr",
+      "kod": "TR-M1",
+      "message": "Konferansa davetlisiniz !"
+    },
+    {
+      "name": "Mail2",
+      "title":"zaferbank.com",
+      "kod": "TR-M2",
+      "message": "Paranızı tanımdağınız milyonlarca kişi ile paylaştığınızın farkında mısınız"
+    },
+    {
+      "name": "Mail3",
+      "title":"besiktas.com",
+      "kod": "TR-M3",
+      "message": "Yeni sezon formalarda indirim. Sakın kaçırmayın"
+    }
+  ]
+}
