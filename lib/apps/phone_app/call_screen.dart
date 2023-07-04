@@ -57,7 +57,6 @@ class _CallScreenState extends State<CallScreen>
         MatesMessage(
           person: widget.number,
           number: widget.number,
-          isContactsMode: false,
         ),
       );
     });

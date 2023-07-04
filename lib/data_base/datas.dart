@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../apps/Tools/incoming_message.dart';
 import '../apps/Tools/outcoming_message.dart';
+import '../apps/contacts_app/contactsWidget.dart';
 import '../apps/matesApp_app/mates_massage.dart';
-import '../apps/mail_app/mail_container.dart';
 import '../apps/photos_app/photo_widget.dart';
 
 
@@ -79,54 +79,33 @@ class DataDepo {
   ];
 
   List<Widget> contacts = [
-    const MatesMessage(
+    const ContactWidget(
       person: "Hayalet",
       number: "0535 031 53 53",
-      isContactsMode: false,
     ),
-    const MatesMessage(
+    const ContactWidget(
       person: "Harun",
       number: "0535 035 53 53",
-      isContactsMode: false,
     ),
-    const MatesMessage(
+    const ContactWidget(
       person: "Akbaba",
       number: "0535 035 53 53",
-      isContactsMode: false,
     ),
-    const MatesMessage(
+    const ContactWidget(
       person: "Tahsin Müdür",
       number: "0238 010 67 67",
-      isContactsMode: false,
     ),
-    const MatesMessage(
+    const ContactWidget(
       person: "Eda",
       number: "0538 010 67 87",
-      isContactsMode: false,
     ),
-    const MatesMessage(
+    const ContactWidget(
       person: "Selim",
       number: "0538 010 77 67",
-      isContactsMode: false,
     ),
-    const MatesMessage(
+    const ContactWidget(
       person: "Şule",
       number: "0538 110 67 67",
-      isContactsMode: false,
-    ),
-    const MatesMessage(
-      person: "Jale",
-      number: "0538 011 67 67",
-      isContactsMode: false,
-    ),
-    const MatesMessage(
-      person: "Berna",
-      number: "0538 011 67 67",
-      isContactsMode: false,
-    ),
-    const MatesMessage(
-      person: "Selma",
-      isContactsMode: false,
     ),
   ];
 
@@ -134,13 +113,10 @@ class DataDepo {
     const MatesMessage(
       person: "Hayalet",
       number: "0530303030",
-      icon: Icons.call_end,
-      isContactsMode: false,
     ),
     const MatesMessage(
       person: "Harun",
       number: "0303033003",
-      isContactsMode: false,
     ),
   ];
 

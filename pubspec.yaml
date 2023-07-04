@@ -50,6 +50,7 @@ flutter:
     - assets/apps/pian/pian_notes/
     - assets/apps/photosApp/images/
     - assets/apps/mailApp/
+    - assets/contacts/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

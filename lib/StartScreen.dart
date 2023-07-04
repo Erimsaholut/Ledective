@@ -17,6 +17,7 @@ import 'constants/constants.dart';
 class _StartScreenState extends State<StartScreen> {
   final PageController pageController = PageController(initialPage: 0);
   int _currentPageIndex = 0;
+  double sizedBoxHeight = 20.0;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +45,8 @@ class _StartScreenState extends State<StartScreen> {
                     children: [
                       Column(
                         children: [
-                          const SizedBox(
-                            height: 30,
+                          SizedBox(
+                            height: sizedBoxHeight,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -64,8 +65,8 @@ class _StartScreenState extends State<StartScreen> {
                                   child: AppShop()),
                             ],
                           ),
-                          const SizedBox(
-                            height: 30,
+                          SizedBox(
+                            height: sizedBoxHeight,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -84,8 +85,8 @@ class _StartScreenState extends State<StartScreen> {
                                   child: Settings()),
                             ],
                           ),
-                          const SizedBox(
-                            height: 30,
+                          SizedBox(
+                            height: sizedBoxHeight,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -119,8 +120,8 @@ class _StartScreenState extends State<StartScreen> {
                     children: [
                       Column(
                         children: [
-                          const SizedBox(
-                            height: 30,
+                          SizedBox(
+                            height: sizedBoxHeight,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -139,8 +140,8 @@ class _StartScreenState extends State<StartScreen> {
                                   child: SizedBox()),
                             ],
                           ),
-                          const SizedBox(
-                            height: 30,
+                          SizedBox(
+                            height: sizedBoxHeight,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -159,8 +160,8 @@ class _StartScreenState extends State<StartScreen> {
                                   child: PianApp()),
                             ],
                           ),
-                          const SizedBox(
-                            height: 30,
+                          SizedBox(
+                            height: sizedBoxHeight,
                           ),
                           const sizedRow(),
                         ],
@@ -188,7 +189,7 @@ class _StartScreenState extends State<StartScreen> {
                               const Icon(Icons.circle, size: 20.0)
                             ],
                     ),
-                    const SizedBox(height: 25),
+                    SizedBox(height: 25),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: const [
