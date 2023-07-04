@@ -73,29 +73,32 @@ class _NotesAppState extends State<NotesApp> {
           actions: [
             TextButton(
               onPressed: () {
-                setState(() {
-                  String noteName = "Note$noteNumber";
-                  noteNumber++;
-                  Map<String, dynamic> newNoteData = {
-                    "name": noteName,
-                    "message": newNote,
-                  };
-                  datalar.add(newNoteData);
+                if (newNote.isNotEmpty) {
+                  setState(() {
+                    String noteName = "Note$noteNumber";
+                    noteNumber++;
+                    Map<String, dynamic> newNoteData = {
+                      "name": noteName,
+                      "message": newNote,
+                    };
+                    datalar.add(newNoteData);
 
-                  notesWidgets.add(
-                    NotesContainer(
-                      initialValue: currentNote,
-                      myNote: newNote,
-                      onChanged: (newNote) {
-                        setState(() {
-                          currentNote = newNote;
-                        });
-                      },
-                    ),
-                  );
-                });
+                    notesWidgets.add(
+                      NotesContainer(
+                        initialValue: currentNote,
+                        myNote: newNote,
+                        onChanged: (newNote) {
+                          setState(() {
+                            currentNote = newNote;
+                          });
+                        },
+                      ),
+                    );
+                  });
 
-                _saveJson();
+                  _saveJson();
+                }
+
                 Navigator.of(context).pop();
               },
               child: const Text("Add"),
@@ -105,6 +108,7 @@ class _NotesAppState extends State<NotesApp> {
       },
     );
   }
+
 
   Future<void> _saveJson() async {
     Map<String, dynamic> jsonData = {
