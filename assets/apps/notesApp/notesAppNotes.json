@@ -1,17 +1,17 @@
 {
   "notes": [
     {
-      "isim": "Note1",
+      "name": "Note1",
       "kod": "TR-N1",
       "message": "Behzat ç bir ankara polisiyesidir ve dünya dizi tarihinin gelmiş geçmiş en büyük yapımıdır. O kadar büyük bir yapımdır ki diğer dizilerin erişebileceği en yüksek seviye Behzat ç. ile karşılaştırılabilmektir."
     },
     {
-      "isim": "Note2",
+      "name": "Note2",
       "kod": "TR-N2",
       "message": "Farazi V Kayra dinlemeyi severim"
     },
     {
-      "isim": "Note3",
+      "name": "Note3",
       "kod": "TR-N3",
       "message": "Ammmirim maktül intihar etmiş bu bir cinayet olayı olduğu için araştırmamız gerekiyor ama katille konuşamıyoruz. Maktülle beraber katil de ölmüş"
     }

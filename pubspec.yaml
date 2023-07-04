@@ -49,6 +49,7 @@ flutter:
     - assets/apps/notesApp/
     - assets/apps/pian/pian_notes/
     - assets/apps/photosApp/images/
+    - assets/apps/mailApp/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

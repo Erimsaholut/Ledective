@@ -4,9 +4,8 @@ import '../apps/Tools/outcoming_message.dart';
 import '../apps/matesApp_app/mates_massage.dart';
 import '../apps/mail_app/mail_container.dart';
 import '../apps/photos_app/photo_widget.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
+
 class DataDepo {
   List<Widget> matesMessages = [ //todo buraya komple bir ayarlama gelecek mesjaları sohbetten çekmesi lazım
     const MatesMessage(
@@ -20,42 +19,6 @@ class DataDepo {
     const MatesMessage(message: "Amirim ben bir hata yaptım", person: "Harun"),
     const MatesMessage(message: "Amirim Harun Selimi yedi", person: "Eda"),
     const MatesMessage(message: "Tamam", person: "Selim"),
-  ];
-  List<Widget> mailMessages = [
-    const MailContainer(
-        title: "faturam.com.tr", message: "9000 TL'lik faturanız geldi"),
-    const MailContainer(
-        title: "dünyayurt.com", message: "Oda kontrolü yarın yapılacak"),
-    const MailContainer(
-        title: "haberler.com", message: "Günün öne çıkan haberleri"),
-    const MailContainer(
-      title: "mcbu.com",
-      message: "Okuldan kaydınız silinmiştir",
-    ),
-    const MailContainer(
-        title: "uzunmesajsitesi.com",
-        message:
-            "bu mesaj uzun bir mesaj olacak, asıl amacımız string 30 karakteri geçerse ne alcağını göstermek "),
-    const MailContainer(
-        title: "dw_killer.onion", message: "Karanlık ağda yeni ilan"),
-    const MailContainer(
-      title: "zartzurt.com",
-      message: "Anlaşmayı kabul etmişsiniz",
-    ),
-    const MailContainer(
-      title: "zartzurt.com",
-      message: "Anlaşmayı kabul etmişsiniz",
-    ),
-    const MailContainer(
-      title: "zartzurt.com",
-      message: "Anlaşmayı kabul etmişsiniz",
-    ),
-    const MailContainer(
-      title: "zartzurt.com",
-      message: "Anlaşmayı kabul etmişsiniz",
-    ),
-    const MailContainer(
-        title: "zartzurt.com", message: "Anlaşmayı kabul etmişsiniz"),
   ];
 
   Map<String, List<Widget>> matesAppMessages = {
@@ -101,8 +64,6 @@ class DataDepo {
     ],
   };
 
-
-  @JsonSerializable()
   List<Widget> galleryImages = [
     const PhotoWidget(adress: 'assets/apps/photosApp/images/1500x500.jpeg'),
     const PhotoWidget(adress: 'assets/apps/photosApp/images/my_foto2.jpg'),
@@ -117,7 +78,6 @@ class DataDepo {
     const PhotoWidget(adress: 'assets/apps/photosApp/images/babba.jpeg',scale: 0.9),
   ];
 
-  @JsonSerializable()
   List<Widget> contacts = [
     const MatesMessage(
       person: "Hayalet",
@@ -170,7 +130,6 @@ class DataDepo {
     ),
   ];
 
-  @JsonSerializable()
   List<Widget> recents = [
     const MatesMessage(
       person: "Hayalet",
