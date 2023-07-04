@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ledective/apps/mail_app/mail_container.dart';
 import 'package:ledective/apps/tools/back_button.dart';
-import 'package:ledective/data_base/datas.dart';
+import 'dart:convert' show json;
+import 'package:flutter/services.dart' show rootBundle;
 
 class MailApp extends StatefulWidget {
   const MailApp({Key? key}) : super(key: key);
@@ -10,8 +12,39 @@ class MailApp extends StatefulWidget {
 }
 
 class _MailAppState extends State<MailApp> {
-  DataDepo db = DataDepo();
+  int mailNumber = 1;
+  List<dynamic> datalar = [];
+  List<Widget> mailWidgets = [];
 
+  Future<void> loadJson() async {
+    print("loadladık");
+    String jsonData = await rootBundle.loadString("assets/apps/mailApp/mails.json");
+    Map<String, dynamic> data = json.decode(jsonData);
+    datalar = data['mails'];
+  }
+
+  void printJsonMassage(String id) async {
+    print(id);
+    dynamic item = datalar.firstWhere((item) => item['name'] == id, orElse: () => null);
+    if (item != null) {
+      String description = item['message'];
+      setState(() {
+        mailWidgets.add(
+          MailContainer(title: item["title"],message: description,));
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadJson().then((_) {
+      for (var _ in datalar) {
+        printJsonMassage("Mail$mailNumber");
+        mailNumber++;
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +92,7 @@ class _MailAppState extends State<MailApp> {
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 15),
               children: [
-                ...(db.mailMessages),
+                ...mailWidgets
               ],
             ),
           ),

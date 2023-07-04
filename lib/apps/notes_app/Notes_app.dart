@@ -27,7 +27,7 @@ class _NotesAppState extends State<NotesApp> {
 
   void printJsonMassage(String id) async {
     print(id);
-    dynamic item = datalar.firstWhere((item) => item['isim'] == id, orElse: () => null);
+    dynamic item = datalar.firstWhere((item) => item['name'] == id, orElse: () => null);
     if (item != null) {
       String description = item['message'];
       setState(() {
@@ -77,7 +77,7 @@ class _NotesAppState extends State<NotesApp> {
                   String noteName = "Note$noteNumber";
                   noteNumber++;
                   Map<String, dynamic> newNoteData = {
-                    "isim": noteName,
+                    "name": noteName,
                     "message": newNote,
                   };
                   datalar.add(newNoteData);
