@@ -117,7 +117,7 @@ class _ContactsState extends State<Contacts> {
     String jsonString = json.encode(jsonData);
 
     final file = await File("/Users/erimsaholut/StudioProjects/Ledective/assets/contacts/contacts.json").writeAsString(jsonString);
-    //todo almıyor amına koyduğumun pathini almıyor.
+    //todo almıyor amına koyduğumun pathlerini
   }
 
 

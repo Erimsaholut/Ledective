@@ -1,1 +1,24 @@
-{"contacts":[{"name":"Özge","number":"0535 031 53 53","kod":"C1"},{"name":"Orhun","number":"0188 973 27 35","kod":"C2"},{"name":"Atakan","number":"0535 031 14 53","kod":"C3"},{"name":"Bartu","number":"0420 420 00 24","kod":"C4"},{"name":"anaanı","number":"321312","kod":"C5"}]}
+{
+  "contacts": [
+    {
+      "name": "Özge",
+      "number": "0535 031 53 53",
+      "kod": "C1"
+    },
+    {
+      "name": "Orhun",
+      "number": "0188 973 27 35",
+      "kod": "C2"
+    },
+    {
+      "name": "Atakan",
+      "number": "0535 031 14 53",
+      "kod": "C3"
+    },
+    {
+      "name": "Bartu",
+      "number": "0420 420 00 24",
+      "kod": "C4"
+    }
+  ]
+}

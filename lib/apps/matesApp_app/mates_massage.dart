@@ -13,7 +13,6 @@ class MatesMessage extends StatelessWidget {
   final String number;
   final String person;
   final IconData icon;
-
   const MatesMessage({
     this.backGroundColor = Colors.teal,
     this.icon = Icons.person,
@@ -37,7 +36,7 @@ class MatesMessage extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    MatesChatPAGE(message: message, person: person),
+                    MatesChatPAGE(person: person),
               ),
             );
           },
@@ -97,12 +96,12 @@ class MatesMessage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Text(
-                            message,
-                            style: const TextStyle(
+                            "Tap to talk",
+                            style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
                               color: Colors.black,
