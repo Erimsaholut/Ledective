@@ -1,58 +1,26 @@
 import 'package:flutter/material.dart';
 import '../apps/Tools/incoming_message.dart';
 import '../apps/Tools/outcoming_message.dart';
-import '../apps/contacts_app/contactsWidget.dart';
 import '../apps/matesApp_app/mates_massage.dart';
 import '../apps/photos_app/photo_widget.dart';
 
 
 class DataDepo {
-  List<Widget> matesMessages = [ //todo buraya komple bir ayarlama gelecek mesjaları sohbetten çekmesi lazım
+  List<Widget> matesMessages = [ //todo Kişi isimlerini buradan çekiyor bunu yerine contactlardan çeksin
     const MatesMessage(
-      message: "Amirim maktulü çok kötü bir halde bulduk",
       person: "Hayalet",
     ),
-    const MatesMessage(message: "Eleman yakalandı", person: "Akbaba"),
+    const MatesMessage(person: "Akbaba"),
     const MatesMessage(
-        message: "Behzo yarın büroda görüşelim", person: "Ercüment"),
-    const MatesMessage(message: "Çabuk büroya gel", person: "Tahsin"),
-    const MatesMessage(message: "Amirim ben bir hata yaptım", person: "Harun"),
-    const MatesMessage(message: "Amirim Harun Selimi yedi", person: "Eda"),
-    const MatesMessage(message: "Tamam", person: "Selim"),
+        person: "Ercüment"),
+    const MatesMessage(person: "Tahsin"),
+    const MatesMessage(person: "Harun"),
+    const MatesMessage(person: "Eda"),
+    const MatesMessage(person: "Selim"),
   ];
 
   Map<String, List<Widget>> matesAppMessages = {
-    "hayalet": [
-      const OutgoingMessage(message: "Nasıl yani"),
-      const IncomingMessage(message: "Walla"),
-      const OutgoingMessage(message: "Hay aksi"),
-      const OutgoingMessage(
-        message:
-        "Hayalet bu işi bir an önce çözmemiz lazım",
-      ),
-      const IncomingMessage(message: "Özür dilerim 😭"),
-    ],
-    "akbaba": [
-      const OutgoingMessage(message: "Baya baya yemiş mi"),
-      const IncomingMessage(message: "Baya baya yemiş amirim"),
-      const OutgoingMessage(message: "Hay aksi"),
-      const OutgoingMessage(
-        message:
-        "Bu işi düzgün yapmazsan büroya gelip seninle konuşacağım",
-      ),
-      const IncomingMessage(message: "Özür dilerim"),
-    ],
-    "ercument": [
-      const OutgoingMessage(message: "Nasıl yani"),
-      const IncomingMessage(message: "Walla"),
-      const OutgoingMessage(message: "Hay aksi"),
-      const OutgoingMessage(
-        message:
-        "Hayalet bu işi bir an önce çözmemiz lazım",
-      ),
-      const IncomingMessage(message: "Özür dilerim 😭"),
-    ],
-    "harun": [
+    "Özge": [
       const OutgoingMessage(message: "Nasıl yani"),
       const IncomingMessage(message: "Walla"),
       const OutgoingMessage(message: "Hay aksi"),
@@ -78,36 +46,7 @@ class DataDepo {
     const PhotoWidget(adress: 'assets/apps/photosApp/images/babba.jpeg',scale: 0.9),
   ];
 
-  List<Widget> contacts = [
-    const ContactWidget(
-      person: "Hayalet",
-      number: "0535 031 53 53",
-    ),
-    const ContactWidget(
-      person: "Harun",
-      number: "0535 035 53 53",
-    ),
-    const ContactWidget(
-      person: "Akbaba",
-      number: "0535 035 53 53",
-    ),
-    const ContactWidget(
-      person: "Tahsin Müdür",
-      number: "0238 010 67 67",
-    ),
-    const ContactWidget(
-      person: "Eda",
-      number: "0538 010 67 87",
-    ),
-    const ContactWidget(
-      person: "Selim",
-      number: "0538 010 77 67",
-    ),
-    const ContactWidget(
-      person: "Şule",
-      number: "0538 110 67 67",
-    ),
-  ];
+
 
   List<Widget> recents = [
     const MatesMessage(

@@ -22,7 +22,7 @@
       "name": "Mail4",
       "title": "kargo.com.tr",
       "kod": "TR-M4",
-      "message": "This is a spam mail !"
+      "message": "Kargonuz dağıtıma çıktı. Adresinizde bulunamadığınız için şubemizde bekletilecektir."
     },
     {
       "name": "Mail5",

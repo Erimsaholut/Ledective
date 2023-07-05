@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ledective/apps/matesApp_app/mates_massage.dart';
 import 'package:ledective/apps/tools/back_button.dart';
-import 'package:ledective/data_base/datas.dart';
 import 'new_message_page.dart';
+import 'dart:convert' show json;
+import 'package:flutter/services.dart' show rootBundle;
 
 class MatesApp extends StatefulWidget {
   const MatesApp({Key? key}) : super(key: key);
@@ -11,6 +13,39 @@ class MatesApp extends StatefulWidget {
 }
 
 class _MatesAppState extends State<MatesApp> {
+  int contactNumber = 1;
+  List<dynamic> datalar = [];
+  List<Widget> contactWidgets = [];
+
+
+  Future<void> loadJson() async {
+    print("loadladık");
+    String jsonData = await rootBundle.loadString("assets/contacts/contacts.json");
+    Map<String, dynamic> data = json.decode(jsonData);
+    datalar = data['contacts'];
+  }
+
+  void printJsonMassage(String id) async {
+    print(id);
+    dynamic item = datalar.firstWhere((item) => item['kod'] == id, orElse: () => null);
+    if (item != null) {
+      setState(() {
+        contactWidgets.add(
+            MatesMessage(number: item['number'],person: item['name']));
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadJson().then((_) {
+      for (var _ in datalar) {
+        printJsonMassage("C$contactNumber");
+        contactNumber++;
+      }
+    });
+  }
 
   void _newMessagePage() {
     Navigator.push(
@@ -20,10 +55,10 @@ class _MatesAppState extends State<MatesApp> {
       ),
     );
   }
-  DataDepo db = DataDepo();
+
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("MatesApp"),
@@ -44,7 +79,7 @@ class _MatesAppState extends State<MatesApp> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    ...(db.matesMessages),
+                    ...contactWidgets,
                     const SizedBox(height: 100),
                   ],
                 ),
