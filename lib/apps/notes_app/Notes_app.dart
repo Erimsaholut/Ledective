@@ -19,6 +19,11 @@ class _NotesAppState extends State<NotesApp> {
   List<dynamic> datalar = [];
 
   Future<void> loadJson() async {
+
+
+
+
+
     print("loadladık");
     String jsonData = await rootBundle.loadString("assets/apps/notesApp/notesAppNotes.json");
     Map<String, dynamic> data = json.decode(jsonData);
@@ -116,7 +121,8 @@ class _NotesAppState extends State<NotesApp> {
     };
     String jsonString = json.encode(jsonData);
 
-    final file = await File("/Users/erimsaholut/StudioProjects/Ledective/assets/apps/notesApp/notesAppNotes.json").writeAsString(jsonString);
+    final file = await File("assets/apps/notesApp/notesAppNotes.json").writeAsString(jsonString);
+    //todo almıyor amına koyduğumun pathini almıyor.
   }
 
   @override

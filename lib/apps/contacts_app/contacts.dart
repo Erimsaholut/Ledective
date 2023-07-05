@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:ledective/apps/contacts_app/contactsWidget.dart';
 import 'package:ledective/apps/tools/back_button.dart';
@@ -74,35 +76,49 @@ class _ContactsState extends State<Contacts> {
           actions: [
             TextButton(
               onPressed: () {
-                setState(() {
-                  String newCode = "C$contactNumber";
-                  contactNumber++;
-                  Map<String, dynamic> newNoteData = {
-                    "name": newName,
-                    "number": newNumber,
-                    "kod": newCode,
-                  };
-                  datalar.add(newNoteData);
+                if(newName.isNotEmpty && newNumber.isNotEmpty){
+                  setState(() {
+                    String newCode = "C$contactNumber";
+                    contactNumber++;
+                    Map<String, dynamic> newNoteData = {
+                      "name": newName,
+                      "number": newNumber,
+                      "kod": newCode,
+                    };
+                    datalar.add(newNoteData);
 
-                  contactWidgets.add(
-                    ContactWidget(
-                      person: newName,
-                      number: newNumber,
-                    ),
-                  );
-                });
+                    contactWidgets.add(
+                      ContactWidget(
+                        person: newName,
+                        number: newNumber,
+                      ),
+                    );
+                  });
+
+                  _saveJson();
+                }
+
 
                 Navigator.of(context).pop();
               },
               child: const Text("Add"),
             ),
+
           ],
         );
       },
     );
   }
 
-//todo kaydetme kısmında kaldın
+  Future<void> _saveJson() async {
+    Map<String, dynamic> jsonData = {
+      "contacts": datalar,
+    };
+    String jsonString = json.encode(jsonData);
+
+    final file = await File("/Users/erimsaholut/StudioProjects/Ledective/assets/contacts/contacts.json").writeAsString(jsonString);
+    //todo almıyor amına koyduğumun pathini almıyor.
+  }
 
 
   @override
