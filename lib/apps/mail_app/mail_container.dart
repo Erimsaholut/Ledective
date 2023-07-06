@@ -20,18 +20,19 @@ class _MailContainerState extends State<MailContainer> {
   Widget build(BuildContext context) {
     String shortMessage = widget.message;
 
-
-    String shortTitle =
-    widget.title.length > 16 ? "${widget.title.substring(0, 12)}.com" : widget.title;
+    String shortTitle = widget.title.length > 16
+        ? "${widget.title.substring(0, 12)}.com"
+        : widget.title;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      //todo kanka bu kısa kalma sorunu çözüldü ama titleları  başa attıyor o zaman bi center falan bişeyler ayarla
       children: [
         GestureDetector(
           onTap: () {
             setState(() {
-              isExpanded = !isExpanded;
+              if (widget.message.length > 18) {
+                isExpanded = !isExpanded;
+              }
             });
           },
           child: AnimatedContainer(
@@ -52,11 +53,13 @@ class _MailContainerState extends State<MailContainer> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Text(
-                          shortTitle,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
+                        Center(
+                          child: Text(
+                            shortTitle,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -81,9 +84,7 @@ class _MailContainerState extends State<MailContainer> {
                       child: Scrollbar(
                         child: ListView(
                           physics: const NeverScrollableScrollPhysics(),
-                          children: const [
-                            SizedBox(height: double.infinity),
-                          ],
+                          children: const [],
                         ),
                       ),
                     ),

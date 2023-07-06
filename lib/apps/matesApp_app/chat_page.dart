@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ledective/apps/Tools/incoming_message.dart';
 import 'package:ledective/data_base/datas.dart';
-import '../../StoryBrain/storyBrain.dart';
+import '../../story_brain/storyBrain.dart';
 import '../Tools/outcoming_message.dart';
 
 class MatesChatPAGE extends StatefulWidget {
@@ -14,9 +14,17 @@ class MatesChatPAGE extends StatefulWidget {
   _MatesChatPAGEState createState() => _MatesChatPAGEState();
 }
 
+
+
 class _MatesChatPAGEState extends State<MatesChatPAGE> {
   DataDepo db = DataDepo();
   bool isKeyboardVisible = false;
+
+  void updateChatList() {
+    setState(() {
+      // Güncelleme işlemleri burada yapılacak
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +52,8 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                   padding: const EdgeInsets.all(10),
                   child: ListView(
                     children: [
-                      IncomingMessage(message: "abi"),
-                      OutgoingMessage(message: "Efendim"),
+                      const IncomingMessage(message: "Amirim"),
+                      const OutgoingMessage(message: "He"),
                       ...(personMessages),
                     ],
                   ),
@@ -68,7 +76,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                       ),
                       child: Center(
                         child: Text(
-                          "Send Message",
+                          isKeyboardVisible?"Close Keyboard":"Send Message",
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.black.withOpacity(0.5)),
                         ),
                       ),
@@ -92,7 +100,9 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              checkAnswer(1,widget.person);
+                              setState(() {
+                                checkAnswer(1, widget.person, personMessages);
+                              });
                             },
                             child: const Center(
                               child: Text(
@@ -105,7 +115,9 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              checkAnswer(2,widget.person);
+                              setState(() {
+                                checkAnswer(2,widget.person,personMessages);
+                              });
                             },
                             child: const Center(
                               child: Text(
@@ -118,7 +130,9 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              checkAnswer(3,widget.person);
+                              setState(() {
+                                checkAnswer(3,widget.person,personMessages);
+                              });
                             },
                             child: const Center(
                               child: Text(

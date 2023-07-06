@@ -6,29 +6,10 @@ import '../apps/photos_app/photo_widget.dart';
 
 
 class DataDepo {
-  List<Widget> matesMessages = [ //todo Kişi isimlerini buradan çekiyor bunu yerine contactlardan çeksin
-    const MatesMessage(
-      person: "Hayalet",
-    ),
-    const MatesMessage(person: "Akbaba"),
-    const MatesMessage(
-        person: "Ercüment"),
-    const MatesMessage(person: "Tahsin"),
-    const MatesMessage(person: "Harun"),
-    const MatesMessage(person: "Eda"),
-    const MatesMessage(person: "Selim"),
-  ];
 
   Map<String, List<Widget>> matesAppMessages = {
     "Özge": [
-      const OutgoingMessage(message: "Nasıl yani"),
-      const IncomingMessage(message: "Walla"),
-      const OutgoingMessage(message: "Hay aksi"),
-      const OutgoingMessage(
-        message:
-        "Hayalet bu işi bir an önce çözmemiz lazım",
-      ),
-      const IncomingMessage(message: "Özür dilerim 😭"),
+      const IncomingMessage(message: "Şu an ulusal konferans için yurtdışında olduğunuzu biliyorum ama yardımınızı gerektiren bir durum var"),
     ],
   };
 
