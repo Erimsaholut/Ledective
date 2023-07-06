@@ -1,9 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-class IncomingMessage extends StatelessWidget {
+class IncomingMessage extends StatefulWidget {
   final String message;
   const IncomingMessage({Key? key, required this.message}) : super(key: key);
+
+  @override
+  _IncomingMessageState createState() => _IncomingMessageState();
+}
+
+class _IncomingMessageState extends State<IncomingMessage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<int> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 6),
+    );
+
+    _animation = StepTween(begin: 0, end: 3).animate(_animationController);
+
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _animationController.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        _animationController.forward();
+      }
+    });
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +53,8 @@ class IncomingMessage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.only(right: 80,),
+              padding: const EdgeInsets.only(right: 80),
               child: Container(
-
                 constraints: BoxConstraints(
                   minHeight: minHeight,
                   maxHeight: maxHeight,
@@ -32,11 +68,40 @@ class IncomingMessage extends StatelessWidget {
                     bottomRight: Radius.circular(32),
                   ),
                 ),
-                child: SingleChildScrollView(
-                  child: Text(
-                    message,
-                    style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500),
-                  ),
+                child: AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) {
+                    return Stack(
+                      children: [
+                        Opacity(
+                          opacity: _animation.value >= 1 ? 1.0 : 0.0,
+                          child: SingleChildScrollView(
+                            child: Text(
+                              widget.message,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        Positioned.fill(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(
+                                _animation.value + 1,
+                                    (index) {
+                                  return Text(
+                                    '. ',
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
@@ -47,4 +112,3 @@ class IncomingMessage extends StatelessWidget {
     );
   }
 }
-
