@@ -9,7 +9,7 @@ class DataDepo {
 
   Map<String, List<Widget>> matesAppMessages = {
     "Özge": [
-      const IncomingMessage(message: "Şu an ulusal konferans için yurtdışında olduğunuzu biliyorum ama yardımınızı gerektiren bir durum var"),
+      const IncomingMessage(message: "Şu an ulusal konferans için yurtdışında olduğunuzu biliyorum ama yardımınızı gerektiren bir durum var",delaySec: 1,),
     ],
   };
 

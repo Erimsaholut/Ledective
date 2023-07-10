@@ -1,45 +1,45 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class IncomingMessage extends StatefulWidget {
   final String message;
-  const IncomingMessage({Key? key, required this.message}) : super(key: key);
+  final int delaySec;
+
+  const IncomingMessage({
+    Key? key,
+    required this.message,
+    this.delaySec = 0,
+  }) : super(key: key);
 
   @override
   _IncomingMessageState createState() => _IncomingMessageState();
 }
 
-class _IncomingMessageState extends State<IncomingMessage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<int> _animation;
+
+class _IncomingMessageState extends State<IncomingMessage> {
+  late Duration delayDuration;
+  bool _isVisible = false;
 
   @override
   void initState() {
     super.initState();
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 6),
-    );
-
-    _animation = StepTween(begin: 0, end: 3).animate(_animationController);
-
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _animationController.reverse();
-      } else if (status == AnimationStatus.dismissed) {
-        _animationController.forward();
-      }
-    });
-
-    _animationController.forward();
+    delayDuration = Duration(seconds: widget.delaySec);
+    _startTimer();
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
+  void _startTimer() {
+    if (delayDuration == Duration.zero) {
+      _setVisible(true);
+    } else {
+      Future.delayed(delayDuration, () {
+        _setVisible(true);
+      });
+    }
+  }
+
+  void _setVisible(bool visible) {
+    setState(() {
+      _isVisible = visible;
+    });
   }
 
   @override
@@ -52,59 +52,31 @@ class _IncomingMessageState extends State<IncomingMessage>
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 80),
-              child: Container(
-                constraints: BoxConstraints(
-                  minHeight: minHeight,
-                  maxHeight: maxHeight,
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: const BoxDecoration(
-                  color: CupertinoColors.systemBlue,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32),
-                    topRight: Radius.circular(32),
-                    bottomRight: Radius.circular(32),
+            if (_isVisible)
+              Padding(
+                padding: const EdgeInsets.only(right: 80),
+                child: Container(
+                  constraints: BoxConstraints(
+                    minHeight: minHeight,
+                    maxHeight: maxHeight,
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: const BoxDecoration(
+                    color: CupertinoColors.systemBlue,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32),
+                      bottomRight: Radius.circular(32),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      widget.message,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
                   ),
                 ),
-                child: AnimatedBuilder(
-                  animation: _animationController,
-                  builder: (context, child) {
-                    return Stack(
-                      children: [
-                        Opacity(
-                          opacity: _animation.value >= 1 ? 1.0 : 0.0,
-                          child: SingleChildScrollView(
-                            child: Text(
-                              widget.message,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: List.generate(
-                                _animation.value + 1,
-                                    (index) {
-                                  return Text(
-                                    '. ',
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
               ),
-            ),
             const SizedBox(height: 20),
           ],
         );

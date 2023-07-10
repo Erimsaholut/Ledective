@@ -22,7 +22,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
 
   void updateChatList() {
     setState(() {
-      // Güncelleme işlemleri burada yapılacak
+      /* Güncelleme işlemleri burada yapılacak*/
     });
   }
 
@@ -52,7 +52,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                   padding: const EdgeInsets.all(10),
                   child: ListView(
                     children: [
-                      const IncomingMessage(message: "Amirim"),
+                      const IncomingMessage(message: "Amirim",delaySec: 0,),
                       const OutgoingMessage(message: "He"),
                       ...(personMessages),
                     ],
