@@ -19,11 +19,6 @@ class _NotesAppState extends State<NotesApp> {
   List<dynamic> datalar = [];
 
   Future<void> loadJson() async {
-
-
-
-
-
     print("loadladık");
     String jsonData = await rootBundle.loadString("assets/apps/notesApp/notesAppNotes.json");
     Map<String, dynamic> data = json.decode(jsonData);

@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:ledective/apps/contacts_app/contactPage.dart';
-import '../phone_app/call_screen.dart';
 import 'chat_page.dart';
 
 class MatesMessage extends StatelessWidget {
   final VoidCallback? onLongPressed;
   final VoidCallback? onPressed;
   final Color? backGroundColor;
-  final Color? iconColor;
   final String? surname;
-  final String message;
   final String number;
   final String person;
   final IconData icon;
+  final int notification;
+
   const MatesMessage({
+    this.notification = 0,
     this.backGroundColor = Colors.teal,
     this.icon = Icons.person,
     required this.person,
     this.onLongPressed,
-    this.message = "",
     this.number = "",
-    this.iconColor = Colors.black,
     this.onPressed,
     this.surname,
     Key? key,
@@ -35,8 +32,7 @@ class MatesMessage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    MatesChatPAGE(person: person),
+                builder: (context) => MatesChatPAGE(person: person),
               ),
             );
           },
@@ -76,6 +72,7 @@ class MatesMessage extends StatelessWidget {
                     ),
                   ),
                   Expanded(
+
                     flex: 3,
                     child: Container(
                       height: 100,
@@ -115,7 +112,10 @@ class MatesMessage extends StatelessWidget {
               ),
             ],
           ),
-        ),const SizedBox(height: 30,)
+        ),
+        const SizedBox(
+          height: 30,
+        )
       ],
     );
   }
