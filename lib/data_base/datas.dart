@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ledective/apps/contacts_app/contactsWidget.dart';
 import '../apps/Tools/incoming_message.dart';
-import '../apps/Tools/outcoming_message.dart';
-import '../apps/matesApp_app/mates_massage.dart';
 import '../apps/photos_app/photo_widget.dart';
 
 
@@ -9,7 +8,7 @@ class DataDepo {
 
   Map<String, List<Widget>> matesAppMessages = {
     "Özge": [
-      const IncomingMessage(message: "Şu an ulusal konferans için yurtdışında olduğunuzu biliyorum ama yardımınızı gerektiren bir durum var",delaySec: 1,),
+      const IncomingMessage(message: "Şu an ulusal konferans için yurtdışında olduğunuzu biliyorum ama yardımınızı gerektiren bir durum var"),
     ],
   };
 
@@ -30,11 +29,11 @@ class DataDepo {
 
 
   List<Widget> recents = [
-    const MatesMessage(
+    const ContactWidget(
       person: "Hayalet",
       number: "0530303030",
     ),
-    const MatesMessage(
+    const ContactWidget(
       person: "Harun",
       number: "0303033003",
     ),

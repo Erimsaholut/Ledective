@@ -264,7 +264,7 @@ class _PhoneContactsState extends State<PhoneContacts> {
                           ),
                         ],
                       ),
-                    )
+                    )//Keypad Screen
                   ],
                 ),
               ),
@@ -275,7 +275,7 @@ class _PhoneContactsState extends State<PhoneContacts> {
                 padding: const EdgeInsets.all(8.0),
                 child: ListView(
                   children: [
-                    ...(db.recents)
+                    ...(db.recents)/*recenti sikeceksin*/
                   ],
                 ),
               ),
