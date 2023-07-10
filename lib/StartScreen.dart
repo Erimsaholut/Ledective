@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ledective/apps/appShop_app/appShop.dart';
+import 'package:ledective/apps/calendarApp/calendar.dart';
 import 'package:ledective/apps/clock_app/clock.dart';
 import 'package:ledective/apps/contacts_app/contacts.dart';
 import 'package:ledective/apps/matesApp_app/mates_app.dart';
@@ -78,7 +79,7 @@ class _StartScreenState extends State<StartScreen> {
                               AppWidget(
                                   title: "Calendar",
                                   iconData: Icons.calendar_today,
-                                  child: SizedBox()),
+                                  child: Calendar()),
                               AppWidget(
                                   title: "Settings",
                                   iconData: Icons.settings,
