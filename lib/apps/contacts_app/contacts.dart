@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:ledective/apps/contacts_app/contactsWidget.dart';
 import 'package:ledective/apps/tools/back_button.dart';
@@ -116,7 +115,10 @@ class _ContactsState extends State<Contacts> {
     };
     String jsonString = json.encode(jsonData);
 
-    final file = await File("/Users/erimsaholut/StudioProjects/Ledective/assets/contacts/contacts.json").writeAsString(jsonString);
+    final file = await File("/../../../assets/contacts/contacts.json").writeAsString(jsonString);
+    ///                      Ledective/lib/apps/contacts_app/contactPage.dart
+    ///                      Ledective/assets/contacts/contacts.json
+    ///                      ../../../../assets/contacts/contacts.json
     //todo almıyor amına koyduğumun pathlerini
   }
 

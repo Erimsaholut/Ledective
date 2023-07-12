@@ -47,11 +47,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/apps/notesApp/
+    - assets/apps/notesApp/notesAppNotes.json
     - assets/apps/pian/pian_notes/
     - assets/apps/photosApp/images/
     - assets/apps/mailApp/
     - assets/contacts/
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

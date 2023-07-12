@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'chat_page.dart';
 
 class MatesMessage extends StatelessWidget {
-  final VoidCallback? onLongPressed;
-  final VoidCallback? onPressed;
+
   final Color? backGroundColor;
   final String? surname;
   final String number;
@@ -16,9 +15,7 @@ class MatesMessage extends StatelessWidget {
     this.backGroundColor = Colors.teal,
     this.icon = Icons.person,
     required this.person,
-    this.onLongPressed,
     this.number = "",
-    this.onPressed,
     this.surname,
     Key? key,
   }) : super(key: key);
