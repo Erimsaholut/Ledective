@@ -117,7 +117,7 @@ class _NotesAppState extends State<NotesApp> {
     String jsonString = json.encode(jsonData);
 
     final file = await File("assets/apps/notesApp/notesAppNotes.json").writeAsString(jsonString);
-    //todo almıyor amına koyduğumun pathini almıyor.
+
   }
 
   @override
