@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ledective/apps/mail_app/mail_container.dart';
+import 'package:ledective/data_base/datas.dart';
 import 'package:ledective/apps/tools/back_button.dart';
-import 'dart:convert' show json;
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MailApp extends StatefulWidget {
   const MailApp({Key? key}) : super(key: key);
@@ -12,40 +11,16 @@ class MailApp extends StatefulWidget {
 }
 
 class _MailAppState extends State<MailApp> {
-  int mailNumber = 1;
-  List<dynamic> datalar = [];
-  List<Widget> mailWidgets = [];
-
-  Future<void> loadJson() async {
-    print("loadladık");
-    String jsonData = await rootBundle.loadString("assets/apps/mailApp/mails.json");
-    Map<String, dynamic> data = json.decode(jsonData);
-    datalar = data['mails'];
-  }
-
-  void printJsonMassage(String id) async {
-    print(id);
-    dynamic item = datalar.firstWhere((item) => item['name'] == id, orElse: () => null);
-    if (item != null) {
-      String description = item['message'];
-      setState(() {
-        mailWidgets.add(
-          MailContainer(title: item["title"],message: description,));
-      });
-    }
-  }
+  List<Widget> mails = DataDepo().mails;
+  List<Widget> myMails = [];
+  int mailCount = 3;
 
   @override
   void initState() {
     super.initState();
-    loadJson().then((_) {
-      for (var _ in datalar) {
-        printJsonMassage("Mail$mailNumber");
-        mailNumber++;
-      }
-    });
+    myMails = mails.take(mailCount).toList();
+    _getMailCountFromSharedPreferences(); // shared_preferences'dan mailCount değerini al
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +35,18 @@ class _MailAppState extends State<MailApp> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const SizedBox(height: 120),
-                  const Icon(Icons.mail, size: 75),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _addMail(); // mail ekleme fonksiyonunu çağır
+                      });
+                    },
+                    child: const Icon(
+                      Icons.mail,
+                      size: 75,
+                      color: Colors.black,
+                    ),
+                  ),
                   const SizedBox(height: 30),
                   TextButton(
                     onPressed: () {
@@ -94,7 +80,7 @@ class _MailAppState extends State<MailApp> {
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 15),
               children: [
-                ...mailWidgets
+                ...myMails,
               ],
             ),
           ),
@@ -102,4 +88,30 @@ class _MailAppState extends State<MailApp> {
       ),
     );
   }
+
+  void _addMail() {
+    if (mailCount < mails.length) {
+      mailCount += 1;
+      myMails = mails.take(mailCount).toList();
+      _saveMailCountToSharedPreferences(mailCount); // shared_preferences'a mailCount değerini kaydet
+    }
+  }
+
+  Future<void> _saveMailCountToSharedPreferences(int count) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('mailCount', count);
+  }
+
+  Future<void> _getMailCountFromSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? count = prefs.getInt('mailCount');
+    if (count != null) {
+      setState(() {
+        mailCount = count;
+        myMails = mails.take(mailCount).toList();
+      });
+    }
+  }
 }
+
+
