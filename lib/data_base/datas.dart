@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:ledective/apps/Tools/outcoming_message.dart';
 import 'package:ledective/apps/contacts_app/contactsWidget.dart';
+import 'package:ledective/apps/tools/dayPassed.dart';
 import '../apps/Tools/incoming_message.dart';
 import '../apps/mail_app/mail_container.dart';
 import '../apps/photos_app/photo_widget.dart';
 
 class DataDepo {
-  Map<String, List<Widget>> matesAppMessages = {
+  /*Buraya başta yazacak oyun öncesi muhabbetleri ekle*/
+  Map<String, List<Widget>> matesAppFirstMessages = {
     "Özge": [
       const IncomingMessage(
+          message: "İyi akşamlar amirim istediğiniz raporları müdüre ilettim."),
+      const OutgoingMessage(message: "Aferin kızım"),
+      const DayPassed(day:5),
+      const IncomingMessage(
           message:
-              "Şu an ulusal konferans için yurtdışında olduğunuzu biliyorum ama yardımınızı gerektiren bir durum var"),
+              "Palu cinayeti için savcılıkta imza vermeniz gerekiyormuş amirim."),
+      const OutgoingMessage(message: "Atakanı yolla, atıversin benim yerime"),
+      const IncomingMessage(message: "Atakan yok amirim Orhuna haber verdim"),
+      const OutgoingMessage(message: "ok"),
+    ],
+    "Orhun": [
+      const IncomingMessage(message: "İmza işini hallettim amirim."),
+      const OutgoingMessage(message: "tmmdır"),
     ],
   };
 

@@ -50,7 +50,6 @@ flutter:
     - assets/apps/notesApp/notesAppNotes.json
     - assets/apps/pian/pian_notes/
     - assets/apps/photosApp/images/
-    - assets/apps/mailApp/
     - assets/contacts/
 
 

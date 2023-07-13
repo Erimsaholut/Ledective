@@ -19,7 +19,8 @@ class _MailAppState extends State<MailApp> {
   void initState() {
     super.initState();
     myMails = mails.take(mailCount).toList();
-    _getMailCountFromSharedPreferences(); // shared_preferences'dan mailCount değerini al
+    _getMailCountFromSharedPreferences();
+    /* mail sayısını değiştirmek için mailCount değerini alabilirsin burada*/
   }
 
   @override

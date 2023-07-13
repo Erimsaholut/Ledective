@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ledective/apps/Tools/incoming_message.dart';
 import 'package:ledective/data_base/datas.dart';
 import '../../story_brain/storyBrain.dart';
-import '../Tools/outcoming_message.dart';
 
 class MatesChatPAGE extends StatefulWidget {
   final String person;
@@ -14,21 +12,13 @@ class MatesChatPAGE extends StatefulWidget {
   _MatesChatPAGEState createState() => _MatesChatPAGEState();
 }
 
-
-
 class _MatesChatPAGEState extends State<MatesChatPAGE> {
   DataDepo db = DataDepo();
   bool isKeyboardVisible = false;
 
-  void updateChatList() {
-    setState(() {
-      /* Güncelleme işlemleri burada yapılacak*/
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    List<Widget> personMessages = db.matesAppMessages[widget.person] ?? [];
+    List<Widget> personMessages = db.matesAppFirstMessages[widget.person] ?? [];
 
     return Scaffold(
       appBar: AppBar(
@@ -52,8 +42,6 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                   padding: const EdgeInsets.all(10),
                   child: ListView(
                     children: [
-                      const IncomingMessage(message: "Amirim",delaySec: 0,),
-                      const OutgoingMessage(message: "He"),
                       ...(personMessages),
                     ],
                   ),
@@ -101,7 +89,10 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                           child: TextButton(
                             onPressed: () {
                               setState(() {
+                                print(widget.person);
+                                print(personMessages);
                                 checkAnswer(1, widget.person, personMessages);
+
                               });
                             },
                             child: const Center(
