@@ -99,6 +99,10 @@ class _ClockState extends State<Clock> {
                   onPressed: () {
                     _stopwatch.reset();
                     _resetTimer();
+                    if (_stopwatch.isRunning) {
+                      _stopwatch.stop();
+                      _stopTimer();
+                    }
                   },
                   child: const Text(
                     'Reset',

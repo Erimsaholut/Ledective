@@ -172,44 +172,42 @@ class _StartScreenState extends State<StartScreen> {
                 ),
               ],
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: _currentPageIndex == 0
-                          ? [
-                              const Icon(Icons.circle, size: 20.0),
-                              const Icon(Icons.circle_outlined, size: 20.0)
-                            ]
-                          : [
-                              const Icon(Icons.circle_outlined, size: 20.0),
-                              const Icon(Icons.circle, size: 20.0)
-                            ],
-                    ),
-                    SizedBox(height: 25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        AppWidget(
-                            title: "Phone",
-                            iconData: Icons.phone,
-                            child: PhoneContacts()),
-                        AppWidget(
-                            title: "Contacts",
-                            iconData: Icons.contacts,
-                            child: Contacts()),
-                        AppWidget(
-                            title: "Messages",
-                            iconData: Icons.message,
-                            child: SizedBox()),
-                      ],
-                    ),
-                  ],
-                ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _currentPageIndex == 0
+                        ? [
+                            const Icon(Icons.circle, size: 20.0),
+                            const Icon(Icons.circle_outlined, size: 20.0)
+                          ]
+                        : [
+                            const Icon(Icons.circle_outlined, size: 20.0),
+                            const Icon(Icons.circle, size: 20.0)
+                          ],
+                  ),
+                  SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      AppWidget(
+                          title: "Phone",
+                          iconData: Icons.phone,
+                          child: PhoneContacts()),
+                      AppWidget(
+                          title: "Contacts",
+                          iconData: Icons.contacts,
+                          child: Contacts()),
+                      AppWidget(
+                          title: "Messages",
+                          iconData: Icons.message,
+                          child: SizedBox()),
+                    ],
+                  ),
+                ],
               ),
             )
           ],
