@@ -10,19 +10,19 @@
       "name": "Mail2",
       "title": "zaferbank.com",
       "kod": "TR-M2",
-      "message": "Paranızı tanımdağınız milyonlarca kişi ile paylaştığınızın farkında mısınız ? "
+      "message": " "
     },
     {
       "name": "Mail3",
-      "title": "besiktas.com",
+      "title": "",
       "kod": "TR-M3",
-      "message": "Yeni sezon formalarda indirim. Sakın kaçırmayın"
+      "message": ""
     },
     {
       "name": "Mail4",
-      "title": "xnxy.com",
+      "title": "",
       "kod": "TR-M4",
-      "message": "SPAM MAIL !"
+      "message": ""
     },
     {
       "name": "Mail5",
@@ -32,15 +32,15 @@
     },
     {
       "name": "Mail6",
-      "title": "cexape.com",
+      "title": "",
       "kod": "TR-M6",
-      "message": "Mansur aday olsa kürtler oy vermezdi ğğğğğ"
+      "message": ""
     },
     {
       "name": "Mail7",
-      "title": "github.com",
+      "title": "",
       "kod": "TR-M7",
-      "message": "Github aktivasyon kodunuz 23432246254264323434523 girmek için 10 saniyeniz var !!!"
+      "message": ""
     }
   ]
 }
