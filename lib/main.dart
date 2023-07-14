@@ -20,7 +20,12 @@ void main() async {
 Future<void> appOpened() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final int? firstOpen = prefs.getInt('isOpenedBefore');
+
   if (firstOpen == null) {
+    print('first time open');
+    await prefs.setInt('isOpenedBefore', 1);
+    print(firstOpen);
+
     final DateTime now = DateTime.now();
     await prefs.setInt('firstOpenDay', now.day);
     await prefs.setInt('firstOpenMonth', now.month);

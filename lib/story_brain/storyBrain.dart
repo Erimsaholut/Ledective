@@ -27,7 +27,7 @@ checkAnswer(int number, String person, List chatList) async {
       chatList.add(const OutgoingMessage(message: "Başından sav"));
 
       chatList.add(const IncomingMessage(
-          delaySec: 2,
+          delaySec: 1,
           message:
               "Amirim lütfen biraz ciddi olun, durum gerçekten kötü"));
     }

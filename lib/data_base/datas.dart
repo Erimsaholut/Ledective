@@ -10,6 +10,7 @@ class DataDepo {
   /*Buraya başta yazacak oyun öncesi muhabbetleri ekle*/
   Map<String, List<Widget>> matesAppFirstMessages = {
     "Özge": [
+      const DayPassed(day:8),
       const IncomingMessage(
           message: "İyi akşamlar amirim istediğiniz raporları müdüre ilettim."),
       const OutgoingMessage(message: "Aferin kızım"),
@@ -18,12 +19,17 @@ class DataDepo {
           message:
               "Palu cinayeti için savcılıkta imza vermeniz gerekiyormuş amirim."),
       const OutgoingMessage(message: "Atakanı yolla, atıversin benim yerime"),
-      const IncomingMessage(message: "Atakan yok amirim Orhuna haber verdim"),
+      const IncomingMessage(message: "Atakan izinli amirim Orhuna haber verdim"),
       const OutgoingMessage(message: "ok"),
+      const DayPassed(),
+      const IncomingMessage(message: "Amirim yardımınızı gerektiren büyük bir cinayet olayı oldu. Büro olarak işin içinde çıkamadık."),
     ],
     "Orhun": [
+      const DayPassed(day: 5),
       const IncomingMessage(message: "İmza işini hallettim amirim."),
       const OutgoingMessage(message: "tmmdır"),
+      const DayPassed(),
+      const IncomingMessage(message: "Akşama iki bira ok ?"),
     ],
   };
 
