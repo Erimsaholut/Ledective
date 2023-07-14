@@ -12,9 +12,12 @@ class MatesChatPAGE extends StatefulWidget {
   _MatesChatPAGEState createState() => _MatesChatPAGEState();
 }
 
+
 class _MatesChatPAGEState extends State<MatesChatPAGE> {
   DataDepo db = DataDepo();
   bool isKeyboardVisible = false;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +43,22 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                 flex: 5,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
-                  child: ListView(
-                    children: [
-                      ...(personMessages),
-                    ],
-                  ),
+                  child: ListView.builder(
+                  itemCount: personMessages.length,
+                  itemBuilder: (context, index) {
+                    return personMessages[index];
+                  },
                 ),
+
+          ),
               ),
               TextButton(
                 onPressed: () {
-                  setState(() {
-                    isKeyboardVisible = !isKeyboardVisible;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      isKeyboardVisible = !isKeyboardVisible;
+                    });
+                  }
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -145,4 +152,3 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
     );
   }
 }
-

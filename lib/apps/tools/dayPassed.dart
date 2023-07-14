@@ -5,6 +5,7 @@ class DayPassed extends StatelessWidget {
   final int day;
 
   Future<int> takeArguments() async {
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? firstOpenDay = prefs.getInt('firstOpenDay');
     final int? firstOpenMonth = prefs.getInt('firstOpenMonth');
@@ -20,7 +21,7 @@ class DayPassed extends StatelessWidget {
     }
   }
 
-  const DayPassed({Key? key, required this.day}) : super(key: key);
+  const DayPassed({Key? key, this.day=0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,26 +30,45 @@ class DayPassed extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final int totalDays = snapshot.data!;
-          return Column(
-            children: [
-              Center(
-                child: Text(
-                  "$totalDays gün önce",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black.withOpacity(0.5),
+          if(totalDays==0){
+            return Column(
+              children: [
+                Center(
+                  child: Text(
+                    "Bugün",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black.withOpacity(0.5),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
-          );
+                const SizedBox(height: 10),
+              ],
+            );
+          }
+          else{
+
+            return Column(
+              children: [
+                Center(
+                  child: Text(
+                    "$totalDays gün önce",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            );
+
+          }
         } else if (snapshot.hasError) {
-          // Hata durumu için işlemler yapılabilir
           return Text('Hata oluştu: ${snapshot.error}');
         } else {
-          // Veri henüz gelmediği durumda gösterilecek yüklenme animasyonu veya widget'ı
           return const CircularProgressIndicator();
         }
       },
