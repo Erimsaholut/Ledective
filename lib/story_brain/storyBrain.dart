@@ -10,7 +10,7 @@ checkAnswer(int number, String person, List chatList) async {
       chatList.add(const OutgoingMessage(message: "Agresif cevap"));
 
       chatList.add(const IncomingMessage(
-          delaySec: 2,
+          delaySec: 1,
           message:
               "Gerçekten özür dilerim amirim ama ciddi bir olay olmasa sizi rahatsız etmezdim"));
     } else if (number == 2) {
@@ -20,7 +20,7 @@ checkAnswer(int number, String person, List chatList) async {
       chatList.add(const IncomingMessage(
         message:
             "Amirim maktül domuz bağı ile öldürülmüş ve her yanında soğanlar var. Ayrıca evdeki bütün ampüller patlamış",
-        delaySec: 2,
+        delaySec: 1,
       ));
     } else {
       /* BAŞINDAN SAV */
@@ -40,7 +40,7 @@ checkAnswer(int number, String person, List chatList) async {
       /* AGRESİF CEVAP */
       chatList.add(const OutgoingMessage(message: "Orhun bak Özgeyi sikmek istediğim için cevap verirum sen de tatava yapıp sinirimi bozma benim"));
       chatList.add(const IncomingMessage(
-          delaySec: 2,
+          delaySec: 1,
           message:
               "Amirim ayıp oluyor ama "));
     } else if (number == 2) {
@@ -50,14 +50,14 @@ checkAnswer(int number, String person, List chatList) async {
       chatList.add(const IncomingMessage(
         message:
             "Amirim maktül domuz bağı ile öldürülmüş ve her yanında soğanlar var. Ayrıca evdeki bütün ampüller patlamış",
-        delaySec: 2,
+        delaySec: 1,
       ));
     } else {
       /* BAŞINDAN SAV */
       chatList.add(const OutgoingMessage(message: "Başından sav"));
 
       chatList.add(const IncomingMessage(
-          delaySec: 2,
+          delaySec: 1,
           message:
               "Ehhh senle mi uğraşıcaz lan sabah akşam. Bir gün ayık gelmez işe, her gün başkasıyla kavga eder uğraştırır devlete zarardan başka bir şey değilsin amına koyduğum"));
     }
