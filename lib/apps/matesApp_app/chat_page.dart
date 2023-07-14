@@ -14,10 +14,20 @@ class MatesChatPAGE extends StatefulWidget {
 class _MatesChatPAGEState extends State<MatesChatPAGE> {
   DataDepo db = DataDepo();
   bool isKeyboardVisible = false;
+  final ScrollController _scrollController = ScrollController(); // Add ScrollController
 
   @override
   Widget build(BuildContext context) {
     List<Widget> personMessages = db.matesAppFirstMessages[widget.person] ?? [];
+
+    // Scroll to the bottom
+    void scrollToBottom() {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -36,6 +46,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: SingleChildScrollView(
+                  controller: _scrollController, // Assign the ScrollController
                   child: Column(
                     children: [
                       ...(personMessages),
@@ -50,6 +61,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                   setState(() {
                     isKeyboardVisible = !isKeyboardVisible;
                   });
+                  scrollToBottom(); // Scroll to bottom when button is pressed
                 }
               },
               child: Column(
@@ -91,8 +103,8 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                           onPressed: () {
                             setState(() {
                               print(widget.person);
-                              print(personMessages);
                               checkAnswer(1, widget.person, personMessages);
+                              scrollToBottom(); // Scroll to bottom when button is pressed
                             });
                           },
                           child: const Center(
@@ -108,6 +120,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                           onPressed: () {
                             setState(() {
                               checkAnswer(2, widget.person, personMessages);
+                              scrollToBottom(); // Scroll to bottom when button is pressed
                             });
                           },
                           child: const Center(
@@ -123,6 +136,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                           onPressed: () {
                             setState(() {
                               checkAnswer(3, widget.person, personMessages);
+                              scrollToBottom(); // Scroll to bottom when button is pressed
                             });
                           },
                           child: const Center(
