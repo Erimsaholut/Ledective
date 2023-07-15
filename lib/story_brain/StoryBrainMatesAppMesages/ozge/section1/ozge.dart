@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import '../../../../apps/Tools/incoming_message.dart';
 
+/* storyBrain'in cevapları buradan alması lazım*/
+
 Map<String, List<Widget>> matesAppMessages = {
   "Özge": [
     const IncomingMessage(

@@ -49,9 +49,9 @@ class _StartScreenState extends State<StartScreen> {
                           SizedBox(
                             height: sizedBoxHeight,
                           ),
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
+                            children: [
                               AppWidget(
                                   title: "Mail",
                                   iconData: Icons.mail,
@@ -69,9 +69,9 @@ class _StartScreenState extends State<StartScreen> {
                           SizedBox(
                             height: sizedBoxHeight,
                           ),
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
+                            children: [
                               AppWidget(
                                   title: "MatesApp",
                                   iconData: Icons.mark_chat_read,
@@ -89,9 +89,9 @@ class _StartScreenState extends State<StartScreen> {
                           SizedBox(
                             height: sizedBoxHeight,
                           ),
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
+                            children: [
                               AppWidget(
                                   title: "Camera",
                                   iconData: Icons.camera_alt_rounded,
@@ -101,8 +101,8 @@ class _StartScreenState extends State<StartScreen> {
                                   iconData: Icons.cruelty_free_outlined,
                                   child: Sinstagram()),
                               AppWidget(
-                                  title: "Crypt",
-                                  iconData: Icons.password_rounded,
+                                  title: "poltel",
+                                  iconData: Icons.policy,
                                   child: SizedBox()),
                             ],
                           ),
@@ -124,9 +124,9 @@ class _StartScreenState extends State<StartScreen> {
                           SizedBox(
                             height: sizedBoxHeight,
                           ),
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
+                            children: [
                               AppWidget(
                                   title: "Notes",
                                   iconData: Icons.mode_edit_outline_rounded,
@@ -144,9 +144,9 @@ class _StartScreenState extends State<StartScreen> {
                           SizedBox(
                             height: sizedBoxHeight,
                           ),
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
+                            children: [
                               AppWidget(
                                   title: "21",
                                   iconData: Icons.videogame_asset_rounded,
@@ -189,10 +189,10 @@ class _StartScreenState extends State<StartScreen> {
                             const Icon(Icons.circle, size: 20.0)
                           ],
                   ),
-                  SizedBox(height: 25),
-                  Row(
+                  const SizedBox(height: 25),
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
+                    children: [
                       AppWidget(
                           title: "Phone",
                           iconData: Icons.phone,
