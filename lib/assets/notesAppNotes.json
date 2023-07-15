@@ -1,0 +1,19 @@
+{
+  "notes": [
+    {
+      "isim": "Note1",
+      "kod": "TR-N1",
+      "message": "Behzat ç bir ankara polisiyesidir ve dünya dizi tarihinin gelmiş geçmiş en büyük yapımıdır..."
+    },
+    {
+      "isim": "Note2",
+      "kod": "TR-N2",
+      "message": "Farazi V Kayra dinlemeyi severim"
+    },
+    {
+      "isim": "Note3",
+      "kod": "TR-N3",
+      "message": "Amirim maktül intihar etmiş bu bir cinayet olayı olduğu için araştırmamız gerekiyor ama katille konuşamıyoruz. Maktülle beraber katil de ölmüş"
+    }
+  ]
+}
