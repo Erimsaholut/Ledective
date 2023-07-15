@@ -11,7 +11,6 @@ class PhotoWidget extends StatelessWidget {
     return Column(
       children: [
         Image.asset(adress,scale: scale)
-
       ],
     );
   }

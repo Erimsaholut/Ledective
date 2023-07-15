@@ -124,4 +124,3 @@ class _MatesAppState extends State<MatesApp> {
     );
   }
 }
-
