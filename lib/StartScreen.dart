@@ -7,6 +7,7 @@ import 'package:ledective/apps/matesApp_app/mates_app.dart';
 import 'package:ledective/apps/notes_app/Notes_app.dart';
 import 'package:ledective/apps/photos_app/photos.dart';
 import 'package:ledective/apps/pian_app/pian.dart';
+import 'package:ledective/apps/poltel_app/poltel.dart';
 import 'package:ledective/apps/settings_app/settings.dart';
 import 'package:ledective/apps/sinstagram_app/sinstagram.dart';
 import 'apps/phone_app/phone.dart';
@@ -101,9 +102,9 @@ class _StartScreenState extends State<StartScreen> {
                                   iconData: Icons.cruelty_free_outlined,
                                   child: Sinstagram()),
                               AppWidget(
-                                  title: "poltel",
+                                  title: "Poltel",
                                   iconData: Icons.policy,
-                                  child: SizedBox()),
+                                  child: Poltel()),
                             ],
                           ),
                         ],
