@@ -30,63 +30,80 @@ class DocumentMaker extends StatelessWidget {
       appBar: AppBar(
         title: Text("$name $type"),
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Container(
-          width: double.infinity,
-          color: Colors.grey.shade400,
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "İfade verenin kimliği :\n",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text("\t Adı ve soyadı:\t$name"),
-                Text("\t Kimlik numarası:\t$number"),
-                Text("\t İfadenin alındığı tarih:\t$madeDate"),
-                Text("\t Medeni Hali - Cinsiyeti:\t$isMarried - $gender"),
-                const Text(
-                  "\n Sanığın ifadesi :\n",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                for (int i = 0; i < questions.length; i++)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "\t Soruldu :\t",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            questions[i],
-                          ),
-                          const Text("\n"),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "\t Cevap:\t",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(answers[i]),
-                          const Text("\n\n"),
-                        ],
-                      ),
-                    ],
-                  ),
-              ],
+      body: Container(
+        width: double.infinity,
+        color: Colors.grey.shade400,
+        child: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: statementRaport(),
             ),
-          ),
+          ],
         ),
       ),
+    );
+  }
+
+  Column statementRaport() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "İfade verenin kimliği :\n",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Text("\t Adı ve soyadı:\t$name"),
+        Text("\t Kimlik numarası:\t$number"),
+        Text("\t İfadenin alındığı tarih:\t$madeDate"),
+        Text("\t Medeni Hali - Cinsiyeti:\t$isMarried - $gender"),
+        const Text(
+          "\n Sanığın ifadesi :\n",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        for (int i = 0; i < questions.length; i++)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "\t Soruldu :\t",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          questions[i],
+                        ),
+                        const Text("\n"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "\t Cevap:\n",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(answers[i]),
+                        const Text("\n\n"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
