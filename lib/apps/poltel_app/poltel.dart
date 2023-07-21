@@ -35,7 +35,7 @@ class _PoltelState extends State<Poltel> {
                     name: "Orhan Kasap",
                   ),
                   PolDocument(
-                    name: "Ferhat Yılmaz",
+                    name: "Berat Yılmaz",
                     isAutopsy: true,
                   ),
                 ],

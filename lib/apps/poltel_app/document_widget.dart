@@ -66,35 +66,17 @@ class PolDocument extends StatelessWidget {
 
 Widget autopsyRaport() {
   return Scaffold(
-    appBar: AppBar(title: Text(" *Berat yılmaz* otopsi raporu ")),
+    appBar: AppBar(title: const Text(" Berat Yılmaz otopsi raporu ")),
     body: Container(
       width: double.infinity,
       color: Colors.grey.shade400,
       child: ListView(
-        children: const [
+        children: [
           Padding(
-            padding: EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Cesedin kimliği :\n",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text("\t Adı ve soyadı: Berat Yılmaz"),
-                Text("\t Kimlik numarası: 3231"),
-                Text("\t Otopsi tarihi: tarih gelecek"),
-                /**/
-                Text("\t Cinsiyeti: Erkek"),
-                Text("\t Yaş: 20-25"),
-                Text(
-                  "\n MUAYENE BULGULARI :\n",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                ),
-              ],
+              children: [...otopsi],
             ),
           ),
         ],
