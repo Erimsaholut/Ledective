@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ledective/data_base/datas.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../story_brain/storyBrain.dart';
 
 class MatesChatPAGE extends StatefulWidget {
@@ -14,7 +15,20 @@ class MatesChatPAGE extends StatefulWidget {
 class _MatesChatPAGEState extends State<MatesChatPAGE> {
   DataDepo db = DataDepo();
   bool isKeyboardVisible = false;
+  int section = 0; //todo normalde 0 yap
   final ScrollController _scrollController = ScrollController();
+
+  Future<void> getSection() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    section = prefs.getInt('section')!;
+  }
+
+  @override
+  void initState() {
+    getSection();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +116,8 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                           onPressed: () {
                             setState(() {
                               print(widget.person);
-                              checkAnswer(1, widget.person, personMessages);
+                              checkAnswer(
+                                  1, section, widget.person, personMessages);
                               scrollToBottom();
                             });
                           },
@@ -118,7 +133,8 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                         child: TextButton(
                           onPressed: () {
                             setState(() {
-                              checkAnswer(2, widget.person, personMessages);
+                              checkAnswer(
+                                  2, section, widget.person, personMessages);
                               scrollToBottom();
                             });
                           },
@@ -134,7 +150,8 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                         child: TextButton(
                           onPressed: () {
                             setState(() {
-                              checkAnswer(3, widget.person, personMessages);
+                              checkAnswer(
+                                  3, section, widget.person, personMessages);
                               scrollToBottom();
                             });
                           },

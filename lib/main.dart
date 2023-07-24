@@ -30,5 +30,6 @@ Future<void> appOpened() async {
     await prefs.setInt('firstOpenDay', now.day);
     await prefs.setInt('firstOpenMonth', now.month);
     await prefs.setInt('firstOpenYear', now.year);
+    await prefs.setInt('section', 0);
   }
 }
