@@ -2,30 +2,40 @@ import 'package:ledective/story_brain/StoryBrainMatesAppMesages/ozge/ozge.dart';
 import '../apps/Tools/incoming_message.dart';
 import '../apps/Tools/outcoming_message.dart';
 
-//TODO OBJECTİVE NEDİR BURASI KARAR MERCİ OLACAK VE BURADAKİ APP MASSAGES KISMINDAN GEREKLİ DOSYALARI GÖNDERECEK.
 
-checkAnswer(int number, int section, String person, List chatList) async {
+
+checkAnswer(int userSelect, int section,int sm, String person, List chatList,List keyboardTexts) async {
   if (section == 0) {
 
     if (person == "Özge") {
 
+      if(sm==0){
+        keyboardTexts = ["deneme1","deneme2","deneme3"];
 
+        if (userSelect == 1) {
+          chatList.add(S0userAppMessages["0"]![0]);
 
-
-      if (number == 1) {
-        chatList.add(const OutgoingMessage(
-            message: "Kızım tatildeyken iş için yazmayın demedim mi ben size"));
-
-        for (int i = 0; i < S0ozgeAppMessages["0"]!.length; i++) {
-          chatList.add(S0ozgeAppMessages["0"]![i]);
+          for (int i = 0; i < S0ozgeAppMessages["0"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["0"]![i]);
+          }
         }
+
+
+
+        else if (userSelect == 2) {
+          chatList.add(S0userAppMessages["1"]![0]);
+
+          for (int i = 0; i < S0ozgeAppMessages["1"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["1"]![i]);
+          }
+        }
+
+
       }
-
-
-
-      else if (number == 2) {
-        chatList.add(const OutgoingMessage(
-            message: "Neymiş bu kadar önemli olan durum"));
+      if(sm==1){
+        keyboardTexts = ["sm1","sm2","sm3"];
+        if (userSelect == 1) {
+          chatList.add(S0userAppMessages["1"]![0]);
 
         for (int i = 0; i < S0ozgeAppMessages["2"]!.length; i++) {
           chatList.add(S0ozgeAppMessages["2"]![i]);
@@ -33,17 +43,86 @@ checkAnswer(int number, int section, String person, List chatList) async {
       }
 
 
-
-      else {
-        chatList.add(const OutgoingMessage(
-            message: "Yakınlarının ifadesini aldınız mı ?"));
-
-        for (int i = 0; i < S0ozgeAppMessages["3.1"]!.length; i++) {
-          chatList.add(S0ozgeAppMessages["3.1"]![i]);
-        }
       }
+      if(sm==2){
+        keyboardTexts = ["sm31","sm22","sm343"];
+        if (userSelect == 1) {
+              chatList.add(S0userAppMessages["3.1"]![0]);
+
+          for (int i = 0; i < S0ozgeAppMessages["3.1"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["3.1"]![i]);
+          }
+        }
 
 
+
+        else if (userSelect == 2) {
+          keyboardTexts = ["adsas","dfsfdas","sm343"];
+          chatList.add(S0userAppMessages["3.2"]![0]);
+
+          for (int i = 0; i < S0ozgeAppMessages["3.2"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["3.2"]![i]);
+          }
+          sm++;
+
+        }
+
+
+
+        else {
+          chatList.add(S0userAppMessages["3.3"]![0]);
+
+          for (int i = 0; i < S0ozgeAppMessages["3.3"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["3.3"]![i]);
+          }
+        }
+
+      }
+      if(sm==3){
+
+        if (userSelect == 1) {
+          chatList.add(S0userAppMessages["4"]![0]);
+
+          for (int i = 0; i < S0ozgeAppMessages["4"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["4"]![i]);
+          }
+          sm++;
+        }
+
+
+
+
+
+        else {
+          chatList.add(S0userAppMessages["3.1"]![0]);
+
+          for (int i = 0; i < S0ozgeAppMessages["3.1"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["3.1"]![i]);
+          }
+        }
+
+      }
+      if(sm==4){
+        if (userSelect == 1) {
+          chatList.add(S0userAppMessages["3.1"]![0]);
+
+          for (int i = 0; i < S0ozgeAppMessages["4"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["4"]![i]);
+          }
+        }
+
+
+
+        else {
+          chatList.add(const OutgoingMessage(
+              message: "Yakınlarının ifadesini aldınız mı ?"));
+
+          for (int i = 0; i < S0ozgeAppMessages["3.1"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["3.1"]![i]);
+          }
+        }
+
+      }
 
     }
 
@@ -65,13 +144,13 @@ checkAnswer(int number, int section, String person, List chatList) async {
 
 
     if (person == "Orhun") {
-      if (number == 1) {
+      if (userSelect == 1) {
         chatList.add(const OutgoingMessage(
             message:
                 "Orhun bak Özgeyi sikmek istediğim için cevap verirum sen de tatava yapıp sinirimi bozma benim"));
         chatList.add(const IncomingMessage(
             delaySec: 1, message: "Amirim ayıp oluyor ama "));
-      } else if (number == 2) {
+      } else if (userSelect == 2) {
         chatList.add(const OutgoingMessage(message: "Meraklı Cevap"));
 
         chatList.add(const IncomingMessage(
