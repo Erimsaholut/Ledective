@@ -13,14 +13,15 @@ class MatesChatPAGE extends StatefulWidget {
 }
 
 class _MatesChatPAGEState extends State<MatesChatPAGE> {
-  DataDepo db = DataDepo();
-  bool isKeyboardVisible = false;
-  int section = 0; //todo normalde 0 yap
   final ScrollController _scrollController = ScrollController();
+  bool isKeyboardVisible = false;
+  DataDepo db = DataDepo();
+  int section = 0;
+  int sm = 0; //todo  bunu ya shared üzerinden ya başka bir yerden al kişiye özel olması gerekiyor.
+  //todo uygulama açıldığında önceki mesajları tekrar yazdırması lazım
 
   Future<void> getSection() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     section = prefs.getInt('section')!;
   }
 
@@ -33,6 +34,17 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
   @override
   Widget build(BuildContext context) {
     List<Widget> personMessages = db.matesAppFirstMessages[widget.person] ?? [];
+    List<String> keyboardTexts = ["Choice1","Choice2","Choice3"];
+
+    String setKeyboardText(int num){
+      if(keyboardTexts[num].isNotEmpty){
+        print(keyboardTexts[num]);
+        return keyboardTexts[num];
+      }else{
+        print("null");
+        return "Null";
+      }
+    }
 
     void scrollToBottom() {
       _scrollController.animateTo(
@@ -81,8 +93,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(32)),
@@ -91,16 +102,17 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                       child: Text(
                         isKeyboardVisible ? "Close Keyboard" : "Send Message",
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black.withOpacity(0.5)),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black.withOpacity(0.5),
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
                 ],
               ),
-            ),
+            ),/*keyboard text*/
             Visibility(
               visible: isKeyboardVisible,
               child: Expanded(
@@ -115,16 +127,31 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                         child: TextButton(
                           onPressed: () {
                             setState(() {
-                              print(widget.person);
-                              checkAnswer(
-                                  1, section, widget.person, personMessages);
+                              checkAnswer(1, section, sm, widget.person, personMessages,keyboardTexts);
+                              print(keyboardTexts);
+                              sm++;
                               scrollToBottom();
                             });
                           },
-                          child: const Center(
+                          child: Text(
+                            setKeyboardText(0),
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              checkAnswer(2, section, sm, widget.person, personMessages,keyboardTexts);
+                              sm++;
+                              scrollToBottom();
+                            });
+                          },
+                          child: Center(
                             child: Text(
-                              "Choice 1",
-                              style: TextStyle(color: Colors.black),
+                              setKeyboardText(1),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ),
                         ),
@@ -133,32 +160,16 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                         child: TextButton(
                           onPressed: () {
                             setState(() {
-                              checkAnswer(
-                                  2, section, widget.person, personMessages);
+                              checkAnswer(3, section, sm, widget.person, personMessages,keyboardTexts);
+                              sm++;
                               scrollToBottom();
+                              print(sm);
                             });
                           },
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              "Choice 2",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              checkAnswer(
-                                  3, section, widget.person, personMessages);
-                              scrollToBottom();
-                            });
-                          },
-                          child: const Center(
-                            child: Text(
-                              "Choice 3",
-                              style: TextStyle(color: Colors.black),
+                              setKeyboardText(2),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ),
                         ),
