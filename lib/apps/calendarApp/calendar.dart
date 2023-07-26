@@ -27,18 +27,18 @@ class _CalendarState extends State<Calendar> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(height: 20,),
-        TableCalendar(
-          rowHeight: 70,
-          locale: "en_US",
-          focusedDay: today,
-          firstDay: DateTime.utc(2010,1,1),
-          lastDay: DateTime.utc(2029,1,1),
-          selectedDayPredicate: (day)=>isSameDay(day,today),
-          onDaySelected: _onDaySelected,
-          headerStyle: const HeaderStyle(
-            formatButtonVisible: false,titleCentered: true
-          ),
-        )
+          TableCalendar(
+            rowHeight: 70,
+            locale: "en_US",
+            focusedDay: today,
+            firstDay: DateTime.utc(2010,1,1),
+            lastDay: DateTime.utc(2029,1,1),
+            selectedDayPredicate: (day)=>isSameDay(day,today),
+            onDaySelected: _onDaySelected,
+            headerStyle: const HeaderStyle(
+                formatButtonVisible: false,titleCentered: true
+            ),
+          )
         ],
 
       ),

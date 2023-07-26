@@ -14,6 +14,7 @@ class _ClockState extends State<Clock> {
   int pageNow = 0;
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
+  int _selectedDuration = 30;
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(milliseconds: 10), (_) {
@@ -30,92 +31,214 @@ class _ClockState extends State<Clock> {
     setState(() {});
   }
 
-  Widget _buildScreen() {
-    switch (pageNow) {
-      case 0:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6.0),
-          child: AnalogClock(
-            decoration: const BoxDecoration(
-              color: Colors.black,
-              shape: BoxShape.circle,
-            ),
-            isLive: true,
-            secondHandColor: Colors.red,
-            hourHandColor: Colors.white,
-            minuteHandColor: Colors.white,
-            numberColor: Colors.white,
-            showNumbers: true,
-            showAllNumbers: true,
-            textScaleFactor: 1.4,
-            showTicks: true,
-            showDigitalClock: true,
-            datetime: DateTime.now(),
+  void _startStopwatch() {
+    int durationInMilliseconds = _selectedDuration * 60000;
+    int initialMilliseconds = _stopwatch.elapsed.inMilliseconds;
+
+    if (initialMilliseconds >= durationInMilliseconds) {
+      _stopwatch.reset();
+    }
+
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+      int elapsedMilliseconds = _stopwatch.elapsed.inMilliseconds;
+      int remainingMilliseconds = durationInMilliseconds - elapsedMilliseconds;
+
+      if (remainingMilliseconds <= 0) {
+        _stopwatch.stop();
+        timer.cancel();
+      } else {
+        setState(() {});
+      }
+    });
+
+    _stopwatch.start();
+    setState(() {});
+  }
+
+
+  Widget _buildAnalogClock() {
+    return Container(
+      color: Colors.grey,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+        child: AnalogClock(
+          decoration: const BoxDecoration(
+            color: Colors.black,
+            shape: BoxShape.circle,
           ),
-        );
-      case 1:
-        return SizedBox(
-          width: double.infinity,
-          child: DigitalClock(
-            textScaleFactor: 3.0,
-            showSeconds: true,
-            isLive: true,
-            digitalClockTextColor: Colors.black,
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-            ),
-            datetime: DateTime.now(),
+          isLive: true,
+          secondHandColor: Colors.red,
+          hourHandColor: Colors.white,
+          minuteHandColor: Colors.white,
+          numberColor: Colors.white,
+          showNumbers: true,
+          showAllNumbers: true,
+          textScaleFactor: 1.4,
+          showTicks: true,
+          showDigitalClock: true,
+          datetime: DateTime.now(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDigitalClock() {
+    return const SizedBox(
+      width: double.infinity,
+      child: DigitalClock(
+        textScaleFactor: 3.0,
+        showSeconds: true,
+        isLive: true,
+        digitalClockTextColor: Colors.black,
+        decoration: BoxDecoration(
+          color: Colors.grey,
+        ),
+      ),);
+  }
+
+  Widget _buildTimerClock() {
+    return Container(
+      color: Colors.grey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '${_stopwatch.elapsed.inMinutes.toString().padLeft(2, '0')}:${(_stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, '0')}',
+            style: const TextStyle(fontSize: 64),
           ),
-        );
-      case 2:
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '${_stopwatch.elapsed.inMinutes.toString().padLeft(2, '0')}:${(_stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, '0')}',
-              style: const TextStyle(fontSize: 64),
-            ),
-            const SizedBox(height: 80),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    if (_stopwatch.isRunning) {
-                      _stopwatch.stop();
-                      _stopTimer();
-                    } else {
-                      _stopwatch.start();
-                      _startTimer();
-                    }
-                  },
-                  child: Text(
-                    _stopwatch.isRunning ? 'Stop' : 'Start',
-                    style: const TextStyle(color: Colors.black, fontSize: 30),
-                  ),
+          const SizedBox(height: 80),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  if (_stopwatch.isRunning) {
+                    _stopwatch.stop();
+                    _stopTimer();
+                  } else {
+                    _stopwatch.start();
+                    _startTimer();
+                  }
+                },
+                child: Text(
+                  _stopwatch.isRunning ? 'Stop' : 'Start',
+                  style: const TextStyle(color: Colors.black, fontSize: 30),
                 ),
-                const SizedBox(width: 60),
-                TextButton(
-                  onPressed: () {
-                    _stopwatch.reset();
-                    _resetTimer();
-                    if (_stopwatch.isRunning) {
-                      _stopwatch.stop();
-                      _stopTimer();
-                    }
-                  },
-                  child: const Text(
-                    'Reset',
-                    style: TextStyle(color: Colors.black, fontSize: 30),
-                  ),
+              ),
+              const SizedBox(width: 60),
+              TextButton(
+                onPressed: () {
+                  _stopwatch.reset();
+                  _resetTimer();
+                  if (_stopwatch.isRunning) {
+                    _stopwatch.stop();
+                    _stopTimer();
+                  }
+                },
+                child: const Text(
+                  'Reset',
+                  style: TextStyle(color: Colors.black, fontSize: 30),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStopwatchClock() {
+    return Container(
+      color: Colors.grey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '${_stopwatch.elapsed.inHours.toString().padLeft(2, '0')}:${(_stopwatch.elapsed.inMinutes % 60).toString().padLeft(2, '0')}',
+            style: const TextStyle(fontSize: 48),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  _startStopwatch();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey.shade600, // Set button color
+                ),
+                child: const Text(
+                  'Start',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              const SizedBox(width: 20),
+              ElevatedButton(
+                onPressed: () {
+                  _stopwatch.stop();
+                  _timer?.cancel();
+                  setState(() {});
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey.shade600, // Set button color
+                ),
+                child: const Text(
+                  'Stop',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              const SizedBox(width: 20),
+              ElevatedButton(
+                onPressed: () {
+                  _stopwatch.reset();
+                  _timer?.cancel();
+                  setState(() {});
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey.shade600, // Set button color
+                ),
+                child: const Text(
+                  'Reset',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: DropdownButton<int>(
+              value: _selectedDuration,
+              onChanged: (newValue) {
+                setState(() {
+                  _selectedDuration = newValue!;
+                });
+              },
+              items: const [
+                DropdownMenuItem(
+                  value: 5,
+                  child: Text('5 minutes'),
+                ),
+                DropdownMenuItem(
+                  value: 10,
+                  child: Text('10 minutes'),
+                ),
+                DropdownMenuItem(
+                  value: 30,
+                  child: Text('30 minutes'),
+                ),
+                DropdownMenuItem(
+                  value: 60,
+                  child: Text('60 minutes'),
                 ),
               ],
             ),
-          ],
-        );
-      default:
-        return Container();
-    }
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -126,65 +249,60 @@ class _ClockState extends State<Clock> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [
+      _buildAnalogClock(),
+      _buildDigitalClock(),
+      _buildTimerClock(),
+      _buildStopwatchClock(), // Dördüncü sayfayı ekledik
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Clock"),
         backgroundColor: Colors.grey.shade600,
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Column(
-            children: [
-              Expanded(
-                flex: 10,
-                child: Container(
-                  height: double.infinity,
-                  decoration: BoxDecoration(color: Colors.grey.shade400),
-                  child: _buildScreen(),
-                ),
+          Expanded(
+            flex: 10,
+            child: PageView(
+              children: pages,
+              onPageChanged: (index) {
+                setState(() {
+                  pageNow = index;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Colors.grey.shade600,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int i = 0; i < pages.length; i++)
+                    IconButton(
+                      icon: Icon(
+                        i == 0
+                            ? Icons.access_time_filled
+                            : i == 1
+                            ? Icons.watch_later_outlined
+                            : i == 2
+                            ? Icons.timer
+                            : Icons.watch, // Stopwatch icon ekledik
+                      ),
+                      color: pageNow == i ? Colors.white : Colors.grey,
+                      onPressed: () {
+                        setState(() {
+                          pageNow = i;
+                        });
+                      },
+                    ),
+                ],
               ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  color: Colors.grey.shade600,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.access_time_filled),
-                        color: pageNow == 0 ? Colors.white : Colors.grey,
-                        onPressed: () {
-                          setState(() {
-                            pageNow = 0;
-                          });
-                        },
-                      ),
-                      const SizedBox(width: 20),
-                      IconButton(
-                        icon: const Icon(Icons.watch_later_outlined),
-                        color: pageNow == 1 ? Colors.white : Colors.grey,
-                        onPressed: () {
-                          setState(() {
-                            pageNow = 1;
-                          });
-                        },
-                      ),
-                      const SizedBox(width: 20),
-                      IconButton(
-                        icon: const Icon(Icons.timer),
-                        color: pageNow == 2 ? Colors.white : Colors.grey,
-                        onPressed: () {
-                          setState(() {
-                            pageNow = 2;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )
+            ),
+          ),
         ],
       ),
     );
