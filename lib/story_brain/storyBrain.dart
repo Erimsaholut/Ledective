@@ -1,16 +1,16 @@
 import 'package:ledective/story_brain/StoryBrainMatesAppMesages/ozge/ozge.dart';
 import '../apps/Tools/incoming_message.dart';
 import '../apps/Tools/outcoming_message.dart';
+import '../apps/matesApp_app/chat_page.dart';
 
 
-
-checkAnswer(int userSelect, int section,int sm, String person, List chatList,List keyboardTexts) async {
+checkAnswer(int userSelect, int section,int sm, String person, List chatList,Function setKeyboard ) async {
   if (section == 0) {
 
     if (person == "Özge") {
 
       if(sm==0){
-        keyboardTexts = ["deneme1","deneme2","deneme3"];
+        setKeyboard(["Neymiş bu kadar önemli olan durum","Deneme","Deneme"]);
 
         if (userSelect == 1) {
           chatList.add(S0userAppMessages["0"]![0]);
@@ -33,7 +33,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Lis
 
       }
       if(sm==1){
-        keyboardTexts = ["sm1","sm2","sm3"];
+        setKeyboard(["Yakınlarının ifadesini aldınız mı ?","Hangi davaları askıya aldınız ? ","Kapalı değildi Erdiyi engelledim ben "]);
         if (userSelect == 1) {
           chatList.add(S0userAppMessages["1"]![0]);
 
@@ -45,7 +45,6 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Lis
 
       }
       if(sm==2){
-        keyboardTexts = ["sm31","sm22","sm343"];
         if (userSelect == 1) {
               chatList.add(S0userAppMessages["3.1"]![0]);
 
@@ -57,7 +56,6 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Lis
 
 
         else if (userSelect == 2) {
-          keyboardTexts = ["adsas","dfsfdas","sm343"];
           chatList.add(S0userAppMessages["3.2"]![0]);
 
           for (int i = 0; i < S0ozgeAppMessages["3.2"]!.length; i++) {
@@ -66,9 +64,6 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Lis
           sm++;
 
         }
-
-
-
         else {
           chatList.add(S0userAppMessages["3.3"]![0]);
 
@@ -95,27 +90,6 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Lis
 
         else {
           chatList.add(S0userAppMessages["3.1"]![0]);
-
-          for (int i = 0; i < S0ozgeAppMessages["3.1"]!.length; i++) {
-            chatList.add(S0ozgeAppMessages["3.1"]![i]);
-          }
-        }
-
-      }
-      if(sm==4){
-        if (userSelect == 1) {
-          chatList.add(S0userAppMessages["3.1"]![0]);
-
-          for (int i = 0; i < S0ozgeAppMessages["4"]!.length; i++) {
-            chatList.add(S0ozgeAppMessages["4"]![i]);
-          }
-        }
-
-
-
-        else {
-          chatList.add(const OutgoingMessage(
-              message: "Yakınlarının ifadesini aldınız mı ?"));
 
           for (int i = 0; i < S0ozgeAppMessages["3.1"]!.length; i++) {
             chatList.add(S0ozgeAppMessages["3.1"]![i]);

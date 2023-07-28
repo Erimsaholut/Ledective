@@ -17,43 +17,50 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
   bool isKeyboardVisible = false;
   DataDepo db = DataDepo();
   int section = 0;
-  int sm = 0; //todo  bunu ya shared üzerinden ya başka bir yerden al kişiye özel olması gerekiyor.
-  //todo uygulama açıldığında önceki mesajları tekrar yazdırması lazım
+  int sm = 0;
+
+  List<Widget> personMessages = [];
+  List<String> keyboardTexts = ["Kızım tatildeyken iş için yazmayın demedim mi ben size","Neymiş bu kadar önemli olan durum","Deneme"];
+
+  @override
+  void initState() {
+    super.initState();
+    getSection();
+    personMessages = db.matesAppFirstMessages[widget.person] ?? [];
+  }
 
   Future<void> getSection() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     section = prefs.getInt('section')!;
   }
 
-  @override
-  void initState() {
-    getSection();
-    super.initState();
+  void scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  String setKeyboardText(int num) {
+    return keyboardTexts[num - 1];
+  }
+
+  void sendMessage(int num) {
+    setState(() {
+      checkAnswer(num, section, sm, widget.person, personMessages,setKeyboard);
+      sm++;
+      scrollToBottom();
+      print(sm);
+    });
+  }
+
+  void setKeyboard(List<String> newList){
+    keyboardTexts = newList;
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> personMessages = db.matesAppFirstMessages[widget.person] ?? [];
-    List<String> keyboardTexts = ["Choice1","Choice2","Choice3"];
-
-    String setKeyboardText(int num){
-      if(keyboardTexts[num].isNotEmpty){
-        print(keyboardTexts[num]);
-        return keyboardTexts[num];
-      }else{
-        print("null");
-        return "Null";
-      }
-    }
-
-    void scrollToBottom() {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.person),
@@ -73,9 +80,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   child: Column(
-                    children: [
-                      ...(personMessages),
-                    ],
+                    children: [...personMessages],
                   ),
                 ),
               ),
@@ -112,7 +117,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                   const SizedBox(height: 20),
                 ],
               ),
-            ),/*keyboard text*/
+            ),
             Visibility(
               visible: isKeyboardVisible,
               child: Expanded(
@@ -125,32 +130,19 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                     children: [
                       Expanded(
                         child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              checkAnswer(1, section, sm, widget.person, personMessages,keyboardTexts);
-                              print(keyboardTexts);
-                              sm++;
-                              scrollToBottom();
-                            });
-                          },
+                          onPressed: () => sendMessage(1),
                           child: Text(
-                            setKeyboardText(0),
+                            setKeyboardText(1),
                             style: const TextStyle(color: Colors.black),
                           ),
                         ),
                       ),
                       Expanded(
                         child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              checkAnswer(2, section, sm, widget.person, personMessages,keyboardTexts);
-                              sm++;
-                              scrollToBottom();
-                            });
-                          },
+                          onPressed: () => sendMessage(2),
                           child: Center(
                             child: Text(
-                              setKeyboardText(1),
+                              setKeyboardText(2),
                               style: const TextStyle(color: Colors.black),
                             ),
                           ),
@@ -158,17 +150,10 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                       ),
                       Expanded(
                         child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              checkAnswer(3, section, sm, widget.person, personMessages,keyboardTexts);
-                              sm++;
-                              scrollToBottom();
-                              print(sm);
-                            });
-                          },
+                          onPressed: () => sendMessage(3),
                           child: Center(
                             child: Text(
-                              setKeyboardText(2),
+                              setKeyboardText(3),
                               style: const TextStyle(color: Colors.black),
                             ),
                           ),
