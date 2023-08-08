@@ -8,10 +8,8 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
   if (section == 0) {
 
     if (person == "Özge") {
-
       if(sm==0){
-        setKeyboard(["Neymiş bu kadar önemli olan durum","Deneme","Deneme"]);
-
+        setKeyboard(["Neymiş bu kadar önemli olan durum","Kızım ben size izindeyken bana yazmayın demedim mi ?","null"]);
         if (userSelect == 1) {
           chatList.add(S0userAppMessages["0"]![0]);
 
@@ -20,8 +18,6 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
           }
         }
 
-
-
         else if (userSelect == 2) {
           chatList.add(S0userAppMessages["1"]![0]);
 
@@ -29,8 +25,6 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
             chatList.add(S0ozgeAppMessages["1"]![i]);
           }
         }
-
-
       }
       if(sm==1){
         setKeyboard(["Yakınlarının ifadesini aldınız mı ?","Hangi davaları askıya aldınız ? ","Kapalı değildi Erdiyi engelledim ben "]);
@@ -45,6 +39,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
 
       }
       if(sm==2){
+        setKeyboard(["sm2","sm2","sm2"]);
         if (userSelect == 1) {
               chatList.add(S0userAppMessages["3.1"]![0]);
 
@@ -74,7 +69,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
 
       }
       if(sm==3){
-
+        setKeyboard(["sm3","null","null"]);
         if (userSelect == 1) {
           chatList.add(S0userAppMessages["4"]![0]);
 
@@ -83,10 +78,6 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
           }
           sm++;
         }
-
-
-
-
 
         else {
           chatList.add(S0userAppMessages["3.1"]![0]);
@@ -97,7 +88,6 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
         }
 
       }
-
     }
 
 
@@ -118,28 +108,89 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
 
 
     if (person == "Orhun") {
-      if (userSelect == 1) {
-        chatList.add(const OutgoingMessage(
+      if(sm==0){
+        setKeyboard(["Evladım salak mısın sen","Evladım","Salak"]);
+
+        if (userSelect == 1) {
+          chatList.add(const OutgoingMessage(
+              message:
+              "Orhun bak Özgeyi sikmek istediğim için cevap verirum sen de tatava yapıp sinirimi bozma benim"));
+          chatList.add(const IncomingMessage(
+              delaySec: 1, message: "Amirim ayıp oluyor ama "));
+        } else if (userSelect == 2) {
+          chatList.add(const OutgoingMessage(message: "Meraklı Cevap"));
+
+          chatList.add(const IncomingMessage(
             message:
-                "Orhun bak Özgeyi sikmek istediğim için cevap verirum sen de tatava yapıp sinirimi bozma benim"));
-        chatList.add(const IncomingMessage(
-            delaySec: 1, message: "Amirim ayıp oluyor ama "));
-      } else if (userSelect == 2) {
-        chatList.add(const OutgoingMessage(message: "Meraklı Cevap"));
-
-        chatList.add(const IncomingMessage(
-          message:
-              "Amirim maktül domuz bağı ile öldürülmüş ve her yanında soğanlar var. Ayrıca evdeki bütün ampüller patlamış",
-          delaySec: 1,
-        ));
-      } else {
-        chatList.add(const OutgoingMessage(message: "Başından sav"));
-
-        chatList.add(const IncomingMessage(
+            "Amirim maktül domuz bağı ile öldürülmüş ve her yanında soğanlar var. Ayrıca evdeki bütün ampüller patlamış",
             delaySec: 1,
-            message:
-                "Ehhh senle mi uğraşıcaz lan sabah akşam. Bir gün ayık gelmez işe, her gün başkasıyla kavga eder uğraştırır devlete zarardan başka bir şey değilsin amına koyduğum"));
+          ));
+        } else {
+          chatList.add(const OutgoingMessage(message: "Başından sav"));
+
+          chatList.add(const IncomingMessage(
+              delaySec: 1,
+              message:
+              "Ehhh senle mi uğraşıcaz lan sabah akşam. Bir gün ayık gelmez işe, her gün başkasıyla kavga eder uğraştırır devlete zarardan başka bir şey değilsin amına koyduğum"));
+        }
       }
+      if(sm==1){
+        setKeyboard(["all","mall","null"]);
+
+        if (userSelect == 1) {
+          chatList.add(const OutgoingMessage(
+              message:
+              "Orhun bak Özgeyi sikmek istediğim için cevap verirum sen de tatava yapıp sinirimi bozma benim"));
+          chatList.add(const IncomingMessage(
+              delaySec: 1, message: "Amirim ayıp oluyor ama "));
+        } else if (userSelect == 2) {
+          chatList.add(const OutgoingMessage(message: "Meraklı Cevap"));
+
+          chatList.add(const IncomingMessage(
+            message:
+            "Amirim maktül domuz bağı ile öldürülmüş ve her yanında soğanlar var. Ayrıca evdeki bütün ampüller patlamış",
+            delaySec: 1,
+          ));
+        } else {
+          chatList.add(const OutgoingMessage(message: "Başından sav"));
+
+          chatList.add(const IncomingMessage(
+              delaySec: 1,
+              message:
+              "Ehhh senle mi uğraşıcaz lan sabah akşam. Bir gün ayık gelmez işe, her gün başkasıyla kavga eder uğraştırır devlete zarardan başka bir şey değilsin amına koyduğum"));
+        }
+      }
+      if(sm==2){
+        setKeyboard(["Ananı 2 tokatta komaya sokarım ","Şakam yok","Yaparım"]);
+
+        if (userSelect == 1) {
+          chatList.add(const OutgoingMessage(
+              message:
+              "Orhun bak Özgeyi sikmek istediğim için cevap verirum sen de tatava yapıp sinirimi bozma benim"));
+          chatList.add(const IncomingMessage(
+              delaySec: 1, message: "Amirim ayıp oluyor ama "));
+        } else if (userSelect == 2) {
+          chatList.add(const OutgoingMessage(message: "Meraklı Cevap"));
+
+          chatList.add(const IncomingMessage(
+            message:
+            "Amirim maktül domuz bağı ile öldürülmüş ve her yanında soğanlar var. Ayrıca evdeki bütün ampüller patlamış",
+            delaySec: 1,
+          ));
+        } else {
+          chatList.add(const OutgoingMessage(message: "Başından sav"));
+
+          chatList.add(const IncomingMessage(
+              delaySec: 1,
+              message:
+              "Ehhh senle mi uğraşıcaz lan sabah akşam. Bir gün ayık gelmez işe, her gün başkasıyla kavga eder uğraştırır devlete zarardan başka bir şey değilsin amına koyduğum"));
+        }
+      }
+
     }
   }
+}
+
+firstKeyboard(){
+
 }

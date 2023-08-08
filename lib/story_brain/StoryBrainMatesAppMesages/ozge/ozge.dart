@@ -5,14 +5,14 @@ import '../../../apps/Tools/outcoming_message.dart';
 /* storyBrain'in cevapları buradan alması lazım*/
 
 Map<String, List<Widget>> S0ozgeAppMessages = {
-  "0": [
+"0": [
+const IncomingMessage(
+message: "Amirim çok özür dilerim ama gerçekten ciddi bir olay",delaySec: 1),
+],
+  "1": [
     const IncomingMessage(
         message:
             "Amirim şu an yurtdışında olduğunuzu biliyorum ama yardımınızı gerektiren önemli bir durum var",delaySec: 1),
-  ],
-  "1": [
-    const IncomingMessage(
-        message: "Amirim çok özür dilerim ama gerçekten ciddi bir olay",delaySec: 1),
   ],
   "2": [
     const IncomingMessage(
@@ -49,7 +49,7 @@ Map<String, List<Widget>> S0ozgeAppMessages = {
 Map<String, List<Widget>> S0userAppMessages = {
   "0": [
     const OutgoingMessage(
-        message: "Kızım tatildeyken iş için yazmayın demedim mi ben size"),
+        message: "Kızım ben size izindeyken bana yazmayın demedim mi ? "),
   ],
   "1": [
     const OutgoingMessage(

@@ -17,16 +17,19 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
   bool isKeyboardVisible = false;
   DataDepo db = DataDepo();
   int section = 0;
-  int sm = 0;
+  int sm = -1;
 
   List<Widget> personMessages = [];
-  List<String> keyboardTexts = ["Kızım tatildeyken iş için yazmayın demedim mi ben size","Neymiş bu kadar önemli olan durum","Deneme"];
+  List<String> keyboardTexts = ["a","null","null"];
+
+
 
   @override
   void initState() {
     super.initState();
     getSection();
     personMessages = db.matesAppFirstMessages[widget.person] ?? [];
+    checkAnswer(0, section, sm, widget.person, personMessages,setKeyboard);
   }
 
   Future<void> getSection() async {
@@ -58,6 +61,7 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
   void setKeyboard(List<String> newList){
     keyboardTexts = newList;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -128,33 +132,42 @@ class _MatesChatPAGEState extends State<MatesChatPAGE> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () => sendMessage(1),
-                          child: Text(
-                            setKeyboardText(1),
-                            style: const TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () => sendMessage(2),
-                          child: Center(
+                      Visibility(
+                        visible: (setKeyboardText(1)=="null")?false:true,
+                        child: Expanded(
+                          child: TextButton(
+                            onPressed: () => sendMessage(1),
                             child: Text(
-                              setKeyboardText(2),
+                              setKeyboardText(1),
                               style: const TextStyle(color: Colors.black),
                             ),
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () => sendMessage(3),
-                          child: Center(
-                            child: Text(
-                              setKeyboardText(3),
-                              style: const TextStyle(color: Colors.black),
+                      Visibility(
+                        visible: (setKeyboardText(2)=="null")?false:true,
+                        child: Expanded(
+                          child: TextButton(
+                            onPressed: () => sendMessage(2),
+                            child: Center(
+                              child: Text(
+                                setKeyboardText(2),
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: (setKeyboardText(3)=="null")?false:true,
+                        child: Expanded(
+                          child: TextButton(
+                            onPressed: () => sendMessage(3),
+                            child: Center(
+                              child: Text(
+                                setKeyboardText(3),
+                                style: const TextStyle(color: Colors.black),
+                              ),
                             ),
                           ),
                         ),
