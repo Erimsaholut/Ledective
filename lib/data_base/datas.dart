@@ -91,5 +91,9 @@ class DataDepo {
         title: "github.com",
         message:
             "Github aktivasyon kodunuz Æ!>2A4@@X?3_ß4523 girmek için 10 saniyeniz var !!!"),
+    const MailContainer(
+        title: "cbu.com",
+        message:
+        "Tebrikler sınıfınızın %10 kontenjanına girdiğiniz için bu sene harç ücretiniz %75 indirimli."),
   ];
 }
