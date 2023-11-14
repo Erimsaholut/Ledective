@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ledective/apps/appShop_app/appShop.dart';
-import 'package:ledective/apps/calendarApp/calendar.dart';
 import 'package:ledective/apps/clock_app/clock.dart';
 import 'package:ledective/apps/contacts_app/contacts.dart';
 import 'package:ledective/apps/matesApp_app/mates_app.dart';
@@ -10,8 +9,9 @@ import 'package:ledective/apps/pian_app/pian.dart';
 import 'package:ledective/apps/poltel_app/poltel.dart';
 import 'package:ledective/apps/settings_app/settings.dart';
 import 'package:ledective/apps/sinstagram_app/sinstagram.dart';
+import 'package:ledective/widgets/sized_row.dart';
+import 'apps/calendar_app/calendar.dart';
 import 'apps/phone_app/phone.dart';
-import 'apps/tools/sized_row.dart';
 import 'apps/mail_app/mail.dart';
 import 'AppWidget.dart';
 import 'constants/constants.dart';
@@ -60,7 +60,7 @@ class _StartScreenState extends State<StartScreen> {
                               AppWidget(
                                   title: "Photos",
                                   iconData: Icons.photo,
-                                  child: Photos()),
+                                  child: PhotosApp()),
                               AppWidget(
                                   title: "AppShop",
                                   iconData: Icons.shop,
@@ -80,7 +80,7 @@ class _StartScreenState extends State<StartScreen> {
                               AppWidget(
                                   title: "Calendar",
                                   iconData: Icons.calendar_today,
-                                  child: Calendar()),
+                                  child: CalendarApp()),
                               AppWidget(
                                   title: "Settings",
                                   iconData: Icons.settings,

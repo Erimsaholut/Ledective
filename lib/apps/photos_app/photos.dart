@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:ledective/data_base/datas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Photos extends StatefulWidget {
-  const Photos({Key? key}) : super(key: key);
+class PhotosApp extends StatefulWidget {
+  const PhotosApp({Key? key}) : super(key: key);
 
   @override
-  State<Photos> createState() => _PhotosState();
+  State<PhotosApp> createState() => _PhotosAppState();
 }
 
-class _PhotosState extends State<Photos> {
+class _PhotosAppState extends State<PhotosApp> {
   List<Widget> photos = DataDepo().galleryImages;
   List<Widget> myPhotos = [];
   int photoCount = 3; // Başlangıçta görüntülenecek fotoğraf sayısı
