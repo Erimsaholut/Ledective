@@ -9,11 +9,12 @@ import 'package:ledective/apps/pian_app/pian.dart';
 import 'package:ledective/apps/poltel_app/poltel.dart';
 import 'package:ledective/apps/settings_app/settings.dart';
 import 'package:ledective/apps/sinstagram_app/sinstagram.dart';
+import 'package:ledective/widgets/AppWidgetTest.dart';
 import 'package:ledective/widgets/sized_row.dart';
 import 'apps/calendar_app/calendar.dart';
 import 'apps/phone_app/phone.dart';
 import 'apps/mail_app/mail.dart';
-import 'AppWidget.dart';
+import 'widgets/AppWidget.dart';
 import 'constants/constants.dart';
 
 class _StartScreenState extends State<StartScreen> {
@@ -50,18 +51,24 @@ class _StartScreenState extends State<StartScreen> {
                           SizedBox(
                             height: sizedBoxHeight,
                           ),
-                          const Row(
+                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              AppWidget(
+                              const AppWidget(
                                   title: "Mail",
                                   iconData: Icons.mail,
                                   child: MailApp()),
-                              AppWidget(
+                              // AppWidget(
+                              //     title: "Photos",
+                              //     iconData: Icons.photo,
+                              //     child: PhotosApp()),
+                              AppWidgetTest(
                                   title: "Photos",
-                                  iconData: Icons.photo,
-                                  child: PhotosApp()),
-                              AppWidget(
+                                  function: () {
+                                    Navigator.pushNamed(context, "/photosApp");
+                                  },
+                                  iconData: Icons.photo),
+                              const AppWidget(
                                   title: "AppShop",
                                   iconData: Icons.shop,
                                   child: AppShop()),
@@ -115,8 +122,7 @@ class _StartScreenState extends State<StartScreen> {
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-                  decoration: BoxDecoration(color: kStartScreenPage2Color
-                      ),
+                  decoration: BoxDecoration(color: kStartScreenPage2Color),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

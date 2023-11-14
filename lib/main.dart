@@ -37,11 +37,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
 //todo uygulama çıkmadan önce bunu bi sıfırlaman lazım
 Future<void> appOpened() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();

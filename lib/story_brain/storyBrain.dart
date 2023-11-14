@@ -114,7 +114,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
         if (userSelect == 1) {
           chatList.add(const OutgoingMessage(
               message:
-              "Orhun bak Özgeyi sikmek istediğim için cevap verirum sen de tatava yapıp sinirimi bozma benim"));
+              "Orhun bak Özgeyi s@*mek istediğim için cevap veriyorum sen de tatava yapıp sinirimi bozma benim"));
           chatList.add(const IncomingMessage(
               delaySec: 1, message: "Amirim ayıp oluyor ama "));
         } else if (userSelect == 2) {
