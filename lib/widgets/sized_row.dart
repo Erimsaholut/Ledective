@@ -6,9 +6,9 @@ class sizedRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: const[
+      children: [
         SizedBox(
           height: 110,
           width: 110,

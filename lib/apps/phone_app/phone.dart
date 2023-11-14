@@ -276,7 +276,7 @@ class _PhoneContactsState extends State<PhoneContacts> {
                 padding: const EdgeInsets.all(8.0),
                 child: ListView(
                   children: [
-                    ...(db.recents)/*recents buraya gelecek*/
+                    ...(db.recents)/*recentsi hallet*/
                   ],
                 ),
               ),
