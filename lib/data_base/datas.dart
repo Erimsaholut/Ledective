@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ledective/apps/Tools/outcoming_message.dart';
 import 'package:ledective/apps/contacts_app/contactsWidget.dart';
-import 'package:ledective/apps/tools/dayPassed.dart';
 import '../apps/Tools/incoming_message.dart';
 import '../apps/mail_app/mail_container.dart';
 import '../apps/photos_app/photo_widget.dart';
+import '../widgets/dayPassed.dart';
 
 class DataDepo {
   /*Buraya başta yazacak oyun öncesi muhabbetleri ekle daha sonrası için bir etkisi olmayacak*/
