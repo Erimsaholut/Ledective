@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:ledective/apps/Tools/outcoming_message.dart';
 import 'package:ledective/apps/contacts_app/contactsWidget.dart';
-import '../apps/Tools/incoming_message.dart';
-import '../apps/mail_app/mail_container.dart';
 import '../apps/photos_app/photo_widget.dart';
+import '../apps/mail_app/mail_container.dart';
+import 'package:flutter/material.dart';
 import '../widgets/dayPassed.dart';
+import '../widgets/incoming_message.dart';
+import '../widgets/outcoming_message.dart';
 
 class DataDepo {
   /*Buraya başta yazacak oyun öncesi muhabbetleri ekle daha sonrası için bir etkisi olmayacak*/
@@ -49,7 +49,6 @@ class DataDepo {
     const PhotoWidget(
         adress: 'assets/apps/photosApp/images/my_foto4.jpg', scale: 1),
     const PhotoWidget(adress: 'assets/apps/photosApp/images/myCat.jpeg'),
-    const PhotoWidget(adress: 'assets/apps/photosApp/images/benumit.jpeg'),
     const PhotoWidget(adress: 'assets/apps/photosApp/images/kadr.jpeg'),
     const PhotoWidget(adress: 'assets/apps/photosApp/images/kadr2.jpeg'),
     const PhotoWidget(adress: 'assets/apps/photosApp/images/benKedi.jpeg'),

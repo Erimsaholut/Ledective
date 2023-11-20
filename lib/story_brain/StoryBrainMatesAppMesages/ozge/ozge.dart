@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import '../../../apps/Tools/incoming_message.dart';
-import '../../../apps/Tools/outcoming_message.dart';
 
+import '../../../widgets/incoming_message.dart';
+import '../../../widgets/outcoming_message.dart';
 /* storyBrain'in cevapları buradan alması lazım*/
 
 Map<String, List<Widget>> S0ozgeAppMessages = {
