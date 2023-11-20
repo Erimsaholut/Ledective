@@ -31,6 +31,7 @@ class _NotesAppState extends State<NotesApp> {
   void printJsonMassage(String id) async {
     print(id);
     dynamic item = datalar.firstWhere((item) => item['name'] == id, orElse: () => null);
+
     if (item != null) {
       String description = item['message'];
       setState(() {

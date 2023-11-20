@@ -1,7 +1,6 @@
 import 'package:ledective/story_brain/StoryBrainMatesAppMesages/ozge/ozge.dart';
-import '../apps/Tools/incoming_message.dart';
-import '../apps/Tools/outcoming_message.dart';
-import '../apps/matesApp_app/chat_page.dart';
+import '../widgets/incoming_message.dart';
+import '../widgets/outcoming_message.dart';
 
 
 checkAnswer(int userSelect, int section,int sm, String person, List chatList,Function setKeyboard ) async {
