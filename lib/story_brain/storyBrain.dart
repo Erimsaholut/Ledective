@@ -139,7 +139,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
         if (userSelect == 1) {
           chatList.add(const OutgoingMessage(
               message:
-              "Orhun bak Özgeyi sikmek istediğim için cevap verirum sen de tatava yapıp sinirimi bozma benim"));
+              "Orhun bak Özgeyi +½# istediğim için cevap verirum sen de tatava yapıp sinirimi bozma benim"));
           chatList.add(const IncomingMessage(
               delaySec: 1, message: "Amirim ayıp oluyor ama "));
         } else if (userSelect == 2) {
@@ -160,7 +160,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
         }
       }
       if(sm==2){
-        setKeyboard(["Ananı 2 tokatta komaya sokarım ","Şakam yok","Yaparım"]);
+        setKeyboard(["Seni işten attırırım","Şakam yok","Yaparım"]);
 
         if (userSelect == 1) {
           chatList.add(const OutgoingMessage(
