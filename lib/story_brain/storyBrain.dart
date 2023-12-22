@@ -160,7 +160,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
         }
       }
       if(sm==2){
-        setKeyboard(["Bir daha olmasın ","Şakam yok","Yaparım"]);
+        setKeyboard(["Seni işten attırırım","Şakam yok","Yaparım"]);
 
         if (userSelect == 1) {
           chatList.add(const OutgoingMessage(

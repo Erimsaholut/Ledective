@@ -16,13 +16,13 @@ class _AppShopState extends State<AppShop> {
         title: const Text("AppShop"),
         backgroundColor: Colors.red,
       ),
-      body: SizedBox(
+      body: const SizedBox(
         width: double.infinity,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
+            children: [
               Icon(
                 Icons.error_outline,
                 size: 300,
