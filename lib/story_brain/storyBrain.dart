@@ -2,22 +2,23 @@ import 'package:ledective/story_brain/StoryBrainMatesAppMesages/ozge/ozge.dart';
 import '../widgets/incoming_message.dart';
 import '../widgets/outcoming_message.dart';
 
-
-checkAnswer(int userSelect, int section,int sm, String person, List chatList,Function setKeyboard ) async {
+checkAnswer(int userSelect, int section, int sm, String person, List chatList,
+    Function setKeyboard) async {
   if (section == 0) {
-
     if (person == "Özge") {
-      if(sm==0){
-        setKeyboard(["Neymiş bu kadar önemli olan durum","Kızım ben size izindeyken bana yazmayın demedim mi ?","null"]);
+      if (sm == 0) {
+        setKeyboard([
+          "Neymiş bu kadar önemli olan durum",
+          "Kızım ben size izindeyken bana yazmayın demedim mi ?",
+          "null"
+        ]);
         if (userSelect == 1) {
           chatList.add(S0userAppMessages["0"]![0]);
 
           for (int i = 0; i < S0ozgeAppMessages["0"]!.length; i++) {
             chatList.add(S0ozgeAppMessages["0"]![i]);
           }
-        }
-
-        else if (userSelect == 2) {
+        } else if (userSelect == 2) {
           chatList.add(S0userAppMessages["1"]![0]);
 
           for (int i = 0; i < S0ozgeAppMessages["1"]!.length; i++) {
@@ -25,50 +26,45 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
           }
         }
       }
-      if(sm==1){
-        setKeyboard(["Yakınlarının ifadesini aldınız mı ?","Hangi davaları askıya aldınız ? ","Kapalı değildi Erdiyi engelledim ben "]);
+      if (sm == 1) {
+        setKeyboard([
+          "Yakınlarının ifadesini aldınız mı ?",
+          "Hangi davaları askıya aldınız ? ",
+          "Kapalı değildi Erdiyi engelledim ben "
+        ]);
         if (userSelect == 1) {
           chatList.add(S0userAppMessages["1"]![0]);
 
-        for (int i = 0; i < S0ozgeAppMessages["2"]!.length; i++) {
-          chatList.add(S0ozgeAppMessages["2"]![i]);
+          for (int i = 0; i < S0ozgeAppMessages["2"]!.length; i++) {
+            chatList.add(S0ozgeAppMessages["2"]![i]);
+          }
         }
       }
-
-
-      }
-      if(sm==2){
-        setKeyboard(["sm2","sm2","sm2"]);
+      if (sm == 2) {
+        setKeyboard(["sm2", "sm2", "sm2"]);
         if (userSelect == 1) {
-              chatList.add(S0userAppMessages["3.1"]![0]);
+          chatList.add(S0userAppMessages["3.1"]![0]);
 
           for (int i = 0; i < S0ozgeAppMessages["3.1"]!.length; i++) {
             chatList.add(S0ozgeAppMessages["3.1"]![i]);
           }
-        }
-
-
-
-        else if (userSelect == 2) {
+        } else if (userSelect == 2) {
           chatList.add(S0userAppMessages["3.2"]![0]);
 
           for (int i = 0; i < S0ozgeAppMessages["3.2"]!.length; i++) {
             chatList.add(S0ozgeAppMessages["3.2"]![i]);
           }
           sm++;
-
-        }
-        else {
+        } else {
           chatList.add(S0userAppMessages["3.3"]![0]);
 
           for (int i = 0; i < S0ozgeAppMessages["3.3"]!.length; i++) {
             chatList.add(S0ozgeAppMessages["3.3"]![i]);
           }
         }
-
       }
-      if(sm==3){
-        setKeyboard(["sm3","null","null"]);
+      if (sm == 3) {
+        setKeyboard(["sm3", "null", "null"]);
         if (userSelect == 1) {
           chatList.add(S0userAppMessages["4"]![0]);
 
@@ -76,44 +72,24 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
             chatList.add(S0ozgeAppMessages["4"]![i]);
           }
           sm++;
-        }
-
-        else {
+        } else {
           chatList.add(S0userAppMessages["3.1"]![0]);
 
           for (int i = 0; i < S0ozgeAppMessages["3.1"]!.length; i++) {
             chatList.add(S0ozgeAppMessages["3.1"]![i]);
           }
         }
-
       }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     if (person == "Orhun") {
-      if(sm==0){
-        setKeyboard(["Evladım salak mısın sen","Evladım","Salak"]);
+      if (sm == 0) {
+        setKeyboard(["Evladım salak mısın sen", "Evladım", "Salak"]);
 
         if (userSelect == 1) {
           chatList.add(const OutgoingMessage(
               message:
-              "Orhun bak sırf Özge rica etti diye cevap veriyorum, sinirimi bozma benim"));
+                  "Orhun bak sırf Özge rica etti diye cevap veriyorum, sinirimi bozma benim"));
           chatList.add(const IncomingMessage(
               delaySec: 1, message: "Amirim ayıp oluyor ama "));
         } else if (userSelect == 2) {
@@ -121,7 +97,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
 
           chatList.add(const IncomingMessage(
             message:
-            "Amirim maktülün evinde boğuşma izleri var, olay yeri ekibi inceliyor",
+                "Amirim maktülün evinde boğuşma izleri var, olay yeri ekibi inceliyor",
             delaySec: 1,
           ));
         } else {
@@ -130,16 +106,16 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
           chatList.add(const IncomingMessage(
               delaySec: 1,
               message:
-              "Amirim lütfen biraz ciddi olun, durum gerçekten kötü"));
+                  "Amirim lütfen biraz ciddi olun, durum gerçekten kötü"));
         }
       }
-      if(sm==1){
-        setKeyboard(["all","mall","null"]);
+      if (sm == 1) {
+        setKeyboard(["all", "mall", "null"]);
 
         if (userSelect == 1) {
           chatList.add(const OutgoingMessage(
               message:
-              "Orhun bak sırf Özge rica etti diye cevap veriyorum, sinirimi bozma benim"));
+                  "Orhun bak sırf Özge rica etti diye cevap veriyorum, sinirimi bozma benim"));
           chatList.add(const IncomingMessage(
               delaySec: 1, message: "Amirim ayıp oluyor ama "));
         } else if (userSelect == 2) {
@@ -147,7 +123,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
 
           chatList.add(const IncomingMessage(
             message:
-            "Amirim maktülün evinde boğuşma izleri var, olay yeri ekibi inceliyor",
+                "Amirim maktülün evinde boğuşma izleri var, olay yeri ekibi inceliyor",
             delaySec: 1,
           ));
         } else {
@@ -156,16 +132,16 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
           chatList.add(const IncomingMessage(
               delaySec: 1,
               message:
-              "Amirim lütfen biraz ciddi olun, durum gerçekten kötü"));
+                  "Amirim lütfen biraz ciddi olun, durum gerçekten kötü"));
         }
       }
-      if(sm==2){
-        setKeyboard(["Seni işten attırırım","Şakam yok","Yaparım"]);
+      if (sm == 2) {
+        setKeyboard(["Seni işten attırırım", "Şakam yok", "Yaparım"]);
 
         if (userSelect == 1) {
           chatList.add(const OutgoingMessage(
               message:
-              "Orhun bak sırf Özge rica etti diye cevap veriyorum, sinirimi bozma benim"));
+                  "Orhun bak sırf Özge rica etti diye cevap veriyorum, sinirimi bozma benim"));
           chatList.add(const IncomingMessage(
               delaySec: 1, message: "Amirim ayıp oluyor ama "));
         } else if (userSelect == 2) {
@@ -173,7 +149,7 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
 
           chatList.add(const IncomingMessage(
             message:
-            "Amirim maktülün evinde boğuşma izleri var, olay yeri ekibi inceliyor",
+                "Amirim maktülün evinde boğuşma izleri var, olay yeri ekibi inceliyor",
             delaySec: 1,
           ));
         } else {
@@ -182,14 +158,11 @@ checkAnswer(int userSelect, int section,int sm, String person, List chatList,Fun
           chatList.add(const IncomingMessage(
               delaySec: 1,
               message:
-              "Amirim lütfen biraz ciddi olun, durum gerçekten kötü"));
+                  "Amirim lütfen biraz ciddi olun, durum gerçekten kötü"));
         }
       }
-
     }
   }
 }
 
-firstKeyboard(){
-
-}
+firstKeyboard() {}
