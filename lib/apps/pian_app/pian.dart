@@ -27,27 +27,25 @@ class PianApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Pian"),
-          backgroundColor: Colors.black,
-          leading: const BackButton(),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Pian"),
         backgroundColor: Colors.black,
-        body: SafeArea(
-          child: Column(
-            verticalDirection: VerticalDirection.down,
-            children: [
-              buildTitle(sound: 1, color: Colors.red),
-              buildTitle(sound: 2, color: Colors.orange),
-              buildTitle(sound: 3, color: Colors.yellow),
-              buildTitle(sound: 4, color: Colors.green),
-              buildTitle(sound: 5, color: Colors.teal),
-              buildTitle(sound: 7, color: Colors.blue),
-              buildTitle(sound: 6, color: Colors.purple),
-            ],
-          ),
+        leading: const BackButton(),
+      ),
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          verticalDirection: VerticalDirection.down,
+          children: [
+            buildTitle(sound: 1, color: Colors.red),
+            buildTitle(sound: 2, color: Colors.orange),
+            buildTitle(sound: 3, color: Colors.yellow),
+            buildTitle(sound: 4, color: Colors.green),
+            buildTitle(sound: 5, color: Colors.teal),
+            buildTitle(sound: 7, color: Colors.blue),
+            buildTitle(sound: 6, color: Colors.purple),
+          ],
         ),
       ),
     );

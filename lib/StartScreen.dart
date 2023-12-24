@@ -12,6 +12,7 @@ import 'package:ledective/apps/sinstagram_app/sinstagram.dart';
 import 'package:ledective/widgets/AppWidgetTest.dart';
 import 'package:ledective/widgets/sized_row.dart';
 import 'apps/calendar_app/calendar.dart';
+import 'apps/games_app/games.dart';
 import 'apps/phone_app/phone.dart';
 import 'apps/mail_app/mail.dart';
 import 'widgets/AppWidget.dart';
@@ -58,10 +59,6 @@ class _StartScreenState extends State<StartScreen> {
                                   title: "Mail",
                                   iconData: Icons.mail,
                                   child: MailApp()),
-                              // AppWidget(
-                              //     title: "Photos",
-                              //     iconData: Icons.photo,
-                              //     child: PhotosApp()),
                               AppWidgetTest(
                                   title: "Photos",
                                   function: () {
@@ -155,9 +152,9 @@ class _StartScreenState extends State<StartScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               AppWidget(
-                                  title: "21",
-                                  iconData: Icons.videogame_asset_rounded,
-                                  child: SizedBox()),
+                                  title: "Games",
+                                  iconData: Icons.videogame_asset_sharp,
+                                  child: Games()),
                               AppWidget(
                                   title: "Music",
                                   iconData: Icons.speaker,

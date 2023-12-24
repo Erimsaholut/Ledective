@@ -22,7 +22,6 @@ class _NotesAppState extends State<NotesApp> {
   List<dynamic> datalar = [];
 
   Future<void> loadJson() async {
-    print("loadladık");
     String jsonData = await rootBundle.loadString("assets/apps/notesApp/notesAppNotes.json");
     Map<String, dynamic> data = json.decode(jsonData);
     datalar = data['notes'];
@@ -86,7 +85,6 @@ class _NotesAppState extends State<NotesApp> {
                       "message": newNote,
                     };
                     datalar.add(newNoteData);
-
                     notesWidgets.add(
                       NotesContainer(
                         initialValue: currentNote,
@@ -99,10 +97,8 @@ class _NotesAppState extends State<NotesApp> {
                       ),
                     );
                   });
-
                   _saveJson();
                 }
-
                 Navigator.of(context).pop();
               },
               child: const Text("Add"),
