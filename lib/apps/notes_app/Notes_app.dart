@@ -1,12 +1,8 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:ledective/apps/notes_app/notes_container.dart';
 import 'dart:convert' show json;
-import 'package:flutter/services.dart' show rootBundle;
-
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/back_button.dart';
-
-
+import 'notes_container.dart';
 
 class NotesApp extends StatefulWidget {
   const NotesApp({Key? key}) : super(key: key);
@@ -21,14 +17,33 @@ class _NotesAppState extends State<NotesApp> {
   List<Widget> notesWidgets = [];
   List<dynamic> datalar = [];
 
-  Future<void> loadJson() async {
-    String jsonData = await rootBundle.loadString("assets/apps/notesApp/notesAppNotes.json");
-    Map<String, dynamic> data = json.decode(jsonData);
-    datalar = data['notes'];
+  @override
+  void initState() {
+    super.initState();
+    _loadNotes();
   }
 
-  void printJsonMassage(String id) async {
-    print(id);
+  Future<void> _loadNotes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonData = prefs.getString('notes');
+    if (jsonData != null) {
+      datalar = json.decode(jsonData)['notes'];
+      for (var _ in datalar) {
+        _printJsonMassage("Note$noteNumber");
+        noteNumber++;
+      }
+    }
+  }
+
+  Future<void> _saveNotes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> jsonData = {
+      "notes": datalar,
+    };
+    await prefs.setString('notes', json.encode(jsonData));
+  }
+
+  void _printJsonMassage(String id) async {
     dynamic item = datalar.firstWhere((item) => item['name'] == id, orElse: () => null);
 
     if (item != null) {
@@ -45,20 +60,8 @@ class _NotesAppState extends State<NotesApp> {
             },
           ),
         );
-
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loadJson().then((_) {
-      for (var _ in datalar) {
-        printJsonMassage("Note$noteNumber");
-        noteNumber++;
-      }
-    });
   }
 
   void _showAddNoteDialog() {
@@ -97,7 +100,7 @@ class _NotesAppState extends State<NotesApp> {
                       ),
                     );
                   });
-                  _saveJson();
+                  _saveNotes();
                 }
                 Navigator.of(context).pop();
               },
@@ -107,17 +110,6 @@ class _NotesAppState extends State<NotesApp> {
         );
       },
     );
-  }
-
-
-  Future<void> _saveJson() async {
-    Map<String, dynamic> jsonData = {
-      "notes": datalar,
-    };
-    String jsonString = json.encode(jsonData);
-
-    final file = await File("assets/apps/notesApp/notesAppNotes.json").writeAsString(jsonString);
-
   }
 
   @override
@@ -170,9 +162,11 @@ class _NotesAppState extends State<NotesApp> {
                 children: [
                   Expanded(
                     flex: 6,
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(currentNote),
+                    child: SingleChildScrollView(
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(currentNote),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -214,6 +208,7 @@ class _NotesAppState extends State<NotesApp> {
                             child: TextButton(
                               onPressed: () {
                                 setState(() {
+                                  // TODO: Implement note deletion logic
                                 });
                               },
                               child: const Padding(

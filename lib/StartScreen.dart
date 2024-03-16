@@ -4,7 +4,6 @@ import 'package:ledective/apps/clock_app/clock.dart';
 import 'package:ledective/apps/contacts_app/contacts.dart';
 import 'package:ledective/apps/matesApp_app/mates_app.dart';
 import 'package:ledective/apps/notes_app/Notes_app.dart';
-import 'package:ledective/apps/photos_app/photos.dart';
 import 'package:ledective/apps/pian_app/pian.dart';
 import 'package:ledective/apps/poltel_app/poltel.dart';
 import 'package:ledective/apps/settings_app/settings.dart';
@@ -102,7 +101,7 @@ class _StartScreenState extends State<StartScreen> {
                                   iconData: Icons.camera_alt_rounded,
                                   child: SizedBox()),
                               AppWidget(
-                                  title: "Sinstagram",
+                                  title: "Sinstgram",
                                   iconData: Icons.cruelty_free_outlined,
                                   child: Sinstagram()),
                               AppWidget(

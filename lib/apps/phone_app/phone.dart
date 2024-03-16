@@ -4,6 +4,7 @@ import 'package:ledective/apps/phone_app/call_screen.dart';
 
 import '../../data_base/datas.dart';
 import '../../widgets/round_icon_button.dart';
+import '../contacts_app/contactsWidget.dart';
 
 
 class PhoneContacts extends StatefulWidget {
@@ -275,8 +276,15 @@ class _PhoneContactsState extends State<PhoneContacts> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView(
-                  children: [
-                    ...(db.recents)/*recentsi hallet*/
+                  children: const [
+                    ContactWidget(
+                      person: "Hayalet",
+                      number: "0530303030",
+                    ),
+                    ContactWidget(
+                      person: "Harun",
+                      number: "0530303030",
+                    ),
                   ],
                 ),
               ),
