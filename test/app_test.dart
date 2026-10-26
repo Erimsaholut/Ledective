@@ -48,31 +48,37 @@ void main() {
     await _pumpApp(tester);
 
     // Pian needs the audio plugin, which isn't available in widget tests.
-    const titles = [
-      'Mail', 'Photos', 'AppShop', 'MatesApp', 'Calendar', 'Settings',
-      'Camera', 'Sinstagram', 'Poltel', 'Phone', 'Contacts', 'Messages',
-      // Second page.
-      'Notes', 'Clock', 'Shopper', 'Games', 'Music',
+    const firstPage = [
+      'Mail', 'Photos', 'Camera', 'Calendar', 'Clock', 'Poltel', 'Notes',
+      'Settings', 'Sinstagram', 'AppShop', 'Shopper',
+      // The dock.
+      'Phone', 'Messages', 'MatesApp', 'Contacts',
     ];
+    const secondPage = ['Games', 'Music'];
 
-    for (final title in titles) {
-      final icon = find.widgetWithText(AppIcon, title);
-      if (icon.hitTestable().evaluate().isEmpty) {
-        // The app is on the second home screen page.
-        await tester.fling(
-          find.byType(PageView).first,
-          const Offset(-500, 0),
-          1000,
-        );
-        await tester.pumpAndSettle();
-      }
-      await tester.tap(icon.hitTestable());
+    Finder icon(String title) => find
+        .byWidgetPredicate((w) => w is AppIcon && w.title == title)
+        .hitTestable();
+
+    Future<void> openAndClose(String title) async {
+      await tester.tap(icon(title));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull, reason: title);
-
-      final navigator = tester.state<NavigatorState>(find.byType(Navigator));
-      navigator.pop();
+      tester.state<NavigatorState>(find.byType(Navigator).first).pop();
       await tester.pumpAndSettle();
+    }
+
+    for (final title in firstPage) {
+      await openAndClose(title);
+    }
+    await tester.fling(
+      find.byType(PageView).first,
+      const Offset(-500, 0),
+      1000,
+    );
+    await tester.pumpAndSettle();
+    for (final title in secondPage) {
+      await openAndClose(title);
     }
   });
 
@@ -83,8 +89,6 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: ChatPage(person: 'Özge')));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Send Message'));
-    await tester.pump();
     await tester.tap(find.text('Neymiş bu kadar önemli olan durum'));
     await tester.pump();
 
@@ -136,7 +140,7 @@ void main() {
     await tester.tap(find.text('call'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
-    await tester.tap(find.byIcon(Icons.call_end));
+    await tester.tap(find.byIcon(Icons.call_end_rounded));
     await tester.pumpAndSettle();
 
     await tester.pump(const Duration(seconds: 20));

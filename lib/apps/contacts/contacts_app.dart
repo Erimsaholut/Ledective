@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../data/contacts_repository.dart';
-import '../../widgets/back_button.dart';
-import '../phone/call_screen.dart';
+import '../../theme/app_theme.dart';
 import 'contact_page.dart';
-import 'contact_tile.dart';
+import 'contacts_list.dart';
 
 class ContactsApp extends StatefulWidget {
   const ContactsApp({super.key});
@@ -16,6 +15,7 @@ class ContactsApp extends StatefulWidget {
 class _ContactsAppState extends State<ContactsApp> {
   final ContactsRepository _repository = ContactsRepository();
   List<Contact> _contacts = [];
+  String _query = '';
 
   @override
   void initState() {
@@ -28,10 +28,13 @@ class _ContactsAppState extends State<ContactsApp> {
     if (mounted) setState(() => _contacts = contacts);
   }
 
-  Future<void> _showAddContactDialog() async {
-    final contact = await showDialog<Contact>(
-      context: context,
-      builder: (context) => const _AddContactDialog(),
+  Future<void> _addContact() async {
+    final contact = await Navigator.push(
+      context,
+      MaterialPageRoute<Contact>(
+        fullscreenDialog: true,
+        builder: (_) => const NewContactPage(),
+      ),
     );
     if (contact == null) return;
     await _repository.add(contact);
@@ -51,68 +54,77 @@ class _ContactsAppState extends State<ContactsApp> {
     await _reload();
   }
 
-  void _call(Contact contact) {
-    Navigator.push(
-      context,
-      MaterialPageRoute<void>(
-        builder: (context) =>
-            CallScreen(number: contact.number, person: contact.name),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final background = Colors.green.shade200;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Contacts"),
-        automaticallyImplyLeading: false,
-        backgroundColor: background,
-      ),
-      backgroundColor: background,
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-        children: [
-          for (final contact in _contacts)
-            ContactTile(
-              avatar: const PersonAvatar(),
-              label: contact.name,
-              onTap: () => _openContact(contact),
-              onLongPress: () => _call(contact),
-            ),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: SizedBox(
-          height: 100,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const BackButtonWidget(colour: Colors.white, buttonSize: 40),
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar.large(
+            backgroundColor: Colors.white,
+            title: const Text("Contacts"),
+            actions: [
               IconButton(
-                onPressed: _showAddContactDialog,
+                onPressed: _addContact,
                 tooltip: "Add Contact",
-                icon: const Icon(Icons.add, color: Colors.white, size: 50),
+                icon: const Icon(Icons.add_rounded, color: AppColors.blue),
               ),
             ],
           ),
-        ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: TextField(
+                onChanged: (value) => setState(() => _query = value.trim()),
+                decoration: const InputDecoration(
+                  hintText: "Ara",
+                  prefixIcon: Icon(Icons.search_rounded),
+                  isDense: true,
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ContactsList(
+              contacts: _contacts,
+              query: _query,
+              onTap: _openContact,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                "${_contacts.length} Kişi",
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: AppColors.secondaryLabel),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _AddContactDialog extends StatefulWidget {
-  const _AddContactDialog();
+/// Full-screen form for a new contact. Pops with the [Contact].
+class NewContactPage extends StatefulWidget {
+  const NewContactPage({super.key});
 
   @override
-  State<_AddContactDialog> createState() => _AddContactDialogState();
+  State<NewContactPage> createState() => _NewContactPageState();
 }
 
-class _AddContactDialogState extends State<_AddContactDialog> {
+class _NewContactPageState extends State<NewContactPage> {
   final _name = TextEditingController();
   final _number = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _name.addListener(() => setState(() {}));
+    _number.addListener(() => setState(() {}));
+  }
 
   @override
   void dispose() {
@@ -121,45 +133,74 @@ class _AddContactDialogState extends State<_AddContactDialog> {
     super.dispose();
   }
 
+  bool get _valid =>
+      _name.text.trim().isNotEmpty && _number.text.trim().isNotEmpty;
+
   void _submit() {
-    final name = _name.text.trim();
-    final number = _number.text.trim();
-    if (name.isEmpty || number.isEmpty) return;
+    if (!_valid) return;
     Navigator.pop(
       context,
-      Contact(name: name, number: number, userAdded: true),
+      Contact(
+        name: _name.text.trim(),
+        number: _number.text.trim(),
+        userAdded: true,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text("Add Contact"),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
+    return Scaffold(
+      appBar: AppBar(
+        leadingWidth: 90,
+        leading: TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Cancel"),
+        ),
+        title: const Text("New Contact"),
+        actions: [
+          TextButton(
+            onPressed: _valid ? _submit : null,
+            child: const Text(
+              "Add",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
         children: [
+          const SizedBox(height: 12),
+          const Center(
+            child: CircleAvatar(
+              radius: 48,
+              backgroundColor: Color(0xFFC7C7CC),
+              child: Icon(Icons.person_rounded, size: 64, color: Colors.white),
+            ),
+          ),
+          const SizedBox(height: 24),
           TextField(
             controller: _name,
             autofocus: true,
             textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(labelText: "Name"),
+            decoration: const InputDecoration(
+              hintText: "Name",
+              fillColor: Colors.white,
+            ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           TextField(
             controller: _number,
             keyboardType: TextInputType.phone,
-            decoration: const InputDecoration(labelText: "Number"),
             onSubmitted: (_) => _submit(),
+            decoration: const InputDecoration(
+              hintText: "Phone",
+              fillColor: Colors.white,
+            ),
           ),
         ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("Cancel"),
-        ),
-        TextButton(onPressed: _submit, child: const Text("Add")),
-      ],
     );
   }
 }

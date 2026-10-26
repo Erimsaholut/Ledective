@@ -48,10 +48,7 @@ class _RollTheDiceState extends State<RollTheDice> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Zar Sallama Oyunu'),
-        backgroundColor: Colors.red,
-      ),
+      appBar: AppBar(title: const Text('Zar Sallama Oyunu')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

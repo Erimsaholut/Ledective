@@ -1,49 +1,182 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../data/game_clock.dart';
 import '../../story/story_progress.dart';
 import 'documents.dart';
 
-const _bold = TextStyle(fontWeight: FontWeight.bold);
+const _ink = Color(0xFF1A1A1A);
+const _bold = TextStyle(fontWeight: FontWeight.w700, color: _ink);
+const _body = TextStyle(fontSize: 14, height: 1.45, color: _ink);
+const poltelNavy = Color(0xFF0B1F4D);
 
-class _DocumentScaffold extends StatelessWidget {
-  const _DocumentScaffold({required this.title, required this.children});
+/// A document shown as a sheet of paper on a grey desk.
+class _PaperScaffold extends StatelessWidget {
+  const _PaperScaffold({
+    required this.title,
+    required this.authority,
+    required this.heading,
+    required this.children,
+  });
 
   final String title;
+  final String authority;
+  final String heading;
   final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      backgroundColor: Colors.grey.shade400,
+      backgroundColor: const Color(0xFF5B6472),
+      appBar: AppBar(
+        backgroundColor: poltelNavy,
+        foregroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        title: Text(
+          title,
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      ),
       body: SelectionArea(
         child: ListView(
-          padding: const EdgeInsets.all(15.0),
-          children: children,
+          padding: const EdgeInsets.all(14),
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(22, 26, 22, 30),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFDFCF8),
+                borderRadius: BorderRadius.circular(3),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x55000000),
+                    blurRadius: 14,
+                    offset: Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Icon(
+                        Icons.local_police_rounded,
+                        size: 40,
+                        color: poltelNavy,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        authority,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 11.5,
+                          letterSpacing: 1.2,
+                          fontWeight: FontWeight.w600,
+                          color: _ink,
+                          height: 1.4,
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      const Divider(color: _ink, thickness: 1),
+                      const SizedBox(height: 14),
+                      Text(
+                        heading,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          letterSpacing: 2,
+                          fontWeight: FontWeight.w800,
+                          color: _ink,
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      ...children,
+                    ],
+                  ),
+                  const Positioned(top: 0, right: 0, child: _Stamp("GİZLİ")),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class StatementPage extends StatelessWidget {
-  const StatementPage({super.key, required this.statement});
+/// A red rubber stamp.
+class _Stamp extends StatelessWidget {
+  const _Stamp(this.text);
 
-  final Statement statement;
+  final String text;
 
-  Widget _qa(String label, String text) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8, bottom: 16),
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: -pi / 12,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xAAC62828), width: 2),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Color(0xAAC62828),
+            fontWeight: FontWeight.w900,
+            letterSpacing: 2,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A "label: value" row of the identity table.
+class _Field extends StatelessWidget {
+  const _Field(this.label, this.value);
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0x33000000))),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 7),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 80, child: Text(label, style: _bold)),
-          Expanded(child: Text(text)),
+          SizedBox(
+            width: 130,
+            child: Text(label, style: _body.copyWith(color: Colors.black54)),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: _body.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
         ],
       ),
     );
   }
+}
+
+Widget _sectionTitle(String text) => Padding(
+  padding: const EdgeInsets.only(top: 20, bottom: 8),
+  child: Text(text.toUpperCase(), style: _bold.copyWith(letterSpacing: 1)),
+);
+
+class StatementPage extends StatelessWidget {
+  const StatementPage({super.key, required this.statement});
+
+  final Statement statement;
 
   @override
   Widget build(BuildContext context) {
@@ -56,40 +189,65 @@ class StatementPage extends StatelessWidget {
           ]
         : StoryProgress.instance.testimonyFrom(person);
     final date = GameClock.current.daysBeforeFirstOpen(s.daysBeforeFirstOpen);
-    return _DocumentScaffold(
-      title: "${s.name} İfade Tutanağı",
+
+    Widget signature(String role, String name) => Column(
       children: [
-        const Text("İfade verenin kimliği :\n", style: _bold),
-        for (final line in [
-          "Adı ve soyadı: ${s.name}",
-          "Kimlik numarası: ${s.number}",
-          "İfadenin alındığı tarih: ${formatDate(date)}",
-          "Öğrenim durumu: ${s.education}",
-          "Medeni Hali - Cinsiyeti: ${s.isMarried} - ${s.gender}",
-        ])
-          Padding(padding: const EdgeInsets.only(left: 8), child: Text(line)),
-        const Text("\nİfadesi :\n", style: _bold),
+        Text(role, style: _bold.copyWith(fontSize: 12)),
+        const SizedBox(height: 6),
+        Text(
+          name,
+          style: const TextStyle(
+            fontSize: 18,
+            fontStyle: FontStyle.italic,
+            color: Color(0xFF1F3A93),
+          ),
+        ),
+        Text(name, style: _body.copyWith(fontSize: 12)),
+      ],
+    );
+
+    return _PaperScaffold(
+      title: "${s.name} İfade Tutanağı",
+      authority:
+          "T.C.\nİÇİŞLERİ BAKANLIĞI\nEMNİYET GENEL MÜDÜRLÜĞÜ\nCİNAYET BÜRO AMİRLİĞİ",
+      heading: "İFADE TUTANAĞI",
+      children: [
+        _sectionTitle("İfade verenin kimliği"),
+        _Field("Adı ve soyadı", s.name),
+        _Field("Kimlik numarası", s.number),
+        _Field("İfade tarihi", formatDate(date)),
+        _Field("Öğrenim durumu", s.education),
+        _Field("Medeni hali", s.isMarried),
+        _Field("Cinsiyeti", s.gender),
+        _sectionTitle("İfadesi"),
         for (final record in records) ...[
-          _qa("Soruldu :", record.question),
-          _qa("Cevap :", record.answer),
+          Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(text: "Soruldu: ", style: _bold),
+                TextSpan(text: record.question),
+              ],
+            ),
+            style: _body,
+          ),
+          const SizedBox(height: 6),
+          Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(text: "Cevap: ", style: _bold),
+                TextSpan(text: record.answer),
+              ],
+            ),
+            style: _body,
+          ),
           const SizedBox(height: 16),
         ],
-        const SizedBox(height: 24),
+        const SizedBox(height: 20),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Column(
-              children: [
-                const Text("İfadeyi alan", style: _bold),
-                Text(s.takenBy),
-              ],
-            ),
-            Column(
-              children: [
-                const Text("İfade veren", style: _bold),
-                Text(s.name),
-              ],
-            ),
+            signature("İfadeyi alan", s.takenBy),
+            signature("İfade veren", s.name),
           ],
         ),
       ],
@@ -106,28 +264,29 @@ class AutopsyPage extends StatelessWidget {
 
   Widget _line(ReportLine line) {
     return switch (line) {
-      ReportHeading(:final text) => Padding(
-        padding: const EdgeInsets.only(top: 16, bottom: 12),
-        child: Text("$text :", style: _bold),
-      ),
+      ReportHeading(:final text) => _sectionTitle(text),
       ReportSubheading(:final text) => Padding(
-        padding: const EdgeInsets.only(left: 16, top: 12, bottom: 8),
-        child: Text("$text :", style: _bold),
+        padding: const EdgeInsets.only(top: 12, bottom: 4),
+        child: Text(text, style: _bold.copyWith(fontStyle: FontStyle.italic)),
       ),
-      ReportField(:final text) => Padding(
-        padding: const EdgeInsets.only(left: 8),
-        child: Text(text.replaceAll("{autopsyDate}", _autopsyDate)),
+      ReportField(:final text) => _fieldFrom(
+        text.replaceAll("{autopsyDate}", _autopsyDate),
       ),
       ReportParagraph(:final text) => Padding(
-        padding: const EdgeInsets.only(top: 12),
-        child: Text(text),
+        padding: const EdgeInsets.only(top: 8),
+        child: Text(text, style: _body, textAlign: TextAlign.justify),
       ),
-      ReportConclusion(:final text) => Padding(
-        padding: const EdgeInsets.only(top: 24),
+      ReportConclusion(:final text) => Container(
+        margin: const EdgeInsets.only(top: 24),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(color: _ink),
+          color: const Color(0x0D000000),
+        ),
         child: Text(
           text,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: _body.copyWith(
+            fontWeight: FontWeight.w600,
             fontStyle: FontStyle.italic,
           ),
         ),
@@ -135,10 +294,26 @@ class AutopsyPage extends StatelessWidget {
     };
   }
 
+  /// Splits "Label: value" into a table row.
+  Widget _fieldFrom(String text) {
+    final separator = text.indexOf(':');
+    if (separator < 0) {
+      final space = text.indexOf(' ');
+      return _Field(text.substring(0, space), text.substring(space + 1));
+    }
+    return _Field(
+      text.substring(0, separator),
+      text.substring(separator + 1).trim(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _DocumentScaffold(
-      title: "$autopsySubject otopsi raporu",
+    return _PaperScaffold(
+      title: "$autopsySubject Otopsi Raporu",
+      authority:
+          "T.C.\nADALET BAKANLIĞI\nADLİ TIP KURUMU\nMORG İHTİSAS DAİRESİ",
+      heading: "OTOPSİ RAPORU",
       children: [for (final line in autopsyReport) _line(line)],
     );
   }

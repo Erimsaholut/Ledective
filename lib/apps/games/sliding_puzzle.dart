@@ -84,13 +84,19 @@ class _SlidingPuzzleState extends State<SlidingPuzzle> {
                   if (tile == 0) {
                     return Container(
                       margin: const EdgeInsets.all(2),
-                      color: Colors.grey,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE5E5EA),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     );
                   }
                   return Padding(
                     padding: const EdgeInsets.all(2),
                     child: Material(
-                      color: Colors.blue,
+                      color: const Color(0xFF0A84FF),
+                      borderRadius: BorderRadius.circular(12),
+                      clipBehavior: Clip.antiAlias,
+                      elevation: 2,
                       child: InkWell(
                         onTap: () => _tap(index),
                         child: Center(

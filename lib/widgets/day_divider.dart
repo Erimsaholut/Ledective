@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/game_clock.dart';
 
+/// A date pill between chat messages.
 class DayDivider extends StatelessWidget {
   const DayDivider({super.key, this.label, this.daysAgo = 0});
 
@@ -18,14 +19,26 @@ class DayDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Center(
-        child: Text(
-          label ?? describe(daysAgo, GameClock.current),
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.black.withValues(alpha: 0.5),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.9),
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: const [
+              BoxShadow(color: Color(0x14000000), blurRadius: 1),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            child: Text(
+              label ?? describe(daysAgo, GameClock.current),
+              style: const TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF54656F),
+              ),
+            ),
           ),
         ),
       ),

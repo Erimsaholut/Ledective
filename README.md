@@ -43,15 +43,17 @@ flutter analyze
 ```
 lib/
   main.dart            Uygulama girişi, kayıtlı oyun durumunu yükler
-  home/                Ana ekran ve uygulama simgeleri
+  home/                Ana ekran, uygulama simgeleri ve ana ekran çubuğu
+  theme/               Tema, renkler ve Türkçe tarih biçimleri
   apps/<uygulama>/     Telefondaki her uygulama ayrı bir klasörde
   story/               Sohbet motoru (dialogue.dart), hikâye metinleri
                        (conversations.dart) ve kayıtlı ilerleme
                        (story_progress.dart)
   data/                Kalıcı oyun durumu (rehber, notlar, son aramalar,
-                       ilk açılış tarihi, ana ekran renkleri) ve sabit
+                       ilk açılış tarihi, duvar kâğıdı) ve sabit
                        oyun içeriği (mailler, galeri)
-  widgets/             Ortak arayüz parçaları
+  widgets/             Ortak arayüz parçaları (avatar, sohbet balonu,
+                       iOS tarzı gruplu liste)
 assets/                Görseller, sesler ve JSON verileri
 test/                  Birim ve widget testleri
 ```

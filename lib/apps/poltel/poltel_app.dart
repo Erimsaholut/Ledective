@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../data/game_clock.dart';
 import '../../story/story_progress.dart';
+import '../../theme/app_theme.dart';
 import 'document_pages.dart';
 import 'document_tile.dart';
 import 'documents.dart';
@@ -19,36 +22,91 @@ int newDocumentCount(StoryProgress progress) => deliveredDocuments(
 class Poltel extends StatelessWidget {
   const Poltel({super.key});
 
+  String _subtitle(PoltelDocument document) {
+    final statement = document.statement;
+    final days = statement?.daysBeforeFirstOpen ?? 2;
+    final date = formatDate(GameClock.current.daysBeforeFirstOpen(days));
+    return statement == null
+        ? "Adli Tıp Kurumu · $date"
+        : "Alan: ${statement.takenBy} · $date";
+  }
+
   @override
   Widget build(BuildContext context) {
     final progress = StoryProgress.instance;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade700,
-        title: const Text("Poltel"),
+        backgroundColor: poltelNavy,
+        foregroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        toolbarHeight: 72,
+        title: const Column(
+          children: [
+            Text(
+              "POLTEL",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                letterSpacing: 4,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            Text(
+              "Emniyet Belge Sistemi",
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+          ],
+        ),
       ),
-      backgroundColor: Colors.blue.shade100,
       body: ListenableBuilder(
         listenable: progress,
         builder: (context, _) {
           final documents = deliveredDocuments(progress);
           if (documents.isEmpty) {
             return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  "Gelen belge yok",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.inbox_rounded,
+                    size: 64,
+                    color: AppColors.separator,
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    "Gelen belge yok",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Ekibin gönderdiği belgeler burada görünür.",
+                    style: TextStyle(color: AppColors.secondaryLabel),
+                  ),
+                ],
               ),
             );
           }
           return ListView(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(16),
             children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 4, bottom: 8),
+                child: Text(
+                  "BERAT YILMAZ DOSYASI",
+                  style: TextStyle(
+                    color: AppColors.secondaryLabel,
+                    fontSize: 13,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
               for (final document in documents)
                 DocumentTile(
                   title: document.title,
+                  subtitle: _subtitle(document),
+                  icon: document.statement == null
+                      ? Icons.medical_information_rounded
+                      : Icons.description_rounded,
                   isNew: !progress.hasSeen('poltel:${document.id}'),
                   onOpen: () => progress.markSeen('poltel:${document.id}'),
                   page: switch (document.statement) {

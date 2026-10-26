@@ -226,7 +226,9 @@ class _ShopperAppState extends State<ShopperApp> {
                         ? null
                         : () => _checkout(sheetContext),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
+                      backgroundColor: const Color(0xFFFF7A00),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                     child: const Text("Satın Al"),
                   ),
@@ -246,7 +248,7 @@ class _ShopperAppState extends State<ShopperApp> {
         builder: (_) => Scaffold(
           appBar: AppBar(
             title: const Text("Siparişlerim"),
-            backgroundColor: Colors.orange,
+            backgroundColor: Colors.white,
           ),
           body: _orders.isEmpty
               ? const Center(child: Text("Henüz siparişiniz yok"))
@@ -274,7 +276,7 @@ class _ShopperAppState extends State<ShopperApp> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Shopper"),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
             tooltip: "Siparişlerim",
@@ -292,7 +294,7 @@ class _ShopperAppState extends State<ShopperApp> {
           ),
         ],
       ),
-      backgroundColor: Colors.orange.shade50,
+      backgroundColor: const Color(0xFFF2F2F7),
       body: Column(
         children: [
           Padding(

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../data/contacts_repository.dart';
 import '../../data/private_chats.dart';
+import '../../widgets/avatar.dart';
 import '../../widgets/chat_bubble.dart';
-import '../contacts/contact_tile.dart';
+import 'mates_style.dart';
 
 /// Picks a contact to write to. Story characters already have their own
 /// chats, so only contacts the player added can be picked here.
@@ -29,40 +31,50 @@ class _NewMessagePageState extends State<NewMessagePage> {
   Widget build(BuildContext context) {
     final contacts = _contacts;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("New Message"),
-        backgroundColor: Colors.green,
+        backgroundColor: MatesColors.header,
+        foregroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        centerTitle: false,
+        title: const Text(
+          "New Message",
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
       ),
-      backgroundColor: Colors.green.shade100,
       body: contacts == null
           ? const SizedBox.shrink()
           : ListView(
-              padding: const EdgeInsets.all(20),
               children: [
                 if (!contacts.any((c) => c.userAdded))
                   const Padding(
-                    padding: EdgeInsets.only(bottom: 20),
+                    padding: EdgeInsets.all(20),
                     child: Text(
                       "Add someone in Contacts to start a new conversation.",
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: MatesColors.secondaryText,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
                 for (final contact in contacts)
-                  Opacity(
-                    opacity: contact.userAdded ? 1 : 0.4,
-                    child: ContactTile(
-                      avatar: const PersonAvatar(),
-                      label: contact.name,
-                      onTap: contact.userAdded
-                          ? () => Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (_) =>
-                                    PrivateChatPage(contact: contact),
-                              ),
-                            )
-                          : null,
+                  ListTile(
+                    tileColor: Colors.white,
+                    enabled: contact.userAdded,
+                    leading: Opacity(
+                      opacity: contact.userAdded ? 1 : 0.4,
+                      child: Avatar(name: contact.name),
+                    ),
+                    title: Text(contact.name),
+                    subtitle: Text(
+                      contact.userAdded ? contact.number : "Sohbet zaten açık",
+                    ),
+                    onTap: () => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => PrivateChatPage(contact: contact),
+                      ),
                     ),
                   ),
               ],
@@ -100,11 +112,24 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MatesColors.chatBackground,
       appBar: AppBar(
-        title: Text(widget.contact.name),
-        backgroundColor: Colors.green,
+        backgroundColor: MatesColors.header,
+        foregroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        centerTitle: false,
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            Avatar(name: widget.contact.name, radius: 18),
+            const SizedBox(width: 10),
+            Text(
+              widget.contact.name,
+              style: const TextStyle(color: Colors.white, fontSize: 17),
+            ),
+          ],
+        ),
       ),
-      backgroundColor: Colors.green.shade100,
       body: SafeArea(
         child: Column(
           children: [
@@ -120,36 +145,17 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                     reverse: true,
                     padding: const EdgeInsets.all(10),
                     itemCount: messages.length,
-                    itemBuilder: (context, index) =>
-                        ChatBubble(text: messages[index], outgoing: true),
+                    itemBuilder: (context, index) => ChatBubble(
+                      text: messages[index],
+                      outgoing: true,
+                      outgoingColor: MatesColors.outgoing,
+                      tail: index == 0,
+                    ),
                   );
                 },
               ),
             ),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      textInputAction: TextInputAction.send,
-                      onSubmitted: (_) => _send(),
-                      decoration: const InputDecoration(
-                        hintText: "Message",
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: _send,
-                    tooltip: "Send",
-                    icon: const Icon(Icons.send, color: Colors.green),
-                  ),
-                ],
-              ),
-            ),
+            ChatInputBar(controller: _controller, onSend: _send),
           ],
         ),
       ),

@@ -3,8 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/game_data.dart';
 import '../../story/story_progress.dart';
-import '../../widgets/back_button.dart';
-import 'mail_tile.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/avatar.dart';
 
 class MailApp extends StatefulWidget {
   const MailApp({super.key});
@@ -37,14 +37,17 @@ class _MailAppState extends State<MailApp> {
     });
   }
 
-  /// Story mails that have arrived, newest first, then the regular inbox.
+  /// Story mails that have arrived, newest first, then the regular inbox
+  /// with the most recently received mail on top.
   List<Mail> _inbox(StoryProgress progress) => [
     for (final mail in storyMails.reversed)
       if (progress.has(mail.requires!)) mail,
-    ...mails.take(_mailCount),
+    ...mails.take(_mailCount).toList().reversed,
   ].where((mail) => !_deleted.contains(mail.id)).toList();
 
   Future<void> _checkForNewMail() async {
+    await Future<void>.delayed(const Duration(milliseconds: 600));
+    if (!mounted) return;
     if (_mailCount >= mails.length) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -83,66 +86,182 @@ class _MailAppState extends State<MailApp> {
       );
   }
 
+  void _open(Mail mail) {
+    StoryProgress.instance.markSeen('mail:${mail.id}');
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => _MailPage(mail: mail, onDelete: () => _delete(mail)),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = StoryProgress.instance;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: ListenableBuilder(
+        listenable: progress,
+        builder: (context, _) {
+          final inbox = _inbox(progress);
+          return RefreshIndicator(
+            onRefresh: _checkForNewMail,
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                const SliverAppBar.large(
+                  backgroundColor: Colors.white,
+                  title: Text("Inbox"),
+                ),
+                if (inbox.isEmpty)
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Text(
+                        "Inbox is empty",
+                        style: TextStyle(color: AppColors.secondaryLabel),
+                      ),
+                    ),
+                  ),
+                SliverList.separated(
+                  itemCount: inbox.length,
+                  separatorBuilder: (_, _) => const Divider(indent: 72),
+                  itemBuilder: (context, index) {
+                    final mail = inbox[index];
+                    final unread = !progress.hasSeen('mail:${mail.id}');
+                    return Dismissible(
+                      key: ValueKey(mail.id),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (_) => _delete(mail),
+                      background: Container(
+                        color: AppColors.red,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 24),
+                        child: const Icon(
+                          Icons.delete_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                      child: ListTile(
+                        tileColor: Colors.white,
+                        contentPadding: const EdgeInsets.fromLTRB(4, 6, 16, 6),
+                        leading: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: 16,
+                              child: unread
+                                  ? const Icon(
+                                      Icons.circle,
+                                      size: 10,
+                                      color: AppColors.blue,
+                                    )
+                                  : null,
+                            ),
+                            Avatar(
+                              name: mail.sender,
+                              icon: Icons.alternate_email_rounded,
+                            ),
+                          ],
+                        ),
+                        title: Text(
+                          mail.sender,
+                          style: TextStyle(
+                            fontWeight: unread
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                          ),
+                        ),
+                        subtitle: Text(
+                          mail.body,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        onTap: () => _open(mail),
+                      ),
+                    );
+                  },
+                ),
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text(
+                      "Yeni posta için aşağı çekin",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.secondaryLabel,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _MailPage extends StatelessWidget {
+  const _MailPage({required this.mail, required this.onDelete});
+
+  final Mail mail;
+  final VoidCallback onDelete;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            tooltip: "Delete",
+            icon: const Icon(
+              Icons.delete_outline_rounded,
+              color: AppColors.blue,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              onDelete();
+            },
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
         children: [
-          Expanded(
-            child: ColoredBox(
-              color: Colors.blueGrey,
-              child: SafeArea(
+          Row(
+            children: [
+              Avatar(name: mail.sender, icon: Icons.alternate_email_rounded),
+              const SizedBox(width: 12),
+              Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 120),
-                    IconButton(
-                      onPressed: _checkForNewMail,
-                      tooltip: "Check for new mail",
-                      iconSize: 75,
-                      icon: const Icon(Icons.mail, color: Colors.black),
+                    Text(
+                      mail.sender,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    const SizedBox(height: 30),
-                    const BackButtonWidget(),
+                    const Text(
+                      "Kime: komiser@emniyet.gov.tr",
+                      style: TextStyle(color: AppColors.secondaryLabel),
+                    ),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-          Expanded(
-            flex: 3,
-            child: ListenableBuilder(
-              listenable: StoryProgress.instance,
-              builder: (context, _) {
-                final inbox = _inbox(StoryProgress.instance);
-                if (inbox.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "Inbox is empty",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  );
-                }
-                return ListView(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 60,
-                    horizontal: 15,
-                  ),
-                  children: [
-                    for (final mail in inbox)
-                      Dismissible(
-                        key: ValueKey(mail.id),
-                        onDismissed: (_) => _delete(mail),
-                        background: const ColoredBox(
-                          color: Colors.red,
-                          child: Icon(Icons.delete, color: Colors.white),
-                        ),
-                        child: MailTile(mail: mail),
-                      ),
-                  ],
-                );
-              },
-            ),
-          ),
+          const SizedBox(height: 20),
+          const Divider(),
+          const SizedBox(height: 20),
+          Text(mail.body, style: const TextStyle(fontSize: 17, height: 1.45)),
         ],
       ),
     );

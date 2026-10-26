@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../data/game_clock.dart';
+import '../../theme/app_theme.dart';
+import '../../theme/turkish_dates.dart';
 
 class CalendarEvent {
   const CalendarEvent({
@@ -116,19 +118,41 @@ class _CalendarAppState extends State<CalendarApp> {
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final events = _eventsOn(_selectedDay);
+    const red = AppColors.red;
     return Scaffold(
-      appBar: AppBar(title: const Text("Calendar")),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addEvent,
-        tooltip: "Add Event",
-        child: const Icon(Icons.add),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        centerTitle: false,
+        title: Text(
+          "${turkishMonths[_focusedDay.month - 1]} ${_focusedDay.year}",
+          style: const TextStyle(
+            color: red,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => setState(() {
+              _selectedDay = now;
+              _focusedDay = now;
+            }),
+            child: const Text("Today", style: TextStyle(color: red)),
+          ),
+          IconButton(
+            onPressed: _addEvent,
+            tooltip: "Add Event",
+            icon: const Icon(Icons.add_rounded, color: red),
+          ),
+        ],
       ),
       body: Column(
         children: [
-          const SizedBox(height: 20),
           TableCalendar<CalendarEvent>(
-            rowHeight: 56,
+            rowHeight: 52,
             locale: "en_US",
+            startingDayOfWeek: StartingDayOfWeek.monday,
             focusedDay: _focusedDay,
             firstDay: DateTime.utc(2010, 1, 1),
             lastDay: DateTime.utc(now.year + 10, 12, 31),
@@ -138,34 +162,117 @@ class _CalendarAppState extends State<CalendarApp> {
               _selectedDay = day;
               _focusedDay = focused;
             }),
-            onPageChanged: (focused) => _focusedDay = focused,
-            headerStyle: const HeaderStyle(
-              formatButtonVisible: false,
-              titleCentered: true,
+            onPageChanged: (focused) => setState(() => _focusedDay = focused),
+            headerVisible: false,
+            calendarBuilders: CalendarBuilders(
+              dowBuilder: (context, day) => Center(
+                child: Text(
+                  turkishWeekdayAbbreviations[day.weekday - 1],
+                  style: const TextStyle(
+                    color: AppColors.secondaryLabel,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
+            daysOfWeekStyle: const DaysOfWeekStyle(
+              weekdayStyle: TextStyle(
+                color: AppColors.secondaryLabel,
+                fontSize: 12,
+              ),
+              weekendStyle: TextStyle(
+                color: AppColors.secondaryLabel,
+                fontSize: 12,
+              ),
+            ),
+            calendarStyle: const CalendarStyle(
+              outsideDaysVisible: false,
+              todayTextStyle: TextStyle(
+                color: red,
+                fontWeight: FontWeight.w700,
+                fontSize: 17,
+              ),
+              todayDecoration: BoxDecoration(shape: BoxShape.circle),
+              selectedDecoration: BoxDecoration(
+                color: red,
+                shape: BoxShape.circle,
+              ),
+              selectedTextStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 17,
+              ),
+              defaultTextStyle: TextStyle(fontSize: 17),
+              weekendTextStyle: TextStyle(
+                fontSize: 17,
+                color: AppColors.secondaryLabel,
+              ),
+              markerDecoration: BoxDecoration(
+                color: AppColors.secondaryLabel,
+                shape: BoxShape.circle,
+              ),
+              markerSize: 5,
             ),
           ),
           const Divider(),
           Expanded(
-            child: events.isEmpty
-                ? const Center(child: Text("No events"))
-                : ListView(
-                    children: [
-                      for (final event in events)
-                        ListTile(
-                          leading: Icon(
-                            event.userAdded ? Icons.event_note : Icons.event,
-                          ),
-                          title: Text(event.title),
-                          trailing: event.userAdded
-                              ? IconButton(
-                                  tooltip: "Delete",
-                                  icon: const Icon(Icons.delete_outline),
-                                  onPressed: () => _delete(event),
-                                )
-                              : null,
-                        ),
-                    ],
+            child: ColoredBox(
+              color: AppColors.background,
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  Text(
+                    longTurkishDate(_selectedDay),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
+                  const SizedBox(height: 10),
+                  if (events.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text(
+                        "No events",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: AppColors.secondaryLabel),
+                      ),
+                    ),
+                  for (final event in events)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 4,
+                                color: event.userAdded ? AppColors.blue : red,
+                              ),
+                              Expanded(
+                                child: ListTile(
+                                  title: Text(event.title),
+                                  subtitle: const Text("tüm gün"),
+                                  trailing: event.userAdded
+                                      ? IconButton(
+                                          tooltip: "Delete",
+                                          icon: const Icon(
+                                            Icons.delete_outline_rounded,
+                                          ),
+                                          onPressed: () => _delete(event),
+                                        )
+                                      : null,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

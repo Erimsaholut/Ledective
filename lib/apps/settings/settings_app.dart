@@ -1,62 +1,35 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/constants.dart';
-import '../../data/home_colors.dart';
 import '../../data/game_state.dart';
+import '../../data/wallpaper.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/avatar.dart';
+import '../../widgets/grouped_list.dart';
 import 'profile_page.dart';
 
 class SettingsApp extends StatelessWidget {
   const SettingsApp({super.key});
 
-  Future<void> _pickColor(
-    BuildContext context,
-    ValueNotifier<Color> current,
-    Future<void> Function(Color) save,
-  ) async {
-    final color = await showDialog<Color>(
-      context: context,
-      builder: (context) => SimpleDialog(
-        title: const Text("Choose a color"),
-        contentPadding: const EdgeInsets.all(16),
-        children: [
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: [
-              for (final swatch in kHomeBackgroundSwatches)
-                InkWell(
-                  customBorder: const CircleBorder(),
-                  onTap: () => Navigator.pop(context, swatch),
-                  child: CircleAvatar(
-                    radius: 24,
-                    backgroundColor: swatch,
-                    child: swatch.toARGB32() == current.value.toARGB32()
-                        ? const Icon(Icons.check, color: Colors.white)
-                        : null,
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-    if (color != null) await save(color);
+  void _push(BuildContext context, Widget page) {
+    Navigator.push(context, MaterialPageRoute<void>(builder: (_) => page));
   }
 
   Future<void> _resetProgress(BuildContext context) async {
-    final confirmed = await showAdaptiveDialog<bool>(
+    final confirmed = await showCupertinoDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog.adaptive(
+      builder: (context) => CupertinoAlertDialog(
         title: const Text("Reset Game Progress"),
         content: const Text(
           "Messages, mails, photos, notes and contacts will start over.",
         ),
         actions: [
-          TextButton(
+          CupertinoDialogAction(
             onPressed: () => Navigator.pop(context, false),
             child: const Text("Cancel"),
           ),
-          TextButton(
+          CupertinoDialogAction(
+            isDestructiveAction: true,
             onPressed: () => Navigator.pop(context, true),
             child: const Text("Reset"),
           ),
@@ -71,38 +44,98 @@ class SettingsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = Colors.grey.shade500;
+    const chevron = Icon(
+      CupertinoIcons.chevron_forward,
+      size: 18,
+      color: AppColors.separator,
+    );
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-        backgroundColor: themeColor,
-      ),
-      backgroundColor: themeColor,
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-        children: [
-          _SettingsTile(
-            name: "Main Screen Background Color",
-            color: HomeColors.page1,
-            onPressed: () =>
-                _pickColor(context, HomeColors.page1, HomeColors.setPage1),
-          ),
-          _SettingsTile(
-            name: "Second Screen Background Color",
-            color: HomeColors.page2,
-            onPressed: () =>
-                _pickColor(context, HomeColors.page2, HomeColors.setPage2),
-          ),
-          _SettingsTile(
-            name: "Detective Profile",
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute<void>(builder: (_) => const ProfilePage()),
-            ),
-          ),
-          _SettingsTile(
-            name: "Reset Game Progress",
-            onPressed: () => _resetProgress(context),
+      body: CustomScrollView(
+        slivers: [
+          const SliverAppBar.large(title: Text("Settings")),
+          SliverList.list(
+            children: [
+              GroupedSection(
+                children: [
+                  ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
+                    leading: const Avatar(name: "Komiser", radius: 28),
+                    title: const Text(
+                      "Komiser",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    subtitle: const Text("Ledective Kimliği, Dedektif Profili"),
+                    trailing: chevron,
+                    onTap: () => _push(context, const ProfilePage()),
+                  ),
+                ],
+              ),
+              GroupedSection(
+                dividerIndent: 60,
+                children: [
+                  ListTile(
+                    leading: const TileIcon(
+                      Icons.wallpaper_rounded,
+                      color: AppColors.teal,
+                    ),
+                    title: const Text("Wallpaper"),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ValueListenableBuilder<Wallpaper>(
+                          valueListenable: WallpaperSetting.current,
+                          builder: (context, wallpaper, _) => Text(
+                            wallpaper.name,
+                            style: const TextStyle(
+                              color: AppColors.secondaryLabel,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        chevron,
+                      ],
+                    ),
+                    onTap: () => _push(context, const _WallpaperPage()),
+                  ),
+                  ListTile(
+                    leading: const TileIcon(
+                      Icons.psychology_rounded,
+                      color: AppColors.purple,
+                    ),
+                    title: const Text("Detective Profile"),
+                    trailing: chevron,
+                    onTap: () => _push(context, const ProfilePage()),
+                  ),
+                  ListTile(
+                    leading: const TileIcon(
+                      Icons.info_outline_rounded,
+                      color: AppColors.grey,
+                    ),
+                    title: const Text("About"),
+                    trailing: chevron,
+                    onTap: () => _push(context, const _AboutPage()),
+                  ),
+                ],
+              ),
+              GroupedSection(
+                footer: "Starts the story from the beginning.",
+                children: [
+                  ListTile(
+                    title: const Text(
+                      "Reset Game Progress",
+                      style: TextStyle(color: AppColors.red),
+                    ),
+                    onTap: () => _resetProgress(context),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -110,54 +143,89 @@ class SettingsApp extends StatelessWidget {
   }
 }
 
-class _SettingsTile extends StatelessWidget {
-  const _SettingsTile({required this.name, this.color, this.onPressed});
-
-  final String name;
-  final ValueNotifier<Color>? color;
-  final VoidCallback? onPressed;
+class _WallpaperPage extends StatelessWidget {
+  const _WallpaperPage();
 
   @override
   Widget build(BuildContext context) {
-    final color = this.color;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Material(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Colors.black, width: 3.0),
-          borderRadius: BorderRadius.circular(6.0),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onPressed,
-          child: SizedBox(
-            height: 100,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
+    return Scaffold(
+      appBar: AppBar(title: const Text("Wallpaper")),
+      body: ValueListenableBuilder<Wallpaper>(
+        valueListenable: WallpaperSetting.current,
+        builder: (context, current, _) => GridView.count(
+          padding: const EdgeInsets.all(20),
+          crossAxisCount: 3,
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 16,
+          childAspectRatio: 0.5,
+          children: [
+            for (final wallpaper in wallpapers)
+              GestureDetector(
+                onTap: () => WallpaperSetting.set(wallpaper),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: wallpaper == current
+                                ? AppColors.blue
+                                : Colors.transparent,
+                            width: 3,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(3),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: WallpaperView(wallpaper: wallpaper),
+                        ),
                       ),
                     ),
-                  ),
-                  if (color != null)
-                    ValueListenableBuilder<Color>(
-                      valueListenable: color,
-                      builder: (context, value, _) =>
-                          CircleAvatar(radius: 16, backgroundColor: value),
+                    const SizedBox(height: 8),
+                    Text(
+                      wallpaper.name,
+                      style: TextStyle(
+                        fontWeight: wallpaper == current
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
                     ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ),
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class _AboutPage extends StatelessWidget {
+  const _AboutPage();
+
+  @override
+  Widget build(BuildContext context) {
+    Widget row(String title, String value) => ListTile(
+      title: Text(title),
+      trailing: Text(
+        value,
+        style: const TextStyle(color: AppColors.secondaryLabel, fontSize: 16),
+      ),
+    );
+    return Scaffold(
+      appBar: AppBar(title: const Text("About")),
+      body: ListView(
+        children: [
+          GroupedSection(
+            children: [
+              row("Name", "Komiserin Telefonu"),
+              row("Software Version", "Ledective 1.0"),
+              row("Model", "LDX Pro"),
+              row("Carrier", "LedTel"),
+            ],
+          ),
+        ],
       ),
     );
   }

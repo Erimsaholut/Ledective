@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../widgets/avatar.dart';
+
 class Post {
   const Post({
     required this.id,
@@ -167,102 +169,227 @@ class _SinstagramState extends State<Sinstagram> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Sinstagram"),
-        backgroundColor: Colors.blueAccent,
+  static const _ring = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [
+      Color(0xFFFEDA75),
+      Color(0xFFFA7E1E),
+      Color(0xFFD62976),
+      Color(0xFF962FBF),
+    ],
+  );
+
+  Widget _storyAvatar(String name, {double radius = 30}) {
+    return Container(
+      padding: const EdgeInsets.all(2.5),
+      decoration: const BoxDecoration(shape: BoxShape.circle, gradient: _ring),
+      child: Container(
+        padding: const EdgeInsets.all(2),
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+        ),
+        child: Avatar(name: name, radius: radius),
       ),
-      backgroundColor: Colors.blue.shade100,
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          final post = posts[index];
-          final liked = _liked.contains(post.id);
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            clipBehavior: Clip.antiAlias,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  leading: const CircleAvatar(child: Icon(Icons.person)),
-                  title: Text(
-                    post.author,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text("${post.daysAgo} gün önce"),
+    );
+  }
+
+  Widget _buildPost(Post post) {
+    final liked = _liked.contains(post.id);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
+          child: Row(
+            children: [
+              _storyAvatar(post.author, radius: 15),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  post.author,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
-                if (post.image case final image?)
-                  GestureDetector(
-                    onDoubleTap: () => _toggleLike(post),
-                    child: Image.asset(
-                      image,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                else
-                  Container(
-                    width: double.infinity,
-                    color: Colors.blueGrey.shade700,
-                    padding: const EdgeInsets.all(32),
-                    child: Text(
-                      post.caption,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.white, fontSize: 22),
-                    ),
-                  ),
-                Row(
-                  children: [
-                    IconButton(
-                      tooltip: liked ? "Beğenmekten vazgeç" : "Beğen",
-                      onPressed: () => _toggleLike(post),
-                      icon: Icon(
-                        liked ? Icons.favorite : Icons.favorite_border,
-                        color: liked ? Colors.red : null,
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: "Yorumlar",
-                      onPressed: () => _showComments(post),
-                      icon: const Icon(Icons.mode_comment_outlined),
-                    ),
-                    Text("${post.likes + (liked ? 1 : 0)} beğenme"),
+              ),
+              const Icon(Icons.more_horiz_rounded),
+              const SizedBox(width: 8),
+            ],
+          ),
+        ),
+        if (post.image case final image?)
+          GestureDetector(
+            onDoubleTap: () => _toggleLike(post),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Image.asset(image, fit: BoxFit.cover),
+            ),
+          )
+        else
+          AspectRatio(
+            aspectRatio: 1,
+            child: DecoratedBox(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF3A1C71),
+                    Color(0xFFD76D77),
+                    Color(0xFFFFAF7B),
                   ],
                 ),
-                if (post.image != null)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "${post.author} ",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(text: post.caption),
-                        ],
-                      ),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Text(
+                    post.caption,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                if (post.comments.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                    child: GestureDetector(
-                      onTap: () => _showComments(post),
-                      child: Text(
-                        "${post.comments.length} yorumun tümünü gör",
-                        style: const TextStyle(color: Colors.black54),
+                ),
+              ),
+            ),
+          ),
+        Row(
+          children: [
+            IconButton(
+              tooltip: liked ? "Beğenmekten vazgeç" : "Beğen",
+              onPressed: () => _toggleLike(post),
+              icon: Icon(
+                liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                color: liked ? const Color(0xFFED4956) : null,
+                size: 28,
+              ),
+            ),
+            IconButton(
+              tooltip: "Yorumlar",
+              onPressed: () => _showComments(post),
+              icon: const Icon(Icons.mode_comment_outlined, size: 26),
+            ),
+            const Icon(Icons.send_outlined, size: 26),
+            const Spacer(),
+            const Padding(
+              padding: EdgeInsets.only(right: 12),
+              child: Icon(Icons.bookmark_border_rounded, size: 28),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${post.likes + (liked ? 1 : 0)} beğenme",
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              if (post.image != null) ...[
+                const SizedBox(height: 4),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "${post.author} ",
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
+                      TextSpan(text: post.caption),
+                    ],
+                  ),
+                ),
+              ],
+              if (post.comments.isNotEmpty)
+                GestureDetector(
+                  onTap: () => _showComments(post),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      "${post.comments.length} yorumun tümünü gör",
+                      style: const TextStyle(color: Color(0xFF8E8E8E)),
+                    ),
+                  ),
+                ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4, bottom: 16),
+                child: Text(
+                  "${post.daysAgo} gün önce",
+                  style: const TextStyle(
+                    color: Color(0xFF8E8E8E),
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final authors = {for (final post in posts) post.author}.toList();
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        centerTitle: false,
+        title: const Text(
+          "Sinstagram",
+          style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.italic,
+            letterSpacing: -0.5,
+          ),
+        ),
+        actions: const [
+          Icon(Icons.favorite_border_rounded),
+          SizedBox(width: 16),
+          Icon(Icons.send_outlined),
+          SizedBox(width: 16),
+        ],
+      ),
+      body: ListView(
+        children: [
+          SizedBox(
+            height: 104,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              children: [
+                for (final author in authors)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _storyAvatar(author),
+                        const SizedBox(height: 4),
+                        SizedBox(
+                          width: 70,
+                          child: Text(
+                            author,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 11.5),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
               ],
             ),
-          );
-        },
+          ),
+          const Divider(),
+          for (final post in posts) _buildPost(post),
+        ],
       ),
     );
   }

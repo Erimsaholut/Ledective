@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../data/notes_repository.dart';
-import '../../widgets/back_button.dart';
+import '../../theme/app_theme.dart';
+
+const _notesAccent = Color(0xFFE0A800);
 
 class NotesApp extends StatefulWidget {
   const NotesApp({super.key});
@@ -11,11 +13,8 @@ class NotesApp extends StatefulWidget {
 }
 
 class _NotesAppState extends State<NotesApp> {
-  static const _paper = Color.fromRGBO(255, 252, 121, 1.0);
-
   final NotesRepository _repository = NotesRepository();
   List<String> _notes = [];
-  int? _selected;
 
   @override
   void initState() {
@@ -25,171 +24,130 @@ class _NotesAppState extends State<NotesApp> {
     });
   }
 
-  Future<void> _addNote() async {
-    final note = await showDialog<String>(
-      context: context,
-      builder: (context) => const _AddNoteDialog(),
+  Future<void> _save() => _repository.save(_notes);
+
+  /// Opens the editor for note [index], or for a new note when null.
+  Future<void> _edit(int? index) async {
+    final text = await Navigator.push(
+      context,
+      MaterialPageRoute<String>(
+        builder: (_) =>
+            _NoteEditor(initialText: index == null ? '' : _notes[index]),
+      ),
     );
-    if (note == null) return;
+    if (text == null) return;
     setState(() {
-      _notes = [..._notes, note];
-      _selected = _notes.length - 1;
+      final notes = [..._notes];
+      if (text.trim().isEmpty) {
+        if (index != null) notes.removeAt(index);
+      } else if (index == null) {
+        notes.add(text);
+      } else {
+        notes[index] = text;
+      }
+      _notes = notes;
     });
-    await _repository.save(_notes);
+    await _save();
   }
 
-  Future<void> _editSelectedNote() async {
-    final selected = _selected;
-    if (selected == null) return;
-    final note = await showDialog<String>(
-      context: context,
-      builder: (context) => _AddNoteDialog(initialText: _notes[selected]),
-    );
-    if (note == null) return;
-    setState(() => _notes = [..._notes]..[selected] = note);
-    await _repository.save(_notes);
+  Future<void> _delete(int index) async {
+    setState(() => _notes = [..._notes]..removeAt(index));
+    await _save();
   }
 
-  Future<void> _deleteSelectedNote() async {
-    final selected = _selected;
-    if (selected == null) return;
-    setState(() {
-      _notes = [..._notes]..removeAt(selected);
-      _selected = null;
-    });
-    await _repository.save(_notes);
-  }
+  static String _title(String note) => note.trim().split('\n').first;
 
-  BoxDecoration get _panel => BoxDecoration(
-    color: _paper,
-    border: Border.all(color: Colors.black, width: 2),
-  );
+  static String _preview(String note) {
+    final lines = note.trim().split('\n');
+    return lines.length > 1 ? lines.skip(1).join(' ') : 'Ek metin yok';
+  }
 
   @override
   Widget build(BuildContext context) {
-    final selected = _selected;
     return Scaffold(
-      appBar: AppBar(
-        leading: const BackButtonWidget(buttonSize: 35),
-        backgroundColor: const Color.fromRGBO(255, 237, 95, 1.0),
-        title: const Text(
-          "Notes",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 35,
-            color: Colors.black,
-          ),
-        ),
-      ),
-      body: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Container(
-              decoration: _panel,
-              child: ListView(
-                padding: const EdgeInsets.all(6),
-                children: [
-                  for (var i = 0; i < _notes.length; i++)
-                    _NoteTile(
-                      note: _notes[i],
-                      selected: i == _selected,
-                      onTap: () => setState(() => _selected = i),
-                    ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              decoration: _panel,
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 6,
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          selected == null
-                              ? "Please Select Note"
-                              : _notes[selected],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border.symmetric(
-                          horizontal: BorderSide(width: 4),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _NotesButton(label: "Add Note", onPressed: _addNote),
-                          _NotesButton(
-                            label: "Edit Note",
-                            onPressed: selected == null
-                                ? null
-                                : _editSelectedNote,
+      body: CustomScrollView(
+        slivers: [
+          const SliverAppBar.large(title: Text("Notes")),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Material(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      if (_notes.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.all(32),
+                          child: Text(
+                            "Not yok",
+                            style: TextStyle(color: AppColors.secondaryLabel),
                           ),
-                          _NotesButton(
-                            label: "Delete Note",
-                            onPressed: selected == null
-                                ? null
-                                : _deleteSelectedNote,
+                        ),
+                      for (var i = _notes.length - 1; i >= 0; i--) ...[
+                        Dismissible(
+                          key: ObjectKey((i, _notes[i])),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (_) => _delete(i),
+                          background: Container(
+                            color: AppColors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20),
+                            child: const Icon(
+                              Icons.delete_rounded,
+                              color: Colors.white,
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
+                          child: ListTile(
+                            title: Text(
+                              _title(_notes[i]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              _preview(_notes[i]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            onTap: () => _edit(i),
+                          ),
+                        ),
+                        if (i > 0) const Divider(indent: 16),
+                      ],
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _NoteTile extends StatelessWidget {
-  const _NoteTile({
-    required this.note,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String note;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Material(
-        color: selected ? Colors.grey.shade300 : Colors.white,
-        shape: const Border.fromBorderSide(BorderSide(width: 2)),
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-            child: Text(
-              note,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: Row(
+            children: [
+              const Spacer(),
+              Text(
+                "${_notes.length} Not",
+                style: const TextStyle(fontSize: 12, color: AppColors.label),
               ),
-            ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  heightFactor: 1,
+                  child: IconButton(
+                    tooltip: "Add Note",
+                    onPressed: () => _edit(null),
+                    icon: const Icon(Icons.edit_square, color: _notesAccent),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -197,47 +155,17 @@ class _NoteTile extends StatelessWidget {
   }
 }
 
-class _NotesButton extends StatelessWidget {
-  const _NotesButton({required this.label, required this.onPressed});
+/// A full-screen note editor. Pops with the edited text.
+class _NoteEditor extends StatefulWidget {
+  const _NoteEditor({required this.initialText});
 
-  final String label;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: TextButton(
-          onPressed: onPressed,
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.grey,
-            foregroundColor: Colors.black,
-            disabledForegroundColor: Colors.black38,
-            padding: const EdgeInsets.all(8),
-            shape: RoundedRectangleBorder(
-              side: const BorderSide(width: 1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-          child: FittedBox(child: Text(label)),
-        ),
-      ),
-    );
-  }
-}
-
-class _AddNoteDialog extends StatefulWidget {
-  const _AddNoteDialog({this.initialText});
-
-  /// Text to edit, or null for a new note.
-  final String? initialText;
+  final String initialText;
 
   @override
-  State<_AddNoteDialog> createState() => _AddNoteDialogState();
+  State<_NoteEditor> createState() => _NoteEditorState();
 }
 
-class _AddNoteDialogState extends State<_AddNoteDialog> {
+class _NoteEditorState extends State<_NoteEditor> {
   late final _controller = TextEditingController(text: widget.initialText);
 
   @override
@@ -246,30 +174,57 @@ class _AddNoteDialogState extends State<_AddNoteDialog> {
     super.dispose();
   }
 
-  void _submit() {
-    final note = _controller.text.trim();
-    if (note.isNotEmpty) Navigator.pop(context, note);
-  }
+  void _done() => Navigator.pop(context, _controller.text);
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(widget.initialText == null ? "Add Note" : "Edit Note"),
-      content: TextField(
-        controller: _controller,
-        autofocus: true,
-        maxLines: null,
+    return PopScope<String>(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _done();
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          foregroundColor: _notesAccent,
+          leading: IconButton(
+            tooltip: "Notes",
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: _done,
+          ),
+          actions: [
+            TextButton(
+              onPressed: _done,
+              child: const Text(
+                "Done",
+                style: TextStyle(
+                  color: _notesAccent,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: TextField(
+            controller: _controller,
+            autofocus: widget.initialText.isEmpty,
+            maxLines: null,
+            expands: true,
+            textAlignVertical: TextAlignVertical.top,
+            cursorColor: _notesAccent,
+            style: const TextStyle(fontSize: 17, height: 1.4),
+            decoration: const InputDecoration(
+              filled: false,
+              border: InputBorder.none,
+              hintText: "Not",
+            ),
+          ),
+        ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("Cancel"),
-        ),
-        TextButton(
-          onPressed: _submit,
-          child: Text(widget.initialText == null ? "Add" : "Save"),
-        ),
-      ],
     );
   }
 }

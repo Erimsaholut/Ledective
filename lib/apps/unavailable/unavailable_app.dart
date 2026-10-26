@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/app_theme.dart';
+
 /// Shown for apps that are not part of the game (yet).
 class UnavailableApp extends StatelessWidget {
   const UnavailableApp({super.key, required this.title});
@@ -9,31 +11,40 @@ class UnavailableApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title), backgroundColor: Colors.red),
-      body: SizedBox(
-        width: double.infinity,
+      appBar: AppBar(title: Text(title)),
+      body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.all(32),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Flexible(
-                child: FittedBox(
-                  child: Icon(
-                    Icons.error_outline,
-                    size: 300,
-                    color: Colors.red,
-                  ),
+              Container(
+                width: 120,
+                height: 120,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFE5E5EA),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.construction_rounded,
+                  size: 60,
+                  color: AppColors.secondaryLabel,
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 24),
               Text(
-                "Sorry\n$title is currently not available",
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                "Sorry, $title is currently not available",
                 textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                "Bakım çalışması nedeniyle hizmet veremiyoruz. Lütfen daha sonra tekrar deneyin.",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: AppColors.secondaryLabel),
               ),
             ],
           ),

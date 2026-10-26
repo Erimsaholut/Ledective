@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../data/game_clock.dart';
 import '../../story/story_progress.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/avatar.dart';
 import '../../widgets/chat_bubble.dart';
 import '../../widgets/day_divider.dart';
 
@@ -66,15 +69,14 @@ const List<SmsThread> smsThreads = [
 class MessagesApp extends StatelessWidget {
   const MessagesApp({super.key});
 
+  static bool _isPerson(String sender) =>
+      sender == "Annem" || sender == "Bilinmeyen Numara";
+
   @override
   Widget build(BuildContext context) {
     final progress = StoryProgress.instance;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Messages"),
-        backgroundColor: Colors.indigo,
-      ),
-      backgroundColor: Colors.indigo.shade50,
+      backgroundColor: Colors.white,
       body: ListenableBuilder(
         listenable: progress,
         builder: (context, _) {
@@ -83,42 +85,67 @@ class MessagesApp extends StatelessWidget {
               if (thread.requires == null || progress.has(thread.requires!))
                 thread,
           ];
-          return ListView.separated(
-            itemCount: threads.length,
-            separatorBuilder: (_, _) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final thread = threads[index];
-              final unread = !progress.hasSeen('sms:${thread.sender}');
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.indigo.shade200,
-                  child: const Icon(Icons.sms, color: Colors.white),
-                ),
-                title: Text(
-                  thread.sender,
-                  style: TextStyle(
-                    fontWeight: unread ? FontWeight.bold : FontWeight.normal,
-                  ),
-                ),
-                subtitle: Text(
-                  thread.messages.last,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                trailing: unread
-                    ? const Icon(Icons.circle, size: 12, color: Colors.indigo)
-                    : null,
-                onTap: () {
-                  progress.markSeen('sms:${thread.sender}');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (_) => _ThreadPage(thread: thread),
+          return CustomScrollView(
+            slivers: [
+              const SliverAppBar.large(
+                backgroundColor: Colors.white,
+                title: Text("Messages"),
+              ),
+              SliverList.separated(
+                itemCount: threads.length,
+                separatorBuilder: (_, _) => const Divider(indent: 76),
+                itemBuilder: (context, index) {
+                  final thread = threads[index];
+                  final unread = !progress.hasSeen('sms:${thread.sender}');
+                  return ListTile(
+                    tileColor: Colors.white,
+                    contentPadding: const EdgeInsets.fromLTRB(4, 4, 16, 4),
+                    leading: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 14,
+                          child: unread
+                              ? const Icon(
+                                  Icons.circle,
+                                  size: 10,
+                                  color: AppColors.blue,
+                                )
+                              : null,
+                        ),
+                        Avatar(
+                          name: thread.sender,
+                          icon: _isPerson(thread.sender)
+                              ? null
+                              : Icons.business_rounded,
+                        ),
+                      ],
                     ),
+                    title: Text(
+                      thread.sender,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    subtitle: Text(
+                      thread.messages.last,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    onTap: () {
+                      progress.markSeen('sms:${thread.sender}');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (_) => _ThreadPage(
+                            thread: thread,
+                            isPerson: _isPerson(thread.sender),
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
-              );
-            },
+              ),
+            ],
           );
         },
       ),
@@ -127,30 +154,59 @@ class MessagesApp extends StatelessWidget {
 }
 
 class _ThreadPage extends StatelessWidget {
-  const _ThreadPage({required this.thread});
+  const _ThreadPage({required this.thread, required this.isPerson});
 
   final SmsThread thread;
+  final bool isPerson;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(thread.sender),
-        backgroundColor: Colors.indigo,
+        backgroundColor: const Color(0xFFF9F9F9),
+        toolbarHeight: 76,
+        title: Column(
+          children: [
+            Avatar(
+              name: thread.sender,
+              radius: 20,
+              icon: isPerson ? null : Icons.business_rounded,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              thread.sender,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+            ),
+          ],
+        ),
       ),
-      backgroundColor: Colors.indigo.shade50,
       body: ListView(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         children: [
-          DayDivider(daysAgo: thread.daysAgo),
-          for (final message in thread.messages)
-            ChatBubble(text: message, outgoing: false),
+          Center(
+            child: Text(
+              DayDivider.describe(thread.daysAgo, GameClock.current),
+              style: const TextStyle(
+                color: AppColors.secondaryLabel,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          for (var i = 0; i < thread.messages.length; i++)
+            ChatBubble(
+              text: thread.messages[i],
+              outgoing: false,
+              incomingColor: const Color(0xFFE9E9EB),
+              incomingTextColor: Colors.black,
+              tail: i == thread.messages.length - 1,
+            ),
           const Padding(
             padding: EdgeInsets.all(16),
             child: Text(
               "Bu numaraya yanıt verilemiyor.",
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.black54),
+              style: TextStyle(color: AppColors.secondaryLabel, fontSize: 12),
             ),
           ),
         ],

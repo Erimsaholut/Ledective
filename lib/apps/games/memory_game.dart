@@ -74,7 +74,6 @@ class _MemoryGameState extends State<MemoryGame> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Memory Game'),
-        backgroundColor: Colors.teal,
         actions: [
           IconButton(
             onPressed: _restart,
