@@ -38,6 +38,18 @@ class _NotesAppState extends State<NotesApp> {
     await _repository.save(_notes);
   }
 
+  Future<void> _editSelectedNote() async {
+    final selected = _selected;
+    if (selected == null) return;
+    final note = await showDialog<String>(
+      context: context,
+      builder: (context) => _AddNoteDialog(initialText: _notes[selected]),
+    );
+    if (note == null) return;
+    setState(() => _notes = [..._notes]..[selected] = note);
+    await _repository.save(_notes);
+  }
+
   Future<void> _deleteSelectedNote() async {
     final selected = _selected;
     if (selected == null) return;
@@ -119,6 +131,12 @@ class _NotesAppState extends State<NotesApp> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           _NotesButton(label: "Add Note", onPressed: _addNote),
+                          _NotesButton(
+                            label: "Edit Note",
+                            onPressed: selected == null
+                                ? null
+                                : _editSelectedNote,
+                          ),
                           _NotesButton(
                             label: "Delete Note",
                             onPressed: selected == null
@@ -210,14 +228,17 @@ class _NotesButton extends StatelessWidget {
 }
 
 class _AddNoteDialog extends StatefulWidget {
-  const _AddNoteDialog();
+  const _AddNoteDialog({this.initialText});
+
+  /// Text to edit, or null for a new note.
+  final String? initialText;
 
   @override
   State<_AddNoteDialog> createState() => _AddNoteDialogState();
 }
 
 class _AddNoteDialogState extends State<_AddNoteDialog> {
-  final _controller = TextEditingController();
+  late final _controller = TextEditingController(text: widget.initialText);
 
   @override
   void dispose() {
@@ -233,7 +254,7 @@ class _AddNoteDialogState extends State<_AddNoteDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Add Note"),
+      title: Text(widget.initialText == null ? "Add Note" : "Edit Note"),
       content: TextField(
         controller: _controller,
         autofocus: true,
@@ -244,7 +265,10 @@ class _AddNoteDialogState extends State<_AddNoteDialog> {
           onPressed: () => Navigator.pop(context),
           child: const Text("Cancel"),
         ),
-        TextButton(onPressed: _submit, child: const Text("Add")),
+        TextButton(
+          onPressed: _submit,
+          child: Text(widget.initialText == null ? "Add" : "Save"),
+        ),
       ],
     );
   }

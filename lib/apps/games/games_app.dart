@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../home/app_icon.dart';
-import '../unavailable/unavailable_app.dart';
+import 'memory_game.dart';
 import 'roll_dice.dart';
 import 'sliding_puzzle.dart';
 
@@ -39,7 +39,7 @@ class GamesApp extends StatelessWidget {
             child: AppIcon(
               title: "Memory",
               iconData: Icons.grid_on,
-              app: UnavailableApp(title: "Memory Game"),
+              app: MemoryGame(),
             ),
           ),
         ],

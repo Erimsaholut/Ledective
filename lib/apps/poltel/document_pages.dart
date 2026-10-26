@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../data/game_clock.dart';
+import '../../story/story_progress.dart';
 import 'documents.dart';
 
 const _bold = TextStyle(fontWeight: FontWeight.bold);
@@ -46,6 +48,14 @@ class StatementPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = statement;
+    final person = s.testimonyFrom;
+    final records = person == null
+        ? [
+            for (var i = 0; i < s.questions.length; i++)
+              (question: s.questions[i], answer: s.answers[i]),
+          ]
+        : StoryProgress.instance.testimonyFrom(person);
+    final date = GameClock.current.daysBeforeFirstOpen(s.daysBeforeFirstOpen);
     return _DocumentScaffold(
       title: "${s.name} İfade Tutanağı",
       children: [
@@ -53,17 +63,35 @@ class StatementPage extends StatelessWidget {
         for (final line in [
           "Adı ve soyadı: ${s.name}",
           "Kimlik numarası: ${s.number}",
-          "İfadenin alındığı tarih: ${s.madeDate}",
+          "İfadenin alındığı tarih: ${formatDate(date)}",
           "Öğrenim durumu: ${s.education}",
           "Medeni Hali - Cinsiyeti: ${s.isMarried} - ${s.gender}",
         ])
           Padding(padding: const EdgeInsets.only(left: 8), child: Text(line)),
-        const Text("\nSanığın ifadesi :\n", style: _bold),
-        for (var i = 0; i < s.questions.length; i++) ...[
-          _qa("Soruldu :", s.questions[i]),
-          _qa("Cevap :", s.answers[i]),
+        const Text("\nİfadesi :\n", style: _bold),
+        for (final record in records) ...[
+          _qa("Soruldu :", record.question),
+          _qa("Cevap :", record.answer),
           const SizedBox(height: 16),
         ],
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                const Text("İfadeyi alan", style: _bold),
+                Text(s.takenBy),
+              ],
+            ),
+            Column(
+              children: [
+                const Text("İfade veren", style: _bold),
+                Text(s.name),
+              ],
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -71,6 +99,10 @@ class StatementPage extends StatelessWidget {
 
 class AutopsyPage extends StatelessWidget {
   const AutopsyPage({super.key});
+
+  // The body was found three days before the game starts.
+  static String get _autopsyDate =>
+      formatDate(GameClock.current.daysBeforeFirstOpen(2));
 
   Widget _line(ReportLine line) {
     return switch (line) {
@@ -84,7 +116,7 @@ class AutopsyPage extends StatelessWidget {
       ),
       ReportField(:final text) => Padding(
         padding: const EdgeInsets.only(left: 8),
-        child: Text(text),
+        child: Text(text.replaceAll("{autopsyDate}", _autopsyDate)),
       ),
       ReportParagraph(:final text) => Padding(
         padding: const EdgeInsets.only(top: 12),

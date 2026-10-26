@@ -1,9 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ledective/apps/games/memory_board.dart';
 import 'package:ledective/apps/games/puzzle_board.dart';
+import 'package:ledective/apps/music/songs.dart';
 import 'package:ledective/apps/phone/phone_number.dart';
+import 'package:ledective/apps/pian/note_player.dart';
 import 'package:ledective/apps/poltel/documents.dart';
+import 'package:ledective/apps/shopper/shopper_app.dart';
 import 'package:ledective/data/game_clock.dart';
 import 'package:ledective/widgets/day_divider.dart';
 
@@ -80,13 +84,79 @@ void main() {
   });
 
   test('every statement has one answer per question', () {
-    statements.forEach((name, statement) {
+    for (final document in poltelDocuments) {
+      final statement = document.statement;
+      if (statement == null) continue;
       expect(
         statement.answers.length,
         statement.questions.length,
-        reason: name,
+        reason: document.id,
       );
+    }
+  });
+
+  group('MemoryBoard', () {
+    test('matching pairs stay face up', () {
+      final board = MemoryBoard([0, 1, 0, 1]);
+      expect(board.flip(0), isTrue);
+      expect(board.flip(2), isTrue);
+      expect(board.isMatched(0) && board.isMatched(2), isTrue);
+      expect(board.moves, 1);
     });
+
+    test('a mismatch blocks flips until hidden', () {
+      final board = MemoryBoard([0, 1, 0, 1]);
+      board
+        ..flip(0)
+        ..flip(1);
+      expect(board.isShowingMismatch, isTrue);
+      expect(board.flip(2), isFalse);
+      board.hideOpen();
+      expect(board.isFaceUp(0), isFalse);
+      expect(board.flip(2), isTrue);
+    });
+
+    test('completes when every pair is found', () {
+      final board = MemoryBoard([0, 1, 1, 0]);
+      for (final i in [0, 3, 1, 2]) {
+        board.flip(i);
+      }
+      expect(board.isComplete, isTrue);
+      expect(board.moves, 2);
+    });
+
+    test('shuffled boards hold every value twice', () {
+      final board = MemoryBoard.shuffled(8, random: Random(1));
+      expect([...board.cards]..sort(), [
+        for (var i = 0; i < 8; i++) ...[i, i],
+      ]);
+    });
+
+    test('rejects cards without a pair', () {
+      expect(() => MemoryBoard([0, 0, 1]), throwsArgumentError);
+    });
+  });
+
+  group('songs', () {
+    test('melody notation', () {
+      final steps = parseMelody('c d- e. r');
+      expect(steps.map((s) => s.note), [Note.c, Note.d, Note.e, null]);
+      expect(steps.map((s) => s.beats), [1, 2, 0.5, 1]);
+      expect(() => parseMelody('x'), throwsFormatException);
+    });
+
+    test('every song parses', () {
+      for (final song in songs) {
+        expect(song.steps, isNotEmpty, reason: song.title);
+        expect(song.duration, greaterThan(Duration.zero));
+      }
+    });
+  });
+
+  test('formatLira', () {
+    expect(formatLira(349900), '3.499,00 TL');
+    expect(formatLira(4990), '49,90 TL');
+    expect(formatLira(123456789), '1.234.567,89 TL');
   });
 }
 

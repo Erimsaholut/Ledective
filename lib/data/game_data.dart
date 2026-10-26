@@ -1,9 +1,33 @@
+import '../story/story_flags.dart';
+
 class Mail {
-  const Mail({required this.sender, required this.body});
+  const Mail({required this.sender, required this.body, this.requires});
 
   final String sender;
   final String body;
+
+  /// Story flag after which the mail arrives. Mails without one arrive one
+  /// by one when the player checks for new mail.
+  final String? requires;
+
+  String get id => '$sender|$body';
 }
+
+/// Mails the story sends when the player reaches a point in the case.
+const List<Mail> storyMails = [
+  Mail(
+    sender: "emniyet.gov.tr",
+    requires: StoryFlags.part1Done,
+    body:
+        "İl Emniyet Müdürlüğü: Berat Yılmaz dosyası tüm birimlerin önceliğidir. Gelişmeler günlük olarak şube müdürlüğüne raporlanacaktır.",
+  ),
+  Mail(
+    sender: "narkotik.emniyet.gov.tr",
+    requires: StoryFlags.furkanStatement,
+    body:
+        "Adil Karaca (lakabı \"Adil abi\") hakkında açık soruşturma dosyası mevcuttur. Bilgi paylaşımı için Narkotik Büro Başkomiseri Behram ile irtibata geçiniz.",
+  ),
+];
 
 const List<Mail> mails = [
   Mail(sender: "emniyet.gov.tr", body: "Konferansa davetlisiniz !"),

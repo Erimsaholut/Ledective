@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../apps/calendar/calendar_app.dart';
+import '../apps/camera/camera_app.dart';
 import '../apps/clock/clock_app.dart';
 import '../apps/contacts/contacts_app.dart';
 import '../apps/games/games_app.dart';
 import '../apps/mail/mail_app.dart';
 import '../apps/mates/mates_app.dart';
+import '../apps/messages/messages_app.dart';
+import '../apps/music/music_app.dart';
 import '../apps/notes/notes_app.dart';
 import '../apps/phone/phone_app.dart';
 import '../apps/photos/photos_app.dart';
 import '../apps/pian/pian_app.dart';
 import '../apps/poltel/poltel_app.dart';
 import '../apps/settings/settings_app.dart';
+import '../apps/shopper/shopper_app.dart';
 import '../apps/sinstagram/sinstagram_app.dart';
 import '../apps/unavailable/unavailable_app.dart';
 import '../data/home_colors.dart';
+import '../story/story_progress.dart';
 import 'app_icon.dart';
+
+int _unreadChats(StoryProgress progress) => progress.totalUnread;
 
 const List<List<AppIcon>> _pages = [
   [
@@ -26,7 +33,12 @@ const List<List<AppIcon>> _pages = [
       iconData: Icons.shop,
       app: UnavailableApp(title: "AppShop"),
     ),
-    AppIcon(title: "MatesApp", iconData: Icons.mark_chat_read, app: MatesApp()),
+    AppIcon(
+      title: "MatesApp",
+      iconData: Icons.mark_chat_read,
+      app: MatesApp(),
+      badgeCount: _unreadChats,
+    ),
     AppIcon(
       title: "Calendar",
       iconData: Icons.calendar_today,
@@ -36,14 +48,19 @@ const List<List<AppIcon>> _pages = [
     AppIcon(
       title: "Camera",
       iconData: Icons.camera_alt_rounded,
-      app: UnavailableApp(title: "Camera"),
+      app: CameraApp(),
     ),
     AppIcon(
-      title: "Sinstgram",
+      title: "Sinstagram",
       iconData: Icons.cruelty_free_outlined,
       app: Sinstagram(),
     ),
-    AppIcon(title: "Poltel", iconData: Icons.policy, app: Poltel()),
+    AppIcon(
+      title: "Poltel",
+      iconData: Icons.policy,
+      app: Poltel(),
+      badgeCount: newDocumentCount,
+    ),
   ],
   [
     AppIcon(
@@ -59,18 +76,14 @@ const List<List<AppIcon>> _pages = [
     AppIcon(
       title: "Shopper",
       iconData: Icons.shopify_rounded,
-      app: UnavailableApp(title: "Shopper"),
+      app: ShopperApp(),
     ),
     AppIcon(
       title: "Games",
       iconData: Icons.videogame_asset_sharp,
       app: GamesApp(),
     ),
-    AppIcon(
-      title: "Music",
-      iconData: Icons.speaker,
-      app: UnavailableApp(title: "Music"),
-    ),
+    AppIcon(title: "Music", iconData: Icons.speaker, app: MusicApp()),
     AppIcon(title: "Pian", iconData: Icons.piano, app: PianApp()),
   ],
 ];
@@ -81,7 +94,8 @@ const List<AppIcon> _dock = [
   AppIcon(
     title: "Messages",
     iconData: Icons.message,
-    app: UnavailableApp(title: "Messages"),
+    app: MessagesApp(),
+    badgeCount: unreadSmsCount,
   ),
 ];
 

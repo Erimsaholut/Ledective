@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../constants/constants.dart';
 import '../../data/home_colors.dart';
 import '../../data/game_state.dart';
+import 'profile_page.dart';
 
 class SettingsApp extends StatelessWidget {
   const SettingsApp({super.key});
@@ -91,6 +92,13 @@ class SettingsApp extends StatelessWidget {
             color: HomeColors.page2,
             onPressed: () =>
                 _pickColor(context, HomeColors.page2, HomeColors.setPage2),
+          ),
+          _SettingsTile(
+            name: "Detective Profile",
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(builder: (_) => const ProfilePage()),
+            ),
           ),
           _SettingsTile(
             name: "Reset Game Progress",

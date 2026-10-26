@@ -6,6 +6,8 @@ import 'package:ledective/data/game_state.dart';
 import 'package:ledective/data/recent_calls.dart';
 import 'package:ledective/home/app_icon.dart';
 import 'package:ledective/main.dart';
+import 'package:ledective/story/dialogue.dart';
+import 'package:ledective/story/story_progress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _pumpApp(WidgetTester tester) async {
@@ -48,7 +50,7 @@ void main() {
     // Pian needs the audio plugin, which isn't available in widget tests.
     const titles = [
       'Mail', 'Photos', 'AppShop', 'MatesApp', 'Calendar', 'Settings',
-      'Camera', 'Sinstgram', 'Poltel', 'Phone', 'Contacts', 'Messages',
+      'Camera', 'Sinstagram', 'Poltel', 'Phone', 'Contacts', 'Messages',
       // Second page.
       'Notes', 'Clock', 'Shopper', 'Games', 'Music',
     ];
@@ -93,8 +95,8 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
     expect(find.text('Yakınlarının ifadesini aldınız mı ?'), findsOneWidget);
 
-    final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getString('chatChoices.Özge'), '[0]');
+    expect(StoryProgress.instance.choicesFor('Özge'), [1]);
+    expect(StoryProgress.instance.trait(Trait.curiosity), 1);
 
     // Reopening the chat restores the conversation.
     await tester.pumpWidget(const SizedBox());

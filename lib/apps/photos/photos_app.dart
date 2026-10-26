@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/camera_roll.dart';
 import '../../data/game_data.dart';
 
 class PhotosApp extends StatefulWidget {
@@ -51,26 +52,34 @@ class _PhotosAppState extends State<PhotosApp> {
         backgroundColor: Colors.blueAccent,
       ),
       backgroundColor: Colors.blue.shade100,
-      body: ListView(
-        padding: const EdgeInsets.all(10),
-        children: [
-          for (final path in galleryImages.take(_photoCount))
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: GestureDetector(
-                onTap: () => _openPhoto(path),
-                child: Hero(
-                  tag: path,
-                  child: Image.asset(path, fit: BoxFit.fitWidth),
+      body: ListenableBuilder(
+        listenable: CameraRoll.instance,
+        builder: (context, _) => ListView(
+          padding: const EdgeInsets.all(10),
+          children: [
+            for (final photo in CameraRoll.instance.photos)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Image.memory(photo, fit: BoxFit.fitWidth),
+              ),
+            for (final path in galleryImages.take(_photoCount))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: GestureDetector(
+                  onTap: () => _openPhoto(path),
+                  child: Hero(
+                    tag: path,
+                    child: Image.asset(path, fit: BoxFit.fitWidth),
+                  ),
                 ),
               ),
-            ),
-          if (_photoCount < galleryImages.length)
-            ElevatedButton(
-              onPressed: _loadMorePhotos,
-              child: const Text('Load More Photos'),
-            ),
-        ],
+            if (_photoCount < galleryImages.length)
+              ElevatedButton(
+                onPressed: _loadMorePhotos,
+                child: const Text('Load More Photos'),
+              ),
+          ],
+        ),
       ),
     );
   }

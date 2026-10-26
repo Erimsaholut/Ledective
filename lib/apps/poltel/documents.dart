@@ -1,85 +1,134 @@
-/// Witness statement ("İfade Tutanağı") received over Poltel.
+import '../../story/story_flags.dart';
+
+/// A statement ("İfade Tutanağı") received over Poltel.
 class Statement {
   const Statement({
     required this.name,
     required this.number,
-    required this.madeDate,
+    required this.daysBeforeFirstOpen,
     required this.education,
     required this.isMarried,
     required this.gender,
-    required this.questions,
-    required this.answers,
+    required this.takenBy,
+    this.questions = const [],
+    this.answers = const [],
+    this.testimonyFrom,
   });
 
   final String name;
   final String number;
-  final String madeDate;
+
+  /// When the statement was taken, counted back from the first launch.
+  final int daysBeforeFirstOpen;
   final String education;
   final String isMarried;
   final String gender;
+
+  /// The officer who took the statement ("İfadeyi alan").
+  final String takenBy;
   final List<String> questions;
 
   /// One answer per entry in [questions].
   final List<String> answers;
+
+  /// For interrogations the player runs over MatesApp: the contact whose
+  /// chat holds the questions and answers, instead of [questions].
+  final String? testimonyFrom;
 }
 
-const Map<String, Statement> statements = {
-  "Orhan Kasap": Statement(
-    name: "Orhan Kasap",
-    number: "123456789",
-    madeDate: "01.01.2022",
-    education: "High School",
-    isMarried: "Married",
-    gender: "Male",
-    questions: [
-      "Berat'ı nereden tanıyorsun ve onu nasıl tarif edersin ?",
-      "Kendisine zarar verebilecek birilerinden veya peşinde olan birilerinden bahsetti mi ?",
-      "Daha önce şüpheli bir olaya karıştığını gördün  veya duydun mu ?",
-      "Sen şu madde kullanan çocuğun ismini ver sonra gidebilirsin.",
-    ],
-    answers: [
-      "Berat'ı fazla yakından olmamakla birlikte okuldan tanıyorum. Kendisi sanırım babasından dolayı biraz burnu havada biriydi. Zaten babası milletvekili olan birinin neden bu küçük şehirdeki, küçük bir üniversitede okuduğunu hiçbir zaman anlayamadım. Okula fazla gelip gitmezdi, geldiği zamanlarda da benimle beraber kahve içerdi. Genellikle kendine güvenen ve insanları küçük gören bir konuşma tarzı vardı.",
-      "Hayır, peşinde birilerinin olduğunu sanmıyorum.",
-      "Daha önce okulda yaşanan bir olay olmadı ama geçen hafta madde kullandığı bilinen bir öğrenciye ufak bir paket verirken yere düşürdüğünü görenler olmuş. Ben görmedim ama oradan geçen birkaç kişi gördüğünü söylüyor. Herkesin aklına aynı şey geldi ama kimse okuldan atılmak istemediği için üzerine gitmedi bu olayın",
-      "İsmi Furkan, soyadını bilmiyorum ama bizim okulda kime sorsanız gösterir. Genelde okulun karşısındaki kafede takılıyor. Dağınık saçları olan hafif kambur bir çocuk.",
-    ],
+/// An entry in the Poltel inbox, delivered once [requires] is unlocked.
+class PoltelDocument {
+  const PoltelDocument({
+    required this.id,
+    required this.title,
+    required this.requires,
+    this.statement,
+  });
+
+  final String id;
+  final String title;
+  final String requires;
+
+  /// The statement to show, or null for the autopsy report.
+  final Statement? statement;
+}
+
+const List<PoltelDocument> poltelDocuments = [
+  PoltelDocument(
+    id: 'yusuf',
+    title: 'Yusuf Kasap - İfade Tutanağı',
+    requires: StoryFlags.part1Done,
+    statement: Statement(
+      name: "Yusuf Kasap",
+      number: "354893428",
+      daysBeforeFirstOpen: 2,
+      education: "Lisans (eğitimi devam ediyor)",
+      isMarried: "Bekar",
+      gender: "Erkek",
+      takenBy: "Atakan Kutay",
+      questions: [
+        "Berat'ı nereden tanıyorsun ve onu nasıl tarif edersin ?",
+        "Kendisine zarar verebilecek birilerinden veya peşinde olan birilerinden bahsetti mi ?",
+        "Daha önce şüpheli bir olaya karıştığını gördün  veya duydun mu ?",
+        "Sen şu madde kullanan çocuğun ismini ver sonra gidebilirsin.",
+      ],
+      answers: [
+        "Berat'ı fazla yakından olmamakla birlikte okuldan tanıyorum. Kendisi sanırım babasından dolayı biraz burnu havada biriydi. Zaten babası milletvekili olan birinin neden bu küçük şehirdeki, küçük bir üniversitede okuduğunu hiçbir zaman anlayamadım. Okula fazla gelip gitmezdi, geldiği zamanlarda da benimle beraber kahve içerdi. Genellikle kendine güvenen ve insanları küçük gören bir konuşma tarzı vardı.",
+        "Hayır, peşinde birilerinin olduğunu sanmıyorum.",
+        "Daha önce okulda yaşanan bir olay olmadı ama geçen hafta madde kullandığı bilinen bir öğrenciye ufak bir paket verirken yere düşürdüğünü görenler olmuş. Ben görmedim ama oradan geçen birkaç kişi gördüğünü söylüyor. Herkesin aklına aynı şey geldi ama kimse okuldan atılmak istemediği için üzerine gitmedi bu olayın",
+        "İsmi Furkan, soyadını bilmiyorum ama bizim okulda kime sorsanız gösterir. Genelde okulun karşısındaki kafede takılıyor. Dağınık saçları olan hafif kambur bir çocuk.",
+      ],
+    ),
   ),
-  "Furkan Kasap": Statement(
-    name: "Furkan Kasap",
-    number: "123456789",
-    madeDate: "01.01.2022",
-    education: "High School",
-    isMarried: "Married",
-    gender: "Male",
-    questions: ["Berat'ı tanıyor musun ?", "Olay gecesi neredeydin ?"],
-    answers: [
-      "Tanıyorum ama yakın değildik.",
-      "Kafedeydim.",
-    ],
+  PoltelDocument(
+    id: 'deniz',
+    title: 'Deniz Yılmaz - İfade Tutanağı',
+    requires: StoryFlags.part1Done,
+    statement: Statement(
+      name: "Deniz Yılmaz",
+      number: "987654321",
+      daysBeforeFirstOpen: 2,
+      education: "Yüksek Lisans",
+      isMarried: "Bekar",
+      gender: "Kadın",
+      takenBy: "Doğa Aksu",
+      questions: [
+        "Maktulle yakınlığın nedir?",
+        "Cesedi nasıl buldun?",
+        "Evde dikkatini çeken bir şey oldu mu?",
+        "Berat son zamanlarda tedirgin miydi?",
+        "Berat'ın intihar edebileceğini düşünüyor musun?",
+      ],
+      answers: [
+        "Berat'ın kuzeniyim. Aynı şehirde okuyoruz, ailesi buraya gelemediği için ara sıra ona ben bakardım.",
+        "Berat iki gündür telefonlarımı açmıyordu. Akşam evine gittim, kapı aralıktı. İçeri girdiğimde onu salonda asılı halde buldum ve hemen 112'yi aradım.",
+        "Her yer dağınıktı, sanki kavga edilmiş gibi. Sehpa devrilmişti, bardaklar kırıktı. Berat çok titiz biriydi, evi asla öyle bırakmazdı.",
+        "Geçen hafta bana para lazım olduğunu söyledi. Babasından isteyemeyeceğini, birine borcu olduğunu söyledi. Kime diye sorduğumda konuyu değiştirdi.",
+        "Asla. Berat kendini çok severdi. Gelecek ay yurtdışına gitmek için plan yapıyordu.",
+      ],
+    ),
   ),
-  "Deniz Yılmaz": Statement(
-    name: "Deniz Yılmaz",
-    number: "987654321",
-    madeDate: "05.03.2023",
-    education: "Yüksek Lisans",
-    isMarried: "Bekar",
-    gender: "Kadın",
-    questions: [
-      "Deniz'i nereden tanıyorsun ve onu nasıl tarif edersin?",
-      "Son zamanlarda Deniz, kişisel hayatıyla ilgili sorunlar yaşadı mı?",
-      "Daha önce Deniz'in şüpheli bir olaya karıştığını gördün veya duydun mu?",
-      "Son zamanlarda okulda uyuşturucu kullanımıyla ilgili herhangi bir durum fark ettin mi?",
-      "Deniz hakkında daha fazla detay verebilir misin?",
-    ],
-    answers: [
-      "Deniz'i üniversiteden tanıyorum. O oldukça zeki ve başarılı bir öğrenci. Sınıfta aktif olarak katılır ve sık sık tartışmalara katılır. Arkadaşları tarafından sevilen biri ve yardımsever bir kişiliği var.",
-      "Son zamanlarda Deniz, kişisel hayatıyla ilgili bazı sorunlar yaşadı. Ailevi konulardan dolayı biraz stresli olduğunu söyledi ve bu durum derslerine yansıyor.",
-      "Daha önce Deniz'in şüpheli bir olaya karıştığını görmedim veya duymadım.",
-      "Son zamanlarda okulda uyuşturucu kullanımıyla ilgili herhangi bir durum fark etmedim. Okulda uyuşturucu kullanımıyla ilgili sıkı önlemler alınıyor ve öğrenciler bilinçlendiriliyor.",
-      "Deniz, 25 yaşında bir kadın. Mavi gözlere ve kahverengi saçlara sahip. Hobileri arasında kitap okumak, seyahat etmek ve müzik dinlemek bulunuyor.",
-    ],
+  PoltelDocument(
+    id: 'autopsy',
+    title: 'Berat Yılmaz - Otopsi Raporu',
+    requires: StoryFlags.part1Done,
   ),
-};
+  PoltelDocument(
+    id: 'furkan',
+    title: 'Furkan Şahin - İfade Tutanağı',
+    requires: StoryFlags.furkanStatement,
+    statement: Statement(
+      name: "Furkan Şahin",
+      number: "412578963",
+      daysBeforeFirstOpen: 0,
+      education: "Lisans (eğitimi devam ediyor)",
+      isMarried: "Bekar",
+      gender: "Erkek",
+      takenBy: "Doğa Aksu",
+      testimonyFrom: "Doğa",
+    ),
+  ),
+];
 
 sealed class ReportLine {
   const ReportLine(this.text);
@@ -112,7 +161,7 @@ const List<ReportLine> autopsyReport = [
   ReportHeading("CESEDİN KİMLİĞİ"),
   ReportField("Adı ve soyadı: Berat Yılmaz"),
   ReportField("Kimlik numarası: 3231"),
-  ReportField("Otopsi tarihi: tarih gelecek"),
+  ReportField("Otopsi tarihi: {autopsyDate}"),
   ReportField("Cinsiyeti: Erkek"),
   ReportField("Yaş: 20-25"),
   ReportHeading("DIŞ MUAYENE BULGULARI"),
@@ -131,7 +180,7 @@ const List<ReportLine> autopsyReport = [
   ),
   ReportSubheading("Boyun Muayenesi"),
   ReportParagraph(
-    "Boyun cimadında, kaslarda ve yumuşak dokularda kanama veya ekimoz bulguları gözlenmedi. Boyun çevresinde özellikle arka bölgede asma izleri bulundu. Asma izleri, boyundaki derinliklere nüfuz eden ve çizgi şeklindeki izler olarak tanımlandı. Boyun organlarında şu bulgular saptandı: Hyoid kemik, tiroid kartilaj ve boyun omurları sağlamdı.",
+    "Boyun cimadında, kaslarda ve yumuşak dokularda kanama veya ekimoz bulguları gözlenmedi. Boyun çevresinde özellikle arka bölgede asma izleri bulundu. Asma izleri, boyundaki derinliklere nüfuz eden ve çizgi şeklindeki izler olarak tanımlandı. Boyun organlarında şu bulgular saptandı: Hyoid kemik, tiroid kartilaj ve boyun omurları sağlamdı. Özofagus ve trakea boş olarak bulundu.",
   ),
   ReportSubheading("Göğüs Muayenesi"),
   ReportParagraph(

@@ -38,4 +38,13 @@ class GameClock {
     final end = DateTime.utc(today.year, today.month, today.day);
     return end.difference(start).inDays;
   }
+
+  /// The calendar day [days] days before the first launch.
+  DateTime daysBeforeFirstOpen(int days) =>
+      DateTime(firstOpen.year, firstOpen.month, firstOpen.day - days);
 }
+
+/// Formats [date] the Turkish way, e.g. `05.03.2026`.
+String formatDate(DateTime date) =>
+    '${date.day.toString().padLeft(2, '0')}.'
+    '${date.month.toString().padLeft(2, '0')}.${date.year}';

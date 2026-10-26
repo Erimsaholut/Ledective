@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../story/conversations.dart';
 import '../../story/dialogue.dart';
+import '../../story/story_progress.dart';
 import '../../widgets/chat_bubble.dart';
 import '../../widgets/day_divider.dart';
 
+/// A story conversation in MatesApp. The player answers by picking one of
+/// the options on the keyboard.
 class ChatPage extends StatefulWidget {
   const ChatPage({
     super.key,
@@ -26,23 +26,22 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  late final Conversation _conversation =
-      conversations[widget.person] ?? const Conversation();
-  late final DialogueState _dialogue = DialogueState(_conversation.dialogue);
-  late final List<ChatEntry> _entries = [..._conversation.history];
+  final StoryProgress _progress = StoryProgress.instance;
+  late final DialogueState _dialogue;
+  late final List<ChatEntry> _entries;
 
   final List<Timer> _replyTimers = [];
-  bool _loaded = false;
   bool _keyboardVisible = false;
 
-  String get _prefsKey => 'chatChoices.${widget.person}';
-
-  bool get _awaitingReply => _replyTimers.any((timer) => timer.isActive);
+  bool get _typing => _replyTimers.any((timer) => timer.isActive);
 
   @override
   void initState() {
     super.initState();
-    _restoreProgress();
+    final (dialogue, transcript) = _progress.restore(widget.person);
+    _dialogue = dialogue;
+    _entries = transcript;
+    _progress.markRead(widget.person);
   }
 
   @override
@@ -50,39 +49,31 @@ class _ChatPageState extends State<ChatPage> {
     for (final timer in _replyTimers) {
       timer.cancel();
     }
+    // Replies that were still on their way count as read, too.
+    _progress.markRead(widget.person);
     super.dispose();
   }
 
-  Future<void> _restoreProgress() async {
-    final prefs = await SharedPreferences.getInstance();
-    final stored = prefs.getString(_prefsKey);
-    final choices = stored == null
-        ? <int>[]
-        : (json.decode(stored) as List).cast<int>();
-    if (!mounted) return;
-    setState(() {
-      _entries.addAll(_dialogue.replay(choices));
-      _loaded = true;
-    });
-  }
-
   Future<void> _send(int index) async {
-    final option = _dialogue.choose(index);
+    final option = await _progress.choose(widget.person, _dialogue, index);
+    // The player is watching the replies arrive, so they count as read.
+    await _progress.markRead(widget.person);
+    if (!mounted) return;
+    final replies = [...option.replies, ..._dialogue.arrive()];
     setState(() {
-      _entries.add(OutgoingMessage(option.message));
-      if (_dialogue.isFinished) _keyboardVisible = false;
+      // The keyboard stays open; it hides itself while replies are typed.
+      if (!option.silent) _entries.add(OutgoingMessage(option.message));
     });
 
-    for (var i = 0; i < option.replies.length; i++) {
+    for (var i = 0; i < replies.length; i++) {
       _replyTimers.add(
         Timer(widget.replyDelay * (i + 1), () {
-          setState(() => _entries.add(IncomingMessage(option.replies[i])));
+          setState(() => _entries.add(IncomingMessage(replies[i])));
         }),
       );
     }
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_prefsKey, json.encode(_dialogue.choices));
+    // Rebuild once more so "typing…" shows while the replies are pending.
+    setState(() {});
   }
 
   Widget _buildEntry(ChatEntry entry) {
@@ -98,9 +89,22 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    final canReply = _loaded && !_dialogue.isFinished;
+    final canReply = _dialogue.canReply && !_typing;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.person), backgroundColor: Colors.green),
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.person),
+            if (_typing)
+              const Text(
+                "yazıyor...",
+                style: TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
+              ),
+          ],
+        ),
+      ),
       backgroundColor: Colors.green.shade100,
       body: SafeArea(
         child: Column(
@@ -160,16 +164,21 @@ class _ChatPageState extends State<ChatPage> {
             SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: _awaitingReply ? null : () => _send(i),
+                onPressed: () => _send(i),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.black,
-                  disabledForegroundColor: Colors.black38,
                   padding: const EdgeInsets.symmetric(
                     vertical: 16,
                     horizontal: 12,
                   ),
                 ),
-                child: Text(options[i].label, textAlign: TextAlign.center),
+                child: Text(
+                  options[i].label,
+                  textAlign: TextAlign.center,
+                  style: options[i].silent
+                      ? const TextStyle(fontStyle: FontStyle.italic)
+                      : null,
+                ),
               ),
             ),
         ],
