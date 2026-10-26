@@ -1,0 +1,37 @@
+[
+  {
+    "id": "mom",
+    "kind": "voicemail",
+    "from": "Annem",
+    "daysAgo": 2,
+    "seconds": 21,
+    "transcript": "Ararsın beni. Haberlerde bir öğrenci ölmüş, senin oralarda diyorlar. Çok korktum. Kendine dikkat et."
+  },
+  {
+    "id": "unknown-1",
+    "kind": "voicemail",
+    "from": "Bilinmeyen Numara",
+    "daysAgo": 0,
+    "seconds": 14,
+    "requires": "part1Done",
+    "transcript": "(cızırtı) ... Komiser... o çocuk sadece başlangıçtı. Tatiline devam et. (kapanma sesi)"
+  },
+  {
+    "id": "unknown-2",
+    "kind": "voicemail",
+    "from": "Bilinmeyen Numara",
+    "daysAgo": 0,
+    "seconds": 9,
+    "requires": "mezbaha-found",
+    "transcript": "(fısıltı) Gördün değil mi? Cuma geldiğinde sıradaki sen olacaksın."
+  },
+  {
+    "id": "memo-phone",
+    "kind": "memo",
+    "from": "Not 1",
+    "daysAgo": 0,
+    "seconds": 12,
+    "requires": "part1Done",
+    "transcript": "Berat'ın telefonu olay yerinde yok. Kimde? Son aranan numaraları iste."
+  }
+]

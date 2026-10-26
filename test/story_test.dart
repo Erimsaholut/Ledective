@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ledective/apps/messages/messages_app.dart';
-import 'package:ledective/apps/poltel/documents.dart';
+import 'package:ledective/apps/board/board_app.dart';
 import 'package:ledective/apps/poltel/poltel_app.dart';
-import 'package:ledective/data/game_data.dart';
-import 'package:ledective/story/conversations.dart';
+import 'package:ledective/apps/sinstagram/sinstagram_app.dart';
 import 'package:ledective/story/dialogue.dart';
+import 'package:ledective/story/story_data.dart';
+import 'package:ledective/story/story_validator.dart';
 import 'package:ledective/story/story_progress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +25,7 @@ const _dialogue = Dialogue(
       DialogueOption(label: '(ignore)', silent: true),
     ]),
     'gated': DialogueNode(
-      waitFor: 'flag',
+      waitFor: Condition(all: ['flag']),
       incoming: ['later'],
       [DialogueOption(label: 'fin')],
     ),
@@ -108,59 +110,61 @@ void main() {
     });
   });
 
-  group('story conversations', () {
-    final unlockable = {
-      for (final c in conversations.values)
-        for (final node in c.dialogue?.nodes.values ?? <DialogueNode>[])
-          for (final option in node.options) ...option.unlocks,
-    };
+  setUpAll(() => StoryData.load((path) => File(path).readAsString()));
 
-    conversations.forEach((person, conversation) {
-      final dialogue = conversation.dialogue;
-      if (dialogue == null) return;
+  test('Condition needs all of "all" and one of "any"', () {
+    const c = Condition(all: ['a'], any: ['b', 'c']);
+    expect(c.isMetBy({'a', 'b'}.contains), isTrue);
+    expect(c.isMetBy({'a'}.contains), isFalse);
+    expect(c.isMetBy({'b', 'c'}.contains), isFalse);
+    expect(Condition.always.isMetBy((_) => false), isTrue);
+  });
 
-      test('$person: every node can be reached and every link resolves', () {
-        expect(dialogue.nodes, contains(dialogue.start));
-        final reached = <String>{};
-        final pending = [dialogue.start];
-        while (pending.isNotEmpty) {
-          final id = pending.removeLast();
-          if (!reached.add(id)) continue;
-          final node = dialogue.nodes[id];
-          expect(node, isNotNull, reason: '"$id" is linked but missing');
-          expect(
-            node!.options.isNotEmpty || node.incoming.isNotEmpty,
-            isTrue,
-            reason: '"$id" is empty',
-          );
-          if (node.waitFor case final flag?) {
-            expect(unlockable, contains(flag), reason: '"$id" waits forever');
-          }
-          for (final option in node.options) {
-            if (option.next != null) pending.add(option.next!);
-          }
-        }
-        expect(
-          reached,
-          dialogue.nodes.keys.toSet(),
-          reason: 'some nodes are unreachable',
-        );
-      });
+  test('the story files have no errors', () {
+    final errors = validateStory(
+      StoryData.current,
+      assetExists: (path) => File(path).existsSync(),
+    ).where((issue) => issue.isError);
+    expect(errors, isEmpty, reason: errors.join('\n'));
+  });
+
+  test('the validator catches broken links and stray flags', () {
+    final story = StoryData.fromJson({
+      ...{for (final f in StoryData.files) f: _emptyFile(f)},
+      'chats.json': {
+        'Kim': {
+          'nodes': {
+            'start': {
+              'waitFor': 'never',
+              'options': [
+                {'label': 'x', 'next': 'nowhere'},
+              ],
+            },
+          },
+        },
+      },
     });
+    final messages = validateStory(story).map((i) => i.message).join('\n');
+    expect(messages, contains('nowhere'));
+    expect(messages, contains('"never"'));
+  });
 
-    test('everything the apps wait for can be unlocked', () {
-      for (final document in poltelDocuments) {
-        expect(unlockable, contains(document.requires), reason: document.id);
-      }
-      for (final mail in storyMails) {
-        expect(unlockable, contains(mail.requires), reason: mail.sender);
-      }
-      for (final thread in smsThreads) {
-        if (thread.requires != null) {
-          expect(unlockable, contains(thread.requires), reason: thread.sender);
-        }
-      }
-    });
+  test('malformed files name the broken field', () {
+    expect(
+      () => StoryData.fromJson({
+        for (final f in StoryData.files) f: _emptyFile(f),
+        'evidence.json': [
+          {'id': 'x', 'name': 'x'},
+        ],
+      }),
+      throwsA(
+        isA<FormatException>().having(
+          (e) => e.message,
+          'message',
+          contains('evidence.json[0]'),
+        ),
+      ),
+    );
   });
 
   group('StoryProgress', () {
@@ -192,6 +196,7 @@ void main() {
         'deniz',
         'yusuf',
       ]);
+      expect(progress.alerts.current, isNotNull, reason: 'Orhun wrote');
       expect(progress.unreadCount('Orhun'), 1);
       expect(progress.unreadCount('Erdi'), 1);
 
@@ -237,5 +242,101 @@ void main() {
       expect(StoryProgress.instance.unreadCount('Özge'), 0);
       expect(StoryProgress.instance.hasSeen('poltel:yusuf'), isTrue);
     });
+
+    test('missions report back and unlock what they find', () async {
+      final progress = StoryProgress.instance;
+      final map = StoryData.current.map;
+      await progress.discover(['part1Done']);
+      final task = map.task('home-search')!;
+      final start = DateTime(2026, 1, 1, 12);
+
+      expect(await progress.startMission(task, 'Atakan', now: start), isTrue);
+      expect(
+        await progress.startMission(map.task('home-neighbours')!, 'Atakan'),
+        isFalse,
+        reason: 'Atakan is busy',
+      );
+      await progress.completeDueMissions(
+        now: start.add(const Duration(minutes: 1)),
+      );
+      expect(progress.reports, isEmpty);
+
+      progress.alerts.clear();
+      await progress.completeDueMissions(now: start.add(task.duration));
+      expect(progress.reports.single.officer, 'Atakan');
+      expect(progress.has('ev:torn-photo'), isTrue);
+      expect(newEvidenceCount(progress), 2);
+      expect(progress.alerts.current?.app, 'Harita');
+      expect(progress.missionOf('Atakan'), isNull);
+      expect(
+        await progress.startMission(task, 'Doğa'),
+        isFalse,
+        reason: 'done',
+      );
+    });
+
+    test('fast missions finish thirty times sooner', () async {
+      final progress = StoryProgress.instance;
+      await progress.setFastMissions(true);
+      final task = StoryData.current.map.task('forensics-tox')!;
+      final start = DateTime(2026, 1, 1);
+      await progress.startMission(task, 'Orhun', now: start);
+      expect(
+        progress.activeMission(task.id)!.endsAt.difference(start),
+        task.duration ~/ 30,
+      );
+      await progress.setFastMissions(false);
+    });
+
+    test('a solved inspection unlocks its findings', () async {
+      final progress = StoryProgress.instance;
+      await progress.discover(['ev:torn-map']);
+      final map = StoryData.current.evidence.firstWhere(
+        (e) => e.id == 'torn-map',
+      );
+      expect(pendingInspections(progress), [map]);
+      expect(
+        StoryData.current.map.locations.any(
+          (l) => l.id == 'slaughterhouse' && progress.meets(l.requires),
+        ),
+        isFalse,
+      );
+      await progress.completeInspection(map);
+      expect(progress.isInspected('torn-map'), isTrue);
+      expect(progress.has('map-restored'), isTrue);
+      expect(pendingInspections(progress), isEmpty);
+    });
+
+    test('suspects only turn up in search when the story allows it', () async {
+      final progress = StoryProgress.instance;
+      expect(searchProfiles('furkan', progress), isEmpty);
+      expect(searchProfiles('orhun', progress).single.handle, 'orhun.k');
+      await progress.discover(['part1Done']);
+      expect(searchProfiles('Furkan', progress).single.handle, 'furkan.shn');
+      expect(searchProfiles('adil', progress), isEmpty);
+      await progress.discover(['heard:adil']);
+      expect(searchProfiles('adil', progress).single.private, isTrue);
+      expect(searchProfiles('ozge', progress).single.handle, 'ozge.buro');
+    });
   });
 }
+
+Object _emptyFile(String file) => switch (file) {
+  'chats.json' => <String, Object>{},
+  'mails.json' => {'inbox': [], 'story': []},
+  'sinstagram.json' => {'feed': []},
+  'map.json' => {
+    'image': 'x.png',
+    'officers': ['A'],
+    'locations': [],
+  },
+  'bank.json' => {
+    'bank': 'B',
+    'owner': 'O',
+    'iban': 'I',
+    'card': '1',
+    'balance': 0,
+    'transactions': [],
+  },
+  _ => [],
+};

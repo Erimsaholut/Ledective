@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/bank_account.dart';
+import '../../story/story_progress.dart';
+
 class Product {
   const Product({
     required this.id,
@@ -69,10 +72,8 @@ class ShopperApp extends StatefulWidget {
 
 class _ShopperAppState extends State<ShopperApp> {
   static const _prefsKey = 'shopper';
-  static const _startingBalance = 500000;
 
   final Map<String, int> _cart = {};
-  int _balance = _startingBalance;
   List<({DateTime date, int total, List<String> items})> _orders = [];
 
   int get _cartTotal => _cart.entries
@@ -93,7 +94,6 @@ class _ShopperAppState extends State<ShopperApp> {
     if (stored == null || !mounted) return;
     final data = json.decode(stored) as Map<String, dynamic>;
     setState(() {
-      _balance = data['balance'] as int;
       _orders = [
         for (final order in data['orders'] as List)
           (
@@ -112,7 +112,6 @@ class _ShopperAppState extends State<ShopperApp> {
     await prefs.setString(
       _prefsKey,
       json.encode({
-        'balance': _balance,
         'orders': [
           for (final o in _orders)
             {
@@ -141,14 +140,19 @@ class _ShopperAppState extends State<ShopperApp> {
     final total = _cartTotal;
     final messenger = ScaffoldMessenger.of(context);
     Navigator.pop(sheetContext);
-    if (total > _balance) {
+    final paid = await BankAccount.instance.pay(
+      "Shopper",
+      "Online alışveriş · $_cartCount ürün",
+      total,
+    );
+    if (!paid) {
       messenger.showSnackBar(
         const SnackBar(content: Text("Yetersiz bakiye. Ödeme reddedildi.")),
       );
       return;
     }
+    if (!mounted) return;
     setState(() {
-      _balance -= total;
       _orders = [
         (
           date: DateTime.now(),
@@ -219,7 +223,9 @@ class _ShopperAppState extends State<ShopperApp> {
                     ),
                   const Divider(),
                   Text("Toplam: ${formatLira(_cartTotal)}"),
-                  Text("Bakiye: ${formatLira(_balance)}"),
+                  Text(
+                    "Bakiye: ${formatLira(BankAccount.instance.balance(StoryProgress.instance))}",
+                  ),
                   const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: entries.isEmpty
@@ -300,7 +306,7 @@ class _ShopperAppState extends State<ShopperApp> {
           Padding(
             padding: const EdgeInsets.all(12),
             child: Text(
-              "Bakiye: ${formatLira(_balance)}",
+              "ZaferBank bakiyesi: ${formatLira(BankAccount.instance.balance(StoryProgress.instance))}",
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),

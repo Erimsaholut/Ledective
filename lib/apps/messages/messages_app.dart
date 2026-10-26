@@ -1,69 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../data/game_clock.dart';
+import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/chat_bubble.dart';
 import '../../widgets/day_divider.dart';
-
-class SmsThread {
-  const SmsThread({
-    required this.sender,
-    required this.messages,
-    this.daysAgo = 0,
-    this.requires,
-  });
-
-  final String sender;
-  final List<String> messages;
-
-  /// Days before the first launch the messages were received.
-  final int daysAgo;
-
-  /// Story flag after which the thread arrives, or null if it is there
-  /// from the start.
-  final String? requires;
-}
-
-const List<SmsThread> smsThreads = [
-  SmsThread(
-    sender: "0850 222 0 555",
-    daysAgo: 7,
-    messages: [
-      "Yurt dışına hoş geldiniz! Yurt Dışı Paketiniz tanımlanmıştır. Paketinizle 1 GB internet ve 30 dk konuşma hakkınız bulunmaktadır.",
-      "Yurt dışı internet kullanımınız paketinizin %80'ine ulaşmıştır.",
-    ],
-  ),
-  SmsThread(
-    sender: "ZAFERBANK",
-    daysAgo: 4,
-    messages: [
-      "ZaferBank kartınızla 2.450,00 TL tutarında yurt dışı harcama yapılmıştır. Siz yapmadıysanız 444 0 444'ü arayınız.",
-    ],
-  ),
-  SmsThread(
-    sender: "Annem",
-    daysAgo: 2,
-    messages: [
-      "Tatilin nasıl geçiyor? Yemeğini düzgün ye.",
-      "Haberlerde bir öğrenci ölmüş diyorlar, senin bölgende mi? Dikkat et kendine.",
-    ],
-  ),
-  SmsThread(
-    sender: "e-Devlet",
-    messages: [
-      "Adınıza düzenlenmiş yeni bir tebligat bulunmaktadır. Detaylar için turkiye.gov.tr adresini ziyaret ediniz.",
-    ],
-  ),
-  SmsThread(
-    sender: "Bilinmeyen Numara",
-    requires: StoryFlags.furkanStatement,
-    messages: [
-      "Berat'ın işine burnunu sokma komiser. Çocuğu da rahat bırakın.",
-    ],
-  ),
-];
 
 /// The phone's plain text messages: operator notices, the bank and family.
 class MessagesApp extends StatelessWidget {
@@ -81,9 +24,8 @@ class MessagesApp extends StatelessWidget {
         listenable: progress,
         builder: (context, _) {
           final threads = [
-            for (final thread in smsThreads.reversed)
-              if (thread.requires == null || progress.has(thread.requires!))
-                thread,
+            for (final thread in StoryData.current.smsThreads.reversed)
+              if (progress.meets(thread.requires)) thread,
           ];
           return CustomScrollView(
             slivers: [
@@ -216,10 +158,8 @@ class _ThreadPage extends StatelessWidget {
 }
 
 /// Threads the player hasn't opened yet, for the home screen badge.
-int unreadSmsCount(StoryProgress progress) => smsThreads
+int unreadSmsCount(StoryProgress progress) => StoryData.current.smsThreads
     .where(
-      (t) =>
-          (t.requires == null || progress.has(t.requires!)) &&
-          !progress.hasSeen('sms:${t.sender}'),
+      (t) => progress.meets(t.requires) && !progress.hasSeen('sms:${t.sender}'),
     )
     .length;

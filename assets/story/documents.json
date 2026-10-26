@@ -1,0 +1,150 @@
+[
+  {
+    "id": "yusuf",
+    "type": "statement",
+    "title": "Yusuf Kasap - İfade Tutanağı",
+    "requires": "part1Done",
+    "name": "Yusuf Kasap",
+    "idNumber": "354893428",
+    "daysBeforeFirstOpen": 2,
+    "education": "Lisans (eğitimi devam ediyor)",
+    "maritalStatus": "Bekar",
+    "gender": "Erkek",
+    "takenBy": "Atakan Kutay",
+    "qa": [
+      {
+        "q": "Berat'ı nereden tanıyorsun ve onu nasıl tarif edersin ?",
+        "a": "Berat'ı fazla yakından olmamakla birlikte okuldan tanıyorum. Kendisi sanırım babasından dolayı biraz burnu havada biriydi. Zaten babası milletvekili olan birinin neden bu küçük şehirdeki, küçük bir üniversitede okuduğunu hiçbir zaman anlayamadım. Okula fazla gelip gitmezdi, geldiği zamanlarda da benimle beraber kahve içerdi. Genellikle kendine güvenen ve insanları küçük gören bir konuşma tarzı vardı."
+      },
+      {
+        "q": "Kendisine zarar verebilecek birilerinden veya peşinde olan birilerinden bahsetti mi ?",
+        "a": "Hayır, peşinde birilerinin olduğunu sanmıyorum."
+      },
+      {
+        "q": "Daha önce şüpheli bir olaya karıştığını gördün  veya duydun mu ?",
+        "a": "Daha önce okulda yaşanan bir olay olmadı ama geçen hafta madde kullandığı bilinen bir öğrenciye ufak bir paket verirken yere düşürdüğünü görenler olmuş. Ben görmedim ama oradan geçen birkaç kişi gördüğünü söylüyor. Herkesin aklına aynı şey geldi ama kimse okuldan atılmak istemediği için üzerine gitmedi bu olayın"
+      },
+      {
+        "q": "Sen şu madde kullanan çocuğun ismini ver sonra gidebilirsin.",
+        "a": "İsmi Furkan, soyadını bilmiyorum ama bizim okulda kime sorsanız gösterir. Genelde okulun karşısındaki kafede takılıyor. Dağınık saçları olan hafif kambur bir çocuk."
+      }
+    ]
+  },
+  {
+    "id": "deniz",
+    "type": "statement",
+    "title": "Deniz Yılmaz - İfade Tutanağı",
+    "requires": "part1Done",
+    "name": "Deniz Yılmaz",
+    "idNumber": "987654321",
+    "daysBeforeFirstOpen": 2,
+    "education": "Yüksek Lisans",
+    "maritalStatus": "Bekar",
+    "gender": "Kadın",
+    "takenBy": "Doğa Aksu",
+    "qa": [
+      {
+        "q": "Maktulle yakınlığın nedir?",
+        "a": "Berat'ın kuzeniyim. Aynı şehirde okuyoruz, ailesi buraya gelemediği için ara sıra ona ben bakardım."
+      },
+      {
+        "q": "Cesedi nasıl buldun?",
+        "a": "Berat iki gündür telefonlarımı açmıyordu. Akşam evine gittim, kapı aralıktı. İçeri girdiğimde onu salonda asılı halde buldum ve hemen 112'yi aradım."
+      },
+      {
+        "q": "Evde dikkatini çeken bir şey oldu mu?",
+        "a": "Her yer dağınıktı, sanki kavga edilmiş gibi. Sehpa devrilmişti, bardaklar kırıktı. Berat çok titiz biriydi, evi asla öyle bırakmazdı."
+      },
+      {
+        "q": "Berat son zamanlarda tedirgin miydi?",
+        "a": "Geçen hafta bana para lazım olduğunu söyledi. Babasından isteyemeyeceğini, birine borcu olduğunu söyledi. Kime diye sorduğumda konuyu değiştirdi."
+      },
+      {
+        "q": "Berat'ın intihar edebileceğini düşünüyor musun?",
+        "a": "Asla. Berat kendini çok severdi. Gelecek ay yurtdışına gitmek için plan yapıyordu."
+      }
+    ]
+  },
+  {
+    "id": "autopsy",
+    "type": "report",
+    "title": "Berat Yılmaz - Otopsi Raporu",
+    "requires": "part1Done",
+    "subject": "Berat Yılmaz",
+    "daysBeforeFirstOpen": 2,
+    "authority": "T.C.\nADALET BAKANLIĞI\nADLİ TIP KURUMU\nMORG İHTİSAS DAİRESİ",
+    "heading": "OTOPSİ RAPORU",
+    "lines": [
+      {"heading": "CESEDİN KİMLİĞİ"},
+      {"field": "Adı ve soyadı: Berat Yılmaz"},
+      {"field": "Kimlik numarası: 3231"},
+      {"field": "Otopsi tarihi: {tarih}"},
+      {"field": "Cinsiyeti: Erkek"},
+      {"field": "Yaş: 20-25"},
+      {"heading": "DIŞ MUAYENE BULGULARI"},
+      {"field": "Boy: 173 cm"},
+      {"field": "Ağırlık 70-73 kg"},
+      {"field": "Saç rengi: Açık kumral"},
+      {"field": "Cilt rengi: Beyaz"},
+      {"field": "Sünnet durumu: Sünnetli"},
+      {
+        "paragraph": "Sırt ve bel bölgelerinde ölü lekeleri tespit edildi. Alın sol tarafında 3 cm uzunluğunda kanamalı radyal yara bulundu. Burun sırtında 1 cm çapında bir yara tespit edildi. Sağ parietal bölge orta alt kısmında 3x0,5 cm boyutlarında bir yara bulundu. Çene sağ tarafında 2x2 cm boyutlarında kurumuş bir sıyrık görüldü. Sağ kolun orta arka yüzünde 6 cm çapında bir yara izi bulundu. Sağ el sırtında 2x0,5 cm boyutlarında bir yara izi tespit edildi.Sol diz altında 0,5 cm çapında kurumuş bir sıyrık bulundu.Sağ temporal bölgede 5x7 cm boyutlarında bir alanda 8 adet 4 cm çapında bıçak izi saptandı. En yakın yara arası mesafe 1,5 cm, en uzak yara arası mesafe 15 cm olarak ölçüldü. En yakın yara arası mesafe 1 cm, en uzak yara arası mesafe 15 cm olarak ölçüldü. Vücutta harici darbe, kesici-delici alet yarası ve ateşli silah gibi bulgulara rastlanmadı."
+      },
+      {"heading": "İÇ MUAYENE BULGULARI"},
+      {"subheading": "Baş Muayenesi"},
+      {
+        "paragraph": "Saç derisi kaldırıldı ve sağ temporal bölgede yaygın ekimozlu bir bulgu tespit edildi. Kafatası açıldı. Beyin beyincik çıkarıldı ve tartıldı. Ağırlığı 1250 gr olarak ölçüldü. Sağ temporal bölgede yaygın 0,2 cm kalınlığında subdural kanama tespit edildi. Beyin beyincik yüzeyini etkileyen özellikle beynin sağ temporal lobunda yoğunluk gösteren subaraknoidal kanama saptandı. Kafa kaide kemiklerinin sağlam olduğu belirlendi."
+      },
+      {"subheading": "Boyun Muayenesi"},
+      {
+        "paragraph": "Boyun cimadında, kaslarda ve yumuşak dokularda kanama veya ekimoz bulguları gözlenmedi. Boyun çevresinde özellikle arka bölgede asma izleri bulundu. Asma izleri, boyundaki derinliklere nüfuz eden ve çizgi şeklindeki izler olarak tanımlandı. Boyun organlarında şu bulgular saptandı: Hyoid kemik, tiroid kartilaj ve boyun omurları sağlamdı. Özofagus ve trakea boş olarak bulundu."
+      },
+      {"subheading": "Göğüs Muayenesi"},
+      {
+        "paragraph": "Göğüs kafesi açıldı ve kalp incelendi. Kalbin sağ ventrikül bölgesinde 3 cm derinliğinde bıçak deliği tespit edildi. Delik, sol ventrikül arka duvarından kalbe girmiş ve kalpte büyük bir yırtılma meydana getirmiştir. Kalpte yaygın kanama ve kan pıhtıları gözlendi. Kalbin diğer bölgelerinde anormallik tespit edilmedi. Kalp krizi veya diğer doğal nedenlerden kaynaklanan herhangi bir patolojiye rastlanmadı."
+      },
+      {
+        "conclusion": "Bu otopsi raporu, incelenen erkek cesedin dış ve iç muayene bulgularını içermektedir. Ölüm sebebi, göğsünden aldığı bıçak darbesi sonucu kalpte meydana gelen yırtılma ve kanamadır. Asılma işlemi ve boyundaki izler ölümden sonra oluşmuştur. cesette boğuşma izleri görülmektedir."
+      }
+    ]
+  },
+  {
+    "id": "furkan",
+    "type": "statement",
+    "title": "Furkan Şahin - İfade Tutanağı",
+    "requires": "furkanStatement",
+    "name": "Furkan Şahin",
+    "idNumber": "412578963",
+    "daysBeforeFirstOpen": 0,
+    "education": "Lisans (eğitimi devam ediyor)",
+    "maritalStatus": "Bekar",
+    "gender": "Erkek",
+    "takenBy": "Doğa Aksu",
+    "testimonyFrom": "Doğa"
+  },
+  {
+    "id": "toxicology",
+    "type": "report",
+    "title": "Berat Yılmaz - Toksikoloji Raporu",
+    "requires": "toxicology",
+    "subject": "Berat Yılmaz",
+    "daysBeforeFirstOpen": 0,
+    "authority": "T.C.\nADALET BAKANLIĞI\nADLİ TIP KURUMU\nKİMYA İHTİSAS DAİRESİ",
+    "heading": "TOKSİKOLOJİ RAPORU",
+    "lines": [
+      {"heading": "İnceleme Bilgileri"},
+      {"field": "İnceleme tarihi: {tarih}"},
+      {"field": "Numune: Kan, idrar, mide içeriği"},
+      {"heading": "Bulgular"},
+      {
+        "paragraph": "Kan örneğinde yüksek konsantrasyonda benzodiazepin grubu sakinleştirici tespit edilmiştir. Tespit edilen miktar, kişiyi birkaç saat boyunca bilinçsiz bırakmaya yetecek düzeydedir."
+      },
+      {
+        "paragraph": "Mide içeriğinde alkol ve kahve kalıntısı bulunmuştur. Maddenin içeceğe karıştırılarak verildiği değerlendirilmektedir."
+      },
+      {
+        "conclusion": "Maktulün öldürülmeden önce bilinçli olarak bayıltıldığı, boğuşma izlerinin maddenin etkisi tam başlamadan önce oluştuğu düşünülmektedir."
+      }
+    ]
+  }
+]

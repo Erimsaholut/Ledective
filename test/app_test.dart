@@ -1,5 +1,12 @@
+import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ledective/apps/map/map_app.dart';
+import 'package:ledective/apps/poltel/lab/inspection_page.dart';
+import 'package:ledective/apps/poltel/lab/jigsaw_game.dart';
+import 'package:ledective/apps/poltel/lab/uv_game.dart';
+import 'package:ledective/story/story_data.dart';
 import 'package:ledective/apps/mates/chat_page.dart';
 import 'package:ledective/apps/phone/call_screen.dart';
 import 'package:ledective/data/game_state.dart';
@@ -49,12 +56,12 @@ void main() {
 
     // Pian needs the audio plugin, which isn't available in widget tests.
     const firstPage = [
-      'Mail', 'Photos', 'Camera', 'Calendar', 'Clock', 'Poltel', 'Notes',
-      'Settings', 'Sinstagram', 'AppShop', 'Shopper',
+      'Mail', 'Photos', 'Camera', 'Calendar', 'Clock', 'Poltel', 'Harita',
+      'Pano', 'Notes', 'Sinstagram', 'ZaferBank', 'Kayıtlar', 'Settings',
       // The dock.
       'Phone', 'Messages', 'MatesApp', 'Contacts',
     ];
-    const secondPage = ['Games', 'Music'];
+    const secondPage = ['Games', 'Music', 'Shopper', 'AppShop'];
 
     Finder icon(String title) => find
         .byWidgetPredicate((w) => w is AppIcon && w.title == title)
@@ -146,5 +153,92 @@ void main() {
     await tester.pump(const Duration(seconds: 20));
     await tester.pumpAndSettle();
     expect(find.text('call'), findsOneWidget);
+  });
+
+  testWidgets('sending an officer from the map brings back a report', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+    await tester.runAsync(loadGameState);
+    await StoryProgress.instance.discover(['part1Done']);
+    await tester.pumpWidget(const MaterialApp(home: MapApp()));
+    await tester.pump();
+
+    await tester.tap(find.text("Berat'ın Evi"), kind: PointerDeviceKind.mouse);
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    expect(find.text("Olay yerini yeniden ara"), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Gönder').first);
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    await tester.tap(find.text('Doğa').last);
+    await tester.pump();
+    expect(StoryProgress.instance.missionOf('Doğa'), isNotNull);
+
+    // Close everything so the map's ticker stops.
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('lab minigames complete their inspections', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+    await tester.runAsync(loadGameState);
+    final evidence = StoryData.current.evidence;
+    final progress = StoryProgress.instance;
+
+    // Fingerprint: a wrong guess is rejected, the right one solves it.
+    final glass = evidence.firstWhere((e) => e.id == 'glass');
+    await tester.pumpWidget(MaterialApp(home: InspectionPage(evidence: glass)));
+    await tester.ensureVisible(find.text('Yusuf Kasap'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Yusuf Kasap'));
+    await tester.pump();
+    expect(progress.isInspected('glass'), isFalse);
+    await tester.ensureVisible(find.text('Adil Karaca'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Adil Karaca'));
+    await tester.pumpAndSettle();
+    expect(progress.isInspected('glass'), isTrue);
+    expect(find.text('LABORATUVAR SONUCU'), findsOneWidget);
+
+    // UV: sweeping the lamp over the writing reveals it.
+    final notebook = evidence.firstWhere((e) => e.id == 'notebook');
+    await tester.pumpWidget(
+      MaterialApp(home: InspectionPage(evidence: notebook)),
+    );
+    final page = tester.getRect(find.byType(UvGame));
+    for (var row = 0.3; row < 0.75; row += 0.1) {
+      await tester.timedDragFrom(
+        Offset(page.left + 4, page.top + page.height * row),
+        Offset(page.width - 8, 0),
+        const Duration(milliseconds: 400),
+      );
+    }
+    await tester.pumpAndSettle();
+    expect(progress.isInspected('notebook'), isTrue);
+
+    // Jigsaw: swapping the pieces back solves it.
+    final photo = evidence.firstWhere((e) => e.id == 'torn-photo');
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: JigsawGame(
+            image: photo.image!,
+            rows: 2,
+            cols: 2,
+            board: JigsawBoard.fromPieces(2, 2, [1, 0, 2, 3]),
+            onSolved: () => progress.completeInspection(photo),
+          ),
+        ),
+      ),
+    );
+    final pieces = find.byType(GestureDetector);
+    await tester.tap(pieces.at(0));
+    await tester.tap(pieces.at(1));
+    await tester.pumpAndSettle();
+    expect(progress.isInspected('torn-photo'), isTrue);
+    expect(progress.has('photo-restored'), isTrue);
   });
 }

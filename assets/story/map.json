@@ -1,0 +1,137 @@
+{
+  "image": "assets/story/images/city_map.png",
+  "officers": ["Atakan", "Doğa", "Orhun", "İnanç"],
+  "locations": [
+    {
+      "id": "berat-home",
+      "name": "Berat'ın Evi",
+      "description": "Yeşilkent'te kiralık bir daire. Olay yeri.",
+      "x": 0.27,
+      "y": 0.22,
+      "requires": "part1Done",
+      "tasks": [
+        {
+          "id": "home-search",
+          "label": "Olay yerini yeniden ara",
+          "minutes": 2,
+          "report": "Amirim ilk ekip bazı yerlere hiç bakmamış. Yatak odasında halının altında dokuz parçaya yırtılmış bir fotoğraf bulduk. Mutfakta da yıkanmamış iki bardak vardı, birinin üstünde net bir parmak izi var. Hepsini laboratuvara yolladım.",
+          "unlocks": ["ev:torn-photo", "ev:glass"]
+        },
+        {
+          "id": "home-neighbours",
+          "label": "Komşularla konuş",
+          "minutes": 1.5,
+          "report": "Karşı daireden yaşlı bir kadın olay gecesi saat ikiye doğru bağırışlar duymuş. Biri durmadan 'Adil abi, yemin ederim ödeyeceğim' diye yalvarıyormuş. Sonra her şey birden susmuş.",
+          "unlocks": ["heard:adil"]
+        }
+      ]
+    },
+    {
+      "id": "cafe",
+      "name": "Kampüs Kafe",
+      "description": "Okulun karşısındaki kafe. Berat'ın her zamanki yeri.",
+      "x": 0.66,
+      "y": 0.27,
+      "requires": "part1Done",
+      "tasks": [
+        {
+          "id": "cafe-barista",
+          "label": "Kafeciyle konuş",
+          "minutes": 1,
+          "report": "Kafeci Furkan'ın o gece kapanışa kadar burada olduğunu doğruladı. Berat 23.40 gibi telefonla konuşup aceleyle çıkmış. Hemen arkasından deri ceketli, sakallı biri de kalkmış. Kafeci adamı daha önce hiç görmemiş.",
+          "unlocks": ["cafe:witness"]
+        },
+        {
+          "id": "cafe-cctv",
+          "label": "Kamera kayıtlarını iste",
+          "minutes": 3,
+          "requires": "cafe:witness",
+          "report": "Kafenin dış kamerasından deri ceketli adamın yüzünün göründüğü tek bir kare çıkardık. Görüntü bulanık ama Poltel'e yükledim.",
+          "unlocks": ["ev:cctv"]
+        }
+      ]
+    },
+    {
+      "id": "university",
+      "name": "Üniversite",
+      "description": "Berat'ın neredeyse hiç uğramadığı okul.",
+      "x": 0.78,
+      "y": 0.13,
+      "requires": "part1Done",
+      "tasks": [
+        {
+          "id": "uni-locker",
+          "label": "Berat'ın dolabını aç",
+          "minutes": 2,
+          "report": "Dolapta birkaç kitap ve bir defter vardı. Defter sıradan görünüyor ama bazı sayfalar sanki üstüne bir şey yazılıp silinmiş gibi kabarık. Laboratuvar bir baksın derim.",
+          "unlocks": ["ev:notebook"]
+        },
+        {
+          "id": "uni-registry",
+          "label": "Öğrenci işlerinden kayıt iste",
+          "minutes": 1,
+          "report": "Berat son iki ayda derslerin hiçbirine girmemiş ama yoklamalarda hep 'var' görünüyor. Danışmanı 'Babası her şeyi hallediyordu, karışmayın dediler' demiş."
+        }
+      ]
+    },
+    {
+      "id": "forensics",
+      "name": "Adli Tıp Kurumu",
+      "description": "Otopsiyi yapan kurum.",
+      "x": 0.45,
+      "y": 0.42,
+      "requires": "part1Done",
+      "tasks": [
+        {
+          "id": "forensics-tox",
+          "label": "Ek toksikoloji tahlili iste",
+          "minutes": 4,
+          "report": "Toksikoloji sonuçları geldi amirim, raporu Poltel'e koydum. Çocuğu öldürmeden önce bayıltmışlar.",
+          "unlocks": ["toxicology"]
+        }
+      ]
+    },
+    {
+      "id": "teahouse",
+      "name": "Sanayi Çay Ocağı",
+      "description": "Sanayi sitesinin girişinde. Adil'in takıldığı söylenen yer.",
+      "x": 0.24,
+      "y": 0.77,
+      "requiresAny": ["heard:adil", "furkanStatement"],
+      "tasks": [
+        {
+          "id": "teahouse-watch",
+          "label": "Uzaktan gözetle",
+          "minutes": 3,
+          "report": "Adil'i gördük amirim. Akşama doğru siyah bir makam aracı geldi, arka koltuktaki adamla on dakika konuştu. Plakayı aldık: 06 MV 1907. Araç Meclis otoparkına kayıtlı.",
+          "unlocks": ["plate:mv"]
+        },
+        {
+          "id": "teahouse-raid",
+          "label": "Çay ocağını ara",
+          "minutes": 2,
+          "requires": "plate:mv",
+          "report": "Adil kaçmış, tezgahın altındaki sobada bir şeyler yakmış. Ateşten kurtarabildiğimiz tek şey yarısı yanmış bir harita. Parçaları laboratuvara gönderdim.",
+          "unlocks": ["ev:torn-map"]
+        }
+      ]
+    },
+    {
+      "id": "slaughterhouse",
+      "name": "Eski Mezbaha",
+      "description": "Şehrin dışında, yıllardır kapalı.",
+      "x": 0.84,
+      "y": 0.9,
+      "requires": "map-restored",
+      "tasks": [
+        {
+          "id": "slaughterhouse-enter",
+          "label": "Ekip gönder",
+          "minutes": 3,
+          "report": "Amirim... burası boş değil. Ortada vidalanmış bir sandalye, kesik ip parçaları ve kurumuş kan var. Duvara Berat'ın ve iki öğrencinin daha fotoğrafları asılmış. Fotoğrafların altına tarih yazılmış. Bir tanesinin tarihi önümüzdeki cuma.",
+          "unlocks": ["mezbaha-found"]
+        }
+      ]
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../data/game_clock.dart';
+import '../../story/story_data.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/turkish_dates.dart';
 
@@ -22,16 +23,20 @@ class CalendarEvent {
   final bool userAdded;
 }
 
-/// Story events, placed relative to the day the game was first opened.
+/// Story events from `calendar.json`, placed relative to the day the game
+/// was first opened, with yearly dates repeated around [year].
 List<CalendarEvent> storyEvents(GameClock clock, {int? year}) {
-  DateTime day(int offset) => clock.daysBeforeFirstOpen(-offset);
   final y = year ?? DateTime.now().year;
   return [
-    CalendarEvent(date: day(-7), title: "İzin başlangıcı ✈️"),
-    CalendarEvent(date: day(-3), title: "Berat Yılmaz olayı"),
-    CalendarEvent(date: day(3), title: "Türkiye'ye dönüş uçuşu"),
-    for (final year in [y - 1, y, y + 1])
-      CalendarEvent(date: DateTime(year, 4, 10), title: "Polis Haftası"),
+    for (final event in StoryData.current.calendar)
+      if (event.dayOffset case final offset?)
+        CalendarEvent(
+          date: clock.daysBeforeFirstOpen(-offset),
+          title: event.title,
+        )
+      else if ((event.month, event.day) case (final int m, final int d))
+        for (final year in [y - 1, y, y + 1])
+          CalendarEvent(date: DateTime(year, m, d), title: event.title),
   ];
 }
 

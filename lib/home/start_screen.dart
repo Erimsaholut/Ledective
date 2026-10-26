@@ -4,12 +4,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../apps/bank/bank_app.dart';
+import '../apps/board/board_app.dart';
 import '../apps/calendar/calendar_app.dart';
 import '../apps/camera/camera_app.dart';
 import '../apps/clock/clock_app.dart';
 import '../apps/contacts/contacts_app.dart';
 import '../apps/games/games_app.dart';
 import '../apps/mail/mail_app.dart';
+import '../apps/map/map_app.dart';
 import '../apps/mates/mates_app.dart';
 import '../apps/messages/messages_app.dart';
 import '../apps/music/music_app.dart';
@@ -18,6 +21,7 @@ import '../apps/phone/phone_app.dart';
 import '../apps/photos/photos_app.dart';
 import '../apps/pian/pian_app.dart';
 import '../apps/poltel/poltel_app.dart';
+import '../apps/recordings/recordings_app.dart';
 import '../apps/settings/settings_app.dart';
 import '../apps/shopper/shopper_app.dart';
 import '../apps/sinstagram/sinstagram_app.dart';
@@ -55,17 +59,25 @@ const List<List<AppIcon>> _pages = [
       badgeCount: newDocumentCount,
     ),
     AppIcon(
+      title: "Harita",
+      app: MapApp(),
+      iconData: Icons.map_rounded,
+      colors: [Color(0xFF7ED957), Color(0xFF2E9E5B)],
+      badgeCount: unreadReportCount,
+    ),
+    AppIcon(
+      title: "Pano",
+      app: BoardApp(),
+      iconData: Icons.push_pin_rounded,
+      colors: [Color(0xFFC8955F), Color(0xFF8A5A2F)],
+      badgeCount: newEvidenceCount,
+    ),
+    AppIcon(
       title: "Notes",
       app: NotesApp(),
       iconData: Icons.edit_note_rounded,
       colors: [Color(0xFFFFE066), Color(0xFFFFC300)],
       glyphColor: Color(0xFF5C4A00),
-    ),
-    AppIcon(
-      title: "Settings",
-      app: SettingsApp(),
-      iconData: Icons.settings_rounded,
-      colors: [Color(0xFFAEAEB2), Color(0xFF636366)],
     ),
     AppIcon(
       title: "Sinstagram",
@@ -74,16 +86,25 @@ const List<List<AppIcon>> _pages = [
       colors: [Color(0xFF833AB4), Color(0xFFE1306C), Color(0xFFF77737)],
     ),
     AppIcon(
-      title: "AppShop",
-      app: UnavailableApp(title: "AppShop"),
-      iconData: Icons.apps_rounded,
-      colors: [Color(0xFF5AC8FA), Color(0xFF007AFF)],
+      title: "ZaferBank",
+      app: BankApp(),
+      iconData: Icons.account_balance_rounded,
+      colors: [Color(0xFFE0485F), Color(0xFF8E0E21)],
+      badgeCount: newTransactionCount,
     ),
     AppIcon(
-      title: "Shopper",
-      app: ShopperApp(),
-      iconData: Icons.shopping_bag_rounded,
-      colors: [Color(0xFFFFB347), Color(0xFFFF7A00)],
+      title: "Kayıtlar",
+      app: RecordingsApp(),
+      iconData: Icons.graphic_eq_rounded,
+      colors: [Color(0xFF3A3A3C), Color(0xFF1C1C1E)],
+      glyphColor: Color(0xFFFF453A),
+      badgeCount: unheardRecordingCount,
+    ),
+    AppIcon(
+      title: "Settings",
+      app: SettingsApp(),
+      iconData: Icons.settings_rounded,
+      colors: [Color(0xFFAEAEB2), Color(0xFF636366)],
     ),
   ],
   [
@@ -100,6 +121,18 @@ const List<List<AppIcon>> _pages = [
       colors: [Color(0xFFFF5E7E), Color(0xFFFA233B)],
     ),
     AppIcon(title: "Pian", app: PianApp(), artwork: pianoArtwork),
+    AppIcon(
+      title: "Shopper",
+      app: ShopperApp(),
+      iconData: Icons.shopping_bag_rounded,
+      colors: [Color(0xFFFFB347), Color(0xFFFF7A00)],
+    ),
+    AppIcon(
+      title: "AppShop",
+      app: UnavailableApp(title: "AppShop"),
+      iconData: Icons.apps_rounded,
+      colors: [Color(0xFF5AC8FA), Color(0xFF007AFF)],
+    ),
   ],
 ];
 

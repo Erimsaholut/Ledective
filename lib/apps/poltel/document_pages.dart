@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../../data/game_clock.dart';
 import '../../story/story_progress.dart';
-import 'documents.dart';
+import '../../story/story_data.dart';
 
 const _ink = Color(0xFF1A1A1A);
 const _bold = TextStyle(fontWeight: FontWeight.w700, color: _ink);
@@ -183,10 +183,7 @@ class StatementPage extends StatelessWidget {
     final s = statement;
     final person = s.testimonyFrom;
     final records = person == null
-        ? [
-            for (var i = 0; i < s.questions.length; i++)
-              (question: s.questions[i], answer: s.answers[i]),
-          ]
+        ? s.qa
         : StoryProgress.instance.testimonyFrom(person);
     final date = GameClock.current.daysBeforeFirstOpen(s.daysBeforeFirstOpen);
 
@@ -214,10 +211,10 @@ class StatementPage extends StatelessWidget {
       children: [
         _sectionTitle("İfade verenin kimliği"),
         _Field("Adı ve soyadı", s.name),
-        _Field("Kimlik numarası", s.number),
+        _Field("Kimlik numarası", s.idNumber),
         _Field("İfade tarihi", formatDate(date)),
         _Field("Öğrenim durumu", s.education),
-        _Field("Medeni hali", s.isMarried),
+        _Field("Medeni hali", s.maritalStatus),
         _Field("Cinsiyeti", s.gender),
         _sectionTitle("İfadesi"),
         for (final record in records) ...[
@@ -255,28 +252,29 @@ class StatementPage extends StatelessWidget {
   }
 }
 
-class AutopsyPage extends StatelessWidget {
-  const AutopsyPage({super.key});
+class ReportPage extends StatelessWidget {
+  const ReportPage({super.key, required this.report});
 
-  // The body was found three days before the game starts.
-  static String get _autopsyDate =>
-      formatDate(GameClock.current.daysBeforeFirstOpen(2));
+  final Report report;
+
+  String get _date => formatDate(
+    GameClock.current.daysBeforeFirstOpen(report.daysBeforeFirstOpen),
+  );
 
   Widget _line(ReportLine line) {
-    return switch (line) {
-      ReportHeading(:final text) => _sectionTitle(text),
-      ReportSubheading(:final text) => Padding(
+    final text = line.text.replaceAll("{tarih}", _date);
+    return switch (line.kind) {
+      ReportLineKind.heading => _sectionTitle(text),
+      ReportLineKind.subheading => Padding(
         padding: const EdgeInsets.only(top: 12, bottom: 4),
         child: Text(text, style: _bold.copyWith(fontStyle: FontStyle.italic)),
       ),
-      ReportField(:final text) => _fieldFrom(
-        text.replaceAll("{autopsyDate}", _autopsyDate),
-      ),
-      ReportParagraph(:final text) => Padding(
+      ReportLineKind.field => _fieldFrom(text),
+      ReportLineKind.paragraph => Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Text(text, style: _body, textAlign: TextAlign.justify),
       ),
-      ReportConclusion(:final text) => Container(
+      ReportLineKind.conclusion => Container(
         margin: const EdgeInsets.only(top: 24),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -299,6 +297,7 @@ class AutopsyPage extends StatelessWidget {
     final separator = text.indexOf(':');
     if (separator < 0) {
       final space = text.indexOf(' ');
+      if (space < 0) return _Field(text, '');
       return _Field(text.substring(0, space), text.substring(space + 1));
     }
     return _Field(
@@ -310,11 +309,10 @@ class AutopsyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _PaperScaffold(
-      title: "$autopsySubject Otopsi Raporu",
-      authority:
-          "T.C.\nADALET BAKANLIĞI\nADLİ TIP KURUMU\nMORG İHTİSAS DAİRESİ",
-      heading: "OTOPSİ RAPORU",
-      children: [for (final line in autopsyReport) _line(line)],
+      title: report.title,
+      authority: report.authority,
+      heading: report.heading,
+      children: [for (final line in report.lines) _line(line)],
     );
   }
 }

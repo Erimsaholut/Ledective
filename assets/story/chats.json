@@ -1,0 +1,450 @@
+{
+  "Özge": {
+    "history": [
+      {"day": 8},
+      {"in": "İyi akşamlar amirim istediğiniz raporları müdüre ilettim."},
+      {"out": "Aferin kızım"},
+      {"day": 5},
+      {"in": "Palu cinayeti için savcılıkta imza vermeniz gerekiyormuş amirim."},
+      {"out": "Atakanı yolla, atıversin benim yerime"},
+      {"in": "Atakan izinli amirim Orhuna haber verdim"},
+      {"out": "ok"},
+      {"day": 0},
+      {
+        "in": "Amirim yardımınızı gerektiren büyük bir cinayet olayı oldu. Büro olarak işin içinde çıkamadık."
+      }
+    ],
+    "start": "start",
+    "nodes": {
+      "start": {
+        "incoming": [
+          "Amirim şu an yurtdışında olduğunuzu biliyorum ama yardımınızı gerektiren önemli bir durum var"
+        ],
+        "options": [
+          {
+            "label": "Kızım ben size izindeyken bana yazmayın demedim mi ?",
+            "replies": ["Amirim çok özür dilerim ama gerçekten ciddi bir olay"],
+            "next": "whatHappened",
+            "traits": ["öfke"]
+          },
+          {
+            "label": "Neymiş bu kadar önemli olan durum",
+            "replies": [
+              "3 gün önce akşam saatlerinde bir üniversite öğrencisinin kendini astığı ihbarı geldi. Olay yeri incelemesi ve otopsiden sonra olayın cinayet olduğu açığa çıktı. Maktül öldükten sonra asılmış ve her yerinde boğuşma izleri var",
+              "Olaydan haberimiz olduktan yarım saat sonra şube müdürümüzden bir telefon geldi. Kendisini de il emniyet müdürü aramış. Maktulün bir milletvekilinin oğlu olduğunu ve diğer davaları askıya alıp hepimizin bu davaya odaklanması söyledi.",
+              "Size de ulaşmaya çalışmış ama telefonunuz kapalıymış"
+            ],
+            "next": "questions",
+            "traits": ["merak"]
+          }
+        ]
+      },
+      "whatHappened": {
+        "options": [
+          {
+            "label": "Neymiş bu kadar önemli olan durum",
+            "replies": [
+              "3 gün önce akşam saatlerinde bir üniversite öğrencisinin kendini astığı ihbarı geldi. Olay yeri incelemesi ve otopsiden sonra olayın cinayet olduğu açığa çıktı. Maktül öldükten sonra asılmış ve her yerinde boğuşma izleri var",
+              "Olaydan haberimiz olduktan yarım saat sonra şube müdürümüzden bir telefon geldi. Kendisini de il emniyet müdürü aramış. Maktulün bir milletvekilinin oğlu olduğunu ve diğer davaları askıya alıp hepimizin bu davaya odaklanması söyledi.",
+              "Size de ulaşmaya çalışmış ama telefonunuz kapalıymış"
+            ],
+            "next": "questions"
+          }
+        ]
+      },
+      "questions": {
+        "options": [
+          {
+            "label": "Yakınlarının ifadesini aldınız mı ?",
+            "replies": [
+              "Atakan'la Doğa maktülün yakın arkadaşının ve cesedi bulan kişinin ifadesini aldılar ama görünüşe göre fazla arkadaşı yokmuş."
+            ],
+            "next": "sendStatements",
+            "traits": ["merak"]
+          },
+          {
+            "label": "Hangi davaları askıya aldınız ?",
+            "replies": [
+              "Borç meselesi yüzünden çıkan kavgada ölen adamın davasını askıya aldık ama sadece evrak işleri kalmıştı. Boş kaldığım bir zamanda hallederim ben onu."
+            ],
+            "next": "afterCases",
+            "traits": ["merak"]
+          },
+          {
+            "label": "Kapalı değildi Erdiyi engelledim ben",
+            "replies": [
+              "Anladım amirim. Atakan'la Doğa maktülün yakın arkadaşının ifadesini aldılar. Onları size \"poltel\" üzerinden gönderiyorum"
+            ],
+            "traits": ["umursamaz"],
+            "unlocks": ["part1Done"],
+            "next": "afterMezbaha"
+          }
+        ]
+      },
+      "afterCases": {
+        "options": [
+          {
+            "label": "Tamamdır hallet sen onu. Maktulün yakınlarının ifadesini aldınız mı ?",
+            "replies": [
+              "Atakan'la Doğa maktülün yakın arkadaşının ve cesedi bulan kişinin ifadesini aldılar ama görünüşe göre fazla arkadaşı yokmuş."
+            ],
+            "next": "sendStatements",
+            "traits": ["merak"]
+          }
+        ]
+      },
+      "sendStatements": {
+        "options": [
+          {
+            "label": "İfadeleri bana poltel üzerinden gönder",
+            "replies": ["Hemen gönderiyorum amirim."],
+            "unlocks": ["part1Done"],
+            "next": "afterMezbaha"
+          }
+        ]
+      },
+      "afterMezbaha": {
+        "waitFor": "mezbaha-found",
+        "incoming": [
+          "Amirim... mezbahadaki fotoğraflardaki iki öğrenciyi tanıdık.",
+          "İkisi de geçen ay kayıp ilanı verilmiş öğrenciler. Aileleri hâlâ arıyor.",
+          "Bu sadece Berat'la ilgili değil, değil mi?"
+        ],
+        "options": [
+          {
+            "label": "Ailelere henüz bir şey söylemeyin.",
+            "replies": ["Peki amirim. Ama bunu ne kadar saklayabiliriz bilmiyorum."],
+            "traits": ["temkinli"]
+          },
+          {
+            "label": "Bütün ekibi mezbahaya toplayın. Bu gece kimse uyumayacak.",
+            "replies": ["Hemen haber veriyorum amirim."],
+            "traits": ["cesur"]
+          },
+          {
+            "label": "Bundan Erdi'ye tek kelime etmeyeceksin.",
+            "replies": ["...Anladım amirim."],
+            "traits": ["öfke"],
+            "unlocks": ["erdi-kept-out"]
+          }
+        ]
+      }
+    }
+  },
+  "Orhun": {
+    "history": [
+      {"day": 5},
+      {"in": "İmza işini hallettim amirim."},
+      {"out": "tmmdır"},
+      {"day": 0},
+      {"in": "Akşama iki bira ok ?"}
+    ],
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "part1Done",
+        "incoming": ["Amirim, Özgeyle konuşmuşsunuz sanırım. Dava ile ilgili bilgileri size ben iletebilirim."],
+        "options": [
+          {
+            "label": "İlet bakalım",
+            "replies": [
+              "Amirim okulu biraz soruşturduk ve Beratla görülen madde kullanan çocuğun adresini bulduk."
+            ],
+            "next": "statement"
+          },
+          {
+            "label": "Madde kullanan çocuğu buldunuz mu ?",
+            "replies": ["Bulduk amirim gerçekten yusufun anlattığı yerde takılıyormuş"],
+            "next": "statement"
+          },
+          {
+            "label": "Otopsi raporu ne zaman çıktı",
+            "replies": [
+              "Amirim bu dava yüzünden bütün yöneticilerin eli ayağı karıştı bu yüzden çok hızlı bir şekilde geldi otopsi raporu"
+            ],
+            "next": "status"
+          }
+        ]
+      },
+      "status": {
+        "options": [
+          {
+            "label": "Anladım, ne durumdasınız şu an",
+            "replies": [
+              "Amirim okulu biraz soruşturduk ve Beratla görülen madde kullanan çocuğun adresini bulduk."
+            ],
+            "next": "statement"
+          }
+        ]
+      },
+      "statement": {
+        "options": [
+          {
+            "label": "İfadesini aldınız mı uygulamada gözükmüyor.",
+            "replies": ["İnanç alacak amirim ifadesini isterseniz ona bir yazın."],
+            "unlocks": ["orhunDone"]
+          }
+        ]
+      }
+    }
+  },
+  "Atakan": {
+    "history": [{"day": 6}, {"in": "Amirim yarın izinliyim, Özge'ye haber verdim."}, {"out": "tamam"}],
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "part1Done",
+        "incoming": ["Amirim Yusuf'un ifadesini ben aldım, poltelde var. Çocuk bir şey saklıyor gibiydi."],
+        "options": [
+          {
+            "label": "Neden öyle düşündün?",
+            "replies": [
+              "Furkan'ın adını verirken etrafına bakınıp durdu. Kendisi de o kafeye takılıyormuş, Berat'la sandığından daha yakınlar bence."
+            ],
+            "traits": ["merak"]
+          },
+          {
+            "label": "Tamam, gözünüzü üzerinden ayırmayın.",
+            "replies": ["Emredersiniz amirim."],
+            "traits": ["temkinli"]
+          }
+        ]
+      }
+    }
+  },
+  "Behram": {
+    "history": [{"label": "10 Nisan"}, {"in": "Tüm polis teşkilatımızın polis haftası kutlu olsun."}],
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "furkanStatement",
+        "incoming": [
+          "Komiserim, Furkan'ın ifadesini okudum. Adil bizim narkotik dosyasında da var, aylardır peşindeyiz.",
+          "Bu işe birlikte bakmamız lazım. Döndüğünde ilk iş konuşalım."
+        ],
+        "options": [
+          {
+            "label": "Tamam. Ben dönene kadar Adil'e kimse dokunmasın.",
+            "replies": ["Merak etme, uzaktan izliyoruz."],
+            "traits": ["temkinli"]
+          },
+          {
+            "label": "Bekleyemem, adamlarını hazır tut. Gerekirse bu gece alın.",
+            "replies": ["Sen bilirsin komiserim. Ekip hazır."],
+            "traits": ["cesur"]
+          }
+        ]
+      }
+    }
+  },
+  "İnanç": {
+    "history": [{"day": 12}, {"out": "Raporları cumaya kadar bitirin"}, {"in": "Emredersiniz amirim."}],
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "orhunDone",
+        "options": [
+          {
+            "label": "Naptınız oğlum sorgu işini",
+            "replies": ["Amirim, elemanı evinden aldık biraz sonra sorguya girecektik"],
+            "next": "plan"
+          }
+        ]
+      },
+      "plan": {
+        "options": [
+          {
+            "label": "Benim söyleyeceğim sorularla alın ifadesini.",
+            "replies": ["Yurtdışından döndünüz mü amirim. Siz gelene kadar bekletelim elemanı"],
+            "next": "notBack"
+          },
+          {
+            "label": "Şimdi bürodaki kızlardan birini yanına al. Eleman ne söylüyorsa bana yazsın. Sen de benim sana sorduğum soruları sor ona",
+            "replies": ["Tamamdır doğaya haber verdim ben. Ona söylediğiniz zaman sorguya başlayabiliriz."],
+            "unlocks": ["inancDone"]
+          }
+        ]
+      },
+      "notBack": {
+        "options": [
+          {
+            "label": "Hayır gelmeme daha var. Buradan soracağım ben soruları",
+            "replies": ["Anladım amirim. Doğa'yı yanıma alıyorum, sorularınızı ona yazın."],
+            "traits": ["cesur"],
+            "unlocks": ["inancDone"]
+          }
+        ]
+      }
+    }
+  },
+  "Doğa": {
+    "history": [{"day": 9}, {"in": "Amirim nöbet çizelgesini masanıza bıraktım."}],
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "inancDone",
+        "incoming": ["Amirim sorgu odasındayız. Furkan karşımda, sorularınızı bekliyorum."],
+        "options": [
+          {
+            "label": "Berat'ı nereden tanıyorsun?",
+            "replies": ["Furkan: \"Okuldan abi. Bir iki kere okulun karşısındaki kafede oturduk, o kadar.\""],
+            "next": "package",
+            "traits": ["merak"],
+            "testimony": "Okuldan abi. Bir iki kere okulun karşısındaki kafede oturduk, o kadar."
+          },
+          {
+            "label": "Seni Berat'tan paket alırken görmüşler. O pakette ne vardı?",
+            "replies": ["Furkan: \"Ne paketi abi? Sigara verdi bana, sigara.\""],
+            "next": "package",
+            "traits": ["cesur"],
+            "testimony": "Ne paketi abi? Sigara verdi bana, sigara."
+          },
+          {
+            "label": "Önce bir su ver çocuğa, korkmuş gibi.",
+            "replies": ["Verdim amirim, biraz rahatladı. Sorularınızı alayım."],
+            "next": "calm",
+            "traits": ["merhamet"]
+          }
+        ]
+      },
+      "calm": {
+        "options": [
+          {
+            "label": "Berat'ı nereden tanıyorsun?",
+            "replies": ["Furkan: \"Okuldan abi. Bir iki kere okulun karşısındaki kafede oturduk, o kadar.\""],
+            "next": "package",
+            "traits": ["merak"],
+            "testimony": "Okuldan abi. Bir iki kere okulun karşısındaki kafede oturduk, o kadar."
+          },
+          {
+            "label": "Seni Berat'tan paket alırken görmüşler. O pakette ne vardı?",
+            "replies": ["Furkan: \"Ne paketi abi? Sigara verdi bana, sigara.\""],
+            "next": "package",
+            "traits": ["cesur"],
+            "testimony": "Ne paketi abi? Sigara verdi bana, sigara."
+          }
+        ]
+      },
+      "package": {
+        "options": [
+          {
+            "label": "Yalan söyleme! Kameralarda her şey var, pakette ne vardı?",
+            "replies": [
+              "Furkan: \"Tamam tamam bağırmayın! Ot vardı abi. Berat satıyordu, ben de ondan alıyordum.\""
+            ],
+            "next": "supplier",
+            "traits": ["öfke"],
+            "testimony": "Tamam tamam bağırmayın! Ot vardı abi. Berat satıyordu, ben de ondan alıyordum."
+          },
+          {
+            "label": "Doğruyu söylersen sana yardım ederiz. Pakette ne vardı?",
+            "replies": [
+              "Furkan: \"Ot vardı abi... Berat satıyordu, ben sadece kendime alıyordum. Ailem duymasın ne olur.\""
+            ],
+            "next": "supplier",
+            "traits": ["merhamet"],
+            "testimony": "Ot vardı abi... Berat satıyordu, ben sadece kendime alıyordum. Ailem duymasın ne olur."
+          },
+          {
+            "label": "Olay gecesi neredeydin?",
+            "replies": ["Furkan: \"Kafedeydim abi, kapanana kadar. Kafeci de gördü, kameralara bakın.\""],
+            "next": "packageAfterAlibi",
+            "traits": ["temkinli"],
+            "testimony": "Kafedeydim abi, kapanana kadar. Kafeci de gördü, kameralara bakın."
+          }
+        ]
+      },
+      "packageAfterAlibi": {
+        "options": [
+          {
+            "label": "Yalan söyleme! Kameralarda her şey var, pakette ne vardı?",
+            "replies": [
+              "Furkan: \"Tamam tamam bağırmayın! Ot vardı abi. Berat satıyordu, ben de ondan alıyordum.\""
+            ],
+            "next": "supplier",
+            "traits": ["öfke"],
+            "testimony": "Tamam tamam bağırmayın! Ot vardı abi. Berat satıyordu, ben de ondan alıyordum."
+          },
+          {
+            "label": "Doğruyu söylersen sana yardım ederiz. Pakette ne vardı?",
+            "replies": [
+              "Furkan: \"Ot vardı abi... Berat satıyordu, ben sadece kendime alıyordum. Ailem duymasın ne olur.\""
+            ],
+            "next": "supplier",
+            "traits": ["merhamet"],
+            "testimony": "Ot vardı abi... Berat satıyordu, ben sadece kendime alıyordum. Ailem duymasın ne olur."
+          }
+        ]
+      },
+      "supplier": {
+        "options": [
+          {
+            "label": "Berat malı kimden alıyordu?",
+            "replies": [
+              "Furkan: \"Adil diye biri var, herkes Adil abi der. Berat ona borçlandığını söylemişti geçen hafta.\""
+            ],
+            "next": "adil",
+            "traits": ["merak"],
+            "testimony": "Adil diye biri var, herkes Adil abi der. Berat ona borçlandığını söylemişti geçen hafta."
+          },
+          {
+            "label": "Berat'ın başı birileriyle dertte miydi?",
+            "replies": [
+              "Furkan: \"Adil abiye borcu vardı. Ödemezse başım yanar diyordu. Gülüyordu ama korkuyordu bence.\""
+            ],
+            "next": "adil",
+            "traits": ["temkinli"],
+            "testimony": "Adil abiye borcu vardı. Ödemezse başım yanar diyordu. Gülüyordu ama korkuyordu bence."
+          }
+        ]
+      },
+      "adil": {
+        "options": [
+          {
+            "label": "Adil'i nerede bulabiliriz?",
+            "replies": [
+              "Furkan: \"Sanayinin girişindeki çay ocağında takılır. Ama benden duymadınız abi, beni öldürür.\"",
+              "İfadeyi tutanağa geçirdim amirim, poltele yükledim."
+            ],
+            "traits": ["cesur"],
+            "unlocks": ["furkanStatement"],
+            "testimony": "Sanayinin girişindeki çay ocağında takılır. Ama benden duymadınız abi, beni öldürür."
+          },
+          {
+            "label": "Bu kadar yeter. Doğa, ifadeyi tutanağa geçir.",
+            "replies": ["Tamamdır amirim, poltele yüklüyorum."],
+            "traits": ["temkinli"],
+            "unlocks": ["furkanStatement"]
+          }
+        ]
+      }
+    }
+  },
+  "Erdi": {
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "part1Done",
+        "incoming": [
+          "Neredesin sen telefonları da açmıyosun. Senin kadar sorumsuz herif görmedim ben. Bütün asayiş birbirine girdi sen tatil yapıyorsun"
+        ],
+        "options": [
+          {
+            "label": "Biliyorsun nerede olduğumu",
+            "replies": ["Kimse bilmiyor nerede olduğunu. İzin alacağın zamana bak"],
+            "next": "calm"
+          },
+          {
+            "label": "Olaylardan haberim var buradan müdahale ediyorum. Türkiye'ye dönmem en az 3 gün sürer",
+            "replies": [
+              "Bu dava özel bir dava elinizden geleni yapın gerekirse bütün imkanları devreye sokarız."
+            ],
+            "next": "calm"
+          },
+          {"label": "(Cevap verme)", "traits": ["umursamaz"], "silent": true}
+        ]
+      },
+      "calm": {"options": [{"label": "Sen içini ferah tut"}]}
+    }
+  }
+}

@@ -1,0 +1,36 @@
+[
+  {
+    "sender": "0850 222 0 555",
+    "daysAgo": 7,
+    "messages": [
+      "Yurt dışına hoş geldiniz! Yurt Dışı Paketiniz tanımlanmıştır. Paketinizle 1 GB internet ve 30 dk konuşma hakkınız bulunmaktadır.",
+      "Yurt dışı internet kullanımınız paketinizin %80'ine ulaşmıştır."
+    ]
+  },
+  {
+    "sender": "ZAFERBANK",
+    "daysAgo": 4,
+    "messages": [
+      "ZaferBank kartınızla 2.450,00 TL tutarında yurt dışı harcama yapılmıştır. Siz yapmadıysanız 444 0 444'ü arayınız."
+    ]
+  },
+  {
+    "sender": "Annem",
+    "daysAgo": 2,
+    "messages": [
+      "Tatilin nasıl geçiyor? Yemeğini düzgün ye.",
+      "Haberlerde bir öğrenci ölmüş diyorlar, senin bölgende mi? Dikkat et kendine."
+    ]
+  },
+  {
+    "sender": "e-Devlet",
+    "messages": [
+      "Adınıza düzenlenmiş yeni bir tebligat bulunmaktadır. Detaylar için turkiye.gov.tr adresini ziyaret ediniz."
+    ]
+  },
+  {
+    "sender": "Bilinmeyen Numara",
+    "requires": "furkanStatement",
+    "messages": ["Berat'ın işine burnunu sokma komiser. Çocuğu da rahat bırakın."]
+  }
+]

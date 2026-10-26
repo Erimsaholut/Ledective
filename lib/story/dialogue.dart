@@ -22,6 +22,24 @@ class DayMarker extends ChatEntry {
   final String? label;
 }
 
+/// A story requirement: every flag in [all] and, if given, at least one
+/// flag in [any] must be set.
+class Condition {
+  const Condition({this.all = const [], this.any = const []});
+
+  static const always = Condition();
+
+  final List<String> all;
+  final List<String> any;
+
+  bool get isAlways => all.isEmpty && any.isEmpty;
+
+  Iterable<String> get flags => [...all, ...any];
+
+  bool isMetBy(bool Function(String flag) has) =>
+      all.every(has) && (any.isEmpty || any.any(has));
+}
+
 /// The detective's personality, shaped by the player's choices
 /// ("Gezici tablo" in the story design).
 enum Trait {
@@ -78,15 +96,19 @@ class DialogueOption {
 }
 
 class DialogueNode {
-  const DialogueNode(this.options, {this.incoming = const [], this.waitFor});
+  const DialogueNode(
+    this.options, {
+    this.incoming = const [],
+    this.waitFor = Condition.always,
+  });
 
   /// Messages the other person sends when the conversation reaches this
   /// node. A node without [options] just delivers these and ends the chat.
   final List<String> incoming;
 
-  /// Story flag that has to be set before [incoming] arrives and the player
-  /// can answer. Until then the conversation pauses here.
-  final String? waitFor;
+  /// Story flags that have to be set before [incoming] arrives and the
+  /// player can answer. Until then the conversation pauses here.
+  final Condition waitFor;
 
   final List<DialogueOption> options;
 }
@@ -134,8 +156,8 @@ class DialogueState {
 
   /// True while the conversation waits for a story flag.
   bool get isWaiting {
-    final flag = _node?.waitFor;
-    return flag != null && !_hasFlag(flag);
+    final condition = _node?.waitFor;
+    return condition != null && !condition.isMetBy(_hasFlag);
   }
 
   List<DialogueOption> get options =>

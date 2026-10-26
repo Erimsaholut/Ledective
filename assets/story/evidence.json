@@ -1,0 +1,72 @@
+[
+  {
+    "id": "torn-photo",
+    "name": "Yırtık Fotoğraf",
+    "description": "Berat'ın yatak odasında, halının altından çıktı. Dokuz parçaya yırtılmış.",
+    "image": "assets/apps/photosApp/images/kadr2.jpeg",
+    "requires": "ev:torn-photo",
+    "links": ["cctv"],
+    "inspection": {
+      "type": "jigsaw",
+      "rows": 3,
+      "cols": 3,
+      "instructions": "Parçalara dokunarak yerlerini değiştir ve fotoğrafı birleştir.",
+      "result": "Fotoğraftaki genç Berat değil. Arkadaki duvarda aynı mezbaha fotoğraflarından biri asılı. Birisi Berat'a bu fotoğrafı bir uyarı olarak vermiş olabilir.",
+      "unlocks": ["photo-restored"]
+    }
+  },
+  {
+    "id": "glass",
+    "name": "Bardaktaki Parmak İzi",
+    "description": "Mutfakta yıkanmamış iki bardaktan birinin üstünde bulundu.",
+    "requires": "ev:glass",
+    "links": ["torn-photo"],
+    "inspection": {
+      "type": "fingerprint",
+      "instructions": "Bardaktaki izi sistemdeki kayıtlarla karşılaştır.",
+      "options": ["Furkan Şahin", "Yusuf Kasap", "Adil Karaca", "Deniz Yılmaz"],
+      "answer": "Adil Karaca",
+      "result": "Eşleşme: Adil Karaca. Uyuşturucu ve gasp suçlarından sabıkalı. Olay gecesi Berat'la aynı masada oturmuş.",
+      "unlocks": ["print:adil"]
+    }
+  },
+  {
+    "id": "cctv",
+    "name": "Kamera Görüntüsü",
+    "description": "Kafenin dış kamerası, 23.41. Berat'ın arkasından çıkan deri ceketli adam.",
+    "image": "assets/apps/photosApp/images/kadr.jpeg",
+    "requires": "ev:cctv",
+    "links": ["glass"]
+  },
+  {
+    "id": "notebook",
+    "name": "Berat'ın Defteri",
+    "description": "Üniversitedeki dolabından çıktı. Bazı satırlar silinmiş gibi.",
+    "image": "assets/story/images/notebook_page.png",
+    "requires": "ev:notebook",
+    "links": ["glass"],
+    "inspection": {
+      "type": "uv",
+      "instructions": "UV lambasını sayfanın üzerinde gezdir.",
+      "hiddenText": "40.000 — A.\nSon gün CUMA\nÖdemezsem mezbahaya\nbabama söylemek yok",
+      "result": "Defterde görünmez mürekkeple yazılmış notlar var. Berat, Adil'e 40.000 lira borçluymuş ve 'mezbaha' diye bir yerden korkuyormuş.",
+      "unlocks": ["notebook-read"]
+    }
+  },
+  {
+    "id": "torn-map",
+    "name": "Yanık Harita",
+    "description": "Sanayideki sobadan kurtarıldı. Yarısı yanmış, parçalara ayrılmış.",
+    "image": "assets/story/images/torn_map.png",
+    "requires": "ev:torn-map",
+    "links": ["notebook"],
+    "inspection": {
+      "type": "jigsaw",
+      "rows": 3,
+      "cols": 3,
+      "instructions": "Yanık parçaları birleştir.",
+      "result": "Haritada şehrin dışındaki eski mezbaha kırmızıyla işaretlenmiş: 'Cuma 03:00'. Konum haritana eklendi.",
+      "unlocks": ["map-restored"]
+    }
+  }
+]

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../data/game_data.dart';
+import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/avatar.dart';
@@ -32,7 +32,9 @@ class _MailAppState extends State<MailApp> {
     if (!mounted) return;
     setState(() {
       final count = prefs.getInt(_countKey);
-      if (count != null) _mailCount = count.clamp(0, mails.length);
+      if (count != null) {
+        _mailCount = count.clamp(0, StoryData.current.inboxMails.length);
+      }
       _deleted = {...?prefs.getStringList(_deletedKey)};
     });
   }
@@ -40,15 +42,15 @@ class _MailAppState extends State<MailApp> {
   /// Story mails that have arrived, newest first, then the regular inbox
   /// with the most recently received mail on top.
   List<Mail> _inbox(StoryProgress progress) => [
-    for (final mail in storyMails.reversed)
-      if (progress.has(mail.requires!)) mail,
-    ...mails.take(_mailCount).toList().reversed,
+    for (final mail in StoryData.current.storyMails.reversed)
+      if (progress.meets(mail.requires)) mail,
+    ...StoryData.current.inboxMails.take(_mailCount).toList().reversed,
   ].where((mail) => !_deleted.contains(mail.id)).toList();
 
   Future<void> _checkForNewMail() async {
     await Future<void>.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
-    if (_mailCount >= mails.length) {
+    if (_mailCount >= StoryData.current.inboxMails.length) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(const SnackBar(content: Text("No new mail")));

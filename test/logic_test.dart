@@ -6,7 +6,7 @@ import 'package:ledective/apps/games/puzzle_board.dart';
 import 'package:ledective/apps/music/songs.dart';
 import 'package:ledective/apps/phone/phone_number.dart';
 import 'package:ledective/apps/pian/note_player.dart';
-import 'package:ledective/apps/poltel/documents.dart';
+import 'package:ledective/apps/poltel/lab/jigsaw_game.dart';
 import 'package:ledective/apps/shopper/shopper_app.dart';
 import 'package:ledective/data/game_clock.dart';
 import 'package:ledective/widgets/day_divider.dart';
@@ -83,16 +83,19 @@ void main() {
     });
   });
 
-  test('every statement has one answer per question', () {
-    for (final document in poltelDocuments) {
-      final statement = document.statement;
-      if (statement == null) continue;
-      expect(
-        statement.answers.length,
-        statement.questions.length,
-        reason: document.id,
-      );
-    }
+  group('JigsawBoard', () {
+    test('a new board is never already solved', () {
+      for (var seed = 0; seed < 30; seed++) {
+        expect(JigsawBoard(3, 3, random: Random(seed)).isSolved, isFalse);
+      }
+    });
+
+    test('swapping pieces back solves it', () {
+      final board = JigsawBoard.fromPieces(2, 2, [1, 0, 2, 3]);
+      expect(board.isSolved, isFalse);
+      board.swap(0, 1);
+      expect(board.isSolved, isTrue);
+    });
   });
 
   group('MemoryBoard', () {

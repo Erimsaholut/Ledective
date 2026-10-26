@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/game_state.dart';
 import '../../data/wallpaper.dart';
+import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/grouped_list.dart';
@@ -120,6 +121,20 @@ class SettingsApp extends StatelessWidget {
                     title: const Text("About"),
                     trailing: chevron,
                     onTap: () => _push(context, const _AboutPage()),
+                  ),
+                ],
+              ),
+              GroupedSection(
+                header: "Hikâye yazarı",
+                footer: "Harita görevlerini 30 kat hızlı bitirir.",
+                children: [
+                  ListenableBuilder(
+                    listenable: StoryProgress.instance,
+                    builder: (context, _) => SwitchListTile.adaptive(
+                      title: const Text("Hızlı görevler"),
+                      value: StoryProgress.instance.fastMissions,
+                      onChanged: StoryProgress.instance.setFastMissions,
+                    ),
                   ),
                 ],
               ),

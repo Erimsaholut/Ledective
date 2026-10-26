@@ -1,0 +1,38 @@
+{
+  "inbox": [
+    {"sender": "emniyet.gov.tr", "body": "Konferansa davetlisiniz !"},
+    {
+      "sender": "zaferbank.com",
+      "body": "Paranızı tanımadığınız milyonlarca kişi ile paylaştığınızın farkında mısınız ?"
+    },
+    {"sender": "besiktas.com", "body": "Yeni sezon formalarda indirim. Sakın kaçırmayın"},
+    {
+      "sender": "kargo.com.tr",
+      "body": "Kargonuz dağıtıma çıktı. Adresinizde bulunamadığınız için şubemizde bekletilecektir."
+    },
+    {
+      "sender": "havayolu.com.tr",
+      "body": "Dönüş uçuşunuz için online check-in açılmıştır. İyi yolculuklar dileriz."
+    },
+    {
+      "sender": "github.com",
+      "body": "Hesabınıza yeni bir cihazdan giriş yapıldı. Siz değilseniz şifrenizi değiştirin."
+    },
+    {
+      "sender": "cbu.com",
+      "body": "Tebrikler sınıfınızın %10 kontenjanına girdiğiniz için bu sene harç ücretiniz %75 indirimli."
+    }
+  ],
+  "story": [
+    {
+      "sender": "emniyet.gov.tr",
+      "body": "İl Emniyet Müdürlüğü: Berat Yılmaz dosyası tüm birimlerin önceliğidir. Gelişmeler günlük olarak şube müdürlüğüne raporlanacaktır.",
+      "requires": "part1Done"
+    },
+    {
+      "sender": "narkotik.emniyet.gov.tr",
+      "body": "Adil Karaca (lakabı \"Adil abi\") hakkında açık soruşturma dosyası mevcuttur. Bilgi paylaşımı için Narkotik Büro Başkomiseri Behram ile irtibata geçiniz.",
+      "requires": "furkanStatement"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "bank": "ZaferBank",
+  "owner": "Komiser",
+  "iban": "TR12 0006 2000 0001 2345 6789 01",
+  "card": "4821",
+  "balance": 1245075,
+  "transactions": [
+    {
+      "id": "grocery",
+      "title": "Market",
+      "detail": "Barselona · Kartla ödeme",
+      "amount": -23450,
+      "daysAgo": 2
+    },
+    {
+      "id": "hotel",
+      "title": "Otel",
+      "detail": "Barselona · Yurt dışı harcama",
+      "amount": -245000,
+      "daysAgo": 4
+    },
+    {
+      "id": "flight",
+      "title": "Havayolu",
+      "detail": "Gidiş-dönüş bilet",
+      "amount": -680000,
+      "daysAgo": 10
+    },
+    {
+      "id": "salary",
+      "title": "Maaş",
+      "detail": "Emniyet Genel Müdürlüğü",
+      "amount": 3850000,
+      "daysAgo": 12
+    },
+    {"id": "rent", "title": "Kira", "detail": "Otomatik ödeme", "amount": -1200000, "daysAgo": 15},
+    {
+      "id": "bribe",
+      "title": "Gelen EFT",
+      "detail": "Gönderen gizli · Açıklama: 'Dosyayı kapat'",
+      "amount": 5000000,
+      "daysAgo": 0,
+      "requires": "furkanStatement"
+    }
+  ]
+}

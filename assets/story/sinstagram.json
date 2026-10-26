@@ -1,0 +1,195 @@
+{
+  "feed": [
+    {
+      "id": "orhun-beer",
+      "author": "orhun.k",
+      "image": "assets/apps/photosApp/images/kadr.jpeg",
+      "caption": "Akşam iki bira kimde? 🍺",
+      "likes": 41,
+      "daysAgo": 1,
+      "comments": [
+        {"author": "atakan.kutay", "text": "ben varım amirim"},
+        {"author": "ozge.buro", "text": "😂😂"}
+      ]
+    },
+    {
+      "id": "ozge-cat",
+      "author": "ozge.buro",
+      "image": "assets/apps/photosApp/images/benKedi.jpeg",
+      "caption": "Pamuk bugün de mesaide 🐱",
+      "likes": 128,
+      "daysAgo": 2,
+      "comments": [{"author": "doga.aksu", "text": "Büronun maskotu olsun!"}]
+    },
+    {
+      "id": "atakan-gadget",
+      "author": "atakan.kutay",
+      "image": "assets/apps/photosApp/images/aaa.jpg",
+      "caption": "Amirimiz işbaşında 😂",
+      "likes": 67,
+      "daysAgo": 3,
+      "comments": [{"author": "inanc.k", "text": "Görmesin sakın"}]
+    },
+    {
+      "id": "behram-op",
+      "author": "behram_narkotik",
+      "image": "assets/apps/photosApp/images/gungun.jpeg",
+      "caption": "Bu haftaki operasyondan. Şehrimiz daha güvenli.",
+      "likes": 312,
+      "daysAgo": 5
+    },
+    {
+      "id": "me-holiday",
+      "author": "komiser",
+      "image": "assets/apps/photosApp/images/my_foto4.jpg",
+      "caption": "Tatildeyim, aramayın 🌴",
+      "likes": 89,
+      "daysAgo": 7,
+      "comments": [{"author": "erdi.mudur", "text": "İzin dilekçen hâlâ masamda değil."}]
+    },
+    {
+      "id": "cat-world",
+      "author": "kedi.dunyasi",
+      "image": "assets/apps/photosApp/images/myCat.jpeg",
+      "caption": "Pazartesi sendromu bu sabah böyle görünüyor 😾",
+      "likes": 2310,
+      "daysAgo": 2,
+      "comments": [{"author": "ozge.buro", "text": "Pamuk'un kuzeni gibi 😍"}]
+    },
+    {
+      "id": "series-quotes",
+      "author": "dizi.replikleri",
+      "image": "assets/apps/photosApp/images/my_foto1.jpg",
+      "caption": "Ankara'nın en karizmatik komiseri. Katılmayan? #behzatç",
+      "likes": 5874,
+      "daysAgo": 6,
+      "comments": [
+        {"author": "orhun.k", "text": "Amirime benziyor bence"},
+        {"author": "komiser", "text": "@orhun.k mesaiye dön"}
+      ]
+    },
+    {
+      "id": "art-gallery",
+      "author": "sanat.galerisi",
+      "image": "assets/apps/photosApp/images/1500x500.jpeg",
+      "caption": "Bu hafta sonu sergimiz ziyaretçilerini bekliyor. Giriş ücretsiz.",
+      "likes": 418,
+      "daysAgo": 8
+    },
+    {
+      "id": "detective-memes",
+      "author": "dedektif.memes",
+      "image": "assets/apps/photosApp/images/my_foto5.jpg",
+      "caption": "Tatildeyken bile ipucu arayan polis olmak 🔍",
+      "likes": 9120,
+      "daysAgo": 10,
+      "comments": [{"author": "atakan.kutay", "text": "Amirim bu siz 😂"}]
+    },
+    {
+      "id": "secret-history",
+      "author": "gizli.tarih",
+      "image": "assets/apps/photosApp/images/freeMason.jpg",
+      "caption": "Bilinmeyenler... 🔺 #komplo",
+      "likes": 1024,
+      "daysAgo": 12
+    }
+  ],
+  "profiles": [
+    {
+      "handle": "berat.ylmz",
+      "name": "Berat Yılmaz",
+      "bio": "İstanbul ✈️ Burada geçici",
+      "followers": 1843,
+      "following": 212,
+      "requires": "part1Done",
+      "unlocksOnView": ["seen:berat"],
+      "posts": [
+        {
+          "id": "berat-cafe",
+          "caption": "Okulun karşısındaki kafe, her zamanki yer ☕",
+          "likes": 23,
+          "daysAgo": 4,
+          "comments": [
+            {"author": "furkan.shn", "text": "abi bu akşam yine orda mısın"},
+            {"author": "adil.abi", "text": "borçlar ödenmeden kahve içilmez 😉"},
+            {"author": "deniz.yilmaz", "text": "Kuzen bi ara arasana"}
+          ]
+        },
+        {
+          "id": "berat-dad",
+          "image": "assets/apps/photosApp/images/babba.jpeg",
+          "caption": "Babam bir milletvekili ama ben kendi yolumu çizerim.",
+          "likes": 54,
+          "daysAgo": 9,
+          "comments": [{"author": "yusuf.kasap", "text": "Kral 👑"}]
+        },
+        {
+          "id": "berat-last",
+          "caption": "Bazı kapılar bir kere açılınca kapanmıyor.",
+          "likes": 31,
+          "daysAgo": 3,
+          "comments": [{"author": "deniz.yilmaz", "text": "Ne demek bu? Beni ara."}]
+        }
+      ]
+    },
+    {
+      "handle": "furkan.shn",
+      "name": "Furkan Şahin",
+      "bio": "🍃",
+      "followers": 367,
+      "following": 590,
+      "requires": "part1Done",
+      "posts": [
+        {
+          "id": "furkan-debt",
+          "caption": "Bazı borçlar parayla ödenmez.",
+          "likes": 12,
+          "daysAgo": 6,
+          "comments": [{"author": "adil.abi", "text": "👀"}]
+        }
+      ]
+    },
+    {
+      "handle": "yusuf.kasap",
+      "name": "Yusuf Kasap",
+      "bio": "İktisat · 3. sınıf",
+      "followers": 420,
+      "following": 388,
+      "requires": "part1Done",
+      "posts": [
+        {
+          "id": "yusuf-exam",
+          "caption": "Sınav haftası. Kahve olmadan yaşanmıyor ☕",
+          "likes": 45,
+          "daysAgo": 5
+        }
+      ]
+    },
+    {
+      "handle": "deniz.yilmaz",
+      "name": "Deniz Yılmaz",
+      "bio": "Psikoloji YL",
+      "followers": 812,
+      "following": 301,
+      "requires": "part1Done",
+      "posts": [
+        {
+          "id": "deniz-grief",
+          "caption": "Kuzenim, sana bunu kim yaptıysa bulacağız. 🖤",
+          "likes": 230,
+          "daysAgo": 1
+        }
+      ]
+    },
+    {
+      "handle": "adil.abi",
+      "name": "Adil",
+      "bio": "Sanayi · Her işe çözüm",
+      "followers": 1204,
+      "following": 18,
+      "private": true,
+      "requiresAny": ["heard:adil", "furkanStatement"],
+      "unlocksOnView": ["seen:adil"]
+    }
+  ]
+}
