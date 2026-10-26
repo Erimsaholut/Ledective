@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
-Color kStartScreenPage1Color = Colors.teal;
-Color kStartScreenPage2Color = Colors.red;
-int kTextSizeS = 20;
-int kTextSizeM = 40;
-int kTextSizeX = 60;
-int kTextSizeXL = 80;
-int kTextSizeXXL = 100;
+const Color kStartScreenPage1Color = Colors.teal;
+const Color kStartScreenPage2Color = Colors.red;
+
+/// Swatches offered by the Settings app for the home screen backgrounds.
+const List<Color> kHomeBackgroundSwatches = [
+  Colors.teal,
+  Colors.red,
+  Colors.indigo,
+  Colors.deepPurple,
+  Colors.blueGrey,
+  Colors.orange,
+  Colors.green,
+  Colors.pink,
+];

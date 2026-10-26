@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 
 class BackButtonWidget extends StatelessWidget {
-  final Color colour;
-  final double buttonSize;
-
   const BackButtonWidget({
-    Key? key,
+    super.key,
     this.colour = Colors.black,
     this.buttonSize = 80,
-  }) : super(key: key);
+  });
+
+  final Color colour;
+  final double buttonSize;
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       iconSize: buttonSize,
-      onPressed: () {
-        Navigator.pop(context);
-      },
+      tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+      onPressed: () => Navigator.pop(context),
       icon: Icon(Icons.arrow_back, color: colour),
     );
   }

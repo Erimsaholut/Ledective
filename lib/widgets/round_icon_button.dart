@@ -1,92 +1,54 @@
 import 'package:flutter/material.dart';
 
+/// A circular button showing either [myIcon] or, when given, [buttonText].
 class RoundIconButton extends StatelessWidget {
-  final double size;
-  final IconData? myIcon;
-  final String buttonText;
-  final Color? iconColor;
-  final Color? textColor;
-  final Color? borderColor;
-  final VoidCallback? onPressed;
-  final VoidCallback? onLongPressed;
-  final Color? backGroundColor;
-
-
   const RoundIconButton({
-    Key? key,
+    super.key,
     this.size = 85.0,
     this.myIcon,
     this.buttonText = '',
-    this.iconColor,
-    this.textColor,
-    this.borderColor,
+    this.iconColor = Colors.black,
+    this.textColor = Colors.black,
+    this.borderColor = Colors.black,
     this.backGroundColor,
     this.onPressed,
     this.onLongPressed,
-  }) : super(key: key);
+  });
+
+  final double size;
+  final IconData? myIcon;
+  final String buttonText;
+  final Color iconColor;
+  final Color textColor;
+  final Color borderColor;
+  final Color? backGroundColor;
+  final VoidCallback? onPressed;
+  final VoidCallback? onLongPressed;
 
   @override
   Widget build(BuildContext context) {
-    final isIconButton = buttonText.isEmpty;
-    final defaultIconColor = iconColor ?? Colors.black;
-    final defaultTextColor = textColor ?? Colors.black;
-    final defaultBorderColor = borderColor ?? Colors.black;
-    return isIconButton
-        ? Container(
+    return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         color: backGroundColor,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: defaultBorderColor,
-          width: 3.0,
-        ),
+        border: Border.all(color: borderColor, width: 3.0),
       ),
       child: TextButton(
         onPressed: onPressed,
-        onLongPress: onLongPressed, // onLongPressed kullanıldı
-        style: ButtonStyle(
-          padding: MaterialStateProperty.all(
-            EdgeInsets.all(size * 0.2),
-          ),
-          overlayColor: MaterialStateProperty.all(
-            Colors.white.withOpacity(0.1),
-          ),
+        onLongPress: onLongPressed,
+        style: TextButton.styleFrom(
+          shape: const CircleBorder(),
+          padding: EdgeInsets.all(size * 0.2),
+          overlayColor: Colors.white,
         ),
-        child: Icon(
-          myIcon,
-          size: 40,
-          color: defaultIconColor,
-        ),
-      ),
-    )
-        : Container(
-      height: size,
-      width: size,
-      decoration: BoxDecoration(
-        color: backGroundColor,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: defaultBorderColor,
-          width: 3.0,
-        ),
-      ),
-      child: TextButton(
-        onPressed: onPressed,
-        onLongPress: onLongPressed, // onLongPressed kullanıldı
-        style: ButtonStyle(
-          padding: MaterialStateProperty.all(
-            EdgeInsets.all(size * 0.2),
-          ),
-          overlayColor: MaterialStateProperty.all(
-            Colors.white.withOpacity(0.1),
-          ),
-        ),
-        child: Text(
-          buttonText,
-          style: TextStyle(fontSize: 40, color: defaultTextColor),
-        ),
+        child: buttonText.isEmpty
+            ? Icon(myIcon, size: 40, color: iconColor)
+            : Text(
+                buttonText,
+                style: TextStyle(fontSize: 40, color: textColor),
+              ),
       ),
     );
   }
