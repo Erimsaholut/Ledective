@@ -1,0 +1,89 @@
+{
+  "outlets": [
+    {"id": "sehir-postasi", "name": "Şehir Postası", "color": "#B71C1C"},
+    {"id": "gundem24", "name": "Gündem24", "color": "#0D47A1"},
+    {"id": "kampus", "name": "Kampüs Haber", "color": "#2E7D32"}
+  ],
+  "articles": [
+    {
+      "id": "berat-found",
+      "outlet": "gundem24",
+      "daysAgo": 0,
+      "title": "Milletvekili Yılmaz’ın oğlu evinde ölü bulundu",
+      "summary": "Üniversite öğrencisi Berat Yılmaz’ın ölümünün ilk belirlemelere göre intihar olduğu değerlendiriliyor.",
+      "author": "Gündem24 Haber Merkezi",
+      "tags": ["berat", "yılmaz", "intihar", "yeşilkent"],
+      "body": [
+        "Yeşilkent’te kiralık bir dairede yaşayan üniversite öğrencisi Berat Yılmaz, dün akşam saatlerinde evinde ölü bulundu.",
+        "Emniyet kaynakları ilk belirlemelere göre olayın intihar olarak değerlendirildiğini, otopsi sonuçlarının beklendiğini bildirdi. Yılmaz ailesi basına açıklama yapmadı."
+      ]
+    },
+    {
+      "id": "berat-murder",
+      "outlet": "sehir-postasi",
+      "daysAgo": 0,
+      "requires": "part1Done",
+      "title": "Berat Yılmaz dosyasında cinayet şüphesi",
+      "summary": "Cinayet Büro, ölümün intihar süsü verilmiş bir cinayet olabileceği ihtimali üzerinde duruyor.",
+      "author": "Selin Aras",
+      "tags": ["berat", "cinayet", "otopsi"],
+      "body": [
+        "Kulislerde konuşulana göre otopsi raporu, ilk açıklamalarla çelişen bulgular içeriyor. Cinayet Büro’nun izni yarıda kalan amirinin dosyayı yurt dışından yönettiği öğrenildi.",
+        "Emniyetten yapılan kısa açıklamada soruşturmanın gizlilikle yürütüldüğü belirtildi."
+      ]
+    },
+    {
+      "id": "mezbaha",
+      "outlet": "sehir-postasi",
+      "daysAgo": 0,
+      "requires": "mezbaha-found",
+      "title": "Sanayideki eski mezbahada gece boyu süren çalışma",
+      "summary": "Polis ekipleri yıllardır kapalı olan mezbahayı sabaha kadar aradı. Emniyet açıklama yapmadı.",
+      "author": "Selin Aras",
+      "tags": ["mezbaha", "sanayi"],
+      "body": [
+        "Bölge sakinleri gece boyunca çok sayıda ekip aracının mezbahaya girip çıktığını anlattı. Çalışmanın Berat Yılmaz soruşturmasıyla bağlantılı olup olmadığı bilinmiyor."
+      ]
+    },
+    {
+      "id": "old-case",
+      "outlet": "sehir-postasi",
+      "archive": true,
+      "daysAgo": 1100,
+      "title": "Üniversiteli genç kadının ölümüyle ilgili soruşturma kapatıldı",
+      "summary": "Savcılık, şüpheli ölüm dosyasında takipsizlik kararı verdi. Aile, olayın yeterince araştırılmadığını söylüyor.",
+      "author": "Selin Aras",
+      "tags": ["takipsizlik", "öğrenci", "üniversite", "savcılık", "ölüm"],
+      "unlocksOnRead": ["news:old-case-found"],
+      "body": [
+        "Üniversite öğrencisi bir genç kadının şüpheli ölümüyle ilgili yürütülen soruşturmada takipsizlik kararı verildi.",
+        "Ailesi, olay gecesi kızlarının birlikte olduğu kişilerin hiç ifade vermediğini ileri sürdü."
+      ]
+    },
+    {
+      "id": "foundation",
+      "outlet": "gundem24",
+      "archive": true,
+      "daysAgo": 700,
+      "title": "Yılmaz Vakfı’ndan öğrencilere burs desteği",
+      "summary": "Milletvekili Yılmaz’ın kurucusu olduğu vakıf, bu yıl 200 öğrenciye burs verecek.",
+      "author": "Gündem24 Haber Merkezi",
+      "tags": ["vakıf", "burs", "yılmaz", "milletvekili", "bağış"],
+      "body": [
+        "Vakıftan yapılan açıklamada, burs başvurularının şehirdeki üniversitenin öğrencilerine öncelik verilerek değerlendirileceği belirtildi."
+      ]
+    },
+    {
+      "id": "mezbaha-closed",
+      "outlet": "kampus",
+      "archive": true,
+      "daysAgo": 2900,
+      "title": "Eski mezbaha kapatıldı, arazinin geleceği belirsiz",
+      "summary": "Sanayi bölgesindeki belediye mezbahası yeni tesisin açılmasıyla kapatıldı.",
+      "tags": ["mezbaha", "sanayi", "belediye"],
+      "body": [
+        "Arazinin bir inşaat şirketine kiralanacağı iddia edilirken belediye konuyla ilgili açıklama yapmadı."
+      ]
+    }
+  ]
+}

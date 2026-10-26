@@ -1,0 +1,121 @@
+{
+  "requires": "final:ready",
+  "title": "Dosya Kapandı",
+  "sections": [
+    {
+      "id": "case",
+      "title": "Berat Yılmaz Dosyası",
+      "variants": [
+        {
+          "title": "Yanlış İnsan",
+          "requires": "case:wrong-person",
+          "text": "[Taslak] Deliller yanlış yorumlandı; suçlanan kişi gerçek fail değildi."
+        },
+        {
+          "title": "Adaletin Bedeli",
+          "requires": ["case:solved", "coverup:exposed"],
+          "text": "[Taslak] Cinayet çözüldü, siyasi bağlantılar ortaya çıktı. Bedelini ekip ödedi."
+        },
+        {
+          "title": "Kirli Eller",
+          "requires": ["case:solved", "player:dirty-hands"],
+          "text": "[Taslak] Masumlar hayatta, ama komiser artık kendisi de soruşturulabilir."
+        },
+        {
+          "title": "Sessiz Zafer",
+          "requires": "case:solved",
+          "text": "[Taslak] Katil yakalandı, dosya kapandı. Emri verenler dokunulmaz kaldı."
+        },
+        {"title": "Çözülemeyen Dosya", "text": "[Taslak] Dosya faili meçhul olarak kapandı."}
+      ]
+    },
+    {
+      "id": "career",
+      "title": "Komiser",
+      "variants": [
+        {"requires": "legal:warrant-issued", "text": "[Taslak] Hakkında yakalama kararı çıkarıldı."},
+        {"requires": "status:dismissed", "text": "[Taslak] Meslekten çıkarıldı."},
+        {"requires": "status:suspended", "text": "[Taslak] Görevden uzaklaştırıldı."},
+        {
+          "requires": "integrity < 40",
+          "text": "[Taslak] Görevde kaldı ama artık kimse ona eskisi gibi bakmıyor."
+        },
+        {"text": "[Taslak] Görevine devam ediyor."}
+      ]
+    },
+    {
+      "id": "witnesses",
+      "title": "Tanıklar",
+      "variants": [
+        {"requires": "witness:protected", "text": "[Taslak] Kritik tanık korunarak ifade verdi."},
+        {"requires": "witnessDanger >= 60", "text": "[Taslak] Tanıklardan biri ortadan kayboldu."},
+        {"text": "[Taslak] Tanıklar ifadelerini değiştirmedi."}
+      ]
+    },
+    {
+      "id": "Özge",
+      "title": "Özge",
+      "variants": [
+        {"requires": "trust:Özge >= 70", "text": "[Taslak] Özge komisere hâlâ güveniyor."},
+        {"requires": "trust:Özge <= 30", "text": "[Taslak] Özge ekipten ayrılmayı düşünüyor."},
+        {"text": "[Taslak] Özge için hikâye henüz yazılmadı."}
+      ]
+    },
+    {
+      "id": "Atakan",
+      "title": "Atakan",
+      "variants": [
+        {"requires": "trust:Atakan >= 70", "text": "[Taslak] Atakan komisere hâlâ güveniyor."},
+        {"requires": "trust:Atakan <= 30", "text": "[Taslak] Atakan ekipten ayrılmayı düşünüyor."},
+        {"text": "[Taslak] Atakan için hikâye henüz yazılmadı."}
+      ]
+    },
+    {
+      "id": "Orhun",
+      "title": "Orhun",
+      "variants": [
+        {"requires": "trust:Orhun >= 70", "text": "[Taslak] Orhun komisere hâlâ güveniyor."},
+        {"requires": "trust:Orhun <= 30", "text": "[Taslak] Orhun ekipten ayrılmayı düşünüyor."},
+        {"text": "[Taslak] Orhun için hikâye henüz yazılmadı."}
+      ]
+    },
+    {
+      "id": "Doğa",
+      "title": "Doğa",
+      "variants": [
+        {"requires": "trust:Doğa >= 70", "text": "[Taslak] Doğa komisere hâlâ güveniyor."},
+        {"requires": "trust:Doğa <= 30", "text": "[Taslak] Doğa ekipten ayrılmayı düşünüyor."},
+        {"text": "[Taslak] Doğa için hikâye henüz yazılmadı."}
+      ]
+    },
+    {
+      "id": "İnanç",
+      "title": "İnanç",
+      "variants": [
+        {"requires": "trust:İnanç >= 70", "text": "[Taslak] İnanç komisere hâlâ güveniyor."},
+        {"requires": "trust:İnanç <= 30", "text": "[Taslak] İnanç ekipten ayrılmayı düşünüyor."},
+        {"text": "[Taslak] İnanç için hikâye henüz yazılmadı."}
+      ]
+    },
+    {
+      "id": "Behram",
+      "title": "Behram",
+      "variants": [
+        {"requires": "trust:Behram >= 70", "text": "[Taslak] Behram komisere hâlâ güveniyor."},
+        {"requires": "trust:Behram <= 30", "text": "[Taslak] Behram ekipten ayrılmayı düşünüyor."},
+        {"text": "[Taslak] Behram için hikâye henüz yazılmadı."}
+      ]
+    },
+    {
+      "id": "pressure",
+      "title": "Ankara",
+      "variants": [
+        {
+          "requires": "pressure >= 70",
+          "text": "[Taslak] Üstlerden gelen baskı dosyanın her aşamasında hissedildi."
+        },
+        {"text": "[Taslak] Ankara bu dosyayı unutmayı tercih etti."}
+      ]
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/grouped_list.dart';
 import 'profile_page.dart';
+import 'story_state_page.dart';
 
 class SettingsApp extends StatelessWidget {
   const SettingsApp({super.key});
@@ -126,7 +127,9 @@ class SettingsApp extends StatelessWidget {
               ),
               GroupedSection(
                 header: "Hikâye yazarı",
-                footer: "Harita görevlerini 30 kat hızlı bitirir.",
+                footer:
+                    "Hızlı görevler, harita görevlerini ve süreli olayları "
+                    "30 kat hızlı bitirir.",
                 children: [
                   ListenableBuilder(
                     listenable: StoryProgress.instance,
@@ -135,6 +138,11 @@ class SettingsApp extends StatelessWidget {
                       value: StoryProgress.instance.fastMissions,
                       onChanged: StoryProgress.instance.setFastMissions,
                     ),
+                  ),
+                  ListTile(
+                    title: const Text("Hikâye durumu"),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () => _push(context, const StoryStatePage()),
                   ),
                 ],
               ),

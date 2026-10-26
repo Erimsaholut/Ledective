@@ -4,14 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/turkish_text.dart';
 import '../../widgets/avatar.dart';
-
-/// Lower-cases and strips Turkish letters, so "ozge" finds "Özge".
-String searchKey(String text) {
-  const map = {'ı': 'i', 'ş': 's', 'ç': 'c', 'ğ': 'g', 'ö': 'o', 'ü': 'u'};
-  final lower = text.replaceAll('İ', 'i').replaceAll('I', 'ı').toLowerCase();
-  return lower.split('').map((c) => map[c] ?? c).join();
-}
 
 /// Feed authors become browsable profiles too.
 List<Profile> _feedProfiles() {

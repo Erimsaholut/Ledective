@@ -75,9 +75,9 @@ class Mission {
 }
 
 /// The player's progress through the story: choices in every conversation,
-/// unlocked story flags, missions, lab results and personality points.
-/// Saved in shared preferences.
-class StoryProgress extends ChangeNotifier {
+/// unlocked story flags and numbers, missions, timers, lab results and
+/// personality points. Saved in shared preferences.
+class StoryProgress extends ChangeNotifier implements StoryState {
   StoryProgress._();
 
   static final StoryProgress instance = StoryProgress._();
@@ -95,15 +95,52 @@ class StoryProgress extends ChangeNotifier {
   final Map<String, Mission> _activeMissions = {};
   final Map<String, Mission> _finishedMissions = {};
   final Set<String> _inspected = {};
+  final Map<String, int> _values = {};
+
+  /// Play time each started timer has run for, in milliseconds.
+  final Map<String, int> _timers = {};
+  final Set<String> _timersDone = {};
+  DateTime? _lastTick;
 
   /// Divides mission durations, so story writers can test quickly.
   bool fastMissions = false;
 
   StoryData get _story => StoryData.current;
 
+  @override
   bool has(String flag) => _flags.contains(flag);
 
-  bool meets(Condition condition) => condition.isMetBy(has);
+  /// A number from `state.json`, a trait (`trait:merhamet`) or the money
+  /// sent to a payee (`paid:<id>`, in lira).
+  @override
+  int value(String stat) {
+    if (stat.startsWith('trait:')) {
+      final name = stat.substring(6).toLowerCase();
+      final t = Trait.values.where(
+        (t) => t.name == name || t.label.toLowerCase() == name,
+      );
+      return t.isEmpty ? 0 : trait(t.first);
+    }
+    return _values[stat] ?? _story.state.stats[stat]?.start ?? 0;
+  }
+
+  bool meets(Condition condition) => condition.isMetBy(this);
+
+  /// The lock that keeps [app] closed right now, if any.
+  AppLock? lockOf(String app) => _story.state.locks
+      .where((l) => l.app == app && meets(l.lockedWhen))
+      .firstOrNull;
+
+  /// True once the conditions in `endings.json` hold.
+  bool get isOver =>
+      _story.endings.sections.isNotEmpty && meets(_story.endings.requires);
+
+  /// How [section] of the ending turns out for this player.
+  EndingVariant? ending(EndingSection section) =>
+      section.variants.where((v) => meets(v.requires)).firstOrNull;
+
+  /// Every flag set so far, for the story writer's debug page.
+  Set<String> get flags => Set.unmodifiable(_flags);
 
   int trait(Trait trait) => _traits[trait] ?? 0;
 
@@ -119,6 +156,10 @@ class StoryProgress extends ChangeNotifier {
     _activeMissions.clear();
     _finishedMissions.clear();
     _inspected.clear();
+    _values.clear();
+    _timers.clear();
+    _timersDone.clear();
+    _lastTick = null;
     alerts.clear();
     fastMissions = prefs.getBool('fastMissions') ?? false;
 
@@ -150,6 +191,9 @@ class StoryProgress extends ChangeNotifier {
         ),
       );
       _inspected.addAll((data['inspected'] as List? ?? const []).cast());
+      _values.addAll((data['values'] as Map? ?? const {}).cast());
+      _timers.addAll((data['timers'] as Map? ?? const {}).cast());
+      _timersDone.addAll((data['timersDone'] as List? ?? const []).cast());
     }
     notifyListeners();
   }
@@ -171,6 +215,9 @@ class StoryProgress extends ChangeNotifier {
           for (final m in _finishedMissions.values) m.taskId: m.toJson(),
         },
         'inspected': _inspected.toList(),
+        'values': _values,
+        'timers': _timers,
+        'timersDone': _timersDone.toList(),
       }),
     );
   }
@@ -218,13 +265,32 @@ class StoryProgress extends ChangeNotifier {
       for (final r in _story.recordings)
         if (meets(r.requires)) r.id,
     },
+    'news': {
+      for (final a in _story.news.articles)
+        if (!a.archive && meets(a.requires)) a.id,
+    },
   };
 
-  /// Sets [flags] and raises a banner for everything that arrives because
-  /// of them. Chats with [except] don't raise one (the player is in it).
-  void _unlock(Iterable<String> flags, {String? except}) {
+  /// Applies [effects] (see [Effect]) and raises a banner for everything
+  /// that arrives because of them. Chats with [except] don't raise one (the
+  /// player is in it). Returns whether anything changed.
+  bool _apply(Iterable<String> effects, {String? except}) {
     final before = _snapshot();
-    _flags.addAll(flags);
+    var changed = false;
+    for (final term in effects) {
+      switch (Effect.parse(term)) {
+        case SetFlag(:final flag):
+          changed |= _flags.add(flag);
+        case ClearFlag(:final flag):
+          changed |= _flags.remove(flag);
+        case ChangeStat(:final stat, :final delta):
+          changed |= _setValue(stat, value(stat) + delta);
+        case SetStat(:final stat, value: final v):
+          changed |= _setValue(stat, v);
+      }
+    }
+    if (!changed) return false;
+    _startTimers();
     final after = _snapshot();
     for (final MapEntry(key: kind, value: items) in after.entries) {
       for (final item in items.difference(before[kind]!)) {
@@ -232,6 +298,14 @@ class StoryProgress extends ChangeNotifier {
         if (alert != null) alerts.push(alert);
       }
     }
+    return true;
+  }
+
+  bool _setValue(String stat, int v) {
+    final clamped = _story.state.stats[stat]?.clamp(v) ?? v;
+    if (value(stat) == clamped) return false;
+    _values[stat] = clamped;
+    return true;
   }
 
   StoryAlert? _alertFor(String kind, String item, String? except) {
@@ -284,15 +358,21 @@ class StoryProgress extends ChangeNotifier {
               : 'Yeni kayıt',
           body: r.from,
         );
+      case 'news':
+        final a = _story.news.articles.firstWhere((a) => a.id == item);
+        return StoryAlert(
+          app: _story.news.outlet(a.outlet).name,
+          title: 'Son dakika',
+          body: a.title,
+        );
     }
     return null;
   }
 
-  /// Sets flags discovered outside conversations, e.g. by opening a
+  /// Applies effects discovered outside conversations, e.g. by opening a
   /// Sinstagram profile.
-  Future<void> discover(Iterable<String> flags) async {
-    if (flags.every(has)) return;
-    _unlock(flags);
+  Future<void> discover(Iterable<String> effects) async {
+    if (!_apply(effects)) return;
     notifyListeners();
     await _save();
   }
@@ -303,7 +383,7 @@ class StoryProgress extends ChangeNotifier {
   /// Returns it together with the full transcript so far.
   (DialogueState, List<ChatEntry>) restore(String person) {
     final conversation = _story.conversations[person] ?? const Conversation();
-    final state = DialogueState(conversation.dialogue, hasFlag: has);
+    final state = DialogueState(conversation.dialogue, state: this);
     final transcript = [
       ...conversation.history,
       ...state.replay(choicesFor(person)),
@@ -322,7 +402,7 @@ class StoryProgress extends ChangeNotifier {
     for (final t in option.traits) {
       _traits[t] = trait(t) + 1;
     }
-    _unlock(option.unlocks, except: person);
+    _apply(option.unlocks, except: person);
     notifyListeners();
     await _save();
     return option;
@@ -370,7 +450,7 @@ class StoryProgress extends ChangeNotifier {
   List<({String question, String answer})> testimonyFrom(String person) {
     final dialogue = _story.conversations[person]?.dialogue;
     if (dialogue == null) return const [];
-    final state = DialogueState(dialogue, hasFlag: has)..arrive();
+    final state = DialogueState(dialogue, state: this)..arrive();
     final records = <({String question, String answer})>[];
     for (final index in choicesFor(person)) {
       if (index < 0 || index >= state.options.length) break;
@@ -451,7 +531,7 @@ class StoryProgress extends ChangeNotifier {
           body: task?.report ?? 'Görev tamamlandı.',
         ),
       );
-      if (task != null) _unlock(task.unlocks);
+      if (task != null) _apply(task.unlocks);
     }
     notifyListeners();
     await _save();
@@ -464,8 +544,102 @@ class StoryProgress extends ChangeNotifier {
   /// Records a solved lab minigame and its findings.
   Future<void> completeInspection(Evidence evidence) async {
     if (!_inspected.add(evidence.id)) return;
-    _unlock(evidence.inspection?.unlocks ?? const []);
+    _apply(evidence.inspection?.unlocks ?? const []);
     notifyListeners();
     await _save();
+  }
+
+  /* ---------- Money ---------- */
+
+  /// Records [amount] kuruş sent to [payee] (the bank has already taken
+  /// it). Adds to `paid:<id>` and applies the payee's effects if the
+  /// amount is enough.
+  Future<void> recordTransfer(Payee payee, int amount) async {
+    final key = 'paid:${payee.id}';
+    _values[key] = value(key) + amount ~/ 100;
+    _apply([
+      if (amount >= payee.minAmount) ...payee.unlocks,
+      'sent:${payee.id}',
+    ]);
+    notifyListeners();
+    await _save();
+  }
+
+  /* ---------- Timers ---------- */
+
+  /// Starts timers whose condition just started holding.
+  void _startTimers() {
+    for (final t in _story.state.timers) {
+      if (!_timers.containsKey(t.id) &&
+          !_timersDone.contains(t.id) &&
+          meets(t.when)) {
+        _timers[t.id] = 0;
+      }
+    }
+  }
+
+  /// How long [timer] runs right now, with [fastMissions] taken into
+  /// account.
+  Duration timerDuration(StoryTimer timer) =>
+      fastMissions ? timer.duration ~/ 30 : timer.duration;
+
+  /// Ids of the timers that are running.
+  Iterable<String> get runningTimers => _timers.keys;
+
+  /// Play time left on [timerId], or null if it isn't running.
+  Duration? timeLeft(String timerId) {
+    final elapsed = _timers[timerId];
+    final timer = _story.state.timers.where((t) => t.id == timerId).firstOrNull;
+    if (elapsed == null || timer == null) return null;
+    return timerDuration(timer) - Duration(milliseconds: elapsed);
+  }
+
+  /// Moves running timers on by [elapsed] play time and fires the ones that
+  /// are due.
+  Future<void> advanceTimers(Duration elapsed) async {
+    _startTimers();
+    if (_timers.isEmpty) return;
+    for (final t in _story.state.timers) {
+      final ran = _timers[t.id];
+      if (ran == null) continue;
+      if (!t.unless.isAlways && meets(t.unless)) {
+        _timers.remove(t.id);
+        _timersDone.add(t.id);
+        continue;
+      }
+      final now = ran + elapsed.inMilliseconds;
+      if (now < timerDuration(t).inMilliseconds) {
+        _timers[t.id] = now;
+        continue;
+      }
+      _timers.remove(t.id);
+      _timersDone.add(t.id);
+      final alert = t.alert;
+      if (alert != null) {
+        alerts.push(
+          StoryAlert(app: alert.app, title: alert.title, body: alert.body),
+        );
+      }
+      _apply(t.unlocks);
+    }
+    notifyListeners();
+    await _save();
+  }
+
+  /// Called regularly while the game runs: brings officers back and moves
+  /// timers on. Timers only count play time, so a gap longer than a few
+  /// seconds (the phone was asleep) counts as one tick.
+  Future<void> tick({DateTime? now}) async {
+    final time = now ?? DateTime.now();
+    await completeDueMissions(now: time);
+    final last = _lastTick;
+    _lastTick = time;
+    if (last == null) return;
+    var elapsed = time.difference(last);
+    if (elapsed.isNegative) return;
+    if (elapsed > const Duration(seconds: 10)) {
+      elapsed = const Duration(seconds: 2);
+    }
+    await advanceTimers(elapsed);
   }
 }

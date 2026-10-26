@@ -21,6 +21,9 @@ class StoryData {
     required this.bank,
     required this.recordings,
     required this.calendar,
+    required this.state,
+    required this.news,
+    required this.endings,
   });
 
   static const files = [
@@ -34,6 +37,9 @@ class StoryData {
     'bank.json',
     'voicemail.json',
     'calendar.json',
+    'state.json',
+    'news.json',
+    'endings.json',
   ];
 
   static const directory = 'assets/story';
@@ -61,6 +67,9 @@ class StoryData {
     ),
     recordings: const [],
     calendar: const [],
+    state: const StateData(),
+    news: const NewsData(),
+    endings: const EndingsData(),
   );
 
   final Map<String, Conversation> conversations;
@@ -79,6 +88,11 @@ class StoryData {
   final BankData bank;
   final List<Recording> recordings;
   final List<StoryEvent> calendar;
+
+  /// Numbers such as trust, app locks and timed events.
+  final StateData state;
+  final NewsData news;
+  final EndingsData endings;
 
   /// Reads every story file with [read], which gets a path such as
   /// `assets/story/chats.json`, and makes the result [current].
@@ -119,11 +133,33 @@ class StoryData {
       bank: parse('bank.json', _bank),
       recordings: parse('voicemail.json', (r) => r.list(_recording)),
       calendar: parse('calendar.json', (r) => r.list(_event)),
+      state: parse('state.json', _state),
+      news: parse('news.json', _news),
+      endings: parse('endings.json', _endings),
     );
   }
 }
 
 /* ---------- Models ---------- */
+
+/// Where Poltel files a document.
+enum DocumentCategory {
+  /// The case file.
+  case_('case', 'Dosya'),
+
+  /// Personnel records ("Personel Sicil"). Opening one is logged.
+  personnel('personnel', 'Personel Sicilleri'),
+
+  /// Internal affairs ("İç Denetim"). Opening one is logged.
+  internal('internal', 'İç Denetim');
+
+  const DocumentCategory(this.key, this.label);
+  final String key;
+  final String label;
+
+  /// Restricted records: Poltel notes that the access was logged.
+  bool get isLogged => this != case_;
+}
 
 /// A document delivered to Poltel: a statement or a report.
 sealed class StoryDocument {
@@ -132,11 +168,18 @@ sealed class StoryDocument {
     required this.title,
     required this.requires,
     required this.daysBeforeFirstOpen,
+    this.category = DocumentCategory.case_,
+    this.unlocksOnView = const [],
   });
 
   final String id;
   final String title;
   final Condition requires;
+  final DocumentCategory category;
+
+  /// Effects of opening the document, e.g. recording that a personnel file
+  /// was read.
+  final List<String> unlocksOnView;
 
   /// The document's date, counted back from the first launch.
   final int daysBeforeFirstOpen;
@@ -149,6 +192,8 @@ class Statement extends StoryDocument {
     required super.title,
     required super.requires,
     required super.daysBeforeFirstOpen,
+    super.category,
+    super.unlocksOnView,
     required this.name,
     required this.idNumber,
     required this.education,
@@ -181,6 +226,8 @@ class Report extends StoryDocument {
     required super.title,
     required super.requires,
     required super.daysBeforeFirstOpen,
+    super.category,
+    super.unlocksOnView,
     required this.subject,
     required this.authority,
     required this.heading,
@@ -297,7 +344,7 @@ class MapData {
   final String image;
 
   /// Contacts who can be sent to locations.
-  final List<String> officers;
+  final List<Officer> officers;
   final List<MapLocation> locations;
 
   MissionTask? task(String id) {
@@ -315,6 +362,15 @@ class MapData {
     }
     return null;
   }
+}
+
+/// A contact the player can send on missions, while [requires] holds
+/// (for instance only those who still trust a suspended detective).
+class Officer {
+  const Officer(this.name, {this.requires = Condition.always});
+
+  final String name;
+  final Condition requires;
 }
 
 class MapLocation {
@@ -451,6 +507,7 @@ class BankData {
     required this.card,
     required this.balance,
     required this.transactions,
+    this.payees = const [],
   });
 
   final String bank;
@@ -463,6 +520,36 @@ class BankData {
   /// Balance in kuruş before any story transactions arrive.
   final int balance;
   final List<BankTransaction> transactions;
+
+  /// People and accounts the player can send money to.
+  final List<Payee> payees;
+}
+
+/// Someone the player can send money to. Every transfer adds to the
+/// number `paid:<id>` (in lira); [unlocks] apply once a transfer of at
+/// least [minAmount] goes through.
+class Payee {
+  const Payee({
+    required this.id,
+    required this.name,
+    required this.iban,
+    this.note = '',
+    this.requires = Condition.always,
+    this.minAmount = 0,
+    this.unlocks = const [],
+  });
+
+  final String id;
+  final String name;
+  final String iban;
+
+  /// Shown under the name, e.g. "Tedavi ödemesi".
+  final String note;
+  final Condition requires;
+
+  /// In kuruş.
+  final int minAmount;
+  final List<String> unlocks;
 }
 
 class BankTransaction {
@@ -525,6 +612,191 @@ class StoryEvent {
   final int? dayOffset;
   final int? month;
   final int? day;
+}
+
+/// A number the story keeps, such as a character's trust in the player.
+class StatDefinition {
+  const StatDefinition({
+    required this.name,
+    this.label = '',
+    this.start = 0,
+    this.min,
+    this.max,
+  });
+
+  final String name;
+
+  /// What the number means, for story writers. Never shown to the player.
+  final String label;
+  final int start;
+  final int? min;
+  final int? max;
+
+  int clamp(int value) {
+    final low = min, high = max;
+    if (low != null && value < low) return low;
+    if (high != null && value > high) return high;
+    return value;
+  }
+}
+
+/// Closes an app while [lockedWhen] holds, e.g. Poltel for a suspended
+/// detective.
+class AppLock {
+  const AppLock({
+    required this.app,
+    required this.lockedWhen,
+    required this.title,
+    required this.message,
+  });
+
+  /// The app's name on the home screen.
+  final String app;
+  final Condition lockedWhen;
+  final String title;
+  final String message;
+}
+
+/// Something that happens a while after [when] starts holding, unless
+/// [unless] holds first: a witness leaving town, a delayed call. Only time
+/// spent playing counts.
+class StoryTimer {
+  const StoryTimer({
+    required this.id,
+    required this.when,
+    required this.duration,
+    this.unless = Condition.always,
+    this.unlocks = const [],
+    this.alert,
+  });
+
+  final String id;
+  final Condition when;
+  final Duration duration;
+
+  /// Calls the timer off; [Condition.always] means it can't be.
+  final Condition unless;
+  final List<String> unlocks;
+  final ({String app, String title, String body})? alert;
+}
+
+class StateData {
+  const StateData({
+    this.stats = const {},
+    this.flags = const {},
+    this.locks = const [],
+    this.timers = const [],
+  });
+
+  final Map<String, StatDefinition> stats;
+
+  /// Flags the story plans to use, with what they mean. The validator only
+  /// warns when one of these isn't set by anything yet.
+  final Map<String, String> flags;
+  final List<AppLock> locks;
+  final List<StoryTimer> timers;
+}
+
+class NewsOutlet {
+  const NewsOutlet({required this.id, required this.name, this.color});
+
+  final String id;
+  final String name;
+
+  /// ARGB, e.g. 0xFFB71C1C.
+  final int? color;
+}
+
+/// A news article. Current ones are in the feed once [requires] holds;
+/// [archive] ones only turn up in a search.
+class Article {
+  const Article({
+    required this.id,
+    required this.outlet,
+    required this.title,
+    this.summary = '',
+    this.body = const [],
+    this.author = '',
+    this.daysAgo = 0,
+    this.date,
+    this.image,
+    this.tags = const [],
+    this.archive = false,
+    this.requires = Condition.always,
+    this.unlocksOnRead = const [],
+  });
+
+  final String id;
+  final String outlet;
+  final String title;
+  final String summary;
+
+  /// Paragraphs.
+  final List<String> body;
+  final String author;
+  final int daysAgo;
+
+  /// Printed instead of the date [daysAgo] gives, e.g. "14 Mart 2021".
+  final String? date;
+  final String? image;
+
+  /// Extra words the archive search matches.
+  final List<String> tags;
+  final bool archive;
+  final Condition requires;
+  final List<String> unlocksOnRead;
+}
+
+class NewsData {
+  const NewsData({this.outlets = const [], this.articles = const []});
+
+  final List<NewsOutlet> outlets;
+  final List<Article> articles;
+
+  NewsOutlet outlet(String id) => outlets.firstWhere(
+    (o) => o.id == id,
+    orElse: () => NewsOutlet(id: id, name: id),
+  );
+}
+
+/// One way a part of the ending can turn out.
+class EndingVariant {
+  const EndingVariant({
+    required this.text,
+    this.title = '',
+    this.requires = Condition.always,
+  });
+
+  final String title;
+  final String text;
+  final Condition requires;
+}
+
+/// A part of the epilogue (the case, the detective's career, a colleague),
+/// told by the first variant whose condition holds.
+class EndingSection {
+  const EndingSection({
+    required this.id,
+    required this.title,
+    required this.variants,
+  });
+
+  final String id;
+  final String title;
+  final List<EndingVariant> variants;
+}
+
+class EndingsData {
+  const EndingsData({
+    this.requires = Condition.always,
+    this.title = '',
+    this.sections = const [],
+  });
+
+  /// When the game ends. With no sections the game never does.
+  final Condition requires;
+  final String title;
+  final List<EndingSection> sections;
 }
 
 /* ---------- Parsing ---------- */
@@ -649,12 +921,21 @@ DialogueOption _option(_Reader r) => DialogueOption(
 
 StoryDocument _document(_Reader r) {
   final type = r.text('type');
+  final categoryKey = r.textOr('category') ?? 'case';
+  final category =
+      DocumentCategory.values.where((c) => c.key == categoryKey).firstOrNull ??
+      r.fail(
+        'unknown category "$categoryKey", use '
+        '${DocumentCategory.values.map((c) => c.key).join(', ')}',
+      );
   return switch (type) {
     'statement' => Statement(
       id: r.text('id'),
       title: r.text('title'),
       requires: r.condition(),
       daysBeforeFirstOpen: r.intOr('daysBeforeFirstOpen', 0),
+      category: category,
+      unlocksOnView: r.stringsOr('unlocksOnView'),
       name: r.text('name'),
       idNumber: r.text('idNumber'),
       education: r.text('education'),
@@ -673,6 +954,8 @@ StoryDocument _document(_Reader r) {
       title: r.text('title'),
       requires: r.condition(),
       daysBeforeFirstOpen: r.intOr('daysBeforeFirstOpen', 0),
+      category: category,
+      unlocksOnView: r.stringsOr('unlocksOnView'),
       subject: r.text('subject'),
       authority: r.text('authority'),
       heading: r.text('heading'),
@@ -734,7 +1017,13 @@ Profile _profile(_Reader r) {
 
 MapData _map(_Reader r) => MapData(
   image: r.text('image'),
-  officers: r.field('officers').strings,
+  officers: r
+      .field('officers')
+      .list(
+        (o) => o.value is String
+            ? Officer(o.string)
+            : Officer(o.text('name'), requires: o.condition()),
+      ),
   locations: r
       .field('locations')
       .list(
@@ -751,9 +1040,7 @@ MapData _map(_Reader r) => MapData(
                 (t) => MissionTask(
                   id: t.text('id'),
                   label: t.text('label'),
-                  duration: Duration(
-                    milliseconds: (t.field('minutes').number * 60000).round(),
-                  ),
+                  duration: _minutes(t),
                   report: t.text('report'),
                   requires: t.condition(),
                   unlocks: t.stringsOr('unlocks'),
@@ -816,6 +1103,21 @@ BankData _bank(_Reader r) => BankData(
           requires: t.condition(),
         ),
       ),
+  payees:
+      r
+          .optional('payees')
+          ?.list(
+            (p) => Payee(
+              id: p.text('id'),
+              name: p.text('name'),
+              iban: p.textOr('iban') ?? '',
+              note: p.textOr('note') ?? '',
+              requires: p.condition(),
+              minAmount: p.intOr('minAmount', 0),
+              unlocks: p.stringsOr('unlocks'),
+            ),
+          ) ??
+      const [],
 );
 
 Recording _recording(_Reader r) {
@@ -840,4 +1142,130 @@ StoryEvent _event(_Reader r) => StoryEvent(
   dayOffset: r.optional('dayOffset')?.integer,
   month: r.optional('month')?.integer,
   day: r.optional('day')?.integer,
+);
+
+Duration _minutes(_Reader r) =>
+    Duration(milliseconds: (r.field('minutes').number * 60000).round());
+
+StatDefinition _stat(String name, _Reader s) => StatDefinition(
+  name: name,
+  label: s.textOr('label') ?? '',
+  start: s.intOr('start', 0),
+  min: s.optional('min')?.integer,
+  max: s.optional('max')?.integer,
+);
+
+StateData _state(_Reader r) => StateData(
+  stats: switch (r.optional('stats')) {
+    null => const {},
+    final stats => {
+      for (final name in stats.map.keys) name: _stat(name, stats.field(name)),
+    },
+  },
+  flags: switch (r.optional('flags')) {
+    null => const {},
+    final flags => {
+      for (final name in flags.map.keys) name: flags.field(name).string,
+    },
+  },
+  locks:
+      r
+          .optional('locks')
+          ?.list(
+            (l) => AppLock(
+              app: l.text('app'),
+              lockedWhen: l.condition('lockedWhen'),
+              title: l.text('title'),
+              message: l.text('message'),
+            ),
+          ) ??
+      const [],
+  timers:
+      r
+          .optional('timers')
+          ?.list(
+            (t) => StoryTimer(
+              id: t.text('id'),
+              when: t.condition('when'),
+              duration: _minutes(t),
+              unless: t.condition('unless'),
+              unlocks: t.stringsOr('unlocks'),
+              alert: switch (t.optional('alert')) {
+                null => null,
+                final a => (
+                  app: a.text('app'),
+                  title: a.text('title'),
+                  body: a.text('body'),
+                ),
+              },
+            ),
+          ) ??
+      const [],
+);
+
+NewsData _news(_Reader r) => NewsData(
+  outlets:
+      r
+          .optional('outlets')
+          ?.list(
+            (o) => NewsOutlet(
+              id: o.text('id'),
+              name: o.text('name'),
+              color: switch (o.textOr('color')) {
+                null => null,
+                final hex =>
+                  int.tryParse(hex.replaceFirst('#', 'FF'), radix: 16) ??
+                      o.fail('color must look like #B71C1C'),
+              },
+            ),
+          ) ??
+      const [],
+  articles:
+      r
+          .optional('articles')
+          ?.list(
+            (a) => Article(
+              id: a.text('id'),
+              outlet: a.text('outlet'),
+              title: a.text('title'),
+              summary: a.textOr('summary') ?? '',
+              body: switch (a.optional('body')) {
+                null => const [],
+                final b => b.value is String ? [b.string] : b.strings,
+              },
+              author: a.textOr('author') ?? '',
+              daysAgo: a.intOr('daysAgo', 0),
+              date: a.textOr('date'),
+              image: a.textOr('image'),
+              tags: a.stringsOr('tags'),
+              archive: a.boolOr('archive'),
+              requires: a.condition(),
+              unlocksOnRead: a.stringsOr('unlocksOnRead'),
+            ),
+          ) ??
+      const [],
+);
+
+EndingsData _endings(_Reader r) => EndingsData(
+  requires: r.condition(),
+  title: r.textOr('title') ?? '',
+  sections:
+      r
+          .optional('sections')
+          ?.list(
+            (s) => EndingSection(
+              id: s.text('id'),
+              title: s.text('title'),
+              variants: s
+                  .field('variants')
+                  .list(
+                    (v) => EndingVariant(
+                      title: v.textOr('title') ?? '',
+                      text: v.text('text'),
+                      requires: v.condition(),
+                    ),
+                  ),
+            ),
+          ) ??
+      const [],
 );

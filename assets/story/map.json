@@ -1,6 +1,23 @@
 {
   "image": "assets/story/images/city_map.png",
-  "officers": ["Atakan", "Doğa", "Orhun", "İnanç"],
+  "officers": [
+    {
+      "name": "Atakan",
+      "requiresAny": ["!status:suspended", "trust:Atakan >= 60"]
+    },
+    {
+      "name": "Doğa",
+      "requiresAny": ["!status:suspended", "trust:Doğa >= 60"]
+    },
+    {
+      "name": "Orhun",
+      "requiresAny": ["!status:suspended", "trust:Orhun >= 60"]
+    },
+    {
+      "name": "İnanç",
+      "requiresAny": ["!status:suspended", "trust:İnanç >= 60"]
+    }
+  ],
   "locations": [
     {
       "id": "berat-home",

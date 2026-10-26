@@ -25,7 +25,8 @@
             "label": "Kızım ben size izindeyken bana yazmayın demedim mi ?",
             "replies": ["Amirim çok özür dilerim ama gerçekten ciddi bir olay"],
             "next": "whatHappened",
-            "traits": ["öfke"]
+            "traits": ["öfke"],
+            "unlocks": ["trust:Özge -= 5"]
           },
           {
             "label": "Neymiş bu kadar önemli olan durum",
@@ -125,7 +126,7 @@
             "label": "Bundan Erdi'ye tek kelime etmeyeceksin.",
             "replies": ["...Anladım amirim."],
             "traits": ["öfke"],
-            "unlocks": ["erdi-kept-out"]
+            "unlocks": ["erdi-kept-out", "pressure += 10"]
           }
         ]
       }
@@ -162,7 +163,8 @@
             "replies": [
               "Amirim bu dava yüzünden bütün yöneticilerin eli ayağı karıştı bu yüzden çok hızlı bir şekilde geldi otopsi raporu"
             ],
-            "next": "status"
+            "next": "status",
+            "unlocks": ["trust:Orhun += 5"]
           }
         ]
       },
@@ -189,7 +191,11 @@
     }
   },
   "Atakan": {
-    "history": [{"day": 6}, {"in": "Amirim yarın izinliyim, Özge'ye haber verdim."}, {"out": "tamam"}],
+    "history": [
+      {"day": 6},
+      {"in": "Amirim yarın izinliyim, Özge'ye haber verdim."},
+      {"out": "tamam"}
+    ],
     "start": "start",
     "nodes": {
       "start": {
@@ -201,7 +207,8 @@
             "replies": [
               "Furkan'ın adını verirken etrafına bakınıp durdu. Kendisi de o kafeye takılıyormuş, Berat'la sandığından daha yakınlar bence."
             ],
-            "traits": ["merak"]
+            "traits": ["merak"],
+            "unlocks": ["trust:Atakan += 5"]
           },
           {
             "label": "Tamam, gözünüzü üzerinden ayırmayın.",
@@ -213,7 +220,10 @@
     }
   },
   "Behram": {
-    "history": [{"label": "10 Nisan"}, {"in": "Tüm polis teşkilatımızın polis haftası kutlu olsun."}],
+    "history": [
+      {"label": "10 Nisan"},
+      {"in": "Tüm polis teşkilatımızın polis haftası kutlu olsun."}
+    ],
     "start": "start",
     "nodes": {
       "start": {
@@ -226,19 +236,25 @@
           {
             "label": "Tamam. Ben dönene kadar Adil'e kimse dokunmasın.",
             "replies": ["Merak etme, uzaktan izliyoruz."],
-            "traits": ["temkinli"]
+            "traits": ["temkinli"],
+            "unlocks": ["trust:Behram += 5"]
           },
           {
             "label": "Bekleyemem, adamlarını hazır tut. Gerekirse bu gece alın.",
             "replies": ["Sen bilirsin komiserim. Ekip hazır."],
-            "traits": ["cesur"]
+            "traits": ["cesur"],
+            "unlocks": ["witnessDanger += 5"]
           }
         ]
       }
     }
   },
   "İnanç": {
-    "history": [{"day": 12}, {"out": "Raporları cumaya kadar bitirin"}, {"in": "Emredersiniz amirim."}],
+    "history": [
+      {"day": 12},
+      {"out": "Raporları cumaya kadar bitirin"},
+      {"in": "Emredersiniz amirim."}
+    ],
     "start": "start",
     "nodes": {
       "start": {
@@ -271,14 +287,17 @@
             "label": "Hayır gelmeme daha var. Buradan soracağım ben soruları",
             "replies": ["Anladım amirim. Doğa'yı yanıma alıyorum, sorularınızı ona yazın."],
             "traits": ["cesur"],
-            "unlocks": ["inancDone"]
+            "unlocks": ["inancDone", "trust:İnanç -= 5"]
           }
         ]
       }
     }
   },
   "Doğa": {
-    "history": [{"day": 9}, {"in": "Amirim nöbet çizelgesini masanıza bıraktım."}],
+    "history": [
+      {"day": 9},
+      {"in": "Amirim nöbet çizelgesini masanıza bıraktım."}
+    ],
     "start": "start",
     "nodes": {
       "start": {
@@ -303,7 +322,8 @@
             "label": "Önce bir su ver çocuğa, korkmuş gibi.",
             "replies": ["Verdim amirim, biraz rahatladı. Sorularınızı alayım."],
             "next": "calm",
-            "traits": ["merhamet"]
+            "traits": ["merhamet"],
+            "unlocks": ["trust:Doğa += 5"]
           }
         ]
       },
@@ -343,7 +363,8 @@
             ],
             "next": "supplier",
             "traits": ["merhamet"],
-            "testimony": "Ot vardı abi... Berat satıyordu, ben sadece kendime alıyordum. Ailem duymasın ne olur."
+            "testimony": "Ot vardı abi... Berat satıyordu, ben sadece kendime alıyordum. Ailem duymasın ne olur.",
+            "unlocks": ["trust:Doğa += 5"]
           },
           {
             "label": "Olay gecesi neredeydin?",
@@ -372,7 +393,8 @@
             ],
             "next": "supplier",
             "traits": ["merhamet"],
-            "testimony": "Ot vardı abi... Berat satıyordu, ben sadece kendime alıyordum. Ailem duymasın ne olur."
+            "testimony": "Ot vardı abi... Berat satıyordu, ben sadece kendime alıyordum. Ailem duymasın ne olur.",
+            "unlocks": ["trust:Doğa += 5"]
           }
         ]
       },
@@ -441,10 +463,18 @@
             ],
             "next": "calm"
           },
-          {"label": "(Cevap verme)", "traits": ["umursamaz"], "silent": true}
+          {
+            "label": "(Cevap verme)",
+            "traits": ["umursamaz"],
+            "silent": true
+          }
         ]
       },
-      "calm": {"options": [{"label": "Sen içini ferah tut"}]}
+      "calm": {
+        "options": [
+          {"label": "Sen içini ferah tut"}
+        ]
+      }
     }
   }
 }

@@ -119,34 +119,47 @@ class Poltel extends StatelessWidget {
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 4, bottom: 8),
-                      child: Text(
-                        "BERAT YILMAZ DOSYASI",
-                        style: TextStyle(
-                          color: AppColors.secondaryLabel,
-                          fontSize: 13,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-                    for (final document in documents)
-                      DocumentTile(
-                        title: document.title,
-                        subtitle: _subtitle(document),
-                        icon: document is Report
-                            ? Icons.medical_information_rounded
-                            : Icons.description_rounded,
-                        isNew: !progress.hasSeen('poltel:${document.id}'),
-                        onOpen: () =>
-                            progress.markSeen('poltel:${document.id}'),
-                        page: switch (document) {
-                          final Statement statement => StatementPage(
-                            statement: statement,
+                    for (final category in DocumentCategory.values)
+                      if (documents.where((d) => d.category == category)
+                          case final group when group.isNotEmpty) ...[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+                          child: Text(
+                            category == DocumentCategory.case_
+                                ? "BERAT YILMAZ DOSYASI"
+                                : category.label.toUpperCase(),
+                            style: const TextStyle(
+                              color: AppColors.secondaryLabel,
+                              fontSize: 13,
+                              letterSpacing: 0.5,
+                            ),
                           ),
-                          final Report report => ReportPage(report: report),
-                        },
-                      ),
+                        ),
+                        for (final document in group)
+                          DocumentTile(
+                            title: document.title,
+                            subtitle: _subtitle(document),
+                            icon: switch (document.category) {
+                              DocumentCategory.personnel => Icons.badge_rounded,
+                              DocumentCategory.internal => Icons.gavel_rounded,
+                              DocumentCategory.case_ =>
+                                document is Report
+                                    ? Icons.medical_information_rounded
+                                    : Icons.description_rounded,
+                            },
+                            isNew: !progress.hasSeen('poltel:${document.id}'),
+                            onOpen: () {
+                              progress.markSeen('poltel:${document.id}');
+                              progress.discover(document.unlocksOnView);
+                            },
+                            page: switch (document) {
+                              final Statement statement => StatementPage(
+                                statement: statement,
+                              ),
+                              final Report report => ReportPage(report: report),
+                            },
+                          ),
+                      ],
                   ],
                 );
               },

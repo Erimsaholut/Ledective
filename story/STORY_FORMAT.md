@@ -19,8 +19,18 @@ dart run tool/validate_story.dart --graph
 Şemalar `story/graphs/<kişi>.md` dosyalarına yazılır; GitHub ya da VS Code
 Markdown önizlemesi bunları akış şeması olarak gösterir.
 
-Geliştirirken **Settings → Hızlı görevler** harita görevlerini 30 kat
-hızlandırır, **Reset Game Progress** hikâyeyi baştan başlatır.
+Araç üç tür sonuç verir: **HATA** oyunu bozar, **UYARI** büyük ihtimalle
+bir yanlışlıktır, **NOT** ise `state.json`'da planlanmış ama henüz hiçbir
+şeyin açmadığı bayraklardır; yani yapılacaklar listesi.
+
+Geliştirirken Settings'teki **Hikâye yazarı** bölümü işini kolaylaştırır:
+
+- **Hızlı görevler** harita görevlerini ve süreli olayları 30 kat hızlandırır.
+- **Hikâye durumu** bütün sayıları ve bayrakları gösterir. Sayıları
+  artırıp azaltabilir, planlanmış bayrakları açıp kapatabilir (örneğin
+  komiseri görevden uzaklaştırıp Poltel'in kilitlendiğini görebilir) ve
+  finali o anki seçimlerle önizleyebilirsin.
+- **Reset Game Progress** hikâyeyi baştan başlatır.
 
 ---
 
@@ -39,6 +49,10 @@ Bayrak açanlar:
 | Laboratuvar incelemesi çözülünce | `inspection.unlocks` |
 | Sinstagram profili açılınca | `unlocksOnView` |
 | Sesli mesaj dinlenince | `unlocksOnListen` |
+| Poltel belgesi açılınca | `unlocksOnView` |
+| Haber okununca | `unlocksOnRead` |
+| Para gönderilince | bank.json › `payees` › `unlocks` |
+| Süreli olayın süresi dolunca | state.json › `timers` › `unlocks` |
 
 Bekleyenler `requires` (hepsi açık olmalı) ve `requiresAny` (en az biri açık
 olmalı) alanlarını kullanır. İkisi de tek bir isim ya da isim listesi olabilir:
@@ -50,6 +64,41 @@ olmalı) alanlarını kullanır. İkisi de tek bir isim ya da isim listesi olabi
 ```
 
 Koşulu olmayan her şey oyunun başından görünür.
+
+### Olumsuzlama, sayılar ve karşılaştırma
+
+Koşullarda bir bayrağın başına `!` koymak "bu bayrak açık değilse"
+demektir. Sayılar `>=`, `<=`, `>`, `<`, `==`, `!=` ile karşılaştırılır:
+
+```json
+"requires": ["part1Done", "!status:suspended"]
+"requiresAny": ["trust:Özge >= 70", "witness:protected"]
+```
+
+`unlocks` listesi de sadece bayrak açmaz:
+
+| Yazım | Ne yapar |
+| --- | --- |
+| `"bayrak"` | Bayrağı açar |
+| `"!bayrak"` | Bayrağı kapatır, ör. `"!status:suspended"` göreve iade |
+| `"trust:Özge += 10"` | Sayıyı artırır |
+| `"pressure -= 5"` | Sayıyı azaltır |
+| `"integrity = 50"` | Sayıyı ayarlar |
+
+```json
+{"label": "Atakan'ı koru", "unlocks": ["trust:Atakan += 15", "trust:İnanç -= 10", "player:dirty-hands"]}
+```
+
+Sayılar `state.json`'da tanımlanır. İki tür sayı kendiliğinden vardır ve
+sadece okunabilir:
+
+- `trait:merhamet`, `trait:öfke`...: o kişilik özelliğinin puanı.
+- `paid:<alıcı>`: o alıcıya gönderilen toplam para, **lira** cinsinden.
+
+Bir karakterin güveni oyuncuya hiçbir zaman gösterilmez; sonuçları
+sohbetlerde hissedilmeli. Örneğin Özge'nin bir sırrı söylediği düğüm
+`"waitFor": ["part1Done", "trust:Özge >= 70"]` ile bekleyebilir; aynı bilgiye
+güven düşükse başka bir yoldan (`requiresAny`) ulaşılabilmeli.
 
 Yönlendirmeden keşif hissi için: bir ipucunu birden fazla yoldan
 ulaşılabilir yap (`requiresAny`) ve oyuncuya neyi nerede arayacağını
@@ -125,6 +174,22 @@ sayfanın başındaki kurum adı, `heading` başlık, `lines` ise sırasıyla
 `daysBeforeFirstOpen`: belgenin tarihi, oyunun ilk açıldığı günden kaç gün
 önce olduğu.
 
+`category` belgenin Poltel'de hangi bölümde duracağını belirler:
+
+| `category` | Bölüm |
+| --- | --- |
+| `case` (varsayılan) | Berat Yılmaz dosyası |
+| `personnel` | Personel sicilleri |
+| `internal` | İç denetim / disiplin soruşturmaları |
+
+Sicil ve iç denetim belgelerinin altında "Bu belgeye erişiminiz kayıt altına
+alındı" yazar. Erişimi gerçekten kayda geçirmek için `unlocksOnView` kullan:
+`"unlocksOnView": ["poltel:atakan-file-read"]`. Görevden uzaklaştırma
+soruşturmasında bu bayrak oyuncunun aleyhine kullanılabilir.
+
+Sicil kayıtları gerçeği açıklayan sihirli belgeler olmamalı: amirin
+değerlendirmesi yanlış, önyargılı ya da kasıtlı olabilir.
+
 ## map.json: Harita ve görevler
 
 ```json
@@ -148,6 +213,10 @@ sayfanın başındaki kurum adı, `heading` başlık, `lines` ise sırasıyla
 }
 ```
 
+- `officers` sadece isim olabileceği gibi koşullu da yazılabilir. Koşulu
+  tutmayan subay "Ulaşılamıyor" görünür. Örnek: görevden uzaklaştırılan
+  komisere sadece ona güvenenler yardım eder:
+  `{"name": "Atakan", "requiresAny": ["!status:suspended", "trust:Atakan >= 60"]}`
 - `x`, `y`: harita görselinde konum, 0 ile 1 arasında (sol üst 0,0).
 - Bir subay aynı anda tek görevde olabilir; görev gerçek zamanla sürer
   (`minutes`, ondalık olabilir).
@@ -192,6 +261,87 @@ sayfanın başındaki kurum adı, `heading` başlık, `lines` ise sırasıyla
             "comments": [{"author": "adil.abi", "text": "👀"}]}]}
 ```
 
+## state.json: Sayılar, kilitler ve süreli olaylar
+
+```json
+{
+  "stats": {
+    "trust:Özge": {"label": "Özge'nin komisere güveni", "start": 50, "min": 0, "max": 100}
+  },
+  "flags": {
+    "status:suspended": "Komiser görevden uzaklaştırıldı"
+  },
+  "locks": [
+    {"app": "Poltel", "lockedWhenAny": ["status:suspended", "status:dismissed"],
+     "title": "Erişim askıya alındı", "message": "..."}
+  ],
+  "timers": [
+    {"id": "witness-leaves", "when": "heard:witness", "minutes": 30,
+     "unless": "witness:questioned", "unlocks": ["witness:gone"],
+     "alert": {"app": "MatesApp", "title": "Orhun", "body": "Tanık şehirden ayrılmış amirim."}}
+  ]
+}
+```
+
+- `stats`: hikâyenin tuttuğu sayılar. `min`/`max` verilirse değer bu
+  aralıkta kalır. `label` sadece yazarlar içindir.
+- `flags`: hikâyede kullanılacak bayrakların sözlüğü. Burada tanımlı bir
+  bayrağı bekleyen ama henüz hiçbir şeyin açmadığı yerler hata değil NOT
+  olarak raporlanır; iskeleti önceden kurup sonra doldurabilirsin.
+- `locks`: koşul tutarken bir uygulamayı kilitler. `app`, ana ekrandaki adı
+  (Poltel, Harita, ZaferBank...). Kilit açılınca uygulama kendiliğinden
+  geri gelir.
+- `timers`: `when` tutmaya başladığında süre başlar; `minutes` dolunca
+  `unlocks` uygulanır ve isteğe bağlı `alert` bildirimi çıkar. Süre dolmadan
+  `unless` tutarsa olay iptal olur. Sadece **oyun içinde geçen süre**
+  sayılır: oyuncu telefonu kapatınca süre durur, kimse uygulamayı kapattığı
+  için tanığını kaybetmez.
+
+## news.json: News uygulaması
+
+```json
+{
+  "outlets": [{"id": "sehir-postasi", "name": "Şehir Postası", "color": "#B71C1C"}],
+  "articles": [
+    {"id": "old-case", "outlet": "sehir-postasi", "archive": true, "daysAgo": 1100,
+     "title": "...", "summary": "...", "author": "Selin Aras",
+     "body": ["Paragraf 1", "Paragraf 2"],
+     "tags": ["takipsizlik", "öğrenci"], "unlocksOnRead": ["news:old-case-found"]}
+  ]
+}
+```
+
+- `archive: false` (varsayılan) haberler koşulu açılınca **Gündem**'e düşer ve
+  bildirim çıkarır: medyanın olayı nasıl anlattığını gösterir.
+- `archive: true` haberler sadece **Arşiv** aramasında bulunur. Arama başlık,
+  özet, metin, yazar, gazete adı ve `tags` içinde yapılır. Oyuncunun
+  aklına gelebilecek kelimeleri `tags`'e ekle.
+- `date` verilirse `daysAgo` yerine o yazı gösterilir ("14 Mart 2021").
+- Haberler yanlış, eksik ya da yönlendirilmiş olabilir. Bir gazetenin
+  yazdığı her şey gerçek kabul edilmemeli.
+
+## endings.json: Final
+
+```json
+{
+  "requires": "final:ready",
+  "title": "Dosya Kapandı",
+  "sections": [
+    {"id": "career", "title": "Komiser", "variants": [
+      {"requires": "status:dismissed", "text": "Meslekten çıkarıldı."},
+      {"requires": "integrity < 40", "text": "Görevde kaldı ama..."},
+      {"text": "Görevine devam ediyor."}
+    ]}
+  ]
+}
+```
+
+`requires` tutunca oyun biter ve final ekranı açılır. Final tek bir metin
+değil, bölümlerden oluşur: dosya, komiserin kariyeri, tanıklar, her ekip
+üyesi... Her bölüm, koşulu tutan **ilk** seçenekle anlatılır; bu yüzden en
+özel durumları üste, koşulsuz yedeği en alta yaz. Böylece birkaç düzine
+kısa metinle yüzlerce farklı final birleşimi çıkar.
+
 ## Diğer dosyalar
 
 - **mails.json**: `inbox` aşağı çekince sırayla gelen sıradan mailler,
@@ -200,6 +350,12 @@ sayfanın başındaki kurum adı, `heading` başlık, `lines` ise sırasıyla
 - **bank.json**: tutarlar **kuruş** cinsindendir (`5000000` = 50.000,00 TL),
   eksi değer ödemedir. `requires` taşıyan işlemler hikâyede gelir ve bakiyeyi
   değiştirir; taşımayanlar başlangıç bakiyesine dahildir.
+  `payees` oyuncunun **Para Gönder** ile para yollayabileceği alıcılardır
+  (`id`, `name`, `iban`, `note`, `requires`, `minAmount`, `unlocks`). Her
+  transfer `paid:<id>` sayısına eklenir ve `sent:<id>` bayrağını açar;
+  `unlocks` ise sadece en az `minAmount` kuruşluk bir transferde uygulanır.
+  Transferler geri alınamaz, bakiye gerçek bir kaynaktır ve oyuncunun
+  yazdığı açıklama hesap hareketlerinde kalır.
 - **voicemail.json**: `kind` `voicemail` ya da `memo`; `transcript` dinlerken
   kelime kelime görünür. `audio` ile bir ses dosyası verilebilir
   (`pubspec.yaml`'daki assets listesine eklemeyi unutma).

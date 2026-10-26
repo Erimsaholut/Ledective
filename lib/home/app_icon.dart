@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../story/story_progress.dart';
 import '../theme/turkish_dates.dart';
+import 'access_gate.dart';
 
 /// A home screen icon: a rounded square with a gradient and a glyph, like a
 /// real phone's app icons. Tapping it zooms [app] open from the icon.
@@ -54,7 +55,7 @@ class AppIcon extends StatelessWidget {
         settings: RouteSettings(name: title),
         transitionDuration: const Duration(milliseconds: 380),
         reverseTransitionDuration: const Duration(milliseconds: 300),
-        pageBuilder: (_, _, _) => app,
+        pageBuilder: (_, _, _) => AccessGate(app: title, child: app),
         transitionsBuilder: (_, animation, _, child) {
           final curved = CurvedAnimation(
             parent: animation,
@@ -121,7 +122,9 @@ class AppIcon extends StatelessWidget {
       icon = ListenableBuilder(
         listenable: StoryProgress.instance,
         builder: (context, child) {
-          final value = count(StoryProgress.instance);
+          // A locked app has nothing to show.
+          final progress = StoryProgress.instance;
+          final value = progress.lockOf(title) == null ? count(progress) : 0;
           return Badge(
             isLabelVisible: value > 0,
             label: Text('$value'),

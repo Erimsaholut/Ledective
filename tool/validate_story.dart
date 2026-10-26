@@ -17,8 +17,11 @@ Future<void> main(List<String> args) async {
   }
 
   final issues = validateStory(story, assetExists: (p) => File(p).existsSync());
-  for (final issue in issues) {
-    (issue.isError ? stderr : stdout).writeln(issue);
+  // Notes last: they are the to-do list, not problems.
+  for (final level in IssueLevel.values) {
+    for (final issue in issues.where((i) => i.level == level)) {
+      (issue.isError ? stderr : stdout).writeln(issue);
+    }
   }
 
   if (args.contains('--graph')) {
@@ -32,12 +35,12 @@ Future<void> main(List<String> args) async {
     stdout.writeln('Sohbet şemaları story/graphs/ klasörüne yazıldı.');
   }
 
-  final errors = issues.where((i) => i.isError).length;
-  final warnings = issues.length - errors;
+  int count(IssueLevel level) => issues.where((i) => i.level == level).length;
+  final errors = count(IssueLevel.error);
+  final summary =
+      '${count(IssueLevel.warning)} uyarı, ${count(IssueLevel.note)} not';
   stdout.writeln(
-    errors == 0
-        ? 'Hikâye geçerli ($warnings uyarı).'
-        : '$errors hata, $warnings uyarı.',
+    errors == 0 ? 'Hikâye geçerli ($summary).' : '$errors hata, $summary.',
   );
   exit(errors == 0 ? 0 : 1);
 }

@@ -1,0 +1,43 @@
+{
+  "stats": {
+    "trust:Özge": {"label": "Özge'nin komisere güveni", "start": 50, "min": 0, "max": 100},
+    "trust:Atakan": {"label": "Atakan'ın komisere güveni", "start": 50, "min": 0, "max": 100},
+    "trust:Orhun": {"label": "Orhun'un komisere güveni", "start": 50, "min": 0, "max": 100},
+    "trust:Doğa": {"label": "Doğa'nın komisere güveni", "start": 50, "min": 0, "max": 100},
+    "trust:İnanç": {"label": "İnanç'ın komisere güveni", "start": 50, "min": 0, "max": 100},
+    "trust:Behram": {"label": "Behram'ın komisere güveni", "start": 50, "min": 0, "max": 100},
+    "pressure": {"label": "Üstlerden gelen baskı", "start": 20, "min": 0, "max": 100},
+    "integrity": {"label": "Mesleki dürüstlük", "start": 70, "min": 0, "max": 100},
+    "witnessDanger": {"label": "Tanıkların tehlike düzeyi", "start": 10, "min": 0, "max": 100}
+  },
+  "flags": {
+    "case:internal-investigation": "Komiser hakkında idari inceleme başladı",
+    "status:suspended": "Komiser görevden uzaklaştırıldı",
+    "status:dismissed": "Komiser meslekten çıkarıldı",
+    "legal:warrant-issued": "Komiser hakkında yakalama kararı var",
+    "witness:protected": "Kritik tanık koruma altına alındı",
+    "press:story-published": "Kritik haber yayımlandı",
+    "case:solved": "Berat cinayetinin faili doğru tespit edildi",
+    "case:wrong-person": "Yanlış kişi suçlandı",
+    "coverup:exposed": "Örtbas edilen suçlar ortaya çıktı",
+    "player:dirty-hands": "Komiser usulsüzlüğe başvurdu",
+    "final:ready": "Final soruşturması bitti, oyun sona erer"
+  },
+  "locks": [
+    {
+      "app": "Poltel",
+      "lockedWhenAny": ["status:suspended", "status:dismissed"],
+      "title": "Erişim askıya alındı",
+      "message": "Hakkınızda yürütülen idari soruşturma nedeniyle erişim yetkiniz geçici olarak askıya alınmıştır."
+    }
+  ],
+  "timers": [
+    {
+      "id": "bribe-kept",
+      "when": "furkanStatement",
+      "minutes": 45,
+      "unless": "sent:bribe-return",
+      "unlocks": ["integrity -= 15", "pressure += 10", "case:internal-investigation"]
+    }
+  ]
+}

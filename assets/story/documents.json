@@ -146,5 +146,26 @@
         "conclusion": "Maktulün öldürülmeden önce bilinçli olarak bayıltıldığı, boğuşma izlerinin maddenin etkisi tam başlamadan önce oluştuğu düşünülmektedir."
       }
     ]
+  },
+  {
+    "id": "ozge-sicil",
+    "type": "report",
+    "category": "personnel",
+    "title": "Özge - Personel Sicil Dosyası",
+    "subject": "Özge",
+    "daysBeforeFirstOpen": 40,
+    "authority": "T.C.\nİÇİŞLERİ BAKANLIĞI\nEMNİYET GENEL MÜDÜRLÜĞÜ\nPERSONEL DAİRE BAŞKANLIĞI",
+    "heading": "PERSONEL SİCİL DOSYASI",
+    "unlocksOnView": ["poltel:ozge-file-read"],
+    "lines": [
+      {"field": "Görev: Cinayet Büro Amirliği"},
+      {"field": "Erişim seviyesi: Başkomiser ve üstü"},
+      {"field": "Disiplin kaydı: 1 kapanmış inceleme"},
+      {"heading": "Amir değerlendirmesi"},
+      {
+        "paragraph": "Görevine bağlı ve ekip arkadaşlarıyla güçlü ilişkiler kuran bir personeldir. Ancak önceki bir soruşturma sırasında tanıkla kurduğu kişisel yakınlık nedeniyle tarafsızlığı konusunda tereddüt oluşmuştur. İddialar doğrulanamadığından inceleme kapatılmıştır."
+      },
+      {"conclusion": "Bu değerlendirme tek başına bir kusur veya suç tespiti değildir."}
+    ]
   }
 ]

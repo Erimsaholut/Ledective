@@ -6,6 +6,7 @@ import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
 import '../shopper/shopper_app.dart' show formatLira;
+import 'transfer_page.dart';
 
 const _crimson = Color(0xFFB0122B);
 
@@ -36,6 +37,23 @@ class _BankAppState extends State<BankApp> {
         if (_progress.meets(t.requires)) _progress.markSeen('bank:${t.id}');
       }
     });
+  }
+
+  void _transfer() {
+    if (availablePayees(_progress).isEmpty) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text("Kayıtlı alıcınız bulunmuyor.")),
+        );
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => const TransferPage(color: _crimson),
+      ),
+    );
   }
 
   void _unavailable() {
@@ -207,10 +225,10 @@ class _BankAppState extends State<BankApp> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  for (final (icon, label) in const [
-                    (Icons.send_rounded, "Para Gönder"),
-                    (Icons.receipt_long_rounded, "Fatura Öde"),
-                    (Icons.credit_card_rounded, "Kartlarım"),
+                  for (final (icon, label, onTap) in [
+                    (Icons.send_rounded, "Para Gönder", _transfer),
+                    (Icons.receipt_long_rounded, "Fatura Öde", _unavailable),
+                    (Icons.credit_card_rounded, "Kartlarım", _unavailable),
                   ])
                     Expanded(
                       child: Padding(
@@ -218,7 +236,7 @@ class _BankAppState extends State<BankApp> {
                         child: Card(
                           child: InkWell(
                             borderRadius: BorderRadius.circular(14),
-                            onTap: _unavailable,
+                            onTap: onTap,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               child: Column(

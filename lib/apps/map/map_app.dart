@@ -164,7 +164,14 @@ class _MapAppState extends State<MapApp> {
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
-                    child: _OfficersBar(officers: map.officers),
+                    child: _OfficersBar(
+                      officers: [
+                        for (final o in map.officers)
+                          if (_progress.meets(o.requires) ||
+                              _progress.missionOf(o.name) != null)
+                            o.name,
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -278,6 +285,20 @@ class _OfficersBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = StoryProgress.instance;
+    if (officers.isEmpty) {
+      return const _GlassBar(
+        child: Center(
+          child: Text(
+            "Ekipten kimse sana yardım etmiyor",
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.secondaryLabel,
+            ),
+          ),
+        ),
+      );
+    }
     return _GlassBar(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -370,18 +391,25 @@ class _LocationSheetState extends State<_LocationSheet> {
                 ),
               ),
             ),
-            for (final officer in officers)
+            for (final Officer(name: officer, :requires) in officers)
               Builder(
                 builder: (context) {
                   final busy = _progress.missionOf(officer) != null;
+                  final reachable = _progress.meets(requires);
                   return ListTile(
-                    enabled: !busy,
+                    enabled: !busy && reachable,
                     leading: Opacity(
-                      opacity: busy ? 0.4 : 1,
+                      opacity: busy || !reachable ? 0.4 : 1,
                       child: Avatar(name: officer),
                     ),
                     title: Text(officer),
-                    subtitle: Text(busy ? "Görevde" : "Müsait"),
+                    subtitle: Text(
+                      !reachable
+                          ? "Ulaşılamıyor"
+                          : busy
+                          ? "Görevde"
+                          : "Müsait",
+                    ),
                     onTap: () => Navigator.pop(context, officer),
                   );
                 },

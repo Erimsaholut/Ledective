@@ -1,3 +1,7 @@
+import 'story_terms.dart';
+
+export 'story_terms.dart';
+
 /// One line in a chat transcript.
 sealed class ChatEntry {
   const ChatEntry();
@@ -22,8 +26,9 @@ class DayMarker extends ChatEntry {
   final String? label;
 }
 
-/// A story requirement: every flag in [all] and, if given, at least one
-/// flag in [any] must be set.
+/// A story requirement: every term in [all] and, if given, at least one
+/// term in [any] must hold. Terms are flags, negated flags or comparisons
+/// (see [Requirement]).
 class Condition {
   const Condition({this.all = const [], this.any = const []});
 
@@ -34,10 +39,12 @@ class Condition {
 
   bool get isAlways => all.isEmpty && any.isEmpty;
 
-  Iterable<String> get flags => [...all, ...any];
+  Iterable<String> get terms => [...all, ...any];
 
-  bool isMetBy(bool Function(String flag) has) =>
-      all.every(has) && (any.isEmpty || any.any(has));
+  bool isMetBy(StoryState state) {
+    bool holds(String term) => Requirement.parse(term).isMetBy(state);
+    return all.every(holds) && (any.isEmpty || any.any(holds));
+  }
 }
 
 /// The detective's personality, shaped by the player's choices
@@ -83,8 +90,9 @@ class DialogueOption {
   /// Personality points the player earns for this choice.
   final List<Trait> traits;
 
-  /// Story flags set by this choice. Other conversations and apps wait for
-  /// these (see [DialogueNode.waitFor]).
+  /// Story flags set (and numbers changed) by this choice, see [Effect].
+  /// Other conversations and apps wait for these (see
+  /// [DialogueNode.waitFor]).
   final List<String> unlocks;
 
   /// When true nothing is sent, e.g. "(Cevap verme)".
@@ -106,8 +114,8 @@ class DialogueNode {
   /// node. A node without [options] just delivers these and ends the chat.
   final List<String> incoming;
 
-  /// Story flags that have to be set before [incoming] arrives and the
-  /// player can answer. Until then the conversation pauses here.
+  /// What has to hold before [incoming] arrives and the player can
+  /// answer. Until then the conversation pauses here.
   final Condition waitFor;
 
   final List<DialogueOption> options;
@@ -129,14 +137,12 @@ class Conversation {
 
 /// Walks a [Dialogue] one choice at a time.
 class DialogueState {
-  DialogueState(this.dialogue, {bool Function(String flag)? hasFlag})
-    : _hasFlag = hasFlag ?? _noFlags,
+  DialogueState(this.dialogue, {StoryState? state})
+    : _state = state ?? StoryState.of(const {}),
       _nodeId = dialogue?.start;
 
-  static bool _noFlags(String _) => false;
-
   final Dialogue? dialogue;
-  final bool Function(String flag) _hasFlag;
+  final StoryState _state;
   String? _nodeId;
   bool _arrived = false;
   final List<int> _choices = [];
@@ -157,7 +163,7 @@ class DialogueState {
   /// True while the conversation waits for a story flag.
   bool get isWaiting {
     final condition = _node?.waitFor;
-    return condition != null && !condition.isMetBy(_hasFlag);
+    return condition != null && !condition.isMetBy(_state);
   }
 
   List<DialogueOption> get options =>

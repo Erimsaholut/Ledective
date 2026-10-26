@@ -1,17 +1,40 @@
 import 'dialogue.dart';
 import 'story_data.dart';
 
-/// A problem found in the story files. Errors break the game; warnings are
-/// probably mistakes.
+/// Home screen apps, the names `state.json › locks` can close.
+const appNames = [
+  'Mail', 'Photos', 'Camera', 'Calendar', 'Clock', 'Poltel', 'Harita', //
+  'Pano', 'Notes', 'Sinstagram', 'ZaferBank', 'Kayıtlar', 'News', //
+  'Settings', 'Games', 'Music', 'Pian', 'Shopper', 'AppShop', 'Phone', //
+  'Messages', 'MatesApp', 'Contacts',
+];
+
+enum IssueLevel {
+  /// Breaks the game.
+  error('HATA'),
+
+  /// Probably a mistake.
+  warning('UYARI'),
+
+  /// Planned but not written yet.
+  note('NOT');
+
+  const IssueLevel(this.label);
+  final String label;
+}
+
+/// A problem found in the story files.
 class StoryIssue {
-  const StoryIssue(this.where, this.message, {this.isError = true});
+  const StoryIssue(this.where, this.message, {this.level = IssueLevel.error});
 
   final String where;
   final String message;
-  final bool isError;
+  final IssueLevel level;
+
+  bool get isError => level == IssueLevel.error;
 
   @override
-  String toString() => '${isError ? 'HATA' : 'UYARI'}  $where: $message';
+  String toString() => '${level.label}  $where: $message';
 }
 
 /// Checks that the story hangs together: every link points somewhere,
@@ -25,20 +48,62 @@ List<StoryIssue> validateStory(
   void error(String where, String message) =>
       issues.add(StoryIssue(where, message));
   void warn(String where, String message) =>
-      issues.add(StoryIssue(where, message, isError: false));
+      issues.add(StoryIssue(where, message, level: IssueLevel.warning));
+  void note(String where, String message) =>
+      issues.add(StoryIssue(where, message, level: IssueLevel.note));
 
   // Flags that something sets, and flags that something waits for.
   final set = <String, String>{};
   final used = <String, String>{};
-  void sets(Iterable<String> flags, String where) {
-    for (final f in flags) {
-      set.putIfAbsent(f, () => where);
+  final usedNegated = <String, String>{};
+  // Numbers that something changes or checks.
+  final statsChanged = <String>{};
+  final statsRead = <String>{};
+  final payeeIds = {for (final p in story.bank.payees) p.id};
+  final traitNames = {
+    for (final t in Trait.values) ...[t.name, t.label.toLowerCase()],
+  };
+
+  bool knownStat(String stat, String where, {required bool write}) {
+    if (story.state.stats.containsKey(stat)) return true;
+    final (prefix, name) = switch (stat.indexOf(':')) {
+      -1 => ('', stat),
+      final i => (stat.substring(0, i), stat.substring(i + 1)),
+    };
+    final derived =
+        (prefix == 'trait' && traitNames.contains(name.toLowerCase())) ||
+        (prefix == 'paid' && payeeIds.contains(name));
+    if (derived && !write) return true;
+    error(
+      where,
+      derived
+          ? '"$stat" kendiliğinden hesaplanır, değiştirilemez'
+          : '"$stat" sayısı state.json › stats içinde tanımlı değil',
+    );
+    return false;
+  }
+
+  void sets(Iterable<String> effects, String where) {
+    for (final term in effects) {
+      switch (Effect.parse(term)) {
+        case SetFlag(:final flag):
+          set.putIfAbsent(flag, () => where);
+        case ClearFlag():
+          break;
+        case ChangeStat(:final stat) || SetStat(:final stat):
+          if (knownStat(stat, where, write: true)) statsChanged.add(stat);
+      }
     }
   }
 
   void uses(Condition c, String where) {
-    for (final f in c.flags) {
-      used.putIfAbsent(f, () => where);
+    for (final term in c.terms) {
+      switch (Requirement.parse(term)) {
+        case FlagRequirement(:final flag, :final negated):
+          (negated ? usedNegated : used).putIfAbsent(flag, () => where);
+        case StatRequirement(:final stat):
+          if (knownStat(stat, where, write: false)) statsRead.add(stat);
+      }
     }
   }
 
@@ -88,9 +153,12 @@ List<StoryIssue> validateStory(
   }
 
   // Documents.
+  final documentIds = <String>{};
   for (final d in story.documents) {
     final where = 'documents.json › ${d.id}';
+    if (!documentIds.add(d.id)) error(where, 'bu kimlik iki kez kullanılmış');
     uses(d.requires, where);
+    sets(d.unlocksOnView, where);
     if (d is Statement) {
       final from = d.testimonyFrom;
       if (from != null && !story.conversations.containsKey(from)) {
@@ -111,6 +179,16 @@ List<StoryIssue> validateStory(
   }
   for (final t in story.bank.transactions) {
     uses(t.requires, 'bank.json › ${t.id}');
+  }
+  for (final p in story.bank.payees) {
+    final where = 'bank.json › payees › ${p.id}';
+    uses(p.requires, where);
+    sets(p.unlocks, where);
+    // Set by every transfer; fine if nothing waits for it.
+    set.putIfAbsent('sent:${p.id}', () => '');
+  }
+  if (payeeIds.length != story.bank.payees.length) {
+    error('bank.json › payees', 'aynı kimlikle iki alıcı var');
   }
   for (final r in story.recordings) {
     final where = 'voicemail.json › ${r.id}';
@@ -151,6 +229,9 @@ List<StoryIssue> validateStory(
     }
   }
   if (story.map.officers.isEmpty) error('map.json', 'hiç subay yok');
+  for (final o in story.map.officers) {
+    uses(o.requires, 'map.json › officers › ${o.name}');
+  }
 
   // Evidence.
   final evidenceIds = {for (final e in story.evidence) e.id};
@@ -176,14 +257,89 @@ List<StoryIssue> validateStory(
     }
   }
 
+  // News.
+  final outletIds = {for (final o in story.news.outlets) o.id};
+  final articleIds = <String>{};
+  for (final a in story.news.articles) {
+    final where = 'news.json › ${a.id}';
+    if (!articleIds.add(a.id)) error(where, 'bu kimlik iki kez kullanılmış');
+    if (!outletIds.contains(a.outlet)) {
+      error(where, '"${a.outlet}" diye bir yayın organı yok (outlets)');
+    }
+    uses(a.requires, where);
+    sets(a.unlocksOnRead, where);
+    asset(a.image, where);
+    if (a.body.isEmpty && a.summary.isEmpty) warn(where, 'haberin metni yok');
+  }
+
+  // State: locks, timers.
+  for (final l in story.state.locks) {
+    final where = 'state.json › locks › ${l.app}';
+    if (!appNames.contains(l.app)) {
+      error(where, '"${l.app}" diye bir uygulama yok (${appNames.join(', ')})');
+    }
+    if (l.lockedWhen.isAlways) error(where, '"lockedWhen" gerekli');
+    uses(l.lockedWhen, where);
+  }
+  final timerIds = <String>{};
+  for (final t in story.state.timers) {
+    final where = 'state.json › timers › ${t.id}';
+    if (!timerIds.add(t.id)) error(where, 'bu kimlik iki kez kullanılmış');
+    if (t.when.isAlways) warn(where, '"when" yok: oyunun başında başlar');
+    uses(t.when, where);
+    uses(t.unless, where);
+    sets(t.unlocks, where);
+    if (t.unlocks.isEmpty) warn(where, 'süre dolunca hiçbir şey olmuyor');
+  }
+
+  // Endings.
+  final endings = story.endings;
+  if (endings.sections.isNotEmpty) {
+    uses(endings.requires, 'endings.json');
+    if (endings.requires.isAlways) {
+      error('endings.json', '"requires" yok: oyun açılır açılmaz biter');
+    }
+  }
+  for (final section in endings.sections) {
+    final where = 'endings.json › ${section.id}';
+    if (section.variants.isEmpty) error(where, 'hiç "variants" yok');
+    for (final (i, v) in section.variants.indexed) {
+      uses(v.requires, '$where › ${v.title.isEmpty ? '${i + 1}' : v.title}');
+    }
+    if (section.variants.isNotEmpty &&
+        !section.variants.last.requires.isAlways) {
+      warn(where, 'son seçeneğin koşulu var; hiçbiri tutmazsa bölüm boş kalır');
+    }
+  }
+
+  // Numbers.
+  for (final stat in story.state.stats.keys) {
+    final where = 'state.json › stats › $stat';
+    if (!statsChanged.contains(stat)) {
+      warn(where, 'hiçbir şey bu sayıyı değiştirmiyor');
+    } else if (!statsRead.contains(stat)) {
+      warn(where, 'hiçbir koşul bu sayıya bakmıyor');
+    }
+  }
+
   // Flags.
+  final planned = story.state.flags;
   for (final MapEntry(key: flag, value: where) in used.entries) {
-    if (!set.containsKey(flag)) {
+    if (set.containsKey(flag)) continue;
+    if (planned.containsKey(flag)) {
+      note(where, '"$flag" planlanmış, henüz hiçbir şey onu açmıyor');
+    } else {
       error(where, '"$flag" bayrağını bekliyor ama hiçbir şey onu açmıyor');
     }
   }
+  for (final MapEntry(key: flag, value: where) in usedNegated.entries) {
+    if (!set.containsKey(flag) && !planned.containsKey(flag)) {
+      warn(where, '"!$flag" hep doğru: hiçbir şey "$flag" bayrağını açmıyor');
+    }
+  }
   for (final MapEntry(key: flag, value: where) in set.entries) {
-    if (!used.containsKey(flag)) {
+    if (where.isEmpty) continue;
+    if (!used.containsKey(flag) && !usedNegated.containsKey(flag)) {
       warn(where, '"$flag" bayrağını açıyor ama hiçbir şey onu beklemiyor');
     }
   }
@@ -201,7 +357,7 @@ String dialogueToMermaid(String person, Conversation conversation) {
   for (final MapEntry(key: id, value: node) in dialogue.nodes.entries) {
     final wait = node.waitFor.isAlways
         ? ''
-        : '<br/><i>bekler: ${node.waitFor.flags.join(', ')}</i>';
+        : '<br/><i>bekler: ${node.waitFor.terms.join(', ')}</i>';
     final incoming = node.incoming.isEmpty
         ? ''
         : '<br/>${short(node.incoming.first)}';

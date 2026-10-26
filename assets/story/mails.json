@@ -33,6 +33,11 @@
       "sender": "narkotik.emniyet.gov.tr",
       "body": "Adil Karaca (lakabı \"Adil abi\") hakkında açık soruşturma dosyası mevcuttur. Bilgi paylaşımı için Narkotik Büro Başkomiseri Behram ile irtibata geçiniz.",
       "requires": "furkanStatement"
+    },
+    {
+      "sender": "icdenetim.emniyet.gov.tr",
+      "body": "İç Denetim Şube Müdürlüğü: Banka hesabınıza yapılan ve iade edilmeyen 50.000,00 TL tutarındaki EFT hakkında idari inceleme başlatılmıştır. Savunmanızı yedi gün içinde yazılı olarak bildiriniz.",
+      "requires": "case:internal-investigation"
     }
   ]
 }

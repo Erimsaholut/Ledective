@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/board/board_app.dart';
+import 'package:ledective/apps/news/news_app.dart';
 import 'package:ledective/apps/poltel/poltel_app.dart';
 import 'package:ledective/apps/sinstagram/sinstagram_app.dart';
 import 'package:ledective/story/dialogue.dart';
@@ -74,8 +75,8 @@ void main() {
     });
 
     test('waits for a story flag', () {
-      var flag = false;
-      final state = DialogueState(_dialogue, hasFlag: (_) => flag);
+      final flags = <String>{};
+      final state = DialogueState(_dialogue, state: StoryState.of(flags));
       final entries = state.replay([0, 0]);
       expect(_describe(entries), [
         '< hello',
@@ -89,7 +90,7 @@ void main() {
       expect(state.isFinished, isFalse);
       expect(state.canReply, isFalse);
 
-      flag = true;
+      flags.add('flag');
       expect(state.arrive(), ['later']);
       expect(state.options.single.label, 'fin');
     });
@@ -114,10 +115,25 @@ void main() {
 
   test('Condition needs all of "all" and one of "any"', () {
     const c = Condition(all: ['a'], any: ['b', 'c']);
-    expect(c.isMetBy({'a', 'b'}.contains), isTrue);
-    expect(c.isMetBy({'a'}.contains), isFalse);
-    expect(c.isMetBy({'b', 'c'}.contains), isFalse);
-    expect(Condition.always.isMetBy((_) => false), isTrue);
+    expect(c.isMetBy(StoryState.of({'a', 'b'})), isTrue);
+    expect(c.isMetBy(StoryState.of({'a'})), isFalse);
+    expect(c.isMetBy(StoryState.of({'b', 'c'})), isFalse);
+    expect(Condition.always.isMetBy(StoryState.of({})), isTrue);
+  });
+
+  test('conditions can negate flags and compare numbers', () {
+    final state = StoryState.of({'a'}, {'trust:Özge': 60});
+    bool holds(String term) => Condition(all: [term]).isMetBy(state);
+    expect(holds('!a'), isFalse);
+    expect(holds('!b'), isTrue);
+    expect(holds('trust:Özge >= 60'), isTrue);
+    expect(holds('trust:Özge>60'), isFalse);
+    expect(holds('trust:Özge != 0'), isTrue);
+    expect(holds('pressure < 1'), isTrue);
+    // Flag names with dashes and digits are still flags.
+    expect(Requirement.parse('unknown-1'), isA<FlagRequirement>());
+    expect(Effect.parse('unknown-1'), isA<SetFlag>());
+    expect(Effect.parse('trust:Doğa -= 5'), isA<ChangeStat>());
   });
 
   test('the story files have no errors', () {
@@ -147,6 +163,40 @@ void main() {
     final messages = validateStory(story).map((i) => i.message).join('\n');
     expect(messages, contains('nowhere'));
     expect(messages, contains('"never"'));
+  });
+
+  test('the validator knows numbers and planned flags', () {
+    final story = StoryData.fromJson({
+      ...{for (final f in StoryData.files) f: _emptyFile(f)},
+      'state.json': {
+        'stats': {
+          'trust:A': {'start': 50},
+        },
+        'flags': {'later': 'Henüz yazılmadı'},
+      },
+      'chats.json': {
+        'Kim': {
+          'nodes': {
+            'start': {
+              'waitFor': ['trust:A >= 60', 'later'],
+              'options': [
+                {
+                  'label': 'x',
+                  'unlocks': ['trust:A += 5', 'typo += 1', 'trait:öfke = 2'],
+                },
+              ],
+            },
+          },
+        },
+      },
+    });
+    final issues = validateStory(story);
+    String at(IssueLevel level) =>
+        issues.where((i) => i.level == level).map((i) => i.message).join('\n');
+    expect(at(IssueLevel.error), contains('"typo"'));
+    expect(at(IssueLevel.error), contains('"trait:öfke" kendiliğinden'));
+    expect(at(IssueLevel.error), isNot(contains('trust:A')));
+    expect(at(IssueLevel.note), contains('"later"'));
   });
 
   test('malformed files name the broken field', () {
@@ -183,7 +233,13 @@ void main() {
 
     test('a full playthrough unlocks every part of the case', () async {
       final progress = StoryProgress.instance;
-      expect(deliveredDocuments(progress), isEmpty);
+      Iterable<StoryDocument> caseFiles() => deliveredDocuments(
+        progress,
+      ).where((d) => d.category == DocumentCategory.case_);
+      // Only personnel records are on Poltel before the case starts.
+      expect(deliveredDocuments(progress).map((d) => d.category).toSet(), {
+        DocumentCategory.personnel,
+      });
       expect(progress.unreadCount('Özge'), 1);
       expect(progress.restore('Orhun').$1.canReply, isFalse);
 
@@ -191,11 +247,7 @@ void main() {
       await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
       await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
       expect(progress.has(StoryFlags.part1Done), isTrue);
-      expect(deliveredDocuments(progress).map((d) => d.id), [
-        'autopsy',
-        'deniz',
-        'yusuf',
-      ]);
+      expect(caseFiles().map((d) => d.id), ['autopsy', 'deniz', 'yusuf']);
       expect(progress.alerts.current, isNotNull, reason: 'Orhun wrote');
       expect(progress.unreadCount('Orhun'), 1);
       expect(progress.unreadCount('Erdi'), 1);
@@ -218,7 +270,7 @@ void main() {
       await say('Doğa', 'Berat malı kimden alıyordu?');
       await say('Doğa', "Adil'i nerede bulabiliriz?");
       expect(progress.has(StoryFlags.furkanStatement), isTrue);
-      expect(deliveredDocuments(progress).first.id, 'furkan');
+      expect(caseFiles().first.id, 'furkan');
       expect(progress.testimonyFrom('Doğa').map((r) => r.question), [
         "Berat'ı nereden tanıyorsun?",
         'Doğruyu söylersen sana yardım ederiz. Pakette ne vardı?',
@@ -318,6 +370,104 @@ void main() {
       expect(searchProfiles('adil', progress).single.private, isTrue);
       expect(searchProfiles('ozge', progress).single.handle, 'ozge.buro');
     });
+
+    test('choices change numbers within their limits', () async {
+      final progress = StoryProgress.instance;
+      expect(progress.value('trust:Özge'), 50);
+      await progress.discover(['trust:Özge += 80']);
+      expect(progress.value('trust:Özge'), 100);
+      await progress.discover(['trust:Özge = 10', 'trust:Özge -= 5']);
+      expect(progress.value('trust:Özge'), 5);
+      expect(progress.meets(const Condition(all: ['trust:Özge < 10'])), isTrue);
+    });
+
+    test('flags can be cleared and close apps', () async {
+      final progress = StoryProgress.instance;
+      expect(progress.lockOf('Poltel'), isNull);
+      await progress.discover(['status:suspended']);
+      expect(progress.lockOf('Poltel')!.title, 'Erişim askıya alındı');
+      await progress.discover(['!status:suspended']);
+      expect(progress.lockOf('Poltel'), isNull);
+    });
+
+    test(
+      'a suspended detective only gets help from those who trust them',
+      () async {
+        final progress = StoryProgress.instance;
+        final atakan = StoryData.current.map.officers.firstWhere(
+          (o) => o.name == 'Atakan',
+        );
+        await progress.discover(['status:suspended']);
+        expect(progress.meets(atakan.requires), isFalse);
+        await progress.discover(['trust:Atakan = 60']);
+        expect(progress.meets(atakan.requires), isTrue);
+      },
+    );
+
+    test('timers fire after play time unless called off', () async {
+      final progress = StoryProgress.instance;
+      await progress.discover([StoryFlags.furkanStatement]);
+      await progress.advanceTimers(const Duration(minutes: 30));
+      expect(progress.timeLeft('bribe-kept'), const Duration(minutes: 15));
+      expect(progress.has('case:internal-investigation'), isFalse);
+      await progress.advanceTimers(const Duration(minutes: 15));
+      expect(progress.timeLeft('bribe-kept'), isNull);
+      expect(progress.has('case:internal-investigation'), isTrue);
+      expect(progress.value('integrity'), 55);
+    });
+
+    test('sending the bribe back calls the timer off', () async {
+      final progress = StoryProgress.instance;
+      await progress.discover([StoryFlags.furkanStatement]);
+      final payee = StoryData.current.bank.payees.single;
+      await progress.recordTransfer(payee, 1000000);
+      expect(progress.value('paid:bribe-return'), 10000);
+      expect(progress.has('bribe:returned'), isFalse, reason: 'too little');
+      await progress.recordTransfer(payee, 5000000);
+      expect(progress.has('bribe:returned'), isTrue);
+      await progress.advanceTimers(const Duration(hours: 2));
+      expect(progress.has('case:internal-investigation'), isFalse);
+    });
+
+    test('play time stops while the phone sleeps', () async {
+      final progress = StoryProgress.instance;
+      await progress.discover([StoryFlags.furkanStatement]);
+      final start = DateTime(2026, 1, 1);
+      await progress.tick(now: start);
+      await progress.tick(now: start.add(const Duration(seconds: 2)));
+      await progress.tick(now: start.add(const Duration(hours: 5)));
+      expect(
+        progress.timeLeft('bribe-kept'),
+        const Duration(minutes: 45) - const Duration(seconds: 4),
+      );
+    });
+
+    test('the ending is told by the first variant that fits', () async {
+      final progress = StoryProgress.instance;
+      final endings = StoryData.current.endings;
+      expect(progress.isOver, isFalse);
+      final career = endings.sections.firstWhere((s) => s.id == 'career');
+      final ozge = endings.sections.firstWhere((s) => s.id == 'Özge');
+      expect(progress.ending(career)!.requires.isAlways, isTrue);
+      await progress.discover([
+        'status:suspended',
+        'trust:Özge = 80',
+        'final:ready',
+      ]);
+      expect(progress.isOver, isTrue);
+      expect(progress.ending(career)!.text, contains('uzaklaştırıldı'));
+      expect(progress.ending(ozge)!.text, contains('güveniyor'));
+    });
+
+    test('archived news only turns up in a search', () async {
+      final progress = StoryProgress.instance;
+      expect(currentArticles(progress).map((a) => a.id), ['berat-found']);
+      expect(searchArticles('takipsizlik', progress).single.id, 'old-case');
+      expect(searchArticles('vakif', progress).single.id, 'foundation');
+      expect(searchArticles('ta', progress), isEmpty);
+      await progress.discover([StoryFlags.part1Done]);
+      expect(newArticleCount(progress), 2);
+    });
   });
 }
 
@@ -338,5 +488,6 @@ Object _emptyFile(String file) => switch (file) {
     'balance': 0,
     'transactions': [],
   },
+  'state.json' || 'news.json' || 'endings.json' => <String, Object>{},
   _ => [],
 };

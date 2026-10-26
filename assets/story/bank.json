@@ -42,5 +42,16 @@
       "daysAgo": 0,
       "requires": "furkanStatement"
     }
+  ],
+  "payees": [
+    {
+      "id": "bribe-return",
+      "name": "Gönderene iade",
+      "iban": "TR40 0001 5001 5800 7301 9846 12",
+      "note": "'Dosyayı kapat' açıklamalı EFT'nin gönderildiği hesap",
+      "requires": "furkanStatement",
+      "minAmount": 5000000,
+      "unlocks": ["integrity += 10", "pressure += 15", "bribe:returned"]
+    }
   ]
 }

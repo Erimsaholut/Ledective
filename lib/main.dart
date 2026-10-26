@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import 'data/game_state.dart';
 import 'home/alert_banner.dart';
+import 'home/epilogue_page.dart';
 import 'home/home_indicator.dart';
 import 'home/start_screen.dart';
 import 'story/story_progress.dart';
@@ -20,10 +21,10 @@ Future<void> main() async {
   // Draw edge to edge so the wallpaper runs under the status bar.
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await loadGameState();
-  // Officers come back from missions whichever app is open.
+  // Officers come back and timers run whichever app is open.
   Timer.periodic(
     const Duration(seconds: 2),
-    (_) => StoryProgress.instance.completeDueMissions(),
+    (_) => StoryProgress.instance.tick(),
   );
   runApp(const LedectiveApp());
 }
@@ -37,6 +38,32 @@ class LedectiveApp extends StatefulWidget {
 
 class _LedectiveAppState extends State<LedectiveApp> {
   final RouteDepthObserver _routes = RouteDepthObserver();
+  final GlobalKey<NavigatorState> _navigator = GlobalKey();
+  final StoryProgress _progress = StoryProgress.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _progress.addListener(_showEnding);
+  }
+
+  @override
+  void dispose() {
+    _progress.removeListener(_showEnding);
+    super.dispose();
+  }
+
+  /// Plays the epilogue once, as soon as the story is over.
+  void _showEnding() {
+    if (!_progress.isOver || _progress.hasSeen('ending')) return;
+    _progress.markSeen('ending');
+    _navigator.currentState?.push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (_) => const EpiloguePage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +75,7 @@ class _LedectiveAppState extends State<LedectiveApp> {
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: PointerDeviceKind.values.toSet(),
       ),
+      navigatorKey: _navigator,
       navigatorObservers: [_routes],
       builder: (context, child) => Stack(
         children: [

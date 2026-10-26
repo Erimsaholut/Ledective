@@ -16,6 +16,7 @@ import '../apps/map/map_app.dart';
 import '../apps/mates/mates_app.dart';
 import '../apps/messages/messages_app.dart';
 import '../apps/music/music_app.dart';
+import '../apps/news/news_app.dart';
 import '../apps/notes/notes_app.dart';
 import '../apps/phone/phone_app.dart';
 import '../apps/photos/photos_app.dart';
@@ -99,6 +100,13 @@ const List<List<AppIcon>> _pages = [
       colors: [Color(0xFF3A3A3C), Color(0xFF1C1C1E)],
       glyphColor: Color(0xFFFF453A),
       badgeCount: unheardRecordingCount,
+    ),
+    AppIcon(
+      title: "News",
+      app: NewsApp(),
+      iconData: Icons.newspaper_rounded,
+      colors: [Color(0xFFFF5A5F), Color(0xFFD70015)],
+      badgeCount: newArticleCount,
     ),
     AppIcon(
       title: "Settings",

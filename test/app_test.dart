@@ -2,14 +2,19 @@ import 'dart:ui' show PointerDeviceKind;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ledective/apps/bank/transfer_page.dart';
 import 'package:ledective/apps/map/map_app.dart';
+import 'package:ledective/apps/news/news_app.dart';
+import 'package:ledective/apps/settings/story_state_page.dart';
 import 'package:ledective/apps/poltel/lab/inspection_page.dart';
 import 'package:ledective/apps/poltel/lab/jigsaw_game.dart';
 import 'package:ledective/apps/poltel/lab/uv_game.dart';
 import 'package:ledective/story/story_data.dart';
 import 'package:ledective/apps/mates/chat_page.dart';
 import 'package:ledective/apps/phone/call_screen.dart';
+import 'package:ledective/data/bank_account.dart';
 import 'package:ledective/data/game_state.dart';
+import 'package:ledective/home/epilogue_page.dart';
 import 'package:ledective/data/recent_calls.dart';
 import 'package:ledective/home/app_icon.dart';
 import 'package:ledective/main.dart';
@@ -57,7 +62,8 @@ void main() {
     // Pian needs the audio plugin, which isn't available in widget tests.
     const firstPage = [
       'Mail', 'Photos', 'Camera', 'Calendar', 'Clock', 'Poltel', 'Harita',
-      'Pano', 'Notes', 'Sinstagram', 'ZaferBank', 'Kayıtlar', 'Settings',
+      'Pano', 'Notes', 'Sinstagram', 'ZaferBank', 'Kayıtlar', 'News', //
+      'Settings',
       // The dock.
       'Phone', 'Messages', 'MatesApp', 'Contacts',
     ];
@@ -240,5 +246,83 @@ void main() {
     await tester.pumpAndSettle();
     expect(progress.isInspected('torn-photo'), isTrue);
     expect(progress.has('photo-restored'), isTrue);
+  });
+
+  testWidgets('a suspended detective finds Poltel locked', (tester) async {
+    await _pumpApp(tester);
+    await tester.runAsync(
+      () => StoryProgress.instance.discover(['status:suspended']),
+    );
+    await tester.tap(
+      find.byWidgetPredicate((w) => w is AppIcon && w.title == 'Poltel'),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Erişim askıya alındı'), findsOneWidget);
+    expect(find.text('Belgeler'), findsNothing);
+  });
+
+  testWidgets('money sent from ZaferBank reaches the story', (tester) async {
+    await tester.runAsync(loadGameState);
+    await tester.runAsync(
+      () => StoryProgress.instance.discover([StoryFlags.furkanStatement]),
+    );
+    await tester.pumpWidget(
+      const MaterialApp(home: TransferPage(color: Colors.red)),
+    );
+    final before = BankAccount.instance.balance(StoryProgress.instance);
+    await tester.tap(find.text('Gönderene iade'));
+    await tester.enterText(find.byType(TextField).first, '50.000');
+    await tester.pump();
+    await tester.tap(find.widgetWithText(FilledButton, 'Gönder'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('geri alınamaz'), findsOneWidget);
+    await tester.runAsync(() async {
+      await tester.tap(find.widgetWithText(FilledButton, 'Gönder').last);
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    });
+    await tester.pumpAndSettle();
+    expect(
+      BankAccount.instance.balance(StoryProgress.instance),
+      before - 5000000,
+    );
+    expect(StoryProgress.instance.has('bribe:returned'), isTrue);
+  });
+
+  testWidgets('reading an archived article sets its flag', (tester) async {
+    await tester.runAsync(loadGameState);
+    final article = StoryData.current.news.articles.firstWhere(
+      (a) => a.id == 'old-case',
+    );
+    await tester.pumpWidget(MaterialApp(home: ArticlePage(article: article)));
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 100)),
+    );
+    await tester.pump();
+    expect(find.text(article.title), findsOneWidget);
+    expect(StoryProgress.instance.has('news:old-case-found'), isTrue);
+  });
+
+  testWidgets('the epilogue tells every part of the ending', (tester) async {
+    await tester.runAsync(loadGameState);
+    await tester.runAsync(
+      () => StoryProgress.instance.discover(['case:solved', 'final:ready']),
+    );
+    await tester.pumpWidget(const MaterialApp(home: EpiloguePage()));
+    await tester.pumpAndSettle();
+    expect(find.text('Sessiz Zafer'), findsOneWidget);
+    expect(find.text('DOSYA KAPANDI'), findsOneWidget);
+  });
+
+  testWidgets('the story state page changes numbers and flags', (tester) async {
+    await tester.runAsync(loadGameState);
+    await tester.pumpWidget(const MaterialApp(home: StoryStatePage()));
+    await tester.runAsync(() async {
+      await tester.tap(find.byIcon(Icons.add_rounded).first);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    });
+    await tester.pump();
+    expect(StoryProgress.instance.value('trust:Özge'), 60);
+    expect(find.text('60'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

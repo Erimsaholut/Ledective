@@ -19,12 +19,16 @@ class _PaperScaffold extends StatelessWidget {
     required this.authority,
     required this.heading,
     required this.children,
+    this.logged = false,
   });
 
   final String title;
   final String authority;
   final String heading;
   final List<Widget> children;
+
+  /// Restricted records note that the access was logged.
+  final bool logged;
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +103,25 @@ class _PaperScaffold extends StatelessWidget {
                 ],
               ),
             ),
+            if (logged)
+              const Padding(
+                padding: EdgeInsets.only(top: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.history_rounded,
+                      size: 16,
+                      color: Colors.white70,
+                    ),
+                    SizedBox(width: 6),
+                    Text(
+                      "Bu belgeye erişiminiz kayıt altına alındı.",
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
@@ -205,6 +228,7 @@ class StatementPage extends StatelessWidget {
 
     return _PaperScaffold(
       title: "${s.name} İfade Tutanağı",
+      logged: s.category.isLogged,
       authority:
           "T.C.\nİÇİŞLERİ BAKANLIĞI\nEMNİYET GENEL MÜDÜRLÜĞÜ\nCİNAYET BÜRO AMİRLİĞİ",
       heading: "İFADE TUTANAĞI",
@@ -310,6 +334,7 @@ class ReportPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return _PaperScaffold(
       title: report.title,
+      logged: report.category.isLogged,
       authority: report.authority,
       heading: report.heading,
       children: [for (final line in report.lines) _line(line)],

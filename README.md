@@ -28,13 +28,23 @@ Ana hikâye sohbetlerle ilerler; aradaki her şeyi oyuncu kendisi keşfeder:
   yazı bulma.
 - **Sinstagram araması:** Şüphelilerin hesapları akışta görünmez; adlarını
   öğrenince arayarak ya da bir yorumdaki kullanıcı adına dokunarak bulunur.
-- **ZaferBank**, **Kayıtlar** (sesli mesajlar) ve **Mail / Messages** da
-  hikâye ilerledikçe yeni şeyler alır. Yeni bir şey geldiğinde ekranın
-  üstünde bildirim çıkar.
+- **News:** Gündem haberleri hikâye ilerledikçe düşer; **Arşiv**'de isim,
+  yer ya da olayla yıllar öncesine kadar arama yapılır.
+- **ZaferBank:** Hesap hareketleri ve **Para Gönder**. Transferler geri
+  alınamaz ve hikâyeyi etkiler.
+- **Poltel:** Dava belgelerinin yanında personel sicilleri ve iç denetim
+  kayıtları. Kısıtlı kayıtlara erişim kayda geçer.
+- **Kayıtlar** (sesli mesajlar) ve **Mail / Messages** da hikâye ilerledikçe
+  yeni şeyler alır. Yeni bir şey geldiğinde ekranın üstünde bildirim çıkar.
 
 Her seçim dedektifin kişiliğine puan ekler (Öfke, Merhamet, Merak, Cesur,
 Umursamaz, Temkinli). Puanlar **Settings → Detective Profile** ekranında
-görünür.
+görünür. Arka planda her ekip üyesinin komisere güveni, üstlerden gelen
+baskı, mesleki dürüstlük ve tanıkların tehlikesi de tutulur; oyuncu bunları
+görmez ama sonuçlarını hisseder. Seçimlere göre komiser hakkında inceleme
+açılabilir, görevden uzaklaştırılabilir (Poltel kilitlenir, sadece ona
+güvenenler yardım eder) ve final, dosyanın, komiserin ve ekibin akıbetini
+ayrı ayrı anlatır.
 
 ## Çalıştırma
 
@@ -79,19 +89,27 @@ test/                  Birim ve widget testleri
 Bütün hikâye içeriği `assets/story/*.json` dosyalarındadır; kod değiştirmeden
 düzenlenebilir. Biçim ve örnekler: [`story/STORY_FORMAT.md`](story/STORY_FORMAT.md).
 
+Hikâyenin gizli gerçeği, karakterler, kronoloji, bölümler, ikilemler ve
+finaller [`story/bible/`](story/bible/README.md) klasöründeki senaryo ana
+planında tutulur. Kararlar orada verilir, sonra JSON'a yazılır.
+
 ```bash
 dart run tool/validate_story.dart          # hataları kontrol et
 dart run tool/validate_story.dart --graph  # sohbet şemalarını çiz
 ```
 
-Denerken **Settings → Hızlı görevler** harita görevlerini hızlandırır.
+Denerken **Settings → Hızlı görevler** harita görevlerini ve süreli olayları
+hızlandırır; **Settings → Hikâye durumu** sayıları ve bayrakları gösterip
+değiştirmeye ve finali önizlemeye yarar.
 
 ## Sohbet düğümleri
 
 Sohbetler, kimliklerle birbirine bağlanan düğümlerden oluşur (`chats.json`).
-Bir düğüm `waitFor` ile bir hikâye bayrağını bekleyebilir; bayrağı bir
-sohbet seçeneği, harita görevi, laboratuvar incelemesi ya da açılan bir
-Sinstagram profili açar. Ayrıntılar format rehberinde.
+Bir düğüm `waitFor` ile bir hikâye bayrağını ya da bir sayı koşulunu
+(`"trust:Özge >= 70"`) bekleyebilir; bayrağı bir sohbet seçeneği, harita
+görevi, laboratuvar incelemesi, açılan bir profil ya da belge, okunan bir
+haber, bir para transferi veya süresi dolan bir olay açar. Ayrıntılar format
+rehberinde.
 
 Oyuncunun ilerlemesi cihazda saklanır. `test/story_test.dart` doğrulayıcıyı
 çalıştırır ve hikâyenin baştan sona oynanabildiğini kontrol eder.
