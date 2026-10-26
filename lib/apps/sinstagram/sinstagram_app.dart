@@ -27,19 +27,9 @@ class Post {
 
 const String _images = 'assets/apps/photosApp/images';
 
+/// The feed only shows the bureau and strangers. Suspects get their own
+/// profiles later in the story, found through search.
 const List<Post> posts = [
-  Post(
-    id: 'berat-cafe',
-    author: 'berat.ylmz',
-    caption: "Okulun karşısındaki kafe, her zamanki yer ☕",
-    likes: 23,
-    daysAgo: 4,
-    comments: [
-      (author: 'furkan.shn', text: "abi bu akşam yine orda mısın"),
-      (author: 'adil.abi', text: "borçlar ödenmeden kahve içilmez 😉"),
-      (author: 'deniz.yilmaz', text: "Kuzen bi ara arasana"),
-    ],
-  ),
   Post(
     id: 'orhun-beer',
     author: 'orhun.k',
@@ -78,15 +68,6 @@ const List<Post> posts = [
     daysAgo: 5,
   ),
   Post(
-    id: 'berat-dad',
-    author: 'berat.ylmz',
-    image: '$_images/babba.jpeg',
-    caption: "Babam bir milletvekili ama ben kendi yolumu çizerim.",
-    likes: 54,
-    daysAgo: 9,
-    comments: [(author: 'yusuf.kasap', text: "Kral 👑")],
-  ),
-  Post(
     id: 'me-holiday',
     author: 'komiser',
     image: '$_images/my_foto4.jpg',
@@ -96,6 +77,44 @@ const List<Post> posts = [
     comments: [
       (author: 'erdi.mudur', text: "İzin dilekçen hâlâ masamda değil."),
     ],
+  ),
+  Post(
+    id: 'cat-world',
+    author: 'kedi.dunyasi',
+    image: '$_images/myCat.jpeg',
+    caption: "Pazartesi sendromu bu sabah böyle görünüyor 😾",
+    likes: 2310,
+    daysAgo: 2,
+    comments: [(author: 'ozge.buro', text: "Pamuk'un kuzeni gibi 😍")],
+  ),
+  Post(
+    id: 'series-quotes',
+    author: 'dizi.replikleri',
+    image: '$_images/my_foto1.jpg',
+    caption: "Ankara'nın en karizmatik komiseri. Katılmayan? #behzatç",
+    likes: 5874,
+    daysAgo: 6,
+    comments: [
+      (author: 'orhun.k', text: "Amirime benziyor bence"),
+      (author: 'komiser', text: "@orhun.k mesaiye dön"),
+    ],
+  ),
+  Post(
+    id: 'art-gallery',
+    author: 'sanat.galerisi',
+    image: '$_images/1500x500.jpeg',
+    caption: "Bu hafta sonu sergimiz ziyaretçilerini bekliyor. Giriş ücretsiz.",
+    likes: 418,
+    daysAgo: 8,
+  ),
+  Post(
+    id: 'detective-memes',
+    author: 'dedektif.memes',
+    image: '$_images/my_foto5.jpg',
+    caption: "Tatildeyken bile ipucu arayan polis olmak 🔍",
+    likes: 9120,
+    daysAgo: 10,
+    comments: [(author: 'atakan.kutay', text: "Amirim bu siz 😂")],
   ),
   Post(
     id: 'secret-history',
