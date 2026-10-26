@@ -34,21 +34,26 @@ const List<Mail> mails = [
   Mail(
     sender: "zaferbank.com",
     body:
-        "Paranızı tanımdağınız milyonlarca kişi ile paylaştığınızın farkında mısınız ?",
+        "Paranızı tanımadığınız milyonlarca kişi ile paylaştığınızın farkında mısınız ?",
   ),
   Mail(
     sender: "besiktas.com",
     body: "Yeni sezon formalarda indirim. Sakın kaçırmayın",
   ),
-  Mail(sender: "kargo.com.tr", body: "Kargonuz dağıtıma çıktı. Adresinizde bulunamadığınız için şubemizde bekletilecektir."),
+  Mail(
+    sender: "kargo.com.tr",
+    body:
+        "Kargonuz dağıtıma çıktı. Adresinizde bulunamadığınız için şubemizde bekletilecektir.",
+  ),
   Mail(
     sender: "havayolu.com.tr",
-    body: "Dönüş uçuşunuz için online check-in açılmıştır. İyi yolculuklar dileriz.",
+    body:
+        "Dönüş uçuşunuz için online check-in açılmıştır. İyi yolculuklar dileriz.",
   ),
   Mail(
     sender: "github.com",
     body:
-        "Github aktivasyon kodunuz Æ!>2A4@@X?3_ß4523 girmek için 10 saniyeniz var !!!",
+        "Hesabınıza yeni bir cihazdan giriş yapıldı. Siz değilseniz şifrenizi değiştirin.",
   ),
   Mail(
     sender: "cbu.com",
