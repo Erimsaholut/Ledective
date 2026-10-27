@@ -15,6 +15,10 @@ koşulsuz yedek en altta.
 
 ### Berat Yılmaz dosyası
 
+Fail Kerem Aydın [KARAR]. "Çözüldü" (`case:solved`) Kerem'in fail olarak
+bulunması demek; "Yanlış İnsan" (`case:wrong-person`) en olası haliyle
+Adil'in suçlanması.
+
 | Final | Koşul (taslak) | Özet |
 | --- | --- | --- |
 | Yanlış İnsan | `case:wrong-person` | Deliller yanlış yorumlandı, yanlış kişi suçlandı. Gerçek fail bulunamasa da oyun biter; oyuncu hatasının sonuçlarını görür |
@@ -56,13 +60,14 @@ yazıldıkça her birine o hikâyenin bayraklarına bağlı seçenekler eklenir
 
 `pressure >= 70` ya da yedek.
 
-### Gerçek: Komiser neredeydi? [ÖNERİ]
+### Gerçek: Komiser neredeydi? [KARAR: gizli son]
 
 | Durum | Koşul |
 | --- | --- |
 | Hiç yurt dışında değildi | `twist:never-abroad` |
 
-Bu bölüm sadece o son seçilirse görünür ve diğer bütün bölümleri yeniden
+Sadece yeterince ipucu toplayan oyuncu bu sona ulaşır (öneri: gizli `doubt`
+sayısı; bkz. 01). Bu bölüm sadece o zaman görünür ve diğer bütün bölümleri yeniden
 okutur: sızıntılar, kimsenin nerede olduğunu bilmemesi, annenin "senin
 oralarda" demesi. Ayrıntılar 01-ana-gizem.md'de.
 

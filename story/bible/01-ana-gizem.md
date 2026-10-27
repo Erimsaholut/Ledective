@@ -32,67 +32,126 @@ burası kesinleşmeli; diğer her şey buna dayanır.
 | Adil'le Meclis otoparkına kayıtlı makam aracındaki biri görüştü | Harita: çay ocağı |
 | Yanık harita eski mezbahayı gösteriyor: "Cuma 03:00" | Laboratuvar: yapboz |
 | Mezbahada vidalı sandalye, ip, kan; Berat'ın ve **iki öğrencinin daha** fotoğrafları, altlarında tarihler | Harita: mezbaha |
-| Bilinmeyen numara: "O çocuk sadece başlangıçtı", "Cuma geldiğinde sıradaki sen olacaksın" | Kayıtlar |
-| Hesaba gizli kaynaktan 50.000 TL: "Dosyayı kapat" | ZaferBank |
+| Berat'ın telefonu kayıp; son sinyal 02.40'ta sanayi bölgesinden | Özge'ye sor |
+| Kayıp öğrenci aileleri: çocukları aynı burs programına başvurmuş | News (Selin Aras) |
+| Berat'ın adı Yılmaz Vakfı'nın burs listesinde | Selin Aras'a sor |
+| Son üç yılda altı öğrenci kayıp; ikisi mezbaha fotoğraflarında | Orhun'a sor |
+| Korkmuş bir "tanık", üç yıl önce ölmüş bir kadına kayıtlı hattan arıyor | Kayıtlar, Özge'ye sor |
+| Baba: "Oğlum oraya hiç gitmedi... ben biliyorum" | Babanın numarası |
+| 50.000 TL "Y. Eğitim Vakfı Danışmanlık"tan, "Geçmiş olsun" | ZaferBank |
 
-Bu zincir şu an **Adil'i** katil gibi gösteriyor. Asıl gerçek bundan farklı
-olabilir ve muhtemelen olmalı.
+Bu zincir başta **Adil'i** katil gibi gösterir. Gerçek aşağıda.
 
-## Cevaplanması gereken sorular
+## Gizli gerçek
 
-Her soru için bir **[KARAR]** yazılana kadar bölüm iskeleti (04) kesinleşmez.
+Aşağıdaki **[KARAR]** satırları kesinleşti (27.10.2026). **[ÖNERİ]** satırları
+bu kararlara uyan ayrıntılar; değiştirilebilir. İsimler de öneri.
 
-### Berat gerçekte nasıl biriydi?
-- [?] Geçmişte ne yaptı? Babasının bağlantıları onu hangi suçlardan kurtardı?
-- [?] Son haftalarda değişmiş miydi? Pişman mıydı?
-- [?] Adil'e borcu neden vardı: uyuşturucu mu, başka bir şey mi?
+### Özet
 
-**[ÖNERİ]** Berat ve arkadaşları yıllar önce bir öğrencinin ölümüne yol açan
-bir olaya karışmış; babasının bağlantılarıyla soruşturma örtbas edilmiş
-(News arşivindeki "takipsizlik" haberi bu olay olabilir). Son haftalarda
-Berat pişmandır, olayın kanıtlarını toplamış ve babasını ifşa etmeye
-hazırlanmaktadır. Katil bunu bilmemektedir. Böylece oyuncu önce maktulden
-nefret eder, sonra onun da değişmeye çalıştığını öğrenir.
+Yılmaz Vakfı'nın burs programı, borçlu ve kimsesiz öğrencileri seçip bir
+borç ağına sokar. Ödeyemeyenler Adil'e devredilir, cuma geceleri eski
+mezbahada "konuşturulur", bazıları bir daha görülmez. Üç yıl önce bu ağın
+kurbanlarından **Ece Aydın** orada öldü. Berat o gece oradaydı ve babası
+olayı örtbas ettirdi. Ece'nin ağabeyi **Kerem Aydın** yıllarca gerçeği aradı,
+Berat'a yaklaştı ve onu öldürdü. Ama Berat, öldüğü gece her şeyi ifşa etmeye
+hazırlanıyordu ve kanıtlarını Kerem'e vermeyi planlıyordu.
 
-### Berat'ı kim, nasıl, neden öldürdü?
-- [?] Bayıltıcıyı kim verdi, bıçağı kim vurdu, asma süsünü kim verdi? Bunlar
-  aynı kişi olmak zorunda değil.
-- [?] "Adil abi, ödeyeceğim" yalvarışı gerçekten Adil'e miydi, yoksa Adil o
-  gece başka bir şey için mi oradaydı?
-- [?] Deri ceketli adam kim?
-- [?] Berat'ın telefonu nerede?
+### Katil: Kerem Aydın, mağdurun kardeşi [KARAR]
 
-İki yön konuşuldu, birbirini dışlamıyor:
+- **[ÖNERİ]** 24 yaşında. Kız kardeşi Ece'nin ölümünün intihar olarak
+  kapatılmasını hiç kabul etmedi; takipsizlik kararına itiraz etti, kimse
+  dinlemedi.
+- **[ÖNERİ]** Gerçeği bulmak için Yılmaz Vakfı'nda gönüllü olarak çalışmaya
+  başladı. Burs listelerine, öğrenci dosyalarına erişti ve deseni gördü:
+  ödeyemeyen öğrenciler, cuma geceleri, kayıplar. Kafe kamerasındaki
+  **deri ceketli adam** odur; boynundaki kart **vakfın gönüllü kartıdır**.
+- **[ÖNERİ]** Berat'la son aylarda arkadaş oldu. Kerem, Berat'ın kim olduğunu
+  bildiğini bilmiyordu (aşağıya bak). Bir gece Berat ona açıldı ve Ece'yi o
+  gece mezbahaya götürenin kendisi olduğunu söyledi. Kerem'in kararı o an
+  verildi.
+- **[KARAR]** Kerem, mezbahadaki diğer kurbanların yerini bilen tek kişidir.
+  Yakalandığında asıl ikilem başlar (İkilem 2).
+- **[ÖNERİ]** Berat'ın telefonunu o aldı. Telefondaki kayıtlardan Berat'ın
+  pişman olduğunu ve kanıtları **ertesi gün ona vereceğini** öğrendi. Yıkıldı.
+- **[ÖNERİ]** Mezbahadan sonra komisere fısıldayan **korkmuş tanık** Kerem'dir.
+  Ece'nin eski hattını kullanıyor; hat "üç yıl önce ölmüş bir kadına" kayıtlı.
+  "Fotoğraftaki kızı tanıyorum" derken son kaybolan öğrencilerden birini
+  kastediyor: nerede tutulduğunu biliyor.
 
-- **[ÖNERİ A] Mağdurun yakını.** Katil, yıllar önce Berat yüzünden kardeşini
-  kaybetmiş bir öğrencidir. Aynı zamanda mezbahadaki diğer kurbanların yerini
-  bilen tek kişidir (bkz. İkilem 2).
-- **[ÖNERİ B] Satın alınmış çaresizlik.** Hakan Demir, eşinin kanser tedavisini
-  karşılayamayan işsiz bir adam. Milletvekilinin çevresi onu bilerek seçer:
-  paraya muhtaçtır ve konuşmaya korkar (bkz. İkilem 4). Bu yönde Hakan'ın
-  hedefi Berat değil, **bir tanık** da olabilir.
+### Berat: suçlu ama pişman [KARAR]
 
-[?] Hangisi Berat'ın katili, hangisi başka bir cinayetin faili?
+- **[KARAR]** Üç yıl önce Ece Aydın'ın ölümüne karıştı; babası soruşturmayı
+  örtbas ettirdi. News arşivindeki "takipsizlik" haberi bu olaydır.
+- **[ÖNERİ]** Burs programının yüzüydü: milletvekili oğlu olarak kampüste
+  öğrencileri programa o çekiyordu. Vakfın burs listesinde adının geçmesi bu
+  yüzden (Selin Aras: "Burs alan bir milletvekili oğlu. Garip değil mi?").
+  Furkan'a sattığı paketler de ağın küçük işlerinden.
+- **[KARAR]** Son haftalarda pişmandı. Kanıt topluyor ve babasını ifşa etmeye
+  hazırlanıyordu. Katil bunu bilmiyordu.
+- **[ÖNERİ]** İfşaya hazırlandığını fark eden ağ, onu da aynı kurala bağladı:
+  40.000 TL "borç", "Son gün CUMA". Defterdeki "Ödemezsem mezbahaya" ve
+  "babama söylemek yok" bu yüzden. Mezbahanın duvarındaki fotoğrafı ve
+  altındaki tarih onun son günüydü.
+- **[ÖNERİ]** Halının altındaki yırtık fotoğraf **Kerem'in** fotoğrafıdır.
+  Ağ, vakfın etrafında dolaşan Kerem'i gizlice fotoğraflayıp arkasına
+  "Kardeşi" yazdı ve Berat'a uyarı olarak verdi: "Ece'nin ağabeyi peşinde,
+  uzak dur." Berat fotoğrafı yırttı ama atamadı. Uzaklaşmak yerine her şeyi
+  Ece'nin ailesine, yani Kerem'e anlatmaya karar verdi. Kerem, Berat'ın onu
+  tanıdığını hiç öğrenmedi. [KANON: laboratuvar sonucu bunu gösteriyor;
+  fotoğraf kafe kamerasındaki adama benziyor.]
 
-### Milletvekili Yılmaz'ın suçları neler?
-- [?] Oğlunun hangi olaylarını örtbas etti?
-- [?] Cinayetin çözülmesini istiyor ama geçmişin araştırılmasını istemiyor:
-  bunun için kimi kullanıyor (danışman, Erdi, makam aracındaki kişi)?
-- [?] Yılmaz Vakfı neyi aklıyor ya da kimi susturuyor?
-- [?] "Dosyayı kapat" EFT'sini kim gönderdi?
+### Cinayet gecesi [ÖNERİ]
 
-### Adil ve mezbaha gerçekte ne için kullanılıyor?
-- [?] Adil kimin adamı? Kendi işini mi yapıyor, birinin borç tahsildarı mı?
-- [?] Mezbahadaki sandalye ve ip neyin izi: borç cezalandırma mı, sorgu mu,
-  başka bir şey mi?
-- [?] Fotoğrafların altındaki tarihler neyi gösteriyor? Biri ileri bir tarih
-  mi (Cuma)?
+| Saat | Ne oldu | Bıraktığı iz |
+| --- | --- | --- |
+| 23.40 | Adil kafedeki Berat'ı arar: "Bu gece evindeyim." Berat aceleyle çıkar. Kafede Berat'ı izleyen Kerem peşinden kalkar. | Kafeci, kamera karesi |
+| ~00.30 | Adil Berat'ın evine gelir; içerler, Adil tehdit eder. | Adil'in parmak izli bardağı |
+| ~02.00 | Berat yalvarır: "Adil abi, yemin ederim ödeyeceğim." Adil gider. | Komşu |
+| ~02.05 | Kapıyı Kerem çalar. Sarsılmış Berat ona açılır. Kerem içkisine sakinleştirici karıştırır. Berat fark eder, boğuşurlar. | Sehpa, kırık bardaklar, boğuşma izleri, toksikoloji |
+| ~02.20 | İlaç etkisini gösterir. Kerem Berat'ı kalbinden bıçaklar, intihar süsü vermek için asar. Ece'nin dosyası da "intihar" diye kapanmıştı. | Otopsi, asma izi |
+| 02.40 | Kerem Berat'ın telefonuyla sanayiye, mezbahaya gider. Telefon orada kapanır. | Son sinyal |
+| Sonraki gün | Kapı aralık kalmıştır. İki gün sonra Deniz cesedi bulur. | Deniz ifadesi |
 
-### Kayıp öğrenciler
-- [?] Mezbahadaki iki öğrenci kim? Kayıp mı, ölü mü, hayatta mı?
-- [?] Berat'ın ölümüyle aynı olayların parçası mı?
-- [?] Birinin hayatta olduğu ve yerini bilen bir tanığın korktuğu konuşuldu
-  (İkilem 5).
+### Burs programı ve mezbaha [KARAR]
+
+- **[KARAR]** Mezbaha, Yılmaz Vakfı burs programının karanlık yüzüdür.
+- **[ÖNERİ]** Vakıf kimsesiz, borçlu, ailesi uzakta öğrencilere burs verir.
+  Sözleşmedeki "geri ödeme" maddesiyle bursu bırakan ya da konuşmaya
+  kalkan öğrencinin borcu Adil'e devredilir.
+- **[ÖNERİ]** Adil tahsildardır. Borçlular cuma geceleri saat 03.00'te
+  mezbahada "konuşturulur" (vidalı sandalye, ip). Yanık haritadaki
+  "Cuma 03:00" bir sonraki gecedir.
+- **[ÖNERİ]** Vakfın bu tarafını milletvekilinin danışmanı (Y. Eğitim Vakfı
+  Danışmanlık) yürütür. Çay ocağına gelen makam aracı ona zimmetlidir.
+- **[ÖNERİ]** Son üç yılda altı öğrenci kayboldu. Dördü hiç bulunmadı. Son
+  ikisi geçen ay kayboldu; fotoğrafları mezbahada. **Birisi hâlâ hayatta**
+  (İkilem 5) ve yerini Kerem biliyor.
+- **[ÖNERİ]** Mezbahadaki ileri tarih bir sonraki "borçluyu" gösterir. Sıradaki
+  Furkan olabilir; serbest bırakılan Furkan'ın kaybolması bu yüzden.
+
+### Milletvekili Yılmaz (öneri isim: Haluk Yılmaz)
+
+- **[KARAR]** Oğlunun Ece Aydın olayını örtbas ettirdi.
+- **[ÖNERİ]** Vakfı siyasi makine olarak kurdu. Danışmanın ne yaptığını
+  bilmemeyi seçti; mezbahayı biliyor ("Çünkü ben biliyorum").
+- **[ÖNERİ]** Oğlunun katilinin bulunmasını gerçekten istiyor ama soruşturma
+  vakfa yaklaştıkça önce Erdi'yi, sonra kaymakamı devreye sokuyor, sonunda
+  kendisi yazıp para gönderiyor.
+- **[ÖNERİ]** "Berat benden para istedi, vermedim" doğru. Deniz'e "babamdan
+  isteyemem" demesi de doğru: Berat istedi, reddedildi ve bunu kimseye
+  söyleyemedi.
+- [?] Adil'in deposundaki listede geçen "H.Y." o mu, başka biri mi? Bilerek
+  bırakılmış bir yanlış iz de olabilir.
+
+### Açık sorular
+
+- [?] Erdi neyi biliyor, kimden emir alıyor?
+- [?] Kaymakamın vakıfla bağı ne?
+- [?] Behram'ın "Adil bir zamanlar muhbirdi" sırrı: narkotik bu ağı biliyor muydu?
+- [?] Kerem nasıl yakalanır? Oyuncunun ona ulaşma yolları (Sinstagram'da
+  Ece'nin eski hesabı, vakfın gönüllü listesi, kafe kamerasındaki kart,
+  sesli mesajın hattı).
 
 ### Basına kim sızdırıyor?
 Toksikoloji raporu, Meclis aracının plakası ve mezbaha, emniyet açıklama
@@ -110,10 +169,16 @@ yapmadan Şehir Postası'nda (Selin Aras) çıkar. Erdi her seferinde komisere
     siz biliyordunuz. Biz değil, siz." Aşağıdaki son ile birleşebilir.
 - [?] Sızıntılar soruşturmaya yarıyor mu, zarar mı veriyor?
 
-### Komiser gerçekte nerede? [ÖNERİ]
-Olası bir son: komiser **hiç yurt dışında değildi**; şizofreni ya da benzeri
-bir durum yüzünden tatilde olduğuna inanıyordu (planlanmış bayrak:
-`twist:never-abroad`).
+### Komiser gerçekte nerede?
+**[KARAR] Gizli bir son:** komiser **hiç yurt dışında değildi**; şizofreni ya
+da benzeri bir durum yüzünden tatilde olduğuna inanıyordu (planlanmış bayrak:
+`twist:never-abroad`). Sadece yeterince ipucu toplayan oyuncu bu sona ulaşır;
+diğer finaller bozulmadan kalır.
+
+**[ÖNERİ] Nasıl açılır:** gizli bir `doubt` (şüphe) sayısı. İki türlü
+okunabilen her ipucu (aşağıdakiler) bulunduğunda ya da sorulduğunda bir
+artar. Final soruşturmasında `doubt` yeterince yüksekse oyuncuya son bir
+seçenek çıkar ("Nerede olduğumu biliyor musun?").
 
 Bu son seçilirse adil bir sürpriz olması için:
 - İpuçları baştan beri iki türlü de okunabilmeli; oyuncu ilk oynayışta
@@ -142,8 +207,12 @@ Eklenebilecek ipuçları [ÖNERİ]:
   gelmemesi.
 - Doktor randevusu ya da ilaç hatırlatması (Takvim, Kayıtlar).
 
-[?] Bu son mu, yoksa sadece bir ihtimal olarak mı kalacak? Diğer finallerle
-(Adaletin Bedeli, Kirli Eller...) nasıl birleşir?
+Ek ipuçları da oyunda [KANON, taslak]:
+- İnanç'ın aktardığı telefon kaydı: "yurt dışından aranmış gibi görünmüyor."
+- Özge: "Gazeteye çıkan her şeyi siz biliyordunuz."
+
+[?] Gizli son diğer finallerle nasıl birleşir: Kerem'in akıbeti ve dosyanın
+sonucu yine anlatılır mı, yoksa her şey yeniden mi okunur?
 
 ### Kim ne biliyor, kim yalan söylüyor?
 
@@ -151,12 +220,13 @@ Bu tablo 02 ve 03 doldukça büyür.
 
 | Kişi | Neyi biliyor | Neyi söylüyor | Neden yalan söylüyor |
 | --- | --- | --- | --- |
-| Deniz | [?] | Borçtan bahsediyor | [?] |
-| Yusuf | [?] | Furkan'ı işaret ediyor | [?] |
-| Furkan | [?] | Paketi ve Adil'i anlatıyor | [?] |
-| Adil | [?] | (henüz konuşmadı) | [?] |
-| Erdi | [?] | "İçini ferah tut" | [?] |
-| Milletvekili | [?] | [?] | [?] |
+| Deniz | Berat'ın borcunu, defterini | Borçtan bahsediyor | Yalan söylemiyor; bilmediği çok şey var |
+| Yusuf | Berat'ın kampüste öğrencileri programa çektiğini [ÖNERİ] | Furkan'ı işaret ediyor | Kendisi de burslu; dikkati başkasına çekiyor [ÖNERİ] |
+| Furkan | Cuma gecelerini, Adil'in arabasını | Paketi ve Adil'i anlatıyor | Korkuyor; sıradaki o olabilir |
+| Adil | Burs borçlularını, mezbahayı, danışmanı | (kaçtı) | — |
+| Kerem | Her şeyi; kayıpların yerini | "Tanık" gibi konuşuyor | Yakalanmadan önce kayıpları kurtarmak istiyor [ÖNERİ] |
+| Milletvekili | Vakfın karanlık tarafını, Ece olayını | "Oğlum oraya hiç gitmedi" | Oğlunun ve kendisinin hatırasını koruyor |
+| Erdi | [?] | "Katili bulun, geçmişi kurcalamayın" | [?] |
 
 ## Karar defteri
 
@@ -164,4 +234,7 @@ Kesinleşen her şeyi buraya tarihle yaz ve ilgili dosyalara işle.
 
 | Tarih | Karar | Etkilenen dosyalar |
 | --- | --- | --- |
-| | | |
+| 27.10.2026 | Katil mağdurun kardeşi (Kerem Aydın); kayıpların yerini bilen tek kişi | 02, 03, 05 (İkilem 2), 08 |
+| 27.10.2026 | Berat suçlu ama pişman; öldüğü gece ifşaya hazırlanıyordu | 02, 03 |
+| 27.10.2026 | Mezbaha, Yılmaz Vakfı burs programının karanlık yüzü | 02, 03, 07 |
+| 27.10.2026 | "Hiç yurt dışında değildi" gizli bir son | 08 |

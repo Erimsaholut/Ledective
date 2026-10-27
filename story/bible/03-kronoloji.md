@@ -23,8 +23,17 @@ Oyun başladıktan sonraki olaylar gün değil **bayrak** sırasıyla gelir; onl
 | Zaman | Olay | Kim yaptı | O anda kim biliyordu | Oyuncu nasıl öğrenir | Durum |
 | --- | --- | --- | --- | --- | --- |
 | G-2900 (~8 yıl) | Eski belediye mezbahası kapatılır | Belediye | Herkes | News arşivi | [KANON, taslak] |
-| G-1100 (~3 yıl) | Üniversiteli genç kadının şüpheli ölümünde takipsizlik | Savcılık | Aile, [?] | News arşivi | [KANON, taslak] |
-| [?] | Berat ve arkadaşlarının karıştığı olay | [?] | [?] | [?] | [ÖNERİ] |
+| ~G-1110 | Bir cuma gecesi Ece Aydın mezbahada ölür; Berat oradadır | Burs ağı (Adil), Berat | Berat, Adil, danışman | [?] | [KARAR] olay; ayrıntı [ÖNERİ] |
+| ~G-1105 | Milletvekili olayı örtbas ettirir; ölüm "intihar" sayılır | Milletvekili | Milletvekili, [?] Erdi | Kerem, Selin Aras | [KARAR] |
+| G-1100 (~3 yıl) | Ece'nin ölümünde takipsizlik | Savcılık | Aile | News arşivi | [KANON, taslak] |
+| ~G-1100 → G-200 | Kerem itiraz eder, kimse dinlemez; Ece'nin hattını kapatmaz | Kerem | Kerem | Özge'ye sor (hat) | [ÖNERİ] |
+| son 3 yıl | Burs programından altı öğrenci kaybolur | Burs ağı | Ağ | Orhun'a sor | [KANON, taslak] |
+| ~G-200 | Kerem vakıfta gönüllü olur, burs dosyalarındaki deseni görür | Kerem | Kerem | [?] | [ÖNERİ] |
+| ~G-90 | Kerem Berat'a yaklaşır, arkadaş olurlar | Kerem | | [?] | [ÖNERİ] |
+| ~G-40 | Berat'ın vicdanı ağır basar, kanıt toplamaya başlar | Berat | Berat | Defter, telefon | [KARAR] pişmanlık |
+| ~G-30 | İki burslu öğrenci kaybolur (mezbaha fotoğrafları) | Burs ağı | Ağ, Kerem | Özge, News | [KANON, taslak] |
+| ~G-20 | Ağ, Kerem'in fotoğrafını "Kardeşi" notuyla Berat'a verir; Berat'a 40.000 TL "borç" ve son gün (cuma) yazılır | Danışman, Adil | Berat | Yırtık fotoğraf, defter | [ÖNERİ] |
+| ~G-10 | Berat Kerem'e Ece'yi o gece mezbahaya götürdüğünü itiraf eder | Berat | Kerem | [?] | [ÖNERİ] |
 | [?] | Komiserin eski dosyasındaki hatalı karar | Komiser | [?] | News arşivi, eski ifadeler | [ÖNERİ] |
 | G-700 | Yılmaz Vakfı burs açıklaması | Milletvekili | Herkes | News arşivi | [KANON, taslak] |
 | G-40 | Özge'nin sicil değerlendirmesi | Amiri | Personel dairesi | Poltel sicil | [KANON, taslak] |
@@ -37,9 +46,11 @@ Oyun başladıktan sonraki olaylar gün değil **bayrak** sırasıyla gelir; onl
 | G-6 | Atakan izin ister | Atakan | Özge | Sohbet geçmişi | [KANON] |
 | G-5 | Orhun "imza işini" halleder | Orhun | [?] | Sohbet geçmişi | [KANON] |
 | [?] (G-4/G-3) | Berat Deniz'e borcu olduğunu söyler | Berat | Deniz | Deniz ifadesi | [KANON] |
-| Olay gecesi 23.40 | Berat kafeden telefonla konuşup çıkar, deri ceketli adam peşinden | [?] | Kafeci | Harita: kafe | [KANON] |
-| Olay gecesi ~02.00 | Komşu "Adil abi, ödeyeceğim" yalvarışını duyar | [?] | Komşu | Harita: komşular | [KANON] |
-| Olay gecesi | Berat bayıltılır, bıçaklanır, asılır | [?] | [?] | Otopsi, toksikoloji | [KANON: nasıl], [?: kim] |
+| Olay gecesi 23.40 | Adil arar; Berat kafeden çıkar, Kerem (deri ceketli adam) peşinden | Adil, Kerem | Kafeci | Harita: kafe | [KANON]; kimlik [KARAR] |
+| ~00.30 | Adil Berat'ın evine gelir, tehdit eder | Adil | | Parmak izi | [ÖNERİ] |
+| ~02.00 | Berat Adil'e yalvarır, Adil gider | Adil | Komşu | Harita: komşular | [KANON] |
+| ~02.05–02.20 | Kerem gelir, içkiye ilaç katar, boğuşma; Kerem bıçaklar ve asar | Kerem | Kerem | Otopsi, toksikoloji | [KARAR] fail; saat [ÖNERİ] |
+| 02.40 | Kerem Berat'ın telefonuyla sanayiye gider, telefon kapanır | Kerem | | Özge'ye sor | [KANON, taslak] |
 | G-2 | Deniz cesedi bulur; ifadeler alınır, otopsi yapılır | Deniz, büro | Büro | Poltel | [KANON] |
 | G-0 | Gündem24: "Milletvekilinin oğlu ölü bulundu" | Basın | Herkes | News | [KANON, taslak] |
 

@@ -11,7 +11,7 @@
       "rows": 3,
       "cols": 3,
       "instructions": "Parçalara dokunarak yerlerini değiştir ve fotoğrafı birleştir.",
-      "result": "Fotoğraftaki genç Berat değil. Arkadaki duvarda aynı mezbaha fotoğraflarından biri asılı. Birisi Berat'a bu fotoğrafı bir uyarı olarak vermiş olabilir.",
+      "result": "Fotoğraftaki genç Berat değil: deri ceketli, sakallı biri. Fotoğraf ondan habersiz, uzaktan çekilmiş gibi. Arkasına el yazısıyla tek kelime yazılmış: \"Kardeşi.\" Yırtıklar eski; fotoğraf yırtıldıktan sonra uzun süre saklanmış.",
       "unlocks": ["photo-restored"]
     }
   },

@@ -24,7 +24,7 @@ biçim için `story/STORY_FORMAT.md`.
 
 ## Çalışma sırası
 
-- [ ] 1. Evren ve ana gizem: gizli gerçeği netleştir.
+- [x] 1. Evren ve ana gizem: temel kararlar alındı (27.10.2026); ayrıntılar öneri, açık sorular 01'de.
 - [ ] 2. Karakter dosyaları ve ilişki ağı.
 - [ ] 3. Olayların gerçek kronolojisi.
 - [ ] 4. Ana hikâyenin bölüm iskeleti.

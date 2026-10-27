@@ -93,9 +93,11 @@ basamak tırmanır:
 
 Savcılığa bildirme ve göndericiyi araştırma seçenekleri henüz yok.
 
-### İkilem 2 — Katil mi, kurtarıcı mı?
-Katil, mezbahadaki diğer kurbanların yerini bilen tek kişi. Güvenlik ve ceza
-garantisi istiyor.
+### İkilem 2 — Katil mi, kurtarıcı mı? [KARAR: ana ikilem]
+Katil Kerem Aydın, mezbahadaki diğer kurbanların yerini bilen tek kişi.
+Güvenlik ve ceza garantisi istiyor. Oyuncu bu noktada Berat'ın pişman
+olduğunu ve kanıtlarını Kerem'e vermeye hazırlandığını da biliyor olabilir.
+Kerem bunu ondan duyarsa ne yapar? [?]
 Seçenekler: derhâl gözaltı / savcıyla iş birliği ve koruma / kaçmasına göz yum.
 
 ### İkilem 3 — Bir meslektaşını ele vermek
@@ -104,6 +106,9 @@ Seçenekler: ihbar et (yakını tehlikeye girer) / örtbas et (başkaları öleb
 / ikinci şans ver (ekip güveni sarsılır).
 
 ### İkilem 4 — Karısının tedavisi için cinayet işleyen adam
+> Not: Berat'ın katili Kerem olduğu için Hakan başka bir cinayetin ya da
+> girişimin faili olmalı (bkz. 02 › Hakan Demir).
+
 Hakan itiraf eder, eşinin tedavisinin kesilmemesini ister.
 
 | Seçenek | Bedel |

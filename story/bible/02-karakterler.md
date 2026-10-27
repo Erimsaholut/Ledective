@@ -138,10 +138,24 @@ onu engellediği ima edilir. [KANON]
 ### Berat Yılmaz
 **Rol:** Maktul. Milletvekilinin oğlu. [KANON] Ayrıntı: 01-ana-gizem.md.
 
-### Milletvekili Yılmaz
-**Rol:** Berat'ın babası. [KANON: sadece adı geçiyor] Danışmanı komiserle özel
-olarak iletişime geçebilir (İkilem 1). Yılmaz Vakfı'nın kurucusu (News arşivi,
-taslak).
+- **Ne istiyordu:** [KARAR] Ece'nin ölümündeki payını itiraf etmek, babasını
+  ve vakfı ifşa etmek. [ÖNERİ] Sonra yurt dışına kaçmak (Deniz: "Gelecek ay
+  yurtdışına gitmek için plan yapıyordu").
+- **Ne saklıyordu:** Üç yıl önceki gece; burs programındaki rolü; topladığı
+  kanıtlar (telefonunda).
+- **Neyden korkuyordu:** Babasının öğrenmesi ("babama söylemek yok"), cuma
+  gecesi.
+
+### Milletvekili Yılmaz (öneri isim: Haluk Yılmaz)
+**Rol:** Berat'ın babası, Yılmaz Vakfı'nın kurucusu. Gizli numarasından
+komisere yazar ve 50.000 TL gönderir. [KANON, taslak]
+
+- **Ne istiyor:** Oğlunun katilinin bulunması, ama vakfın ve Ece olayının
+  gömülü kalması. [KARAR: Ece olayını örtbas ettirdi]
+- **Ne saklıyor:** [ÖNERİ] Vakfın karanlık tarafını bildiğini; oğlunun
+  ölmeden iki gün önce ondan para istediğini ve reddettiğini.
+- **Neyden korkuyor:** Oğlunun hatırasının ve kendi kariyerinin aynı gün
+  yıkılması.
 
 ### Deniz Yılmaz
 **Rol:** Berat'ın kuzeni, cesedi bulan kişi. [KANON]
@@ -157,12 +171,39 @@ taslak).
 **Rol:** Uyuşturucu ve gasp sabıkalı. Berat'ın 40.000 TL borçlu olduğu kişi.
 Bardakta parmak izi var, çay ocağından kaçar. [KANON]
 
+### Kerem Aydın — katil [KARAR: mağdurun kardeşi; isim öneri]
+**Rol:** Ece Aydın'ın ağabeyi. Berat'ı öldüren kişi. Oyunda henüz adıyla
+görünmüyor; şu an üç izi var: kafe kamerasındaki deri ceketli adam, yırtık
+fotoğraf ("Kardeşi") ve mezbahadan sonra arayan korkmuş "tanık".
+
+- **Ne istiyor:** Ece için adalet; artık bunun yanında kayıp öğrencileri
+  kurtarmak. [ÖNERİ]
+- **Ne saklıyor:** Cinayeti; Berat'ın telefonunu; kayıpların nerede
+  olduğunu.
+- **Neyden korkuyor:** Kayıpları kurtaramadan yakalanmak. Berat'ın pişman
+  olduğunu öğrendiği için kendi yaptığıyla yüzleşmek.
+- **İnandığı ama yanlış olan:** Berat'ın onu tanımadığını sanıyor. [ÖNERİ]
+- **Konuşma tarzı:** Kısa, fısıltılı, kendini hep "tanık" olarak tanıtıyor.
+- **Ulaşma yolları [ÖNERİ, henüz oyunda yok]:** vakfın gönüllü listesi,
+  kamera karesindeki kart, Ece'nin eski hattı, Sinstagram'da Ece'nin eski
+  hesabındaki yorumlar.
+
+### Ece Aydın [KARAR: Berat yüzünden ölen öğrenci; isim öneri]
+Üç yıl önce, burs programının borçlusu olarak mezbahada öldü. Ölümü takipsizlikle
+kapandı (News arşivi: "Üniversiteli genç kadının ölümüyle ilgili soruşturma
+kapatıldı"). Hattı hâlâ kullanılıyor.
+
 ## Önerilen yeni karakterler [ÖNERİ]
 
 ### Hakan Demir
 İşsiz, eşi kanser tedavisi görüyor, borç içinde. Milletvekilinin çevresi ona
 tedavi parası karşılığında bir cinayet teklif eder ve Hakan kabul eder.
 Oyuncu onu önce profesyonel tetikçi sanar. Ayrıntı: İkilem 4.
+
+Berat'ın katili **değil** (katil Kerem). [?] Hakan'ın hedefi kim olabilir:
+Kerem'e ulaşmaya çalışan bir tanık, Selin Aras, Furkan ya da kayıp
+öğrencilerden hayatta olan. Bölüm IV'te ağın Kerem'i susturmak için onu
+tutması da düşünülebilir.
 
 ### Hakan'ın eşi
 Tedavi parasının nereden geldiğini bilmez. Gerçeği öğrenirse bu parayla
