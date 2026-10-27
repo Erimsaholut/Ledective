@@ -686,12 +686,17 @@ class StateData {
     this.flags = const {},
     this.locks = const [],
     this.timers = const [],
+    this.milestones = const [],
   });
 
   final Map<String, StatDefinition> stats;
 
-  /// Flags the story plans to use, with what they mean. The validator only
-  /// warns when one of these isn't set by anything yet.
+  /// The main path, in order, for the story table: each step's flag and
+  /// name.
+  final List<({String flag, String title})> milestones;
+
+  /// What flags mean. The validator only notes it when one of these isn't
+  /// set by anything yet: it is planned.
   final Map<String, String> flags;
   final List<AppLock> locks;
   final List<StoryTimer> timers;
@@ -1204,6 +1209,11 @@ StateData _state(_Reader r) => StateData(
       for (final name in stats.map.keys) name: _stat(name, stats.field(name)),
     },
   },
+  milestones:
+      r
+          .optional('milestones')
+          ?.list((m) => (flag: m.text('flag'), title: m.text('title'))) ??
+      const [],
   flags: switch (r.optional('flags')) {
     null => const {},
     final flags => {

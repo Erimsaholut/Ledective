@@ -2,9 +2,11 @@
 //
 //   dart run tool/validate_story.dart          # check
 //   dart run tool/validate_story.dart --graph  # also draw story/graphs/*.md
+//   dart run tool/validate_story.dart --table  # also write story/HIKAYE_SEMASI.md
 import 'dart:io';
 
 import 'package:ledective/story/story_data.dart';
+import 'package:ledective/story/story_table.dart';
 import 'package:ledective/story/story_validator.dart';
 
 Future<void> main(List<String> args) async {
@@ -33,6 +35,11 @@ Future<void> main(List<String> args) async {
       );
     }
     stdout.writeln('Sohbet şemaları story/graphs/ klasörüne yazıldı.');
+  }
+
+  if (args.contains('--table')) {
+    File('story/HIKAYE_SEMASI.md').writeAsStringSync(storyTable(story));
+    stdout.writeln('Hikâye şeması story/HIKAYE_SEMASI.md dosyasına yazıldı.');
   }
 
   int count(IssueLevel level) => issues.where((i) => i.level == level).length;

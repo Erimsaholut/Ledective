@@ -19,9 +19,23 @@ dart run tool/validate_story.dart --graph
 Şemalar `story/graphs/<kişi>.md` dosyalarına yazılır; GitHub ya da VS Code
 Markdown önizlemesi bunları akış şeması olarak gösterir.
 
+Bütün hikâyeyi tek bir tabloda görmek için:
+
+```bash
+dart run tool/validate_story.dart --table
+```
+
+Bu, [`story/HIKAYE_SEMASI.md`](HIKAYE_SEMASI.md) dosyasını yeniden üretir:
+ana yolun kilometre taşları, her kişinin seçenekleri ve sonuçları, her
+bayrağa nasıl ulaşıldığı ve neyi açtığı, sayıları neyin değiştirdiği,
+harita görevleri, para, süreli olaylar ve final. JSON'u değiştirdikten sonra
+yeniden üretmeyi unutma; testler tablonun güncel olup olmadığını kontrol
+eder.
+
 Araç üç tür sonuç verir: **HATA** oyunu bozar, **UYARI** büyük ihtimalle
-bir yanlışlıktır, **NOT** ise `state.json`'da planlanmış ama henüz hiçbir
-şeyin açmadığı bayraklardır; yani yapılacaklar listesi.
+bir yanlışlıktır, **NOT** ise yapılacaklar listesidir: `state.json`'da
+planlanmış ama henüz hiçbir şeyin açmadığı bayraklar ve açılan ama henüz
+hiçbir şeyin beklemediği "tohum" bayraklar.
 
 Geliştirirken Settings'teki **Hikâye yazarı** bölümü işini kolaylaştırır:
 
@@ -352,7 +366,9 @@ değerlendirmesi yanlış, önyargılı ya da kasıtlı olabilir.
 
 - `stats`: hikâyenin tuttuğu sayılar. `min`/`max` verilirse değer bu
   aralıkta kalır. `label` sadece yazarlar içindir.
-- `flags`: hikâyede kullanılacak bayrakların sözlüğü. Burada tanımlı bir
+- `milestones`: ana yolun aşamaları sırayla (`{"flag": "part1Done", "title":
+  "..."}`). Hikâye şemasının en başındaki "Ana yol" tablosu bunlardan çıkar.
+- `flags`: bayrakların anlamları. Şemada "Anlamı" sütununda görünür. Burada tanımlı bir
   bayrağı bekleyen ama henüz hiçbir şeyin açmadığı yerler hata değil NOT
   olarak raporlanır; iskeleti önceden kurup sonra doldurabilirsin.
 - `locks`: koşul tutarken bir uygulamayı kilitler. `app`, ana ekrandaki adı

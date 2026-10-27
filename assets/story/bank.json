@@ -52,6 +52,15 @@
       "requires": "mp:wrote",
       "minAmount": 5000000,
       "unlocks": ["integrity += 10", "pressure += 15", "bribe:returned"]
+    },
+    {
+      "id": "orhun-debt",
+      "name": "Orhun K.",
+      "iban": "TR71 0004 6007 1188 8000 0427 33",
+      "note": "Orhun’un icra borcu (80.000 TL)",
+      "requires": "heard:orhun-debt",
+      "minAmount": 2000000,
+      "unlocks": ["orhun:helped", "trust:Orhun += 20", "integrity -= 5"]
     }
   ]
 }

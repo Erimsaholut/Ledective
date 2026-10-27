@@ -183,6 +183,32 @@
         "Berat Yılmaz soruşturmasını yürüten ekibin, Meclis otoparkına kayıtlı bir makam aracını sanayi bölgesinde tespit ettiği öğrenildi.",
         "Aracın, uyuşturucu suçlarından sabıkalı bir şahısla görüştüğü iddia ediliyor. Milletvekili Yılmaz’ın ofisi iddiaları \"mesnetsiz\" olarak nitelendirdi."
       ]
+    },
+    {
+      "id": "families-anonymous",
+      "outlet": "sehir-postasi",
+      "requires": "press:anonymous",
+      "title": "\"Kızım cuma görüşürüz dedi, bir daha aramadı\"",
+      "summary": "Kayıp bir öğrencinin annesi Şehir Postası’na konuştu. Aile kimliğinin açıklanmasını istemedi.",
+      "author": "Selin Aras",
+      "tags": ["kayıp", "öğrenci", "mezbaha", "aile"],
+      "body": [
+        "İki yıl önce kaybolan bir üniversite öğrencisinin annesi, kızının son mesajını gazetemizle paylaştı.",
+        "\"Polis o zaman evden kaçtı dedi. Kızım kaçacak biri değildi\" diyen anne, kızının fotoğrafının sanayideki eski mezbahada bulunduğunu basından öğrendiğini söyledi."
+      ]
+    },
+    {
+      "id": "families-named",
+      "outlet": "sehir-postasi",
+      "requires": "press:named",
+      "title": "Mezbahadaki fotoğraflardaki öğrenciler kim?",
+      "summary": "Şehir Postası iki kayıp öğrencinin kimliğini ve ailelerinin anlattıklarını yayımladı.",
+      "author": "Selin Aras",
+      "tags": ["kayıp", "öğrenci", "mezbaha", "aile", "isim"],
+      "body": [
+        "Eski mezbahada fotoğrafları bulunan iki öğrencinin aileleri ilk kez konuştu. Aileler, çocuklarının kaybolmadan önce aynı burs programına başvurduğunu söyledi.",
+        "Haberin ardından ailelerden birinin kapısına bir not bırakıldığı öğrenildi. Notta ne yazdığı açıklanmadı."
+      ]
     }
   ],
   "filler": {

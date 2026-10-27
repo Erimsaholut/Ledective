@@ -349,6 +349,10 @@ List<StoryIssue> validateStory(
     }
   }
 
+  for (final m in story.state.milestones) {
+    used.putIfAbsent(m.flag, () => 'state.json › milestones › ${m.title}');
+  }
+
   // Numbers.
   for (final stat in story.state.stats.keys) {
     final where = 'state.json › stats › $stat';
@@ -377,7 +381,7 @@ List<StoryIssue> validateStory(
   for (final MapEntry(key: flag, value: where) in set.entries) {
     if (where.isEmpty) continue;
     if (!used.containsKey(flag) && !usedNegated.containsKey(flag)) {
-      warn(where, '"$flag" bayrağını açıyor ama hiçbir şey onu beklemiyor');
+      note(where, '"$flag" açılıyor, henüz hiçbir şey onu beklemiyor');
     }
   }
   return issues;

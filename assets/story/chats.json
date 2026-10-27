@@ -189,6 +189,56 @@
               "Bilmiyorum amirim. Ama Selin Aras benim de numaramı biliyor, iki kere aradı. Açmadım.",
               "Bir de... gazeteye çıkan her şeyi siz biliyordunuz. Biz değil, siz. Sadece söylüyorum."
             ]
+          },
+          {
+            "label": "Berat’ın telefonu bulundu mu?",
+            "requires": "part1Done",
+            "replies": [
+              "Bulunamadı amirim. Son sinyal olay gecesi 02.40’ta sanayi bölgesinden gelmiş.",
+              "Evden çıkmış yani. Ya da biri çıkarmış."
+            ],
+            "unlocks": ["heard:phone-signal"]
+          },
+          {
+            "label": "Deniz nasıl?",
+            "requires": "part1Done",
+            "replies": [
+              "Dağılmış durumda amirim.",
+              "Bir şey daha söyledi: Berat son haftalarda yanında bir defter taşıyormuş, kimseye göstermiyormuş."
+            ],
+            "unlocks": ["heard:notebook"]
+          },
+          {
+            "label": "Furkan’ın ifadesini okudun mu?",
+            "requires": "furkanStatement",
+            "replies": ["Okudum. Çocuk çok korkmuş amirim. \"Beni öldürür\" demiş, bunu ciddiye alalım."]
+          },
+          {
+            "label": "Mezbahadaki tarihler ne anlama geliyor?",
+            "requires": "mezbaha-found",
+            "replies": [
+              "Biri ileri bir tarih amirim. Önümüzdeki cuma.",
+              "Ya bir sonraki kurbanın tarihi ya da birilerinin bizi korkutmak istediği."
+            ]
+          },
+          {
+            "label": "Bana gelen sesli mesajın numarasını sorgulatır mısın?",
+            "requires": "heard:witness",
+            "replies": [
+              "Sorgulattım amirim. Kontörlü bir hat, sanayideki bir büfeden alınmış.",
+              "Hat bir kadın adına kayıtlı. Kadın üç yıl önce ölmüş."
+            ],
+            "unlocks": ["heard:dead-line"]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["toxicology", "!ozge:tox"],
+            "next": "ozgeTox"
+          },
+          {
+            "requires": ["case:internal-investigation", "!ozge:audit"],
+            "next": "ozgeAudit"
           }
         ]
       },
@@ -218,6 +268,154 @@
             "replies": [
               "Bilmiyorum amirim. Ama Selin Aras benim de numaramı biliyor, iki kere aradı. Açmadım."
             ]
+          },
+          {
+            "label": "Berat’ın telefonu bulundu mu?",
+            "requires": "part1Done",
+            "replies": [
+              "Bulunamadı amirim. Son sinyal olay gecesi 02.40’ta sanayi bölgesinden gelmiş.",
+              "Evden çıkmış yani. Ya da biri çıkarmış."
+            ],
+            "unlocks": ["heard:phone-signal"]
+          },
+          {
+            "label": "Deniz nasıl?",
+            "requires": "part1Done",
+            "replies": [
+              "Dağılmış durumda amirim.",
+              "Bir şey daha söyledi: Berat son haftalarda yanında bir defter taşıyormuş, kimseye göstermiyormuş."
+            ],
+            "unlocks": ["heard:notebook"]
+          },
+          {
+            "label": "Furkan’ın ifadesini okudun mu?",
+            "requires": "furkanStatement",
+            "replies": ["Okudum. Çocuk çok korkmuş amirim. \"Beni öldürür\" demiş, bunu ciddiye alalım."]
+          },
+          {
+            "label": "Mezbahadaki tarihler ne anlama geliyor?",
+            "requires": "mezbaha-found",
+            "replies": [
+              "Biri ileri bir tarih amirim. Önümüzdeki cuma.",
+              "Ya bir sonraki kurbanın tarihi ya da birilerinin bizi korkutmak istediği."
+            ]
+          },
+          {
+            "label": "Bana gelen sesli mesajın numarasını sorgulatır mısın?",
+            "requires": "heard:witness",
+            "replies": [
+              "Sorgulattım amirim. Kontörlü bir hat, sanayideki bir büfeden alınmış.",
+              "Hat bir kadın adına kayıtlı. Kadın üç yıl önce ölmüş."
+            ],
+            "unlocks": ["heard:dead-line"]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["toxicology", "!ozge:tox"],
+            "next": "ozgeTox2"
+          },
+          {
+            "requires": ["case:internal-investigation", "!ozge:audit"],
+            "next": "ozgeAudit2"
+          }
+        ]
+      },
+      "ozgeTox": {
+        "incoming": [
+          "Amirim toksikoloji geldi. Çocuğu önce bayıltmışlar.",
+          "Deniz hâlâ kuzeninin intihar ettiğini sanıyor. Ona söyleyelim mi?"
+        ],
+        "options": [
+          {
+            "label": "Söyleyin. Bilmeye hakkı var.",
+            "replies": ["Peki amirim. Ben söylerim, benden duysun."],
+            "traits": ["merhamet"],
+            "unlocks": ["ozge:tox", "deniz:told", "trust:Özge += 5"],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Henüz değil. Soruşturma bitene kadar kimseye söylemeyin.",
+            "replies": ["Anladım amirim. Ama kolay olmayacak."],
+            "traits": ["temkinli"],
+            "next": "afterMezbaha",
+            "unlocks": ["ozge:tox"]
+          }
+        ]
+      },
+      "ozgeTox2": {
+        "incoming": [
+          "Amirim toksikoloji geldi. Çocuğu önce bayıltmışlar.",
+          "Deniz hâlâ kuzeninin intihar ettiğini sanıyor. Ona söyleyelim mi?"
+        ],
+        "options": [
+          {
+            "label": "Söyleyin. Bilmeye hakkı var.",
+            "replies": ["Peki amirim. Ben söylerim, benden duysun."],
+            "traits": ["merhamet"],
+            "unlocks": ["ozge:tox", "deniz:told", "trust:Özge += 5"],
+            "next": "later"
+          },
+          {
+            "label": "Henüz değil. Soruşturma bitene kadar kimseye söylemeyin.",
+            "replies": ["Anladım amirim. Ama kolay olmayacak."],
+            "traits": ["temkinli"],
+            "next": "later",
+            "unlocks": ["ozge:tox"]
+          }
+        ]
+      },
+      "ozgeAudit": {
+        "incoming": [
+          "Amirim iç denetimden aradılar. Sizi sordular.",
+          "Hesabınıza para yatmış, bilip bilmediğimi sordular. Yarın ifademi alacaklar."
+        ],
+        "options": [
+          {
+            "label": "Doğruyu söyle. Ne biliyorsan.",
+            "replies": ["Söyleyeceğim amirim. Ama ne bildiğimi siz de biliyorsunuz."],
+            "unlocks": ["ozge:audit", "integrity += 5"],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Bildiğini söyleme.",
+            "requires": "ozge:knows-money",
+            "replies": ["...", "Bunu benden istemeyin amirim.", "Peki. Bu sefer."],
+            "unlocks": ["ozge:audit", "player:dirty-hands", "trust:Özge -= 15"],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Sen karışma, ben hallederim.",
+            "replies": ["Peki amirim. Ama dikkatli olun."],
+            "next": "afterMezbaha",
+            "unlocks": ["ozge:audit"]
+          }
+        ]
+      },
+      "ozgeAudit2": {
+        "incoming": [
+          "Amirim iç denetimden aradılar. Sizi sordular.",
+          "Hesabınıza para yatmış, bilip bilmediğimi sordular. Yarın ifademi alacaklar."
+        ],
+        "options": [
+          {
+            "label": "Doğruyu söyle. Ne biliyorsan.",
+            "replies": ["Söyleyeceğim amirim. Ama ne bildiğimi siz de biliyorsunuz."],
+            "unlocks": ["ozge:audit", "integrity += 5"],
+            "next": "later"
+          },
+          {
+            "label": "Bildiğini söyleme.",
+            "requires": "ozge:knows-money",
+            "replies": ["...", "Bunu benden istemeyin amirim.", "Peki. Bu sefer."],
+            "unlocks": ["ozge:audit", "player:dirty-hands", "trust:Özge -= 15"],
+            "next": "later"
+          },
+          {
+            "label": "Sen karışma, ben hallederim.",
+            "replies": ["Peki amirim. Ama dikkatli olun."],
+            "next": "later",
+            "unlocks": ["ozge:audit"]
           }
         ]
       }
@@ -341,6 +539,26 @@
               "Ben sorgulattım ama gazeteye ben vermedim amirim, yemin ederim.",
               "Sorgu ekranını kimler görüyor bilmiyorum. Ankara da görüyor olabilir."
             ]
+          },
+          {
+            "label": "Annen nasıl?",
+            "requires": "heard:orhun-debt",
+            "replies": ["Daha iyi amirim. Sorduğunuz için sağ olun."],
+            "unlocks": ["trust:Orhun += 5"]
+          },
+          {
+            "label": "Kayıp ilanlarından ne çıktı?",
+            "requires": "orhun:missing-list",
+            "replies": [
+              "Son üç yılda bu şehirde altı öğrenci için kayıp ilanı verilmiş amirim.",
+              "İkisi mezbahadaki fotoğraflarda. Dördü hiç bulunmamış."
+            ]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["mp:wrote", "!orhun:approached"],
+            "next": "orhunVisit"
           }
         ]
       },
@@ -360,6 +578,106 @@
               "Ben sorgulattım ama gazeteye ben vermedim amirim, yemin ederim.",
               "Sorgu ekranını kimler görüyor bilmiyorum. Ankara da görüyor olabilir."
             ]
+          },
+          {
+            "label": "Annen nasıl?",
+            "requires": "heard:orhun-debt",
+            "replies": ["Daha iyi amirim. Sorduğunuz için sağ olun."],
+            "unlocks": ["trust:Orhun += 5"]
+          },
+          {
+            "label": "Kayıp ilanlarından ne çıktı?",
+            "requires": "orhun:missing-list",
+            "replies": [
+              "Son üç yılda bu şehirde altı öğrenci için kayıp ilanı verilmiş amirim.",
+              "İkisi mezbahadaki fotoğraflarda. Dördü hiç bulunmamış."
+            ]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["mp:wrote", "!orhun:approached"],
+            "next": "orhunVisit2"
+          },
+          {
+            "requires": ["mezbaha-found", "!orhun:blood"],
+            "next": "orhunBlood"
+          }
+        ]
+      },
+      "orhunVisit": {
+        "incoming": [
+          "Amirim size bir şey söylemem lazım. Telefonda olmaz demiştim ama artık bekleyemem.",
+          "Dün akşam biri evime geldi. Borçlarımı biliyordu, icrayı bile.",
+          "\"Dosyada ne varsa bize anlat, borcun kapansın\" dedi. Kovdum. Ama ailem... ne yapacağımı bilmiyorum."
+        ],
+        "options": [
+          {
+            "label": "Doğru yapmışsın. Adamı tarif et.",
+            "replies": ["Takım elbiseli, kibar biri. Arabası siyahtı. Plakasına bakamadım."],
+            "unlocks": ["orhun:approached", "trust:Orhun += 10", "heard:orhun-visitor"],
+            "next": "afterStatement"
+          },
+          {
+            "label": "Bunu iç denetime bildirmem gerekiyor.",
+            "replies": ["...Anlıyorum amirim.", "Ama ailem bunu kaldırmaz."],
+            "unlocks": ["orhun:approached", "orhun:reported", "integrity += 5", "trust:Orhun -= 10"],
+            "next": "afterStatement"
+          },
+          {
+            "label": "Borcun ne kadar?",
+            "replies": ["Seksen bin amirim. Annemin ameliyatı için çektim.", "Size söylemek istemezdim."],
+            "traits": ["merhamet"],
+            "unlocks": ["orhun:approached", "heard:orhun-debt"],
+            "next": "afterStatement"
+          }
+        ]
+      },
+      "orhunVisit2": {
+        "incoming": [
+          "Amirim size bir şey söylemem lazım. Telefonda olmaz demiştim ama artık bekleyemem.",
+          "Dün akşam biri evime geldi. Borçlarımı biliyordu, icrayı bile.",
+          "\"Dosyada ne varsa bize anlat, borcun kapansın\" dedi. Kovdum. Ama ailem... ne yapacağımı bilmiyorum."
+        ],
+        "options": [
+          {
+            "label": "Doğru yapmışsın. Adamı tarif et.",
+            "replies": ["Takım elbiseli, kibar biri. Arabası siyahtı. Plakasına bakamadım."],
+            "unlocks": ["orhun:approached", "trust:Orhun += 10", "heard:orhun-visitor"],
+            "next": "afterPlate"
+          },
+          {
+            "label": "Bunu iç denetime bildirmem gerekiyor.",
+            "replies": ["...Anlıyorum amirim.", "Ama ailem bunu kaldırmaz."],
+            "unlocks": ["orhun:approached", "orhun:reported", "integrity += 5", "trust:Orhun -= 10"],
+            "next": "afterPlate"
+          },
+          {
+            "label": "Borcun ne kadar?",
+            "replies": ["Seksen bin amirim. Annemin ameliyatı için çektim.", "Size söylemek istemezdim."],
+            "traits": ["merhamet"],
+            "unlocks": ["orhun:approached", "heard:orhun-debt"],
+            "next": "afterPlate"
+          }
+        ]
+      },
+      "orhunBlood": {
+        "incoming": [
+          "Amirim olay yeri ekibiyle mezbahadaydım.",
+          "Kanın bir kısmı aylar öncesine ait. Burası yıllardır kullanılıyor."
+        ],
+        "options": [
+          {
+            "label": "Son üç yılın bütün kayıp ilanlarını tara.",
+            "replies": ["Başlıyorum amirim. Sabaha bir liste çıkarırım."],
+            "unlocks": ["orhun:blood", "orhun:missing-list"],
+            "next": "afterPlate"
+          },
+          {
+            "label": "Bu bilgiyi şimdilik raporlara yazma.",
+            "replies": ["Emin misiniz amirim? Erdi Müdürüm görürse..."],
+            "unlocks": ["orhun:blood", "player:dirty-hands"],
+            "next": "afterPlate"
           }
         ]
       }
@@ -435,6 +753,23 @@
             "requires": "leak:hunt",
             "replies": ["Ben mi amirim?", "...Hayır. Kimseyle konuşmadım. Neden bana soruyorsunuz?"],
             "unlocks": ["trust:Atakan -= 5"]
+          },
+          {
+            "label": "Yusuf’tan haber var mı?",
+            "requires": "mezbaha-found",
+            "replies": ["Ailesi memleketine gittiğini söylüyor amirim. Telefonu hâlâ kapalı."]
+          },
+          {
+            "label": "Sen iyi misin? Sesin farklı geliyor.",
+            "requires": "heard:atakan-secret",
+            "replies": ["İyiyim amirim.", "...Sadece yorgunum."],
+            "traits": ["merhamet"]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["mezbaha-found", "!atakan:mezbaha"],
+            "next": "atakanPhoto"
           }
         ]
       },
@@ -445,6 +780,67 @@
             "requires": "leak:hunt",
             "replies": ["Ben mi amirim?", "...Hayır. Kimseyle konuşmadım. Neden bana soruyorsunuz?"],
             "unlocks": ["trust:Atakan -= 5"]
+          },
+          {
+            "label": "Yusuf’tan haber var mı?",
+            "requires": "mezbaha-found",
+            "replies": ["Ailesi memleketine gittiğini söylüyor amirim. Telefonu hâlâ kapalı."]
+          },
+          {
+            "label": "Sen iyi misin? Sesin farklı geliyor.",
+            "requires": "heard:atakan-secret",
+            "replies": ["İyiyim amirim.", "...Sadece yorgunum."],
+            "traits": ["merhamet"]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["mezbaha-found", "!atakan:mezbaha"],
+            "next": "atakanPhoto2"
+          }
+        ]
+      },
+      "atakanPhoto": {
+        "incoming": [
+          "Amirim mezbahadaki fotoğraflardan biri...",
+          "Onu daha önce bir yerde gördüm sanki.",
+          "Boş verin. Yanlış hatırlıyorumdur."
+        ],
+        "options": [
+          {
+            "label": "Nerede gördün?",
+            "replies": ["Bilmiyorum amirim. Belki bir haberde.", "Gerçekten hatırlamıyorum."],
+            "traits": ["merak"],
+            "unlocks": ["atakan:mezbaha", "heard:atakan-photo"],
+            "next": "idle"
+          },
+          {
+            "label": "Hatırlayınca söyle.",
+            "replies": ["Söylerim amirim."],
+            "next": "idle",
+            "unlocks": ["atakan:mezbaha"]
+          }
+        ]
+      },
+      "atakanPhoto2": {
+        "incoming": [
+          "Amirim mezbahadaki fotoğraflardan biri...",
+          "Onu daha önce bir yerde gördüm sanki.",
+          "Boş verin. Yanlış hatırlıyorumdur."
+        ],
+        "options": [
+          {
+            "label": "Nerede gördün?",
+            "replies": ["Bilmiyorum amirim. Belki bir haberde.", "Gerçekten hatırlamıyorum."],
+            "traits": ["merak"],
+            "unlocks": ["atakan:mezbaha", "heard:atakan-photo"],
+            "next": "afterCctv"
+          },
+          {
+            "label": "Hatırlayınca söyle.",
+            "replies": ["Söylerim amirim."],
+            "next": "afterCctv",
+            "unlocks": ["atakan:mezbaha"]
           }
         ]
       }
@@ -526,7 +922,49 @@
           }
         ]
       },
-      "afterRaid": {}
+      "afterRaid": {
+        "events": [
+          {
+            "requires": ["behram:helps", "mezbaha-found", "!behram:depot"],
+            "next": "behramList"
+          }
+        ],
+        "ask": [
+          {
+            "label": "Narkotiğin Adil’le bir anlaşması var mıydı?",
+            "requires": "behram:helps",
+            "replies": ["...", "Muhbirdi. Bir zamanlar.", "Bunu kimseye söyleme komiserim."],
+            "unlocks": ["heard:adil-informant"]
+          },
+          {
+            "label": "Adil şimdi nerede olabilir?",
+            "requires": "ev:torn-map",
+            "replies": ["Şehirden çıkmadı, bundan eminim. Birileri onu saklıyor."]
+          }
+        ]
+      },
+      "behramList": {
+        "incoming": [
+          "Komiserim, Adil’in sakladığı bir depo bulduk. Adil yok.",
+          "Ama duvarda bir liste var. İsimler ve yanlarında tarihler.",
+          "İsimlerden biri Berat."
+        ],
+        "options": [
+          {
+            "label": "Listeyi bana gönder.",
+            "replies": ["Gönderiyorum. Kimseye gösterme."],
+            "unlocks": ["behram:depot", "behram:list"],
+            "next": "afterRaid"
+          },
+          {
+            "label": "Listedeki diğer isimler kim?",
+            "replies": ["Üç öğrenci, bir de baş harfleri: \"H.Y.\"", "Kim olduğunu bilmiyorum."],
+            "traits": ["merak"],
+            "unlocks": ["behram:depot", "behram:list", "heard:initials"],
+            "next": "afterRaid"
+          }
+        ]
+      }
     }
   },
   "İnanç": {
@@ -617,6 +1055,74 @@
             "label": "Çay ocağına baskın için hazır mısınız?",
             "requires": "plate:mv",
             "replies": ["Hazırız amirim. Siz deyin, yarım saatte oradayız."]
+          },
+          {
+            "label": "Telefon kayıtlarına baktılar mı?",
+            "requires": "inanc:records-given",
+            "replies": [
+              "Baktılar amirim. Sizin kaydınızla ilgili bir şey sordular, \"yurt dışından aranmış gibi görünmüyor\" dediler.",
+              "Ben de bilmem dedim."
+            ],
+            "unlocks": ["heard:records-odd"]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["leak:hunt", "!inanc:records"],
+            "next": "inancRecords"
+          },
+          {
+            "requires": ["mezbaha-found", "!inanc:camera"],
+            "next": "inancCamera"
+          }
+        ]
+      },
+      "inancRecords": {
+        "incoming": [
+          "Amirim, Erdi Müdürüm sızıntı yüzünden herkesin telefon kayıtlarını istedi.",
+          "Sizinkini de.",
+          "Savcı onayı yok. Ne yapayım?"
+        ],
+        "options": [
+          {
+            "label": "Ver. Saklayacak bir şeyimiz yok.",
+            "replies": ["Peki amirim. Sizinkini de veriyorum."],
+            "unlocks": ["inanc:records", "inanc:records-given"],
+            "next": "afterOrder"
+          },
+          {
+            "label": "Verme. Savcı onayı olmadan kimse kimsenin kaydına bakamaz.",
+            "replies": ["Ben de öyle düşünüyorum amirim. Ama Erdi Müdürüm bunu unutmaz."],
+            "traits": ["cesur"],
+            "unlocks": ["inanc:records", "trust:İnanç += 5", "pressure += 5"],
+            "next": "afterOrder"
+          },
+          {
+            "label": "Benimkini verme. Diğerlerini ver.",
+            "replies": ["...", "Emredersiniz amirim."],
+            "unlocks": ["inanc:records", "player:dirty-hands", "trust:İnanç -= 10"],
+            "next": "afterOrder"
+          }
+        ]
+      },
+      "inancCamera": {
+        "incoming": [
+          "Amirim mezbahaya giden yolda belediyenin bir güvenlik kamerası var.",
+          "Kayıtları istedim, \"arızalı\" dediler. Üç aydır arızalıymış."
+        ],
+        "options": [
+          {
+            "label": "Arızayı kimin bildirdiğini öğren.",
+            "replies": ["Öğreniyorum amirim."],
+            "traits": ["merak"],
+            "unlocks": ["inanc:camera", "heard:camera-broken"],
+            "next": "afterOrder"
+          },
+          {
+            "label": "Tamam. Başka kamera var mı, ona bak.",
+            "replies": ["Bakıyorum amirim."],
+            "next": "afterOrder",
+            "unlocks": ["inanc:camera"]
           }
         ]
       }
@@ -829,6 +1335,70 @@
             "replies": [
               "Başvuru Ankara’ya gitti amirim. O gelene kadar onu evimin yakınındaki bir otelde tutuyoruz."
             ]
+          },
+          {
+            "label": "Sen nasılsın? Sorgu ağır geçti.",
+            "requires": "furkanStatement",
+            "replies": ["İyiyim amirim.", "Ama çocuğun yüzü aklımdan çıkmıyor."],
+            "traits": ["merhamet"],
+            "unlocks": ["trust:Doğa += 5"]
+          },
+          {
+            "label": "Furkan’ın ailesiyle sen mi konuşuyorsun?",
+            "requires": "furkanStatement",
+            "replies": ["Evet amirim. Annesi her gün arıyor. Ona yalan söylemekten yoruldum."]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["furkan:released", "mezbaha-found", "!doga:furkan-news"],
+            "next": "furkanGone"
+          },
+          {
+            "requires": ["mezbaha-found", "!doga:furkan-news"],
+            "next": "furkanTalks",
+            "requiresAny": ["furkan:held", "furkan:protected"]
+          }
+        ]
+      },
+      "furkanGone": {
+        "incoming": [
+          "Amirim... Furkan dün geceden beri eve gelmemiş.",
+          "Ekip kapının önündeydi, arka bahçeden çıkmış. Telefonu kapalı.",
+          "Annesi bizi suçluyor. Haklı da."
+        ],
+        "options": [
+          {
+            "label": "Bütün ekipleri seferber et. Bulun onu.",
+            "replies": ["Hemen amirim."],
+            "unlocks": ["doga:furkan-news", "furkan:missing", "witnessDanger += 10", "pressure += 5"],
+            "next": "afterFurkan"
+          },
+          {
+            "label": "Adil’in adamlarının elinde olabilir. Behram’a haber ver.",
+            "replies": ["Arıyorum amirim."],
+            "unlocks": ["doga:furkan-news", "furkan:missing", "witnessDanger += 10"],
+            "next": "afterFurkan"
+          }
+        ]
+      },
+      "furkanTalks": {
+        "incoming": [
+          "Amirim Furkan’a mezbahayı sordum. Rengi attı.",
+          "\"Cuma geceleri Adil abi bazı çocukları arabasına bindirirdi. Bir daha görmezdik\" dedi."
+        ],
+        "options": [
+          {
+            "label": "İfadesine ekle.",
+            "replies": ["Ekliyorum amirim."],
+            "unlocks": ["doga:furkan-news", "furkan:friday", "integrity += 5"],
+            "next": "afterFurkan"
+          },
+          {
+            "label": "Bunu kimse bilmesin. Önce onu korumamız lazım.",
+            "replies": ["Anladım amirim."],
+            "unlocks": ["doga:furkan-news", "furkan:friday", "witnessDanger -= 5"],
+            "next": "afterFurkan"
           }
         ]
       }
@@ -958,6 +1528,16 @@
             "label": "Sızıntıyı araştıran var mı?",
             "requiresAny": ["leak:hunt", "leak:defended", "leak:sources"],
             "replies": ["Var. Ben. Ve listenin başında sen varsın."]
+          },
+          {
+            "label": "Müdürüm, Yılmaz’ın danışmanını tanıyor musunuz?",
+            "requires": "plate:mv",
+            "replies": ["Herkes tanır. Ankara’da kapı açan adamdır.", "Uzak dur ondan."]
+          },
+          {
+            "label": "Ne zaman döneceğimi soran oldu mu?",
+            "requires": "pressure:erdi",
+            "replies": ["Herkes soruyor. Ben de soruyorum. Nerede olduğunu bile bilmiyoruz."]
           }
         ],
         "events": [
@@ -970,6 +1550,10 @@
           {
             "requiresAny": ["pressure:refused", "bribe:returned"],
             "next": "warning"
+          },
+          {
+            "requires": ["case:internal-investigation", "!erdi:audit"],
+            "next": "erdiAudit"
           }
         ]
       },
@@ -1065,6 +1649,30 @@
             "silent": true
           }
         ]
+      },
+      "erdiAudit": {
+        "incoming": ["İç denetim dosyanı istedi.", "Hesabına yatan o para neydi?"],
+        "options": [
+          {
+            "label": "Hediye gibi gönderilmiş. İade edecektim.",
+            "replies": ["\"Edecektim.\" Güzel kelime. Denetimde de böyle söyle, belki inanırlar."],
+            "next": "desk",
+            "unlocks": ["erdi:audit"]
+          },
+          {
+            "label": "Size söyleyecek bir şeyim yok.",
+            "replies": ["Bana yok, denetime var. Avukat bul kendine."],
+            "unlocks": ["erdi:audit", "pressure += 5"],
+            "next": "desk"
+          },
+          {
+            "label": "Parayı kimin gönderdiğini siz de biliyorsunuz.",
+            "replies": ["...", "Ben hiçbir şey bilmiyorum. Bu konuşma hiç olmadı."],
+            "traits": ["cesur"],
+            "unlocks": ["erdi:audit", "heard:erdi-knows-money"],
+            "next": "desk"
+          }
+        ]
       }
     }
   },
@@ -1119,9 +1727,65 @@
             "requires": "plate:mv",
             "replies": ["Danışmanı mı? Neden?", "...Ben ayarlarım. Siz doğrudan aramayın, yanlış anlaşılır."]
           }
+        ],
+        "events": [
+          {
+            "requires": ["plate:mv", "!kaymakam:plate"],
+            "next": "kaymakamPlate"
+          }
         ]
       },
-      "refused": {}
+      "refused": {
+        "events": [
+          {
+            "requires": ["bribe:returned", "!kaymakam:returned"],
+            "next": "kaymakamReturned"
+          }
+        ]
+      },
+      "kaymakamPlate": {
+        "incoming": [
+          "Komiser Bey, plakadan haberim oldu.",
+          "Bunu aileye nasıl açıklayacağız? Bir çözüm bulmamız lazım."
+        ],
+        "options": [
+          {
+            "label": "Kimden duydunuz?",
+            "replies": ["Ben her şeyi duyarım Komiser Bey. İşim bu."],
+            "traits": ["merak"],
+            "unlocks": ["kaymakam:plate", "heard:kaymakam-knew"],
+            "next": "informed"
+          },
+          {
+            "label": "Açıklanacak bir şey yok. Soruşturma sürüyor.",
+            "replies": ["Peki. Ama sürünce kimlere dokunacağını iyi düşünün."],
+            "unlocks": ["kaymakam:plate", "pressure += 5"],
+            "next": "informed"
+          }
+        ]
+      },
+      "kaymakamReturned": {
+        "incoming": [
+          "Komiser Bey, bir yanlış anlaşılma olmuş sanırım. Yılmaz Bey çok kırılmış.",
+          "Size dostluk eli uzatılmıştı."
+        ],
+        "options": [
+          {
+            "label": "Dostluğun banka hesabından gelmesine alışık değilim.",
+            "replies": ["Anlaşıldı. Hayırlı günler Komiser Bey."],
+            "traits": ["cesur"],
+            "unlocks": ["kaymakam:returned", "pressure += 10"],
+            "next": "refused"
+          },
+          {
+            "label": "(Cevap verme)",
+            "traits": ["umursamaz"],
+            "silent": true,
+            "next": "refused",
+            "unlocks": ["kaymakam:returned"]
+          }
+        ]
+      }
     }
   },
   "0532 190 19 07": {
@@ -1166,10 +1830,160 @@
         ]
       },
       "after": {
-        "waitFor": "bribe:returned",
+        "ask": [
+          {
+            "label": "Berat’la en son ne zaman konuştunuz?",
+            "replies": [
+              "Ölmeden iki gün önce.",
+              "Benden para istedi. Vermedim.",
+              "Ona son söylediğim şey \"kendi pisliğini kendin temizle\" oldu."
+            ],
+            "unlocks": ["heard:mp-refused-money"]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["bribe:returned", "!mp:returned-seen"],
+            "next": "returned"
+          },
+          {
+            "requires": ["mezbaha-found", "!mp:mezbaha"],
+            "next": "mpMezbaha"
+          }
+        ]
+      },
+      "returned": {
         "incoming": [
           "Paramı geri göndermişsiniz.",
           "Peki. Ben bir baba olarak elimden geleni yaptım. Bundan sonrası benim elimde değil."
+        ],
+        "options": [
+          {
+            "label": "Evet. Gönderdim.",
+            "replies": ["..."],
+            "next": "after",
+            "unlocks": ["mp:returned-seen"]
+          }
+        ]
+      },
+      "mpMezbaha": {
+        "incoming": [
+          "Mezbahayı duydum.",
+          "Berat oraya... Hayır. Oğlum oraya hiç gitmedi.",
+          "Duyuyor musunuz? Hiç gitmedi."
+        ],
+        "options": [
+          {
+            "label": "Oğlunuzun fotoğrafı duvardaydı Yılmaz Bey.",
+            "replies": ["...", "Bir daha bu numaraya yazmayın."],
+            "unlocks": ["mp:mezbaha", "mp:silent"],
+            "next": "after"
+          },
+          {
+            "label": "Neden bu kadar eminsiniz?",
+            "replies": ["Çünkü...", "Çünkü ben biliyorum."],
+            "traits": ["merak"],
+            "unlocks": ["mp:mezbaha", "heard:mp-knows-mezbaha"],
+            "next": "after"
+          }
+        ]
+      }
+    }
+  },
+  "Selin Aras": {
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitForAny": ["leak:hunt", "leak:defended", "leak:sources"],
+        "incoming": [
+          "Komiser Bey merhaba, Selin Aras, Şehir Postası.",
+          "Numaranızı nereden bulduğumu sormayın. Haberlerim yüzünden başınızın ağrıdığını biliyorum.",
+          "Size bir şey sormak istiyorum: Berat Yılmaz’ın adı üç yıl önceki bir dosyada geçiyor. Haberiniz var mı?"
+        ],
+        "options": [
+          {
+            "label": "Kaynağın kim?",
+            "replies": [
+              "Kaynağımı söylemem, siz de söylemezdiniz.",
+              "Ama şunu söyleyeyim: bana ilk ulaşan sizin binanızdan değildi."
+            ],
+            "next": "desk",
+            "traits": ["merak"],
+            "unlocks": ["selin:talked", "heard:source-outside"]
+          },
+          {
+            "label": "Hangi dosya?",
+            "replies": [
+              "Takipsizlikle kapanan bir ölüm. Üniversiteli bir kız.",
+              "Arşivimize bakın. Adını ben vermeyeyim."
+            ],
+            "next": "desk",
+            "unlocks": ["selin:talked", "heard:old-case"]
+          },
+          {
+            "label": "Benimle bir daha iletişime geçmeyin.",
+            "replies": ["Peki. Ama ben yazmaya devam edeceğim, sizinle ya da sizsiz."],
+            "next": "desk",
+            "traits": ["temkinli"],
+            "unlocks": ["selin:refused"]
+          }
+        ]
+      },
+      "desk": {
+        "ask": [
+          {
+            "label": "Berat hakkında başka ne biliyorsun?",
+            "requires": "selin:talked",
+            "replies": [
+              "Yılmaz Vakfı’nın burs listesinde adı var. Burs alan bir milletvekili oğlu.",
+              "Garip değil mi?"
+            ]
+          },
+          {
+            "label": "Kaymakamı araştırıyor musun?",
+            "requires": ["selin:talked", "pressure:kaymakam"],
+            "replies": ["Herkes gibi onu da araştırıyorum Komiser Bey. Siz de mi?"]
+          },
+          {
+            "label": "Sana bilgi verirsem ne yaparsın?",
+            "requires": "selin:talked",
+            "replies": ["Doğrulamadan hiçbir şey yayımlamam. Kaynağımı da ölene kadar korurum."]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["selin:talked", "mezbaha-found", "!selin:families"],
+            "next": "selinFamilies"
+          }
+        ]
+      },
+      "selinFamilies": {
+        "incoming": [
+          "Komiser Bey, mezbahadaki fotoğraflardan birinin kayıp ilanını ben yazmıştım.",
+          "Ailesi benimle konuşuyor. Yarın haberi yayımlayacağım.",
+          "Kızın adını çıkarmamı ister misiniz?"
+        ],
+        "options": [
+          {
+            "label": "Adını çıkar. Ailesi korunmalı.",
+            "replies": ["Peki. Adsız yayımlayacağım."],
+            "traits": ["temkinli"],
+            "unlocks": ["selin:families", "press:anonymous", "witnessDanger -= 5"],
+            "next": "desk"
+          },
+          {
+            "label": "Yayımla. Herkes duysun.",
+            "replies": ["Yayımlıyorum. Bundan sonra kimse saklayamaz."],
+            "traits": ["cesur"],
+            "unlocks": ["selin:families", "press:named", "witnessDanger += 10", "pressure += 10"],
+            "next": "desk"
+          },
+          {
+            "label": "Hiç yayımlama. Soruşturmayı tehlikeye atarsın.",
+            "replies": ["Bunu bir polisten ilk kez duymuyorum.", "Düşüneceğim."],
+            "unlocks": ["selin:families", "press:held"],
+            "next": "desk"
+          }
         ]
       }
     }

@@ -10,6 +10,7 @@ import 'package:ledective/story/news_feed.dart';
 import 'package:ledective/story/story_data.dart';
 import 'package:ledective/story/story_validator.dart';
 import 'package:ledective/story/story_progress.dart';
+import 'package:ledective/story/story_table.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _dialogue = Dialogue(
@@ -240,6 +241,22 @@ void main() {
       assetExists: (path) => File(path).existsSync(),
     ).where((issue) => issue.isError);
     expect(errors, isEmpty, reason: errors.join('\n'));
+  });
+
+  test('the story table covers every chat and milestone', () {
+    final table = storyTable(StoryData.current);
+    for (final person in StoryData.current.conversations.keys) {
+      expect(table, contains('### $person'));
+    }
+    for (final m in StoryData.current.state.milestones) {
+      expect(table, contains('`${m.flag}`'));
+    }
+    // The table in the repository is up to date.
+    expect(
+      File('story/HIKAYE_SEMASI.md').readAsStringSync(),
+      table,
+      reason: 'dart run tool/validate_story.dart --table',
+    );
   });
 
   test('the validator catches broken links and stray flags', () {
@@ -534,6 +551,35 @@ void main() {
       expect(progress.value('trust:Atakan'), 50);
     });
 
+    test(
+      'letting Furkan go has a cost once the slaughterhouse is found',
+      () async {
+        final progress = StoryProgress.instance;
+        String lastFromDoga() =>
+            progress.restore('Doğa').$2.whereType<IncomingMessage>().last.text;
+        await progress.discover([StoryFlags.inancDone]);
+        await say(
+          'Doğa',
+          'Seni Berat\'tan paket alırken görmüşler. O pakette ne vardı?',
+        );
+        await say(
+          'Doğa',
+          'Doğruyu söylersen sana yardım ederiz. Pakette ne vardı?',
+        );
+        await say('Doğa', 'Berat malı kimden alıyordu?');
+        await say('Doğa', 'Adil\'i nerede bulabiliriz?');
+        await progress.discover(['adil:warns']);
+        await say('Doğa', 'Serbest bırakın ama gözünüzü ayırmayın.');
+        expect(progress.value('witnessDanger'), 25);
+
+        await progress.discover(['mezbaha-found']);
+        expect(lastFromDoga(), contains('Annesi bizi suçluyor'));
+        await say('Doğa', 'Bütün ekipleri seferber et. Bulun onu.');
+        expect(progress.has('furkan:missing'), isTrue);
+        expect(progress.has('furkan:friday'), isFalse);
+      },
+    );
+
     test('choices change numbers within their limits', () async {
       final progress = StoryProgress.instance;
       expect(progress.value('trust:Özge'), 50);
@@ -582,7 +628,9 @@ void main() {
     test('sending the bribe back calls the timer off', () async {
       final progress = StoryProgress.instance;
       await progress.discover(['mp:wrote']);
-      final payee = StoryData.current.bank.payees.single;
+      final payee = StoryData.current.bank.payees.firstWhere(
+        (p) => p.id == 'bribe-return',
+      );
       await progress.recordTransfer(payee, 1000000);
       expect(progress.value('paid:bribe-return'), 10000);
       expect(progress.has('bribe:returned'), isFalse, reason: 'too little');

@@ -89,13 +89,16 @@ test/                  Birim ve widget testleri
 Bütün hikâye içeriği `assets/story/*.json` dosyalarındadır; kod değiştirmeden
 düzenlenebilir. Biçim ve örnekler: [`story/STORY_FORMAT.md`](story/STORY_FORMAT.md).
 
-Hikâyenin gizli gerçeği, karakterler, kronoloji, bölümler, ikilemler ve
+Hangi seçimin neye yol açtığı ve her yolun ne gerektirdiği
+[`story/HIKAYE_SEMASI.md`](story/HIKAYE_SEMASI.md) tablosunda. Hikâyenin gizli
+gerçeği, karakterler, kronoloji, bölümler, ikilemler ve
 finaller [`story/bible/`](story/bible/README.md) klasöründeki senaryo ana
 planında tutulur. Kararlar orada verilir, sonra JSON'a yazılır.
 
 ```bash
 dart run tool/validate_story.dart          # hataları kontrol et
 dart run tool/validate_story.dart --graph  # sohbet şemalarını çiz
+dart run tool/validate_story.dart --table  # story/HIKAYE_SEMASI.md tablosunu üret
 ```
 
 Denerken **Settings → Hızlı görevler** harita görevlerini ve süreli olayları

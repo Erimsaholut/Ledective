@@ -10,8 +10,9 @@ dart run tool/validate_story.dart
 
 - [ ] HATA yok: olmayan düğüm, tanımsız sayı, hiçbir şeyin açmadığı ve
   planlanmamış bayrak, eksik görsel.
-- [ ] Her UYARI ya düzeltildi ya da bilerek bırakıldı (aşağıya not al).
-- [ ] NOT listesi (planlanmış bayraklar) yapılacaklarla örtüşüyor.
+- [ ] UYARI yok ya da her biri bilerek bırakıldı (aşağıya not al).
+- [ ] NOT listesi (planlanmış ve tohum bayraklar) yapılacaklarla örtüşüyor.
+- [ ] `story/HIKAYE_SEMASI.md` yeniden üretildi (`--table`).
 - [ ] `flutter test` geçiyor.
 
 ## Elle
@@ -44,11 +45,12 @@ dart run tool/validate_story.dart
 - [ ] Bariz iyi/kötü seçenek yok.
 - [ ] Yan görevler zorunlu değil.
 
-## Bilerek bırakılan uyarılar
+## Tohum bayraklar (NOT olarak görünür)
 
 | Uyarı | Neden |
 | --- | --- |
 | `erdi-kept-out`, `photo-restored`, `print:adil`, `notebook-read`, `seen:*` açılıyor ama beklenmiyor | Hikâyenin devamına bağlanacak kancalar |
 | `poltel:ozge-file-read`, `bribe:returned`, `news:old-case-found` açılıyor ama beklenmiyor | İskelet örnekleri; Bölüm III-V'te kullanılacak |
 | `leak:*` (hunt, defended, sources, who-benefits) | Sızıntı gizemi; kaynak belli olunca bağlanacak |
-| `heard:*` (orhun-secret, atakan-secret, fake-police, adil-missing-case, erdi-ordered, berat-past, witness), `kaymakam:informed`, `behram:helps`, `ozge:knows-money` | Sohbetlerde ekilen tohumlar; kişisel hikâyeler yazılınca bağlanacak |
+| `heard:*` (orhun-secret, atakan-secret, atakan-photo, fake-police, adil-missing-case, adil-informant, erdi-ordered, erdi-knows-money, berat-past, witness, dead-line, phone-signal, notebook, orhun-visitor, camera-broken, records-odd, initials, kaymakam-knew, mp-refused-money, mp-knows-mezbaha, source-outside, old-case), `kaymakam:informed`, `behram:helps`, `behram:list`, `ozge:knows-money`, `orhun:*`, `furkan:*`, `press:*`, `selin:*` | Sohbetlerde ekilen tohumlar; kişisel hikâyeler ve sonraki bölümler yazılınca bağlanacak |
+| `heard:records-odd` ("yurt dışından aranmış gibi görünmüyor"), `heard:mp-refused-money` (babanın "para istedi, vermedim" demesi Deniz'in ifadesiyle çelişir) | Bilerek konmuş çelişkiler: 01'deki "Komiser gerçekte nerede?" ve "Kim yalan söylüyor?" bölümleri |
