@@ -129,6 +129,9 @@ onu engellediği ima edilir. [KANON]
   olabilir.
 - **Sicil ipucu:** [ÖNERİ] Bir soruşturmanın yönünü değiştirmek için baskı
   yaptığı iddiasıyla şikâyet edilmiş, işlem yapılmamış.
+- **Sızıntılar:** [KANON, taslak] Her sızıntı haberinde komisere çıkışır ve
+  bir sonrakinde onu dosyadan alacağını söyler. Haberleri gazeteden öğrenmek
+  onu üstlerinin önünde küçük düşürüyor.
 
 ## Dosyadaki kişiler
 

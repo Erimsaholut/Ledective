@@ -183,6 +183,34 @@ cevaplanır. Koşullu yazılınca hikâye ilerledikçe yeni sorular açılır:
   düğüm. Böylece oyuncu her zaman bir şey sorabilir.
 - Hiçbir şey içermeyen düğüm (`{}`) sohbetin sonudur.
 
+### Olaylar (`events`): karşı taraf kendiliğinden yazar
+
+Bir sohbet tek hat üzerinde ilerler, ama bazı kişiler hikâyenin farklı
+yerlerinde olanlara, hangi sırayla olursa olsun tepki vermeli. Örneğin Erdi,
+her sızıntı haberinde ayrı ayrı kızar. Bunun için bir "masa" düğümü kur;
+olaylar oradan ilgili düğüme gider, o düğümün seçenekleri de masaya döner:
+
+```json
+"desk": {
+  "ask": [...],
+  "events": [
+    {"requires": ["pressure:erdi", "toxicology"], "next": "leakTox"},
+    {"requires": "plate:mv", "next": "leakPlate"},
+    {"requiresAny": ["pressure:refused", "bribe:returned"], "next": "warning"}
+  ]
+},
+"leakTox": {
+  "incoming": ["Kim sızdırıyor bunları?"],
+  "options": [{"label": "Bizden değil müdürüm.", "next": "desk"}]
+}
+```
+
+- Sohbet bu düğümde beklerken (oyuncunun vereceği bir cevap yokken) bir
+  olayın koşulu tutarsa sohbet o düğüme geçer ve karşı taraf yazar. Bildirim
+  de çıkar.
+- Her olay bir kez gerçekleşir. Aynı anda birden fazlası tutarsa listedeki
+  sıraya göre, biri bitince diğeri gelir.
+
 ### Rehberde olmayan kişiler
 
 MatesApp sadece içinde mesaj olan sohbetleri listeler; kimse yazmadan bir

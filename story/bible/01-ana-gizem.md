@@ -5,8 +5,11 @@ burası kesinleşmeli; diğer her şey buna dayanır.
 
 ## Oyunun çerçevesi [KANON]
 
-- Oyuncu, Cinayet Büro amiri bir **komiser**. Yurt dışında (Barselona)
-  izindeyken dosya telefonuna düşer. Bütün soruşturmayı telefondan yürütür.
+- Oyuncu, Cinayet Büro amiri bir **komiser**. Yurt dışında izindeyken dosya
+  telefonuna düşer. Bütün soruşturmayı telefondan yürütür.
+- **Bulunduğu ülke bilerek belirsiz.** Hiçbir içerikte ülke, şehir, para
+  birimi ya da saat farkı geçmez. Erdi bile "Kimse bilmiyor nerede olduğunu"
+  der. Bkz. aşağıdaki "Komiser gerçekte nerede?" bölümü.
 - Şehir küçük bir üniversite şehri. Mekânlar: Yeşilkent, kampüs, sanayi,
   şehir dışındaki eski mezbaha.
 - **Berat Yılmaz**, milletvekili Yılmaz'ın oğlu, üniversite öğrencisi. Evinde
@@ -90,6 +93,57 @@ nefret eder, sonra onun da değişmeye çalıştığını öğrenir.
 - [?] Berat'ın ölümüyle aynı olayların parçası mı?
 - [?] Birinin hayatta olduğu ve yerini bilen bir tanığın korktuğu konuşuldu
   (İkilem 5).
+
+### Basına kim sızdırıyor?
+Toksikoloji raporu, Meclis aracının plakası ve mezbaha, emniyet açıklama
+yapmadan Şehir Postası'nda (Selin Aras) çıkar. Erdi her seferinde komisere
+"Kim sızdırıyor? Senin ekibinden biri mi, yoksa sen mi?" diye çıkışır.
+[KANON, taslak]
+
+- [?] Kaynak kim? Adaylar:
+  - Atakan: gizli ilişkisi yüzünden şantaj altında olabilir; sorulunca gerilir.
+  - Orhun: plaka sorgusu onun adıyla sisteme düştü.
+  - Kaymakam ya da milletvekilinin çevresi: plakanın gazetede olması kimin
+    işine yarar? (Erdi: "Telefonda olmaz bu konuşma.")
+  - Erdi'nin kendisi.
+  - **Komiserin kendisi** [ÖNERİ]: Özge fark eder: "Gazeteye çıkan her şeyi
+    siz biliyordunuz. Biz değil, siz." Aşağıdaki son ile birleşebilir.
+- [?] Sızıntılar soruşturmaya yarıyor mu, zarar mı veriyor?
+
+### Komiser gerçekte nerede? [ÖNERİ]
+Olası bir son: komiser **hiç yurt dışında değildi**; şizofreni ya da benzeri
+bir durum yüzünden tatilde olduğuna inanıyordu (planlanmış bayrak:
+`twist:never-abroad`).
+
+Bu son seçilirse adil bir sürpriz olması için:
+- İpuçları baştan beri iki türlü de okunabilmeli; oyuncu ilk oynayışta
+  fark etmese de ikinci oynayışta "aslında söylenmişti" demeli.
+- Hiçbir ipucu tek başına kesin kanıt olmamalı.
+- Sona kadar hiçbir karakter bunu açıkça söylememeli.
+- Hikâye bu sona hiç gitmeyen oyuncu için de tutarlı kalmalı.
+
+Şu an oyunda iki türlü de okunabilecek ipuçları [KANON]:
+- Erdi: "Kimse bilmiyor nerede olduğunu."
+- Annem: "Haberlerde bir öğrenci ölmüş, **senin oralarda** diyorlar." (Yurt
+  dışındaki birine neden "senin oralarda" desin?)
+- Komiser "Türkiye'ye dönmem en az 3 gün sürer" der ama bir dönüş bileti hiç
+  görünmez.
+- Banka hareketleri "yurt dışı harcama" der ama hiçbir yer adı geçmez.
+- Sızıntılar: gazeteye çıkan her şeyi komiser biliyordu.
+- Fotoğraflar uygulamasında tek bir tatil fotoğrafı yok.
+
+Eklenebilecek ipuçları [ÖNERİ]:
+- Ses notlarında arka planda tanıdık bir şehir sesi (ezan, simitçi, dolmuş).
+- Bir tanığın "komiseri dün kafenin önünde gördüm" demesi, herkesin bunu
+  yanlış tanıma sanması.
+- Fotoğraflar uygulamasına bir tane "tatil" fotoğrafı eklemek: hep aynı otel
+  odası, penceresi perdeyle kapalı.
+- Telefonun dolaşım (roaming) mesajı ile hiçbir yabancı şebeke SMS'inin
+  gelmemesi.
+- Doktor randevusu ya da ilaç hatırlatması (Takvim, Kayıtlar).
+
+[?] Bu son mu, yoksa sadece bir ihtimal olarak mı kalacak? Diğer finallerle
+(Adaletin Bedeli, Kirli Eller...) nasıl birleşir?
 
 ### Kim ne biliyor, kim yalan söylüyor?
 

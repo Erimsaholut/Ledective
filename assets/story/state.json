@@ -21,7 +21,8 @@
     "case:wrong-person": "Yanlış kişi suçlandı",
     "coverup:exposed": "Örtbas edilen suçlar ortaya çıktı",
     "player:dirty-hands": "Komiser usulsüzlüğe başvurdu",
-    "final:ready": "Final soruşturması bitti, oyun sona erer"
+    "final:ready": "Final soruşturması bitti, oyun sona erer",
+    "twist:never-abroad": "Komiser hiç yurt dışında değildi (öneri)"
   },
   "locks": [
     {

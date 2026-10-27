@@ -181,6 +181,14 @@
               "Kaymakam mı? Sizi doğrudan mı?",
               "Amirim... bir kaymakamın bir cinayet dosyasıyla ne işi olur?"
             ]
+          },
+          {
+            "label": "Basına kim sızdırıyor sence?",
+            "requiresAny": ["leak:hunt", "leak:defended", "leak:sources"],
+            "replies": [
+              "Bilmiyorum amirim. Ama Selin Aras benim de numaramı biliyor, iki kere aradı. Açmadım.",
+              "Bir de... gazeteye çıkan her şeyi siz biliyordunuz. Biz değil, siz. Sadece söylüyorum."
+            ]
           }
         ]
       },
@@ -203,6 +211,13 @@
             "requires": "mp:wrote",
             "replies": ["...", "Söylemem amirim. Ama bunu bana neden anlattınız?"],
             "unlocks": ["trust:Özge += 5", "ozge:knows-money"]
+          },
+          {
+            "label": "Basına kim sızdırıyor sence?",
+            "requiresAny": ["leak:hunt", "leak:defended", "leak:sources"],
+            "replies": [
+              "Bilmiyorum amirim. Ama Selin Aras benim de numaramı biliyor, iki kere aradı. Açmadım."
+            ]
           }
         ]
       }
@@ -318,6 +333,14 @@
               "Size anlatmam gereken bir şey var aslında... neyse, telefonda olmaz."
             ],
             "unlocks": ["heard:orhun-secret"]
+          },
+          {
+            "label": "Plaka haberi gazeteye nasıl çıktı?",
+            "requires": "plate:mv",
+            "replies": [
+              "Ben sorgulattım ama gazeteye ben vermedim amirim, yemin ederim.",
+              "Sorgu ekranını kimler görüyor bilmiyorum. Ankara da görüyor olabilir."
+            ]
           }
         ]
       },
@@ -328,6 +351,14 @@
             "requires": "plate:mv",
             "replies": [
               "Sistemde \"Y. Eğitim Vakfı Danışmanlık\" diye geçiyor amirim, şahıs adı yok. Vakfın genel müdürü olabilir."
+            ]
+          },
+          {
+            "label": "Plaka haberi gazeteye nasıl çıktı?",
+            "requires": "plate:mv",
+            "replies": [
+              "Ben sorgulattım ama gazeteye ben vermedim amirim, yemin ederim.",
+              "Sorgu ekranını kimler görüyor bilmiyorum. Ankara da görüyor olabilir."
             ]
           }
         ]
@@ -398,10 +429,25 @@
             "label": "Yusuf’u bir daha konuşturabilir misin?",
             "requires": "part1Done",
             "replies": ["Denedim amirim, telefonu kapalı. Okula da iki gündür gelmiyormuş."]
+          },
+          {
+            "label": "Gazeteyle konuştun mu?",
+            "requires": "leak:hunt",
+            "replies": ["Ben mi amirim?", "...Hayır. Kimseyle konuşmadım. Neden bana soruyorsunuz?"],
+            "unlocks": ["trust:Atakan -= 5"]
           }
         ]
       },
-      "afterCctv": {}
+      "afterCctv": {
+        "ask": [
+          {
+            "label": "Gazeteyle konuştun mu?",
+            "requires": "leak:hunt",
+            "replies": ["Ben mi amirim?", "...Hayır. Kimseyle konuşmadım. Neden bana soruyorsunuz?"],
+            "unlocks": ["trust:Atakan -= 5"]
+          }
+        ]
+      }
     }
   },
   "Behram": {
@@ -833,7 +879,7 @@
           {
             "label": "Anlaşıldı müdürüm. Katile odaklanıyoruz.",
             "replies": ["Aferin. Raporları bana doğrudan yolla, başka kimseye değil."],
-            "next": "pressureIdle",
+            "next": "desk",
             "traits": ["temkinli"],
             "unlocks": ["pressure:erdi", "integrity -= 5"]
           },
@@ -843,7 +889,7 @@
               "Sen bana akıl verme. Ne gerekiyorsa yap ama sessiz yap.",
               "Bu iş benden de büyük, anladın mı?"
             ],
-            "next": "pressureIdle",
+            "next": "desk",
             "traits": ["cesur"],
             "unlocks": ["pressure:erdi", "pressure += 10"]
           },
@@ -853,14 +899,13 @@
               "Sana ne kim aradıysa!",
               "...Bak, ben de emir alıyorum. Kaymakam bile işin içinde. Dikkatli ol."
             ],
-            "next": "pressureIdle",
+            "next": "desk",
             "traits": ["merak"],
             "unlocks": ["pressure:erdi"]
           }
         ]
       },
-      "pressureIdle": {
-        "waitForAny": ["pressure:refused", "bribe:returned"],
+      "warning": {
         "incoming": [
           "Ne yaptın sen? Kaymakam beni aradı, adam çok kızgındı.",
           "Ben de emir alıyorum, bunu anla. Bir daha benim üstümden iş çevirirsen dosyayı senden alırım."
@@ -869,25 +914,27 @@
           {
             "label": "Kimsenin üstünden iş çevirmiyorum müdürüm, işimi yapıyorum.",
             "replies": ["İşini yap ama bana yapma. Seni bir kere daha korurum, iki olmaz."],
-            "next": "afterWarning",
+            "next": "desk",
             "traits": ["cesur"],
             "unlocks": ["pressure += 5"]
           },
           {
             "label": "Haklısınız müdürüm, dikkat ederim.",
             "replies": ["Dikkat et. Bu dosya birilerinin kariyerini bitirecek, seninki olmasın."],
-            "next": "afterWarning",
+            "next": "desk",
             "traits": ["temkinli"],
             "unlocks": ["pressure -= 5"]
           },
           {
             "label": "Size kim emir veriyor müdürüm?",
             "replies": ["...", "Bu soruyu bir daha telefonda sorma."],
-            "next": "afterWarning",
+            "next": "desk",
             "traits": ["merak"],
             "unlocks": ["heard:erdi-ordered"]
           }
-        ],
+        ]
+      },
+      "desk": {
         "ask": [
           {
             "label": "Müdürüm, savcılık dosyayı istedi mi?",
@@ -906,17 +953,116 @@
               "Hesabına para yatmış, iade etmemişsin diyorlar.",
               "Ben bir şey bilmiyorum, bilmek de istemiyorum. Kendi pisliğini kendin temizle."
             ]
+          },
+          {
+            "label": "Sızıntıyı araştıran var mı?",
+            "requiresAny": ["leak:hunt", "leak:defended", "leak:sources"],
+            "replies": ["Var. Ben. Ve listenin başında sen varsın."]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["pressure:erdi", "toxicology"],
+            "next": "leakTox"
+          },
+          {"requires": "plate:mv", "next": "leakPlate"},
+          {"requires": "mezbaha-found", "next": "leakMezbaha"},
+          {
+            "requiresAny": ["pressure:refused", "bribe:returned"],
+            "next": "warning"
           }
         ]
       },
-      "afterWarning": {
-        "ask": [
+      "leakTox": {
+        "incoming": [
+          "Şehir Postası’nı gördün mü? \"Berat Yılmaz’a ölmeden önce ilaç verilmiş.\"",
+          "Toksikoloji raporu dün akşam çıktı. Raporu bizden başka gören yok!",
+          "Kim sızdırıyor bunları? Senin ekibinden biri mi, yoksa sen mi?"
+        ],
+        "options": [
           {
-            "label": "Müdürüm, iç denetim neden benim hesabıma bakıyor?",
-            "requires": "case:internal-investigation",
+            "label": "Benim ekibimden kimse gazeteciyle konuşmaz müdürüm.",
             "replies": [
-              "Hesabına para yatmış, iade etmemişsin diyorlar. Ben bir şey bilmiyorum, bilmek de istemiyorum."
-            ]
+              "Konuşmaz mı? O zaman gazeteci raporu rüyasında mı gördü?",
+              "Bul o köstebeği. Bulamazsan ben bulurum, o zaman hiç hoşuna gitmez."
+            ],
+            "next": "desk",
+            "traits": ["cesur"],
+            "unlocks": ["leak:defended", "pressure += 5"]
+          },
+          {
+            "label": "Ekibi tek tek konuşturacağım.",
+            "replies": ["Konuştur. Ama sessiz yap, bir de bu haber çıkmasın."],
+            "next": "desk",
+            "traits": ["temkinli"],
+            "unlocks": ["leak:hunt", "pressure -= 5"]
+          },
+          {
+            "label": "Rapor sadece bizde değil müdürüm. Adli Tıp’ta, savcılıkta, il müdürlüğünde de var.",
+            "replies": [
+              "Bana ders mi veriyorsun?",
+              "...Haklı olabilirsin. Ama gazete senin adını yazıyor, benimkini değil."
+            ],
+            "next": "desk",
+            "traits": ["merak"],
+            "unlocks": ["leak:sources", "pressure += 5"]
+          }
+        ]
+      },
+      "leakPlate": {
+        "incoming": [
+          "Meclis aracının plakası gazetede! Milletvekili beni aradı, sesini bir duysan...",
+          "Plakayı kim sorguladıysa adı sistemde. Orhun mu? Söyle bana.",
+          "Bir haber daha çıkarsa seni bu dosyadan alırım."
+        ],
+        "options": [
+          {
+            "label": "Sorguyu ben istedim. Sorumlusu benim.",
+            "replies": ["Bak sen... Kahramanlık yapma. Kahramanlar bu teşkilatta ilk gidenlerdir."],
+            "next": "desk",
+            "traits": ["cesur"],
+            "unlocks": ["trust:Orhun += 10", "pressure += 10"]
+          },
+          {
+            "label": "Orhun sorguladı ama sızdıran o değil.",
+            "replies": ["Değilse kim? Bana bir isim getir."],
+            "next": "desk",
+            "unlocks": ["trust:Orhun -= 5", "pressure += 5", "leak:hunt"]
+          },
+          {
+            "label": "Plakanın gazetede olması kimin işine yarar müdürüm, hiç düşündünüz mü?",
+            "replies": ["...", "Telefonda olmaz bu konuşma."],
+            "next": "desk",
+            "traits": ["merak"],
+            "unlocks": ["leak:who-benefits"]
+          }
+        ]
+      },
+      "leakMezbaha": {
+        "incoming": [
+          "Mezbahayı gazeteden öğrendim! Sabah il müdürü aradı, ben \"hangi mezbaha\" diye sordum. Rezil oldum.",
+          "Bana rapor vermeden basına veriyorsunuz demek.",
+          "Bu son uyarım."
+        ],
+        "options": [
+          {
+            "label": "Mezbahayı gece bulduk müdürüm, raporu sabah yollayacaktım.",
+            "replies": ["Gazete senden hızlıymış o zaman."],
+            "next": "desk",
+            "unlocks": ["pressure += 5"]
+          },
+          {
+            "label": "Sızıntıyı ben de araştırıyorum. Bizden değil.",
+            "replies": ["Bunu üçüncü kez söylüyorsun. İnanmamı bekleme artık."],
+            "next": "desk",
+            "unlocks": ["leak:hunt", "pressure += 5"]
+          },
+          {
+            "label": "(Cevap verme)",
+            "next": "desk",
+            "traits": ["umursamaz"],
+            "unlocks": ["pressure += 10"],
+            "silent": true
           }
         ]
       }

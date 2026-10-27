@@ -32,7 +32,7 @@ Oyun başladıktan sonraki olaylar gün değil **bayrak** sırasıyla gelir; onl
 | [?] | Berat derslere girmeyi bırakır, yoklamalar düzeltilir | Babası / okul | Danışman | Harita: üniversite | [KANON] |
 | G-12 | Komiser İnanç'a "Raporları cumaya kadar bitirin" yazar | Komiser | İnanç | Sohbet geçmişi | [KANON] |
 | G-12 | Maaş yatar | | | ZaferBank | [KANON] |
-| G-10 | Komiser Barselona'ya uçar | Komiser | Büro | ZaferBank | [KANON] |
+| G-10 | Komiser yurt dışına uçar (ülke bilinmiyor) | Komiser | Büro | ZaferBank | [KANON]; bkz. 01 "Komiser gerçekte nerede?" |
 | G-7 | Berat Furkan'a paket verirken düşürür | Berat | Görenler | Yusuf ifadesi | [KANON] |
 | G-6 | Atakan izin ister | Atakan | Özge | Sohbet geçmişi | [KANON] |
 | G-5 | Orhun "imza işini" halleder | Orhun | [?] | Sohbet geçmişi | [KANON] |
@@ -60,6 +60,9 @@ Oyun başladıktan sonraki olaylar gün değil **bayrak** sırasıyla gelir; onl
 | `pressure:kaymakam` + (`plate:mv` ya da `notebook-read`) + 3 dk | **Baskı 3:** Milletvekili baba gizli numaradan yazar, "küçük bir destek" gönderir; 50.000 TL "Y. Eğitim Vakfı Danışmanlık"tan "Geçmiş olsun" açıklamasıyla gelir | Milletvekili Yılmaz | Milletvekili, danışman | MatesApp (numara), ZaferBank |
 | Para iade edilirse | **Baskı 4:** "Paranı geri göndermişsin. Bu işi zor yoldan çözeceğiz." Baba: "Bundan sonrası benim elimde değil." | [?] | | Messages, MatesApp |
 | Para 45 dk oyun süresi içinde iade edilmezse | İç denetim incelemesi | İç Denetim | Erdi | Mail |
+| `toxicology` (Erdi baskıyı yaptıktan sonra) | Şehir Postası toksikolojiyi yazar; Erdi "Kim sızdırıyor?" diye çıkışır | [?] kaynak | | News, MatesApp (Erdi) |
+| `plate:mv` | Şehir Postası Meclis aracını yazar; Erdi "Plakayı kim sorguladı?" diye sorar | [?] kaynak | | News, MatesApp (Erdi) |
+| `mezbaha-found` | Erdi mezbahayı gazeteden öğrenir: "Bu son uyarım" | [?] kaynak | | News, MatesApp (Erdi) |
 | `ev:cctv` | Atakan: deri ceketlinin boynunda bir kurum kartı var; kafenin iç kayıtlarını "polis" diyen biri almış | Atakan | | MatesApp (Atakan) |
 | `ev:torn-map` | Behram: baskın narkotiğin altı aylık operasyonunu yaktı | Behram | | MatesApp (Behram) |
 | `mezbaha-found` | Korkmuş bir tanık fısıldar: "Fotoğraftaki kızı tanıyorum, ben sizi arayacağım" | [?] tanık | | Kayıtlar |

@@ -112,12 +112,22 @@ class DialogueOption {
   final bool once;
 }
 
+/// Something that makes the other person write first: once [requires]
+/// holds while the conversation waits at the node, it moves on to [next].
+class DialogueEvent {
+  const DialogueEvent({required this.next, this.requires = Condition.always});
+
+  final String next;
+  final Condition requires;
+}
+
 class DialogueNode {
   const DialogueNode(
     this.options, {
     this.incoming = const [],
     this.waitFor = Condition.always,
     this.ask = const [],
+    this.events = const [],
   });
 
   /// Messages the other person sends when the conversation reaches this
@@ -134,6 +144,11 @@ class DialogueNode {
   /// [waitFor], or for good after the last [incoming]): "Son durum ne?".
   /// They get their replies and the conversation stays where it is.
   final List<DialogueOption> ask;
+
+  /// Turns the conversation can take by itself while it waits here, each
+  /// once: Erdi writing when the press gets hold of something. Their
+  /// [DialogueEvent.next] nodes usually lead back here.
+  final List<DialogueEvent> events;
 }
 
 class Dialogue {
@@ -154,7 +169,8 @@ class Conversation {
 ///
 /// Choices are saved as numbers: an option's place in the node's `options`,
 /// or 1000 + its place in `ask` when asked before the node's messages
-/// arrived, or 2000 + its place when asked after.
+/// arrived, or 2000 + its place when asked after. Events are saved the same
+/// way from 3000 and 4000.
 class DialogueState {
   DialogueState(this.dialogue, {StoryState? state})
     : _state = state ?? StoryState.of(const {}),
@@ -162,6 +178,11 @@ class DialogueState {
 
   static const _askedWaiting = 1000;
   static const _askedAfter = 2000;
+  static const _eventWaiting = 3000;
+  static const _eventAfter = 4000;
+
+  /// What an event "chooses": it sends nothing.
+  static const _event = DialogueOption(label: '', silent: true);
 
   final Dialogue? dialogue;
   final StoryState _state;
@@ -191,12 +212,41 @@ class DialogueState {
     return condition != null && !condition.isMetBy(_state);
   }
 
+  /// Whether the player has an answer to give at the current node.
+  bool get _answering =>
+      _arrived && !isWaiting && (_node?.options.isNotEmpty ?? false);
+
+  /// The saved number of the event that would fire now, if any.
+  int? get _pendingEvent {
+    final node = _node;
+    final waiting = isWaiting;
+    if (node == null || _answering || !(waiting || _arrived)) return null;
+    for (final (i, e) in node.events.indexed) {
+      if (!_asked.contains('$_nodeId/e$i') && e.requires.isMetBy(_state)) {
+        return (waiting ? _eventWaiting : _eventAfter) + i;
+      }
+    }
+    return null;
+  }
+
+  /// True when an event is ready to move the conversation on.
+  bool get hasPendingEvent => _pendingEvent != null;
+
+  /// Moves the conversation on with the event that is ready. Returns false
+  /// if there was none.
+  bool fireEvent() {
+    final saved = _pendingEvent;
+    if (saved == null) return false;
+    _apply(saved);
+    return true;
+  }
+
   /// What is on the keyboard, with each option's saved number.
   List<(DialogueOption, int)> get _keyboard {
     final node = _node;
     if (node == null) return const [];
     final waiting = isWaiting;
-    final answering = _arrived && !waiting && node.options.isNotEmpty;
+    final answering = _answering;
     return [
       if (answering)
         for (final (i, o) in node.options.indexed)
@@ -239,6 +289,15 @@ class DialogueState {
   DialogueOption? _apply(int saved) {
     final node = _node;
     if (node == null) return null;
+    if (saved >= _eventWaiting) {
+      final i = saved % _askedWaiting;
+      if (i >= node.events.length) return null;
+      _asked.add('$_nodeId/e$i');
+      _choices.add(saved);
+      _nodeId = node.events[i].next;
+      _arrived = false;
+      return _event;
+    }
     if (saved >= _askedWaiting) {
       final i = saved % _askedWaiting;
       if (i >= node.ask.length) return null;
@@ -264,8 +323,10 @@ class DialogueState {
     final entries = <ChatEntry>[];
     void deliver() => entries.addAll(arrive().map(IncomingMessage.new));
     for (final saved in choices) {
-      // A question asked while waiting came before the node's messages.
-      final whileWaiting = saved >= _askedWaiting && saved < _askedAfter;
+      // A question or event while waiting came before the node's messages.
+      final whileWaiting =
+          (saved >= _askedWaiting && saved < _askedAfter) ||
+          (saved >= _eventWaiting && saved < _eventAfter);
       if (!whileWaiting) deliver();
       final option = _apply(saved);
       if (option == null) break;

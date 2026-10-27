@@ -348,6 +348,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     }
     if (!changed) return false;
     _startTimers();
+    _fireEvents();
     final after = _snapshot();
     for (final MapEntry(key: kind, value: items) in after.entries) {
       for (final item in items.difference(before[kind]!)) {
@@ -449,6 +450,17 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     return (state, transcript);
   }
 
+  /// Lets conversations whose events are ready move on by themselves.
+  void _fireEvents() {
+    for (final person in _story.conversations.keys) {
+      final (state, _) = restore(person);
+      // A chain of events can't loop forever: each fires once per node.
+      for (var i = 0; i < 50 && state.fireEvent(); i++) {
+        (_choices[person] ??= []).add(state.choices.last);
+      }
+    }
+  }
+
   /// Picks option [index] in [person]'s conversation.
   Future<DialogueOption> choose(
     String person,
@@ -460,7 +472,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     for (final t in option.traits) {
       _traits[t] = trait(t) + 1;
     }
-    _apply(option.unlocks, except: person);
+    // The option may lead straight to a node whose event is ready.
+    if (!_apply(option.unlocks, except: person)) _fireEvents();
     notifyListeners();
     await _save();
     return option;

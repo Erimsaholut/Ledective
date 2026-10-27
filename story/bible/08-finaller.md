@@ -56,6 +56,16 @@ yazıldıkça her birine o hikâyenin bayraklarına bağlı seçenekler eklenir
 
 `pressure >= 70` ya da yedek.
 
+### Gerçek: Komiser neredeydi? [ÖNERİ]
+
+| Durum | Koşul |
+| --- | --- |
+| Hiç yurt dışında değildi | `twist:never-abroad` |
+
+Bu bölüm sadece o son seçilirse görünür ve diğer bütün bölümleri yeniden
+okutur: sızıntılar, kimsenin nerede olduğunu bilmemesi, annenin "senin
+oralarda" demesi. Ayrıntılar 01-ana-gizem.md'de.
+
 ### [?] Eklenecek bölümler
 
 - Örtbas edilen suçlar ortaya çıktı mı?

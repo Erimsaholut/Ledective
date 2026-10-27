@@ -152,6 +152,47 @@ void main() {
       ]);
     });
 
+    test('events make the other person write first, once', () {
+      const desk = Dialogue(
+        start: 'desk',
+        nodes: {
+          'desk': DialogueNode(
+            [],
+            events: [
+              DialogueEvent(
+                next: 'leak',
+                requires: Condition(all: ['leak']),
+              ),
+            ],
+          ),
+          'leak': DialogueNode(
+            incoming: ['Who leaked this?'],
+            [DialogueOption(label: 'Not us', next: 'desk')],
+          ),
+        },
+      );
+      final flags = <String>{};
+      final state = DialogueState(desk, state: StoryState.of(flags))..arrive();
+      expect(state.fireEvent(), isFalse);
+      flags.add('leak');
+      expect(state.fireEvent(), isTrue);
+      expect(state.arrive(), ['Who leaked this?']);
+      state
+        ..choose(0)
+        ..arrive();
+      // Back at the desk, the same event doesn't fire again.
+      expect(state.fireEvent(), isFalse);
+      expect(
+        _describe(
+          DialogueState(
+            desk,
+            state: StoryState.of(flags),
+          ).replay(state.choices),
+        ),
+        ['< Who leaked this?', '> Not us'],
+      );
+    });
+
     test('silent options send nothing', () {
       final entries = DialogueState(_dialogue).replay([0, 1]);
       expect(_describe(entries).last, '< b2');
@@ -467,6 +508,31 @@ void main() {
         expect(progress.meets(bribe.requires), isTrue);
       },
     );
+
+    test('Erdi asks who leaks each story to the press', () async {
+      final progress = StoryProgress.instance;
+      List<String> erdi() => [
+        for (final e in progress.restore('Erdi').$2)
+          if (e case IncomingMessage(:final text)) text,
+      ];
+      await progress.discover([StoryFlags.part1Done]);
+      await say('Erdi', 'Biliyorsun nerede olduğumu');
+      await say('Erdi', 'Sen içini ferah tut');
+      // The plate story breaks first, while Erdi is still waiting to
+      // pressure the detective: he gets to it once that's done.
+      await progress.discover(['plate:mv', 'heard:adil']);
+      await say('Erdi', 'Kim aradı Ankara’dan?');
+      expect(erdi().last, contains('bu dosyadan alırım'));
+      await say('Erdi', 'Orhun sorguladı ama sızdıran o değil.');
+      await progress.discover(['toxicology']);
+      expect(erdi().last, contains('Kim sızdırıyor'));
+      await say('Erdi', 'Ekibi tek tek konuşturacağım.');
+      expect(progress.has('leak:hunt'), isTrue);
+      // Now the team can be asked about it.
+      await say('Atakan', 'Neden öyle düşündün?');
+      await say('Atakan', 'Gazeteyle konuştun mu?');
+      expect(progress.value('trust:Atakan'), 50);
+    });
 
     test('choices change numbers within their limits', () async {
       final progress = StoryProgress.instance;

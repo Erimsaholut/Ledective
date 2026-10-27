@@ -157,6 +157,32 @@
         "Sanayi sitesinde dükkânı olan esnaf, kapalı olması gereken mezbahada aylardır gece ışık gördüklerini, belediyeye iki kez dilekçe verdiklerini söyledi.",
         "Belediye, dilekçelerin \"ilgili birime iletildiğini\" açıkladı."
       ]
+    },
+    {
+      "id": "leak-toxicology",
+      "outlet": "sehir-postasi",
+      "requires": "toxicology",
+      "title": "Berat Yılmaz’a ölmeden önce ilaç verilmiş",
+      "summary": "Şehir Postası’nın ulaştığı toksikoloji raporuna göre genç adam öldürülmeden önce bayıltıldı.",
+      "author": "Selin Aras",
+      "tags": ["berat", "toksikoloji", "ilaç", "rapor", "sızıntı"],
+      "body": [
+        "Emniyet içinden bir kaynağın Şehir Postası’na aktardığı bilgilere göre, Berat Yılmaz’ın kanında yüksek miktarda sakinleştirici bulundu.",
+        "Kaynak, maddenin içeceğe karıştırıldığını ve ölümün \"kesinlikle intihar olmadığını\" söyledi. Emniyet konuyla ilgili açıklama yapmadı."
+      ]
+    },
+    {
+      "id": "leak-plate",
+      "outlet": "sehir-postasi",
+      "requires": "plate:mv",
+      "title": "Cinayet soruşturmasında Meclis aracı iddiası",
+      "summary": "06 MV 1907 plakalı makam aracının şüpheli bir isimle görüştüğü ileri sürüldü.",
+      "author": "Selin Aras",
+      "tags": ["meclis", "plaka", "makam aracı", "sızıntı", "adil"],
+      "body": [
+        "Berat Yılmaz soruşturmasını yürüten ekibin, Meclis otoparkına kayıtlı bir makam aracını sanayi bölgesinde tespit ettiği öğrenildi.",
+        "Aracın, uyuşturucu suçlarından sabıkalı bir şahısla görüştüğü iddia ediliyor. Milletvekili Yılmaz’ın ofisi iddiaları \"mesnetsiz\" olarak nitelendirdi."
+      ]
     }
   ],
   "filler": {

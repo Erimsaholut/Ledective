@@ -939,6 +939,13 @@ DialogueNode _node(_Reader r) => DialogueNode(
   incoming: r.stringsOr('incoming'),
   waitFor: r.condition('waitFor'),
   ask: r.optional('ask')?.list(_option) ?? const [],
+  events:
+      r
+          .optional('events')
+          ?.list(
+            (e) => DialogueEvent(next: e.text('next'), requires: e.condition()),
+          ) ??
+      const [],
 );
 
 DialogueOption _option(_Reader r) => DialogueOption(

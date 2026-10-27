@@ -39,6 +39,7 @@ class _ChatPageState extends State<ChatPage> {
   late final List<ChatEntry> _entries;
 
   final List<Timer> _replyTimers = [];
+  bool _sending = false;
 
   bool get _typing => _replyTimers.any((timer) => timer.isActive);
 
@@ -49,10 +50,29 @@ class _ChatPageState extends State<ChatPage> {
     _dialogue = dialogue;
     _entries = transcript;
     _progress.markRead(widget.person);
+    _progress.addListener(_sync);
+  }
+
+  /// Saved choices this screen hasn't followed yet, such as an event that
+  /// made the other person write.
+  List<int> get _unfollowed {
+    final saved = _progress.choicesFor(widget.person);
+    final seen = _dialogue.choices.length;
+    return saved.length > seen ? saved.sublist(seen) : const [];
+  }
+
+  /// Shows what arrived while the chat is open.
+  void _sync() {
+    if (!mounted || _sending || _typing) return;
+    final entries = _dialogue.replay(_unfollowed);
+    if (entries.isEmpty) return;
+    setState(() => _entries.addAll(entries));
+    _progress.markRead(widget.person);
   }
 
   @override
   void dispose() {
+    _progress.removeListener(_sync);
     for (final timer in _replyTimers) {
       timer.cancel();
     }
@@ -62,11 +82,17 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _send(int index) async {
+    _sending = true;
     final option = await _progress.choose(widget.person, _dialogue, index);
+    _sending = false;
     // The player is watching the replies arrive, so they count as read.
     await _progress.markRead(widget.person);
     if (!mounted) return;
-    final replies = [...option.replies, ..._dialogue.arrive()];
+    final replies = [
+      ...option.replies,
+      for (final entry in _dialogue.replay(_unfollowed))
+        if (entry case IncomingMessage(:final text)) text,
+    ];
     setState(() {
       if (!option.silent) _entries.add(OutgoingMessage(option.message));
     });
@@ -75,6 +101,8 @@ class _ChatPageState extends State<ChatPage> {
       _replyTimers.add(
         Timer(widget.replyDelay * (i + 1), () {
           setState(() => _entries.add(IncomingMessage(replies[i])));
+          // Anything that came in while they were typing shows up now.
+          if (i == replies.length - 1) _sync();
         }),
       );
     }

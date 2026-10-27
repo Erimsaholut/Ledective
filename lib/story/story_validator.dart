@@ -131,6 +131,7 @@ List<StoryIssue> validateStory(
         final next = option.next;
         if (next != null) pending.add(next);
       }
+      pending.addAll(node.events.map((e) => e.next));
     }
     for (final MapEntry(key: id, value: node) in dialogue.nodes.entries) {
       final at = '$where › $id';
@@ -142,6 +143,15 @@ List<StoryIssue> validateStory(
         warn(at, 'bir şey bekliyor ama bekledikten sonra hiçbir şey olmuyor');
       }
       uses(node.waitFor, at);
+      for (final event in node.events) {
+        if (!dialogue.nodes.containsKey(event.next)) {
+          error(at, 'bir olay olmayan "${event.next}" düğümüne gidiyor');
+        }
+        if (event.requires.isAlways) {
+          warn(at, '"${event.next}" olayının koşulu yok: hemen gerçekleşir');
+        }
+        uses(event.requires, at);
+      }
       for (final option in node.ask) {
         if (option.next != null) {
           warn(at, '"${option.label}" bir soru; "next" kullanılmaz');
@@ -398,6 +408,11 @@ String dialogueToMermaid(String person, Conversation conversation) {
           ? ''
           : ' ⇒ ${option.unlocks.join(', ')}';
       buffer.writeln('  $id -->|"${short(option.label)}$unlocks"| $target');
+    }
+    for (final event in node.events) {
+      buffer.writeln(
+        '  $id -.->|"⚡ ${esc(event.requires.terms.join(', '))}"| ${event.next}',
+      );
     }
   }
   return buffer.toString();

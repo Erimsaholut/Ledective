@@ -8,14 +8,14 @@
     {
       "id": "grocery",
       "title": "Market",
-      "detail": "Barselona · Kartla ödeme",
+      "detail": "Yurt dışı · Kartla ödeme",
       "amount": -23450,
       "daysAgo": 2
     },
     {
       "id": "hotel",
       "title": "Otel",
-      "detail": "Barselona · Yurt dışı harcama",
+      "detail": "Otel · Yurt dışı harcama",
       "amount": -245000,
       "daysAgo": 4
     },
