@@ -48,12 +48,21 @@ Oyun başladıktan sonraki olaylar gün değil **bayrak** sırasıyla gelir; onl
 | Tetikleyen | Olay | Kim yaptı | Kim biliyor | Nerede görünür |
 | --- | --- | --- | --- | --- |
 | Başlangıç | Özge komisere yazar | Özge | Büro | MatesApp |
-| `part1Done` | Erdi komisere çıkışır; ilk belgeler gelir; bilinmeyen numara arar | | | MatesApp, Poltel, Kayıtlar |
+| `part1Done` | Erdi komisere çıkışır; ilk belgeler gelir | Erdi | | MatesApp, Poltel |
 | `part1Done` | Şehir Postası: "cinayet şüphesi" | Basın | [?] kaynak kim? | News |
-| `furkanStatement` | "Dosyayı kapat" EFT'si yatar | [?] | Gönderen | ZaferBank |
-| `furkanStatement` + 45 dk oyun süresi | İade edilmezse iç denetim incelemesi başlar | İç Denetim | Erdi? [?] | Mail |
-| `plate:mv` | Adil makam aracındaki biriyle görüşür | Adil, [?] | | Harita raporu |
-| `mezbaha-found` | Tehdit mesajı: "Cuma geldiğinde sıradaki sen olacaksın" | [?] | | Kayıtlar |
+| `furkanStatement` + 6 dk | Büroyu arayan biri "Çocuk bir şey bilmez, bıraksınlar" der; Doğa Furkan'ı sorar | Adil'in çevresi [?] | Doğa | MatesApp (Doğa) |
+| Cinayet netleşince (`toxicology` / `furkanStatement` / `heard:adil`) | **Baskı 1:** Erdi, il müdürünün ve Ankara'nın aradığını, çocuğun geçmişinin kurcalanmamasını söyler | Erdi | Erdi, il müdürü | MatesApp (Erdi) |
+| `pressure:erdi` | Erdi İnanç'tan sorgu kayıtlarını doğrudan kendisine istemiş | Erdi | İnanç | MatesApp (İnanç) |
+| `pressure:erdi` + komiser kazmaya devam eder (kafe, defter, parmak izi, plaka, kamera) + 4 dk | **Baskı 2:** Kaymakam doğrudan yazar, gelişmeleri önce kendisiyle paylaşmasını ister | Kaymakam Cevdet Arslan | Kaymakam, milletvekili | MatesApp (Kaymakam) |
+| Kaymakam reddedilirse | Erdi: "Kaymakam beni aradı, bir daha üstümden iş çevirirsen dosyayı alırım" | Erdi | | MatesApp (Erdi) |
+| Kaymakam reddedilirse | Gözdağı sesli mesajı: "Ankara'da herkesin bir dosyası var" | [?] | | Kayıtlar |
+| `plate:mv` | Orhun plakayı sorgulatır: araç milletvekilinin danışmanına zimmetli; sorgu sisteme düşer | Orhun | Orhun, [?] | MatesApp (Orhun) |
+| `pressure:kaymakam` + (`plate:mv` ya da `notebook-read`) + 3 dk | **Baskı 3:** Milletvekili baba gizli numaradan yazar, "küçük bir destek" gönderir; 50.000 TL "Y. Eğitim Vakfı Danışmanlık"tan "Geçmiş olsun" açıklamasıyla gelir | Milletvekili Yılmaz | Milletvekili, danışman | MatesApp (numara), ZaferBank |
+| Para iade edilirse | **Baskı 4:** "Paranı geri göndermişsin. Bu işi zor yoldan çözeceğiz." Baba: "Bundan sonrası benim elimde değil." | [?] | | Messages, MatesApp |
+| Para 45 dk oyun süresi içinde iade edilmezse | İç denetim incelemesi | İç Denetim | Erdi | Mail |
+| `ev:cctv` | Atakan: deri ceketlinin boynunda bir kurum kartı var; kafenin iç kayıtlarını "polis" diyen biri almış | Atakan | | MatesApp (Atakan) |
+| `ev:torn-map` | Behram: baskın narkotiğin altı aylık operasyonunu yaktı | Behram | | MatesApp (Behram) |
+| `mezbaha-found` | Korkmuş bir tanık fısıldar: "Fotoğraftaki kızı tanıyorum, ben sizi arayacağım" | [?] tanık | | Kayıtlar |
 
 [?] "Cuma" neyin günü? Oyun içinde gerçek bir saat mi (timer), yoksa sadece
 korku mu?

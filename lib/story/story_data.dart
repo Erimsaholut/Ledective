@@ -938,6 +938,7 @@ DialogueNode _node(_Reader r) => DialogueNode(
   r.optional('options')?.list(_option) ?? const [],
   incoming: r.stringsOr('incoming'),
   waitFor: r.condition('waitFor'),
+  ask: r.optional('ask')?.list(_option) ?? const [],
 );
 
 DialogueOption _option(_Reader r) => DialogueOption(
@@ -949,6 +950,8 @@ DialogueOption _option(_Reader r) => DialogueOption(
   unlocks: r.stringsOr('unlocks'),
   silent: r.boolOr('silent'),
   testimony: r.textOr('testimony'),
+  requires: r.condition(),
+  once: r.optional('once')?.boolean ?? true,
 );
 
 StoryDocument _document(_Reader r) {

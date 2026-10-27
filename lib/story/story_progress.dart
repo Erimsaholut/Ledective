@@ -456,7 +456,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     int index,
   ) async {
     final option = state.choose(index);
-    (_choices[person] ??= []).add(index);
+    (_choices[person] ??= []).add(state.choices.last);
     for (final t in option.traits) {
       _traits[t] = trait(t) + 1;
     }
@@ -508,17 +508,16 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   List<({String question, String answer})> testimonyFrom(String person) {
     final dialogue = _story.conversations[person]?.dialogue;
     if (dialogue == null) return const [];
-    final state = DialogueState(dialogue, state: this)..arrive();
     final records = <({String question, String answer})>[];
-    for (final index in choicesFor(person)) {
-      if (index < 0 || index >= state.options.length) break;
-      final option = state.choose(index);
-      state.arrive();
-      final answer = option.testimony;
-      if (answer != null) {
-        records.add((question: option.message, answer: answer));
-      }
-    }
+    DialogueState(dialogue, state: this).replay(
+      choicesFor(person),
+      onChoice: (option) {
+        final answer = option.testimony;
+        if (answer != null) {
+          records.add((question: option.message, answer: answer));
+        }
+      },
+    );
     return records;
   }
 

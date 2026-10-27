@@ -135,11 +135,22 @@ List<StoryIssue> validateStory(
     for (final MapEntry(key: id, value: node) in dialogue.nodes.entries) {
       final at = '$where › $id';
       if (!reached.contains(id)) warn(at, 'bu düğüme hiçbir seçenek gitmiyor');
-      if (node.options.isEmpty && node.incoming.isEmpty) {
-        error(at, 'düğüm boş: ne "incoming" ne "options" var');
+      if (node.options.isEmpty &&
+          node.incoming.isEmpty &&
+          node.ask.isEmpty &&
+          !node.waitFor.isAlways) {
+        warn(at, 'bir şey bekliyor ama bekledikten sonra hiçbir şey olmuyor');
       }
       uses(node.waitFor, at);
+      for (final option in node.ask) {
+        if (option.next != null) {
+          warn(at, '"${option.label}" bir soru; "next" kullanılmaz');
+        }
+        uses(option.requires, at);
+        sets(option.unlocks, at);
+      }
       for (final option in node.options) {
+        uses(option.requires, at);
         final next = option.next;
         if (next != null && !dialogue.nodes.containsKey(next)) {
           error(
@@ -377,7 +388,8 @@ String dialogueToMermaid(String person, Conversation conversation) {
     final incoming = node.incoming.isEmpty
         ? ''
         : '<br/>${short(node.incoming.first)}';
-    buffer.writeln('  $id["<b>$id</b>$wait$incoming"]');
+    final ask = node.ask.isEmpty ? '' : '<br/>❓ ${node.ask.length} soru';
+    buffer.writeln('  $id["<b>$id</b>$wait$incoming$ask"]');
     for (var i = 0; i < node.options.length; i++) {
       final option = node.options[i];
       final target = option.next ?? '${id}_end$i';

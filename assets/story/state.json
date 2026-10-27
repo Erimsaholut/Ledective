@@ -33,11 +33,31 @@
   ],
   "timers": [
     {
+      "id": "kaymakam-calls",
+      "when": "pressure:erdi",
+      "whenAny": ["cafe:witness", "notebook-read", "print:adil", "plate:mv", "ev:cctv"],
+      "minutes": 4,
+      "unlocks": ["kaymakam:calls"]
+    },
+    {
+      "id": "mp-writes",
+      "when": "pressure:kaymakam",
+      "whenAny": ["plate:mv", "notebook-read"],
+      "minutes": 3,
+      "unlocks": ["mp:wrote"]
+    },
+    {
       "id": "bribe-kept",
-      "when": "furkanStatement",
+      "when": "mp:wrote",
       "minutes": 45,
       "unless": "sent:bribe-return",
       "unlocks": ["integrity -= 15", "pressure += 10", "case:internal-investigation"]
+    },
+    {
+      "id": "adil-warns",
+      "when": "furkanStatement",
+      "minutes": 6,
+      "unlocks": ["adil:warns"]
     }
   ]
 }

@@ -29,8 +29,8 @@
     ]
   },
   {
-    "sender": "Bilinmeyen Numara",
-    "requires": "furkanStatement",
-    "messages": ["Berat'ın işine burnunu sokma komiser. Çocuğu da rahat bırakın."]
+    "sender": "Gizli Numara",
+    "requires": "bribe:returned",
+    "messages": ["Paranı geri göndermişsin komiser.", "Demek bu işi zor yoldan çözeceğiz."]
   }
 ]

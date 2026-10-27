@@ -37,10 +37,10 @@
     {
       "id": "bribe",
       "title": "Gelen EFT",
-      "detail": "Gönderen gizli · Açıklama: 'Dosyayı kapat'",
+      "detail": "Gönderen: Y. Eğitim Vakfı Danışmanlık · Açıklama: 'Geçmiş olsun'",
       "amount": 5000000,
       "daysAgo": 0,
-      "requires": "furkanStatement"
+      "requires": "mp:wrote"
     }
   ],
   "payees": [
@@ -48,8 +48,8 @@
       "id": "bribe-return",
       "name": "Gönderene iade",
       "iban": "TR40 0001 5001 5800 7301 9846 12",
-      "note": "'Dosyayı kapat' açıklamalı EFT'nin gönderildiği hesap",
-      "requires": "furkanStatement",
+      "note": "'Geçmiş olsun' açıklamalı EFT'nin geldiği hesap",
+      "requires": "mp:wrote",
       "minAmount": 5000000,
       "unlocks": ["integrity += 10", "pressure += 15", "bribe:returned"]
     }

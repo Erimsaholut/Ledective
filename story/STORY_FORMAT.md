@@ -149,8 +149,47 @@ Anahtar kişinin rehberdeki adıdır (`assets/contacts/contacts.json`).
 - `traits`: kişilik puanı. `öfke`, `merhamet`, `merak`, `cesur`,
   `umursamaz`, `temkinli`.
 - `silent: true`: hiçbir şey göndermez, ör. `"label": "(Cevap verme)"`.
+- `requires` / `requiresAny`: seçenek sadece koşul tutarken klavyede
+  görünür. Örnek: `"label": "Plakayı kime sorgulattın?", "requires": "plate:mv"`.
 - `testimony`: sorgularda şüphelinin cevabı. Bu seçenekler, `testimonyFrom`
   ile o sohbete bağlanan ifade tutanağına soru-cevap olarak yazılır.
+
+### Sorular (`ask`): ekiple düzenli konuşmak
+
+Sohbet bir düğümde beklerken (bir bayrak için ya da son mesajdan sonra)
+oyuncu karşı tarafa soru sorabilir. Sorular sohbeti ilerletmez; sadece
+cevaplanır. Koşullu yazılınca hikâye ilerledikçe yeni sorular açılır:
+
+```json
+"later": {
+  "waitFor": "mezbaha-found",
+  "incoming": ["Amirim... mezbahadaki fotoğraflardaki iki öğrenciyi tanıdık."],
+  "options": [...],
+  "ask": [
+    {"label": "Basın ne diyor?", "requires": "part1Done",
+     "replies": ["Kapıda iki muhabir bekliyor amirim."]},
+    {"label": "Toksikoloji sonucunu gördün mü?", "requires": "toxicology",
+     "replies": ["Gördüm amirim. Çocuğu önce bayıltmışlar."],
+     "unlocks": ["trust:Özge += 5"]}
+  ]
+}
+```
+
+- Bir soru sorulunca kaybolur. Tekrar sorulabilsin istiyorsan `"once": false`.
+- `waitFor` açılıp karşı taraf yazınca sorular, oyuncu cevabını verene kadar
+  gizlenir.
+- Her ekip üyesinin sohbeti bir "bekleme" düğümünde bitmeli: ya bir sonraki
+  gelişmeyi bekleyen (`waitFor` + `incoming`) ya da sadece `ask` içeren bir
+  düğüm. Böylece oyuncu her zaman bir şey sorabilir.
+- Hiçbir şey içermeyen düğüm (`{}`) sohbetin sonudur.
+
+### Rehberde olmayan kişiler
+
+MatesApp sadece içinde mesaj olan sohbetleri listeler; kimse yazmadan bir
+kişi listede görünmez. chats.json'daki anahtar rehberde
+(`assets/contacts/contacts.json`) yoksa sohbet o adla görünür. Bu yüzden
+anahtar bir telefon numarası da olabilir: milletvekilinin gizli numarası gibi
+(`"0532 190 19 07"`).
 
 ## documents.json: Poltel belgeleri
 

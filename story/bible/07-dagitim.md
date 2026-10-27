@@ -52,9 +52,12 @@ flowchart LR
   adil --> teahouse
   teahouse --> plate[plate:mv] --> raid[Baskın] --> map[Yanık harita]
   map -->|yapboz| mezbaha[Eski Mezbaha]
-  furkan --> bribe[Rüşvet EFT] --> timer{45 dk}
-  timer -->|iade| returned[bribe:returned]
+  furkan --> erdi[Erdi: baskı]
+  erdi -->|kazmaya devam| kaymakam[Kaymakam yazar]
+  kaymakam -->|plaka ya da defter| mp[Baba gizli numaradan yazar] --> bribe[50.000 TL 'Geçmiş olsun'] --> timer{45 dk}
+  timer -->|iade| returned[bribe:returned] --> threat[Gözdağı]
   timer -->|iade yok| ic[İç denetim]
+  kaymakam -->|ret| threat
 ```
 
 Bayraklar tarafının tamamı için: `dart run tool/validate_story.dart --graph`.

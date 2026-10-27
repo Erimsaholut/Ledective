@@ -76,12 +76,22 @@ geçmişi araştırılmasın. Hesaba para yatar.
 | Kabul et, gizlice devam et | Zaman, baskının azalması | Kirli eller, sonradan iç denetim |
 | Parayı kullanmadan göndericiyi araştır | Bilgi | Zaman; para hesapta durdukça risk |
 
-**Oyundaki ilk adım [KANON, taslak]:** EFT `furkanStatement` ile gelir.
-ZaferBank'tan "Gönderene iade" yapılırsa `integrity += 10`, `pressure += 15`,
-`bribe:returned`. 45 dakika oyun süresi içinde iade edilmezse `bribe-kept`
-süreli olayı `integrity -= 15`, `pressure += 10` ve
-`case:internal-investigation` açar, İç Denetim maili gelir. Savcılığa bildirme
-ve göndericiyi araştırma seçenekleri henüz yok.
+**Oyundaki karşılığı [KANON, taslak]:** Para birden gelmez; baskı basamak
+basamak tırmanır:
+
+1. **Erdi** (şube müdürü): cinayet netleşince il müdürünün ve Ankara'nın
+   aradığını, çocuğun geçmişinin kurcalanmamasını söyler (`pressure:erdi`).
+2. **Kaymakam**: komiser araştırmaya devam edince doğrudan yazar ve
+   gelişmeleri önce kendisiyle paylaşmasını ister. Kabul (`kaymakam:informed`,
+   integrity −10) ya da ret (`pressure:refused`, pressure +10).
+3. **Milletvekili baba**: plaka ya da defter onu ilgilendirmeye başlayınca
+   kimsenin bilmediği bir numaradan yazar; ardından "Y. Eğitim Vakfı
+   Danışmanlık"tan 50.000 TL "Geçmiş olsun" açıklamasıyla gelir (`mp:wrote`).
+4. **Tehdit**: ret ya da iade, gözdağı mesajlarını ve Erdi'nin uyarısını
+   getirir. Para 45 dakikalık oyun süresi içinde iade edilmezse iç denetim
+   başlar.
+
+Savcılığa bildirme ve göndericiyi araştırma seçenekleri henüz yok.
 
 ### İkilem 2 — Katil mi, kurtarıcı mı?
 Katil, mezbahadaki diğer kurbanların yerini bilen tek kişi. Güvenlik ve ceza

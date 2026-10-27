@@ -29,7 +29,21 @@ const _dialogue = Dialogue(
     'gated': DialogueNode(
       waitFor: Condition(all: ['flag']),
       incoming: ['later'],
-      [DialogueOption(label: 'fin')],
+      [DialogueOption(label: 'fin', next: 'idle')],
+      ask: [
+        DialogueOption(label: 'news?', replies: ['none yet']),
+        DialogueOption(
+          label: 'secret?',
+          replies: ['psst'],
+          requires: Condition(all: ['secret']),
+        ),
+      ],
+    ),
+    'idle': DialogueNode(
+      [],
+      ask: [
+        DialogueOption(label: 'again?', replies: ['yes'], once: false),
+      ],
     ),
   },
 );
@@ -89,11 +103,53 @@ void main() {
       ]);
       expect(state.isWaiting, isTrue);
       expect(state.isFinished, isFalse);
-      expect(state.canReply, isFalse);
+      // Only questions until the flag is set.
+      expect(state.options.map((o) => o.label), ['news?']);
 
       flags.add('flag');
       expect(state.arrive(), ['later']);
       expect(state.options.single.label, 'fin');
+    });
+
+    test('questions can be asked while the story waits', () {
+      final flags = <String>{};
+      final state = DialogueState(_dialogue, state: StoryState.of(flags))
+        ..replay([0, 0]);
+      expect(state.isWaiting, isTrue);
+      expect(state.options.map((o) => o.label), ['news?']);
+      flags.add('secret');
+      expect(state.options.map((o) => o.label), ['news?', 'secret?']);
+      state.choose(0);
+      // Asked once, gone; the conversation stays where it was.
+      expect(state.options.map((o) => o.label), ['secret?']);
+      expect(state.isWaiting, isTrue);
+      expect(state.choices, [0, 0, 1000]);
+
+      flags.add('flag');
+      expect(state.arrive(), ['later']);
+      // While there is an answer to give, questions wait.
+      expect(state.options.map((o) => o.label), ['fin']);
+      state
+        ..choose(0)
+        ..arrive();
+      state.choose(0);
+      state.choose(0);
+      expect(state.choices, [0, 0, 1000, 0, 2000, 2000]);
+    });
+
+    test('replay keeps questions before what came after them', () {
+      final state = DialogueState(_dialogue, state: StoryState.of({'flag'}));
+      expect(_describe(state.replay([0, 0, 1000])), [
+        '< hello',
+        '> to b',
+        '< b1',
+        '< b2',
+        '> done',
+        '< ok',
+        '> news?',
+        '< none yet',
+        '< later',
+      ]);
     });
 
     test('silent options send nothing', () {
@@ -372,6 +428,46 @@ void main() {
       expect(searchProfiles('ozge', progress).single.handle, 'ozge.buro');
     });
 
+    test(
+      'pressure climbs from Erdi to the father before money arrives',
+      () async {
+        final progress = StoryProgress.instance;
+        final bribe = StoryData.current.bank.transactions.firstWhere(
+          (t) => t.id == 'bribe',
+        );
+        bool wrote(String person) => progress.restore(person).$2.isNotEmpty;
+
+        await progress.discover([StoryFlags.part1Done]);
+        await say('Erdi', 'Biliyorsun nerede olduğumu');
+        await say('Erdi', 'Sen içini ferah tut');
+        // Erdi passes the pressure on once the case turns out to be murder.
+        expect(progress.restore('Erdi').$1.isWaiting, isTrue);
+        await progress.discover(['toxicology']);
+        await say('Erdi', 'Geçmişine bakmadan katili nasıl bulacağız müdürüm?');
+        expect(progress.has('pressure:erdi'), isTrue);
+
+        // The district governor only calls once the detective keeps digging.
+        await progress.advanceTimers(const Duration(minutes: 10));
+        expect(wrote('Kaymakam'), isFalse);
+        await progress.discover(['cafe:witness']);
+        await progress.advanceTimers(const Duration(minutes: 4));
+        expect(wrote('Kaymakam'), isTrue);
+        expect(progress.meets(bribe.requires), isFalse);
+        await say(
+          'Kaymakam',
+          'Soruşturma gizli Kaymakam Bey. Bilgiyi ancak savcılık verebilir.',
+        );
+        // Erdi hears about it.
+        expect(progress.unreadCount('Erdi'), greaterThan(0));
+
+        // The father writes, and sends money, after the car is traced.
+        await progress.discover(['plate:mv']);
+        await progress.advanceTimers(const Duration(minutes: 3));
+        expect(wrote('0532 190 19 07'), isTrue);
+        expect(progress.meets(bribe.requires), isTrue);
+      },
+    );
+
     test('choices change numbers within their limits', () async {
       final progress = StoryProgress.instance;
       expect(progress.value('trust:Özge'), 50);
@@ -407,7 +503,7 @@ void main() {
 
     test('timers fire after play time unless called off', () async {
       final progress = StoryProgress.instance;
-      await progress.discover([StoryFlags.furkanStatement]);
+      await progress.discover(['mp:wrote']);
       await progress.advanceTimers(const Duration(minutes: 30));
       expect(progress.timeLeft('bribe-kept'), const Duration(minutes: 15));
       expect(progress.has('case:internal-investigation'), isFalse);
@@ -419,7 +515,7 @@ void main() {
 
     test('sending the bribe back calls the timer off', () async {
       final progress = StoryProgress.instance;
-      await progress.discover([StoryFlags.furkanStatement]);
+      await progress.discover(['mp:wrote']);
       final payee = StoryData.current.bank.payees.single;
       await progress.recordTransfer(payee, 1000000);
       expect(progress.value('paid:bribe-return'), 10000);
@@ -432,7 +528,7 @@ void main() {
 
     test('play time stops while the phone sleeps', () async {
       final progress = StoryProgress.instance;
-      await progress.discover([StoryFlags.furkanStatement]);
+      await progress.discover(['mp:wrote']);
       final start = DateTime(2026, 1, 1);
       await progress.tick(now: start);
       await progress.tick(now: start.add(const Duration(seconds: 2)));

@@ -72,6 +72,8 @@ class DialogueOption {
     this.unlocks = const [],
     this.silent = false,
     this.testimony,
+    this.requires = Condition.always,
+    this.once = true,
   }) : _message = message;
 
   /// Text on the keyboard button.
@@ -101,6 +103,13 @@ class DialogueOption {
   /// For interrogations: the suspect's answer to [message], recorded in the
   /// statement ("İfade Tutanağı") that is built from the conversation.
   final String? testimony;
+
+  /// The option is only on the keyboard while this holds.
+  final Condition requires;
+
+  /// For [DialogueNode.ask] options: disappears once asked. When false the
+  /// player can ask again and again.
+  final bool once;
 }
 
 class DialogueNode {
@@ -108,6 +117,7 @@ class DialogueNode {
     this.options, {
     this.incoming = const [],
     this.waitFor = Condition.always,
+    this.ask = const [],
   });
 
   /// Messages the other person sends when the conversation reaches this
@@ -119,6 +129,11 @@ class DialogueNode {
   final Condition waitFor;
 
   final List<DialogueOption> options;
+
+  /// Questions the player can ask while the conversation waits here (for
+  /// [waitFor], or for good after the last [incoming]): "Son durum ne?".
+  /// They get their replies and the conversation stays where it is.
+  final List<DialogueOption> ask;
 }
 
 class Dialogue {
@@ -136,10 +151,17 @@ class Conversation {
 }
 
 /// Walks a [Dialogue] one choice at a time.
+///
+/// Choices are saved as numbers: an option's place in the node's `options`,
+/// or 1000 + its place in `ask` when asked before the node's messages
+/// arrived, or 2000 + its place when asked after.
 class DialogueState {
   DialogueState(this.dialogue, {StoryState? state})
     : _state = state ?? StoryState.of(const {}),
       _nodeId = dialogue?.start;
+
+  static const _askedWaiting = 1000;
+  static const _askedAfter = 2000;
 
   final Dialogue? dialogue;
   final StoryState _state;
@@ -147,7 +169,10 @@ class DialogueState {
   bool _arrived = false;
   final List<int> _choices = [];
 
-  /// Indices of the options picked so far, used to save and restore progress.
+  /// Ask options already asked, as "node/index".
+  final Set<String> _asked = {};
+
+  /// Saved numbers of the options picked so far, to restore progress.
   List<int> get choices => List.unmodifiable(_choices);
 
   DialogueNode? get _node {
@@ -166,11 +191,30 @@ class DialogueState {
     return condition != null && !condition.isMetBy(_state);
   }
 
-  List<DialogueOption> get options =>
-      !_arrived || isWaiting ? const [] : _node?.options ?? const [];
+  /// What is on the keyboard, with each option's saved number.
+  List<(DialogueOption, int)> get _keyboard {
+    final node = _node;
+    if (node == null) return const [];
+    final waiting = isWaiting;
+    final answering = _arrived && !waiting && node.options.isNotEmpty;
+    return [
+      if (answering)
+        for (final (i, o) in node.options.indexed)
+          if (o.requires.isMetBy(_state)) (o, i),
+      // Questions fit while nothing else is asked of the player.
+      if (!answering && (waiting || _arrived))
+        for (final (i, o) in node.ask.indexed)
+          if (o.requires.isMetBy(_state) &&
+              !(o.once && _asked.contains('$_nodeId/$i')))
+            (o, (waiting ? _askedWaiting : _askedAfter) + i),
+    ];
+  }
 
-  /// True when there is nothing left to answer, for now or for good.
-  bool get canReply => options.isNotEmpty;
+  /// The options on the keyboard right now.
+  List<DialogueOption> get options => [for (final (o, _) in _keyboard) o];
+
+  /// True when there is something to answer or ask.
+  bool get canReply => _keyboard.isNotEmpty;
 
   /// True when the conversation has reached its end.
   bool get isFinished => _node == null || (_arrived && _node!.options.isEmpty);
@@ -184,9 +228,27 @@ class DialogueState {
     return node.incoming;
   }
 
+  /// Picks option [index] of [options].
   DialogueOption choose(int index) {
-    final option = options[index];
-    _choices.add(index);
+    final (option, saved) = _keyboard[index];
+    _apply(saved);
+    return option;
+  }
+
+  /// Applies a saved choice, or returns null if it doesn't fit.
+  DialogueOption? _apply(int saved) {
+    final node = _node;
+    if (node == null) return null;
+    if (saved >= _askedWaiting) {
+      final i = saved % _askedWaiting;
+      if (i >= node.ask.length) return null;
+      _asked.add('$_nodeId/$i');
+      _choices.add(saved);
+      return node.ask[i];
+    }
+    if (saved < 0 || saved >= node.options.length || !_arrived) return null;
+    final option = node.options[saved];
+    _choices.add(saved);
     _nodeId = option.next;
     _arrived = false;
     return option;
@@ -194,17 +256,24 @@ class DialogueState {
 
   /// Replays saved [choices], returning the transcript they produced,
   /// including messages of the node reached last. Stops early if the saved
-  /// choices no longer fit the dialogue.
-  List<ChatEntry> replay(List<int> choices) {
-    final entries = <ChatEntry>[...arrive().map(IncomingMessage.new)];
-    for (final index in choices) {
-      if (index < 0 || index >= options.length) break;
-      final option = choose(index);
+  /// choices no longer fit the dialogue. [onChoice] sees every option.
+  List<ChatEntry> replay(
+    List<int> choices, {
+    void Function(DialogueOption option)? onChoice,
+  }) {
+    final entries = <ChatEntry>[];
+    void deliver() => entries.addAll(arrive().map(IncomingMessage.new));
+    for (final saved in choices) {
+      // A question asked while waiting came before the node's messages.
+      final whileWaiting = saved >= _askedWaiting && saved < _askedAfter;
+      if (!whileWaiting) deliver();
+      final option = _apply(saved);
+      if (option == null) break;
+      onChoice?.call(option);
       if (!option.silent) entries.add(OutgoingMessage(option.message));
-      entries
-        ..addAll(option.replies.map(IncomingMessage.new))
-        ..addAll(arrive().map(IncomingMessage.new));
+      entries.addAll(option.replies.map(IncomingMessage.new));
     }
+    deliver();
     return entries;
   }
 }

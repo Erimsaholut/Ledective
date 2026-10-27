@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../data/contacts_repository.dart';
 import '../../data/private_chats.dart';
 import '../../story/dialogue.dart';
+import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../widgets/avatar.dart';
 import 'chat_page.dart';
@@ -126,16 +127,25 @@ class _MatesAppState extends State<MatesApp> {
           final private = {
             for (final c in _contacts.where((c) => c.userAdded)) c.number: c,
           };
+          final numbers = {for (final c in story) c.name: c.number};
+          // Story chats show up once there is something in them, including
+          // ones from numbers that aren't in the contacts.
+          final people = [
+            ...numbers.keys,
+            for (final person in StoryData.current.conversations.keys)
+              if (!numbers.containsKey(person)) person,
+          ];
           final tiles = [
-            for (final contact in story)
-              _tile(
-                name: contact.name,
-                preview: _preview(_progress.restore(contact.name).$2),
-                unread: _progress.unreadCount(contact.name),
-                onTap: () => _open(
-                  ChatPage(person: contact.name, number: contact.number),
+            for (final person in people)
+              if (_progress.restore(person).$2 case final transcript
+                  when transcript.isNotEmpty)
+                _tile(
+                  name: person,
+                  preview: _preview(transcript),
+                  unread: _progress.unreadCount(person),
+                  onTap: () =>
+                      _open(ChatPage(person: person, number: numbers[person])),
                 ),
-              ),
             for (final number in PrivateChats.instance.numbers)
               if (private[number] case final contact?)
                 _tile(

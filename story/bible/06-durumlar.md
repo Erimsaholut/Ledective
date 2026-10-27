@@ -75,7 +75,14 @@ Bir seçim birden fazla sonucu tetikleyebilir. Her büyük karar buraya yazılı
 
 | Karar | Seçenek | Bayraklar | Sayılar | Sonradan nerede karşısına çıkar |
 | --- | --- | --- | --- | --- |
-| Rüşvet (İkilem 1) | İade et | `bribe:returned` | integrity +10, pressure +15 | [?] |
+| Erdi'nin baskısı | Boyun eğ | `pressure:erdi` | integrity −5 | İnanç'tan kayıtlar Erdi'ye gider |
+| Erdi'nin baskısı | Karşı çık | `pressure:erdi` | pressure +10 | |
+| Kaymakam | Bilgi ver | `pressure:kaymakam`, `kaymakam:informed` | integrity −10 | [?] Bilgi sızar mı? |
+| Kaymakam | Reddet / cevap verme | `pressure:refused` | pressure +10 / +5 | Erdi'nin uyarısı, gözdağı sesli mesajı |
+| Furkan | Bırak / tut / tanık koruma | `furkan:released` / `furkan:held` / `furkan:protected` | witnessDanger +15 / −5 / −10 | [?] |
+| İnanç'a Erdi'nin emri | Ver / bana gönder / ikimize | | trust:İnanç −5 / +10 / +5 | İkilem 6 |
+| Plaka sorgusu (Orhun) | Tutanağa geçir / sakla / azarla | | integrity +5 / `player:dirty-hands` / trust:Orhun −10 | |
+| Rüşvet (İkilem 1) | İade et | `bribe:returned` | integrity +10, pressure +15 | Gözdağı SMS'i, babanın son mesajı, Erdi'nin uyarısı |
 | Rüşvet (İkilem 1) | Hiçbir şey yapma (45 dk) | `case:internal-investigation` | integrity −15, pressure +10 | İç Denetim maili, Bölüm V |
 | Atakan (İkilem 3) | İhbar et | [?] | trust:İnanç +, trust:Özge −, trust:Atakan −− | |
 | Atakan (İkilem 3) | Koru | `player:dirty-hands` | trust:Atakan ++, integrity − | |

@@ -264,9 +264,7 @@ void main() {
 
   testWidgets('money sent from ZaferBank reaches the story', (tester) async {
     await tester.runAsync(loadGameState);
-    await tester.runAsync(
-      () => StoryProgress.instance.discover([StoryFlags.furkanStatement]),
-    );
+    await tester.runAsync(() => StoryProgress.instance.discover(['mp:wrote']));
     await tester.pumpWidget(
       const MaterialApp(home: TransferPage(color: Colors.red)),
     );

@@ -46,3 +46,4 @@ dart run tool/validate_story.dart
 | --- | --- |
 | `erdi-kept-out`, `photo-restored`, `print:adil`, `notebook-read`, `seen:*` açılıyor ama beklenmiyor | Hikâyenin devamına bağlanacak kancalar |
 | `poltel:ozge-file-read`, `bribe:returned`, `news:old-case-found` açılıyor ama beklenmiyor | İskelet örnekleri; Bölüm III-V'te kullanılacak |
+| `heard:*` (orhun-secret, atakan-secret, fake-police, adil-missing-case, erdi-ordered, berat-past, witness), `kaymakam:informed`, `behram:helps`, `ozge:knows-money` | Sohbetlerde ekilen tohumlar; kişisel hikâyeler yazılınca bağlanacak |

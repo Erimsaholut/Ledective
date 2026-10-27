@@ -36,7 +36,7 @@
     },
     {
       "sender": "icdenetim.emniyet.gov.tr",
-      "body": "İç Denetim Şube Müdürlüğü: Banka hesabınıza yapılan ve iade edilmeyen 50.000,00 TL tutarındaki EFT hakkında idari inceleme başlatılmıştır. Savunmanızı yedi gün içinde yazılı olarak bildiriniz.",
+      "body": "İç Denetim Şube Müdürlüğü: Banka hesabınıza 'Y. Eğitim Vakfı Danışmanlık' unvanlı hesaptan yapılan ve iade edilmeyen 50.000,00 TL tutarındaki EFT hakkında idari inceleme başlatılmıştır. Savunmanızı yedi gün içinde yazılı olarak bildiriniz.",
       "requires": "case:internal-investigation"
     }
   ]

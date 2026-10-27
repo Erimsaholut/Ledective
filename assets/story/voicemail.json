@@ -13,17 +13,18 @@
     "from": "Bilinmeyen Numara",
     "daysAgo": 0,
     "seconds": 14,
-    "requires": "part1Done",
-    "transcript": "(cızırtı) ... Komiser... o çocuk sadece başlangıçtı. Tatiline devam et. (kapanma sesi)"
+    "transcript": "(cızırtı) ... Komiser. Tatiline devam et. Ankara’da herkesin bir dosyası var. Seninki de az kalın değil. (kapanma sesi)",
+    "requiresAny": ["pressure:refused", "bribe:returned"]
   },
   {
     "id": "unknown-2",
     "kind": "voicemail",
     "from": "Bilinmeyen Numara",
     "daysAgo": 0,
-    "seconds": 9,
+    "seconds": 17,
     "requires": "mezbaha-found",
-    "transcript": "(fısıltı) Gördün değil mi? Cuma geldiğinde sıradaki sen olacaksın."
+    "transcript": "(fısıltı) Mezbahaya girdiniz, değil mi? ... Fotoğraftaki kızı tanıyorum. Beni aramayın, bu numara benim değil. Hazır olunca ben sizi arayacağım. (kapanma sesi)",
+    "unlocksOnListen": ["heard:witness"]
   },
   {
     "id": "memo-phone",

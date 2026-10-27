@@ -172,6 +172,12 @@ belgelerde gizli bir tanığın kimliği de vardır (İkilem 7). Oyuncu ona bilg
 verebilir, kaynak sorabilir, yayını erteletmeye çalışabilir.
 News'te geçen "Selin Aras" adı şimdilik yer tutucu.
 
+### Kaymakam Cevdet Arslan [KANON, taslak]
+Milletvekilinin ilçesinin kaymakamı. Erdi'nin baskısından sonra komisere
+doğrudan yazar; gelişmeleri "aileye iletmek için" önce kendisine anlatmasını
+ister. Kibar ama tehditkâr: "Usul her zaman insanı korumaz."
+- **Ne istiyor / saklıyor:** [?]
+
 ### Milletvekilinin danışmanı
 Rüşvet teklifini getiren kişi (İkilem 1). [?] Makam aracındaki kişi o mu?
 
