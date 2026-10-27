@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../data/game_clock.dart';
+import '../../story/news_feed.dart';
 import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
@@ -9,44 +10,64 @@ import '../../theme/turkish_text.dart';
 
 const _ink = Color(0xFF111111);
 
-/// Current articles, newest first. Of those from the same day, the one
-/// listed last in the file is the newest.
-List<Article> currentArticles(StoryProgress progress) => [
-  for (final a in StoryData.current.news.articles.reversed)
-    if (!a.archive && progress.meets(a.requires)) a,
-]..sort((a, b) => a.daysAgo.compareTo(b.daysAgo));
+/// What the feed shows right now, newest first.
+List<NewsItem> currentNews(StoryProgress progress) => progress.newsFeedAt();
 
-/// Current articles the player hasn't read.
-int newArticleCount(StoryProgress progress) => currentArticles(
+/// News in the feed the player hasn't read.
+int newArticleCount(StoryProgress progress) => currentNews(
   progress,
-).where((a) => !progress.hasSeen('news:${a.id}')).length;
+).where((item) => !progress.hasSeen('news:${item.key}')).length;
 
-/// Articles, current or archived, that match [query] in their title, text,
-/// author, outlet or tags.
-List<Article> searchArticles(String query, StoryProgress progress) {
+/// Archived articles and the ones in the feed that match [query] in their
+/// title, text, author, outlet or tags.
+List<NewsItem> searchArticles(String query, StoryProgress progress) {
   final key = searchKey(query.trim());
   if (key.length < 3) return const [];
   final news = StoryData.current.news;
-  return [
+  final firstOpen = GameClock.current.firstOpen;
+  final items = [
+    ...currentNews(progress),
     for (final a in news.articles)
-      if (progress.meets(a.requires) &&
-          [
-            a.title,
-            a.summary,
-            a.author,
-            news.outlet(a.outlet).name,
-            ...a.body,
-            ...a.tags,
-          ].any((text) => searchKey(text).contains(key)))
-        a,
-  ]..sort((a, b) => a.daysAgo.compareTo(b.daysAgo));
+      if (a.archive && progress.meets(a.requires))
+        NewsItem(
+          a,
+          DateTime(firstOpen.year, firstOpen.month, firstOpen.day - a.daysAgo),
+        ),
+  ];
+  return [
+    for (final item in items)
+      if ([
+        item.article.title,
+        item.article.summary,
+        item.article.author,
+        news.outlet(item.article.outlet).name,
+        ...item.article.body,
+        ...item.article.tags,
+      ].any((text) => searchKey(text).contains(key)))
+        item,
+  ]..sort((a, b) => b.published.compareTo(a.published));
 }
 
-String _dateOf(Article a) =>
-    a.date ??
-    (a.daysAgo == 0
-        ? "Bugün"
-        : formatDate(GameClock.current.daysBeforeFirstOpen(a.daysAgo)));
+/// "Bugün 14:05", "Dün 09:00" or the date.
+String _dateOf(NewsItem item) {
+  final fixed = item.article.date;
+  if (fixed != null) return fixed;
+  final t = item.published;
+  final now = DateTime.now();
+  final days = DateTime(
+    now.year,
+    now.month,
+    now.day,
+  ).difference(DateTime(t.year, t.month, t.day)).inDays;
+  final clock =
+      '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+  if (item.article.archive) return formatDate(t);
+  return switch (days) {
+    0 => "Bugün $clock",
+    1 => "Dün $clock",
+    _ => formatDate(t),
+  };
+}
 
 Color _colorOf(NewsOutlet outlet) => Color(outlet.color ?? 0xFF424242);
 
@@ -106,7 +127,7 @@ class _NewsAppState extends State<NewsApp> {
   }
 
   Widget _feed() {
-    final articles = currentArticles(_progress);
+    final articles = currentNews(_progress);
     if (articles.isEmpty) {
       return const Center(
         child: Text(
@@ -120,9 +141,9 @@ class _NewsAppState extends State<NewsApp> {
       itemCount: articles.length,
       separatorBuilder: (_, _) => const Divider(indent: 16, endIndent: 16),
       itemBuilder: (context, i) => _ArticleTile(
-        article: articles[i],
+        item: articles[i],
         headline: i == 0,
-        isNew: !_progress.hasSeen('news:${articles[i].id}'),
+        isNew: !_progress.hasSeen('news:${articles[i].key}'),
       ),
     );
   }
@@ -175,8 +196,7 @@ class _NewsAppState extends State<NewsApp> {
                   itemCount: results.length,
                   separatorBuilder: (_, _) =>
                       const Divider(indent: 16, endIndent: 16),
-                  itemBuilder: (context, i) =>
-                      _ArticleTile(article: results[i]),
+                  itemBuilder: (context, i) => _ArticleTile(item: results[i]),
                 ),
         ),
       ],
@@ -206,12 +226,13 @@ class _OutletLabel extends StatelessWidget {
 
 class _ArticleTile extends StatelessWidget {
   const _ArticleTile({
-    required this.article,
+    required this.item,
     this.headline = false,
     this.isNew = false,
   });
 
-  final Article article;
+  final NewsItem item;
+  Article get article => item.article;
   final bool headline;
   final bool isNew;
 
@@ -222,7 +243,7 @@ class _ArticleTile extends StatelessWidget {
     return InkWell(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute<void>(builder: (_) => ArticlePage(article: article)),
+        MaterialPageRoute<void>(builder: (_) => ArticlePage(item: item)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -287,7 +308,7 @@ class _ArticleTile extends StatelessWidget {
             ],
             const SizedBox(height: 6),
             Text(
-              _dateOf(article),
+              _dateOf(item),
               style: const TextStyle(
                 color: AppColors.secondaryLabel,
                 fontSize: 12,
@@ -301,9 +322,9 @@ class _ArticleTile extends StatelessWidget {
 }
 
 class ArticlePage extends StatefulWidget {
-  const ArticlePage({super.key, required this.article});
+  const ArticlePage({super.key, required this.item});
 
-  final Article article;
+  final NewsItem item;
 
   @override
   State<ArticlePage> createState() => _ArticlePageState();
@@ -315,14 +336,14 @@ class _ArticlePageState extends State<ArticlePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final progress = StoryProgress.instance;
-      await progress.markSeen('news:${widget.article.id}');
-      await progress.discover(widget.article.unlocksOnRead);
+      await progress.markSeen('news:${widget.item.key}');
+      await progress.discover(widget.item.article.unlocksOnRead);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final a = widget.article;
+    final a = widget.item.article;
     final outlet = StoryData.current.news.outlet(a.outlet);
     final image = a.image;
     return Scaffold(
@@ -365,7 +386,10 @@ class _ArticlePageState extends State<ArticlePage> {
             ],
             const SizedBox(height: 12),
             Text(
-              [if (a.author.isNotEmpty) a.author, _dateOf(a)].join(" · "),
+              [
+                if (a.author.isNotEmpty) a.author,
+                _dateOf(widget.item),
+              ].join(" · "),
               style: const TextStyle(
                 color: AppColors.secondaryLabel,
                 fontSize: 13,

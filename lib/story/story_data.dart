@@ -707,8 +707,9 @@ class NewsOutlet {
   final int? color;
 }
 
-/// A news article. Current ones are in the feed once [requires] holds;
-/// [archive] ones only turn up in a search.
+/// A news article. Current ones are in the feed once [requires] holds
+/// (and, with [dayOffset], once their day has come); [archive] ones only
+/// turn up in a search.
 class Article {
   const Article({
     required this.id,
@@ -718,6 +719,8 @@ class Article {
     this.body = const [],
     this.author = '',
     this.daysAgo = 0,
+    this.dayOffset,
+    this.hour = 9,
     this.date,
     this.image,
     this.tags = const [],
@@ -736,6 +739,11 @@ class Article {
   final String author;
   final int daysAgo;
 
+  /// Publishes the article this many days after the first launch, at
+  /// [hour] o'clock, instead of when [requires] starts holding.
+  final int? dayOffset;
+  final int hour;
+
   /// Printed instead of the date [daysAgo] gives, e.g. "14 Mart 2021".
   final String? date;
   final String? image;
@@ -747,11 +755,35 @@ class Article {
   final List<String> unlocksOnRead;
 }
 
+/// Everyday news that keeps the feed alive: one article from [articles]
+/// every [minHours] to [maxHours] hours, in a shuffled order that starts
+/// over once every article has run.
+class FillerNews {
+  const FillerNews({
+    this.articles = const [],
+    this.minHours = 6,
+    this.maxHours = 30,
+    this.keep = 6,
+  });
+
+  final List<Article> articles;
+  final int minHours;
+  final int maxHours;
+
+  /// How many of the latest ones stay in the feed.
+  final int keep;
+}
+
 class NewsData {
-  const NewsData({this.outlets = const [], this.articles = const []});
+  const NewsData({
+    this.outlets = const [],
+    this.articles = const [],
+    this.filler = const FillerNews(),
+  });
 
   final List<NewsOutlet> outlets;
   final List<Article> articles;
+  final FillerNews filler;
 
   NewsOutlet outlet(String id) => outlets.firstWhere(
     (o) => o.id == id,
@@ -1220,30 +1252,37 @@ NewsData _news(_Reader r) => NewsData(
             ),
           ) ??
       const [],
-  articles:
-      r
-          .optional('articles')
-          ?.list(
-            (a) => Article(
-              id: a.text('id'),
-              outlet: a.text('outlet'),
-              title: a.text('title'),
-              summary: a.textOr('summary') ?? '',
-              body: switch (a.optional('body')) {
-                null => const [],
-                final b => b.value is String ? [b.string] : b.strings,
-              },
-              author: a.textOr('author') ?? '',
-              daysAgo: a.intOr('daysAgo', 0),
-              date: a.textOr('date'),
-              image: a.textOr('image'),
-              tags: a.stringsOr('tags'),
-              archive: a.boolOr('archive'),
-              requires: a.condition(),
-              unlocksOnRead: a.stringsOr('unlocksOnRead'),
-            ),
-          ) ??
-      const [],
+  articles: r.optional('articles')?.list(_article) ?? const [],
+  filler: switch (r.optional('filler')) {
+    null => const FillerNews(),
+    final f => FillerNews(
+      articles: f.optional('articles')?.list(_article) ?? const [],
+      minHours: f.intOr('minHours', 6),
+      maxHours: f.intOr('maxHours', 30),
+      keep: f.intOr('keep', 6),
+    ),
+  },
+);
+
+Article _article(_Reader a) => Article(
+  id: a.text('id'),
+  outlet: a.text('outlet'),
+  title: a.text('title'),
+  summary: a.textOr('summary') ?? '',
+  body: switch (a.optional('body')) {
+    null => const [],
+    final b => b.value is String ? [b.string] : b.strings,
+  },
+  author: a.textOr('author') ?? '',
+  daysAgo: a.intOr('daysAgo', 0),
+  dayOffset: a.optional('dayOffset')?.integer,
+  hour: a.intOr('hour', 9),
+  date: a.textOr('date'),
+  image: a.textOr('image'),
+  tags: a.stringsOr('tags'),
+  archive: a.boolOr('archive'),
+  requires: a.condition(),
+  unlocksOnRead: a.stringsOr('unlocksOnRead'),
 );
 
 EndingsData _endings(_Reader r) => EndingsData(

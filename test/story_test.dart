@@ -6,6 +6,7 @@ import 'package:ledective/apps/news/news_app.dart';
 import 'package:ledective/apps/poltel/poltel_app.dart';
 import 'package:ledective/apps/sinstagram/sinstagram_app.dart';
 import 'package:ledective/story/dialogue.dart';
+import 'package:ledective/story/news_feed.dart';
 import 'package:ledective/story/story_data.dart';
 import 'package:ledective/story/story_validator.dart';
 import 'package:ledective/story/story_progress.dart';
@@ -461,12 +462,87 @@ void main() {
 
     test('archived news only turns up in a search', () async {
       final progress = StoryProgress.instance;
-      expect(currentArticles(progress).map((a) => a.id), ['berat-found']);
-      expect(searchArticles('takipsizlik', progress).single.id, 'old-case');
-      expect(searchArticles('vakif', progress).single.id, 'foundation');
+      final filler = StoryData.current.news.filler.articles;
+      Iterable<String> story() => currentNews(
+        progress,
+      ).where((i) => !filler.contains(i.article)).map((i) => i.key);
+      expect(story(), ['berat-found']);
+      String found(String query) =>
+          searchArticles(query, progress).single.article.id;
+      expect(found('takipsizlik'), 'old-case');
+      expect(found('vakif'), 'foundation');
       expect(searchArticles('ta', progress), isEmpty);
       await progress.discover([StoryFlags.part1Done]);
-      expect(newArticleCount(progress), 2);
+      expect(story(), ['berat-murder', 'berat-found']);
+    });
+  });
+
+  group('News schedule', () {
+    NewsData news() => StoryData.current.news;
+    final firstOpen = DateTime(2026, 3, 2);
+    List<NewsItem> feedAt(DateTime now, {Set<String> flags = const {}}) =>
+        newsFeed(
+          news(),
+          firstOpen: firstOpen,
+          now: now,
+          meets: (c) => c.isMetBy(StoryState.of(flags)),
+        );
+    bool isFiller(NewsItem i) => news().filler.articles.contains(i.article);
+    bool shows(DateTime now, String id, {Set<String> flags = const {}}) =>
+        feedAt(now, flags: flags).any((i) => i.article.id == id);
+    // Long enough for every everyday article to run a few times.
+    DateTime muchLater() => firstOpen.add(
+      Duration(
+        hours: news().filler.maxHours * news().filler.articles.length * 3,
+      ),
+    );
+
+    test('everyday news is there from the start', () {
+      final feed = feedAt(firstOpen.add(const Duration(hours: 9)));
+      final everyday = feed.where(isFiller).toList();
+      expect(everyday, isNotEmpty);
+      expect(everyday.length, lessThanOrEqualTo(news().filler.keep));
+      final times = feed.map((i) => i.published).toList();
+      expect(times, [...times]..sort((a, b) => b.compareTo(a)));
+    });
+
+    test('scheduled news comes out on its day', () {
+      expect(shows(DateTime(2026, 3, 8, 23), 'one-week'), isFalse);
+      expect(shows(DateTime(2026, 3, 9, 8), 'one-week'), isTrue);
+      // Scheduled news can wait for the story too.
+      final late = DateTime(2026, 3, 20);
+      expect(shows(late, 'mezbaha-residents'), isFalse);
+      expect(
+        shows(late, 'mezbaha-residents', flags: {'mezbaha-found'}),
+        isTrue,
+      );
+    });
+
+    test('everyday news runs again once it has all run', () {
+      final later = muchLater();
+      final everyday = feedAt(later).where(isFiller).toList();
+      expect(everyday.length, news().filler.keep);
+      expect(everyday.every((i) => i.run >= 1), isTrue);
+      expect(everyday.map((i) => i.key).toSet().length, everyday.length);
+      // The schedule is the same every time it is worked out.
+      expect(
+        feedAt(later).map((i) => i.key).toList(),
+        feedAt(later).map((i) => i.key).toList(),
+      );
+    });
+
+    test('the same everyday article never runs twice in a row', () {
+      final end = muchLater();
+      for (
+        var t = firstOpen;
+        t.isBefore(end);
+        t = t.add(const Duration(days: 1))
+      ) {
+        final ids = feedAt(t).where(isFiller).map((i) => i.article.id).toList();
+        for (var i = 1; i < ids.length; i++) {
+          expect(ids[i], isNot(ids[i - 1]), reason: '$t');
+        }
+      }
     });
   });
 }

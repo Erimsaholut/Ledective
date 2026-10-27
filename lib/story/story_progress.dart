@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/game_clock.dart';
 import 'dialogue.dart';
+import 'news_feed.dart';
 import 'story_data.dart';
 
 export 'story_flags.dart';
@@ -102,6 +104,13 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   final Set<String> _timersDone = {};
   DateTime? _lastTick;
 
+  /// When each story article reached the feed.
+  final Map<String, DateTime> _newsArrivals = {};
+
+  /// Scheduled and everyday news already in the feed, so only new ones
+  /// raise a banner. Null until the first tick.
+  Set<String>? _newsOnTick;
+
   /// Divides mission durations, so story writers can test quickly.
   bool fastMissions = false;
 
@@ -160,6 +169,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     _timers.clear();
     _timersDone.clear();
     _lastTick = null;
+    _newsArrivals.clear();
+    _newsOnTick = null;
     alerts.clear();
     fastMissions = prefs.getBool('fastMissions') ?? false;
 
@@ -194,6 +205,11 @@ class StoryProgress extends ChangeNotifier implements StoryState {
       _values.addAll((data['values'] as Map? ?? const {}).cast());
       _timers.addAll((data['timers'] as Map? ?? const {}).cast());
       _timersDone.addAll((data['timersDone'] as List? ?? const []).cast());
+      (data['news'] as Map<String, dynamic>? ?? const {}).forEach(
+        (id, time) => _newsArrivals[id] = DateTime.fromMillisecondsSinceEpoch(
+          time as int,
+        ),
+      );
     }
     notifyListeners();
   }
@@ -218,6 +234,10 @@ class StoryProgress extends ChangeNotifier implements StoryState {
         'values': _values,
         'timers': _timers,
         'timersDone': _timersDone.toList(),
+        'news': {
+          for (final e in _newsArrivals.entries)
+            e.key: e.value.millisecondsSinceEpoch,
+        },
       }),
     );
   }
@@ -265,11 +285,48 @@ class StoryProgress extends ChangeNotifier implements StoryState {
       for (final r in _story.recordings)
         if (meets(r.requires)) r.id,
     },
+    // Scheduled news arrives with time, see [_announceNews].
     'news': {
       for (final a in _story.news.articles)
-        if (!a.archive && meets(a.requires)) a.id,
+        if (!a.archive && a.dayOffset == null && meets(a.requires)) a.id,
     },
   };
+
+  /// The News feed right now, newest first.
+  List<NewsItem> newsFeedAt([DateTime? now]) => newsFeed(
+    _story.news,
+    firstOpen: GameClock.current.firstOpen,
+    now: now ?? DateTime.now(),
+    meets: meets,
+    arrivedAt: (id) => _newsArrivals[id],
+  );
+
+  /// Raises a banner for scheduled and everyday news that came out since
+  /// the last tick. Returns whether any did.
+  bool _announceNews(DateTime now) {
+    final items = {
+      for (final item in newsFeedAt(now))
+        if (item.article.dayOffset != null ||
+            _story.news.filler.articles.contains(item.article))
+          item.key: item,
+    };
+    final before = _newsOnTick;
+    _newsOnTick = items.keys.toSet();
+    if (before == null) return false;
+    var arrived = false;
+    for (final item in items.values) {
+      if (before.contains(item.key)) continue;
+      arrived = true;
+      alerts.push(
+        StoryAlert(
+          app: _story.news.outlet(item.article.outlet).name,
+          title: 'Gündem',
+          body: item.article.title,
+        ),
+      );
+    }
+    return arrived;
+  }
 
   /// Applies [effects] (see [Effect]) and raises a banner for everything
   /// that arrives because of them. Chats with [except] don't raise one (the
@@ -294,6 +351,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     final after = _snapshot();
     for (final MapEntry(key: kind, value: items) in after.entries) {
       for (final item in items.difference(before[kind]!)) {
+        if (kind == 'news') _newsArrivals[item] = DateTime.now();
         final alert = _alertFor(kind, item, except);
         if (alert != null) alerts.push(alert);
       }
@@ -632,6 +690,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   Future<void> tick({DateTime? now}) async {
     final time = now ?? DateTime.now();
     await completeDueMissions(now: time);
+    if (_announceNews(time)) notifyListeners();
     final last = _lastTick;
     _lastTick = time;
     if (last == null) return;

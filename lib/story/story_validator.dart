@@ -260,8 +260,17 @@ List<StoryIssue> validateStory(
   // News.
   final outletIds = {for (final o in story.news.outlets) o.id};
   final articleIds = <String>{};
-  for (final a in story.news.articles) {
+  final filler = story.news.filler;
+  for (final a in [...story.news.articles, ...filler.articles]) {
     final where = 'news.json › ${a.id}';
+    final isFiller = filler.articles.contains(a);
+    if (isFiller && (a.archive || a.dayOffset != null)) {
+      error(where, 'zamansız haberde "archive" ya da "dayOffset" olmaz');
+    }
+    if ((a.dayOffset ?? 0) < 0) error(where, '"dayOffset" eksi olamaz');
+    if (a.hour < 0 || a.hour > 23) {
+      error(where, '"hour" 0 ile 23 arasında olmalı');
+    }
     if (!articleIds.add(a.id)) error(where, 'bu kimlik iki kez kullanılmış');
     if (!outletIds.contains(a.outlet)) {
       error(where, '"${a.outlet}" diye bir yayın organı yok (outlets)');
@@ -270,6 +279,13 @@ List<StoryIssue> validateStory(
     sets(a.unlocksOnRead, where);
     asset(a.image, where);
     if (a.body.isEmpty && a.summary.isEmpty) warn(where, 'haberin metni yok');
+  }
+
+  if (filler.minHours < 1 || filler.maxHours < filler.minHours) {
+    error(
+      'news.json › filler',
+      '"minHours" en az 1, "maxHours" da en az "minHours" olmalı',
+    );
   }
 
   // State: locks, timers.

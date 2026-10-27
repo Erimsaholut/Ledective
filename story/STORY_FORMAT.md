@@ -317,6 +317,33 @@ değerlendirmesi yanlış, önyargılı ya da kasıtlı olabilir.
   özet, metin, yazar, gazete adı ve `tags` içinde yapılır. Oyuncunun
   aklına gelebilecek kelimeleri `tags`'e ekle.
 - `date` verilirse `daysAgo` yerine o yazı gösterilir ("14 Mart 2021").
+- `dayOffset` verilirse haber, oyunun ilk açıldığı günden o kadar gün sonra
+  `hour`'da (varsayılan 9) yayımlanır ve bildirim çıkarır:
+  `"dayOffset": 7, "hour": 8` bir hafta sonra sabah sekizde. `requires` ile
+  birlikte kullanılırsa ikisini de bekler.
+
+### Zamansız haberler (`filler`)
+
+Gündem hiç boş kalmasın diye dükkân açılışları, mahalle olayları, spor ve
+komik haberler bir havuzda durur:
+
+```json
+"filler": {
+  "minHours": 6, "maxHours": 30, "keep": 6,
+  "articles": [
+    {"id": "cakir-kebap", "outlet": "ekspres", "title": "...", "summary": "...", "body": ["..."]}
+  ]
+}
+```
+
+- Her `minHours`–`maxHours` saatte bir havuzdan bir haber yayımlanır.
+  Aralıklar ve sıra rastgeledir ama her oyuncu için sabittir.
+- Oyun başladığında son iki günün haberleri zaten akıştadır.
+- Akışta en son `keep` zamansız haber durur, eskileri düşer.
+- Havuz bitince karıştırılıp baştan yayımlanır. Aynı haber üst üste iki kez
+  gelmez ve her yeniden yayın okunmamış sayılır.
+- Zamansız haberlerde `archive` ve `dayOffset` kullanılmaz; `requires`
+  kullanılabilir (koşulu tutmayan haberin sırası atlanır).
 - Haberler yanlış, eksik ya da yönlendirilmiş olabilir. Bir gazetenin
   yazdığı her şey gerçek kabul edilmemeli.
 

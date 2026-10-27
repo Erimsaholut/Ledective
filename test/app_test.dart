@@ -19,6 +19,7 @@ import 'package:ledective/data/recent_calls.dart';
 import 'package:ledective/home/app_icon.dart';
 import 'package:ledective/main.dart';
 import 'package:ledective/story/dialogue.dart';
+import 'package:ledective/story/news_feed.dart';
 import 'package:ledective/story/story_progress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -293,7 +294,9 @@ void main() {
     final article = StoryData.current.news.articles.firstWhere(
       (a) => a.id == 'old-case',
     );
-    await tester.pumpWidget(MaterialApp(home: ArticlePage(article: article)));
+    await tester.pumpWidget(
+      MaterialApp(home: ArticlePage(item: NewsItem(article, DateTime(2023)))),
+    );
     await tester.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 100)),
     );

@@ -2,7 +2,9 @@
   "outlets": [
     {"id": "sehir-postasi", "name": "Şehir Postası", "color": "#B71C1C"},
     {"id": "gundem24", "name": "Gündem24", "color": "#0D47A1"},
-    {"id": "kampus", "name": "Kampüs Haber", "color": "#2E7D32"}
+    {"id": "kampus", "name": "Kampüs Haber", "color": "#2E7D32"},
+    {"id": "ekspres", "name": "Yeşilkent Ekspres", "color": "#E65100"},
+    {"id": "spor", "name": "Tribün Spor", "color": "#00695C"}
   ],
   "articles": [
     {
@@ -84,6 +86,348 @@
       "body": [
         "Arazinin bir inşaat şirketine kiralanacağı iddia edilirken belediye konuyla ilgili açıklama yapmadı."
       ]
+    },
+    {
+      "id": "funeral",
+      "outlet": "gundem24",
+      "title": "Berat Yılmaz son yolculuğuna uğurlandı",
+      "summary": "Cenaze törenine siyasetçiler ve öğrenciler katıldı. Milletvekili Yılmaz basına konuşmadı.",
+      "author": "Gündem24 Haber Merkezi",
+      "dayOffset": 1,
+      "hour": 11,
+      "tags": ["berat", "cenaze", "yılmaz", "danışman"],
+      "body": [
+        "Berat Yılmaz için memleketinde düzenlenen törene kalabalık bir siyasetçi grubu katıldı. Arkadaşlarının bir kısmının törene alınmadığı öğrenildi.",
+        "Milletvekili Yılmaz, gazetecilerin sorularını yanıtsız bıraktı. Tören boyunca yanından ayrılmayan danışmanının, objektiflere el kaldırarak çekimi engellemeye çalıştığı görüldü."
+      ]
+    },
+    {
+      "id": "mp-speaks",
+      "outlet": "gundem24",
+      "title": "Milletvekili Yılmaz ilk kez konuştu: \"Oğlumun katilleri bulunacak\"",
+      "summary": "Yılmaz, soruşturmanın \"gereksiz ayrıntılarla\" uzatılmaması gerektiğini söyledi.",
+      "author": "Gündem24 Haber Merkezi",
+      "dayOffset": 3,
+      "hour": 19,
+      "tags": ["yılmaz", "milletvekili", "açıklama"],
+      "body": [
+        "Oğlunun ölümünün ardından ilk kez kameraların karşısına geçen Yılmaz, emniyete güvendiğini söyledi.",
+        "\"Ailemin acısının istismar edilmesine, oğlumun hayatının magazin malzemesi yapılmasına izin vermeyeceğim. Soruşturma gereksiz ayrıntılarla uzatılmamalı\" dedi."
+      ]
+    },
+    {
+      "id": "campus-vigil",
+      "outlet": "kampus",
+      "title": "Kampüste sessiz yürüyüş: \"Bizi de dinleyin\"",
+      "summary": "Öğrenciler Berat Yılmaz için yürüdü. Bazı pankartlarda başka isimler de vardı.",
+      "author": "Kampüs Haber",
+      "dayOffset": 4,
+      "hour": 16,
+      "tags": ["kampüs", "öğrenci", "kayıp", "yürüyüş", "rektörlük"],
+      "body": [
+        "Rektörlük binası önünde toplanan öğrenciler sessiz bir yürüyüş yaptı.",
+        "Yürüyüşte taşınan pankartların bazılarında, son iki yılda kampüste \"kayıp\" olarak bildirilen iki öğrencinin adı yazıyordu. Rektörlük, pankartların \"etkinliğin amacı dışında\" olduğunu açıkladı."
+      ]
+    },
+    {
+      "id": "one-week",
+      "outlet": "sehir-postasi",
+      "title": "Berat Yılmaz dosyasında bir hafta geride kaldı",
+      "summary": "Soru işaretleri büyüyor: dosyayı yöneten amir hâlâ yurt dışında.",
+      "author": "Selin Aras",
+      "dayOffset": 7,
+      "hour": 8,
+      "tags": ["berat", "soruşturma", "ankara", "amir"],
+      "body": [
+        "Ölümün üzerinden bir hafta geçti. Emniyet, soruşturmanın \"titizlikle\" sürdüğünü söylüyor; ancak dosyanın amirinin hâlâ yurt dışından çalıştığı biliniyor.",
+        "Kulislerde, Ankara’dan gelen telefonların dosyanın seyrini etkilediği konuşuluyor."
+      ]
+    },
+    {
+      "id": "mezbaha-residents",
+      "outlet": "sehir-postasi",
+      "title": "Sanayi sakinleri tedirgin: \"Geceleri o binada ışık yanıyordu\"",
+      "summary": "Eski mezbahanın çevresinde yaşayanlar yıllardır şikâyet ettiklerini anlattı.",
+      "author": "Selin Aras",
+      "dayOffset": 2,
+      "hour": 10,
+      "requires": "mezbaha-found",
+      "tags": ["mezbaha", "sanayi", "belediye", "dilekçe"],
+      "body": [
+        "Sanayi sitesinde dükkânı olan esnaf, kapalı olması gereken mezbahada aylardır gece ışık gördüklerini, belediyeye iki kez dilekçe verdiklerini söyledi.",
+        "Belediye, dilekçelerin \"ilgili birime iletildiğini\" açıkladı."
+      ]
     }
-  ]
+  ],
+  "filler": {
+    "minHours": 6,
+    "maxHours": 30,
+    "keep": 6,
+    "articles": [
+      {
+        "id": "cakir-kebap",
+        "outlet": "ekspres",
+        "title": "Yeşilkent’e \"Çakır Kebap\" açıldı, kuyruk köşeyi döndü",
+        "summary": "Sahibi, isim konusunda \"Bilenler bilir\" demekle yetindi.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["açılış", "kebap", "yeşilkent", "dükkan"],
+        "body": [
+          "Yeşilkent Caddesi’nde açılan kebapçının önünde ilk gün uzun kuyruklar oluştu.",
+          "İsmin bir dizi karakterinden mi geldiği sorusuna işletme sahibi Ramazan Usta gözlüklerini düzelterek \"Bilenler bilir\" yanıtını verdi. İlk 50 müşteriye ayran bedava."
+        ]
+      },
+      {
+        "id": "memati-wash",
+        "outlet": "ekspres",
+        "title": "Sanayide \"Memati Oto Yıkama\" hizmete girdi",
+        "summary": "\"Abi\" diye seslenen müşteriye yüzde 10 indirim.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["açılış", "oto yıkama", "sanayi", "memati"],
+        "body": [
+          "Sanayi sitesinde açılan oto yıkamacının sahibi, kampanyayı \"saygı çerçevesinde\" düzenlediklerini söyledi.",
+          "\"Abi\" yerine \"kardeşim\" diyen müşterilerin indirimden yararlanamayacağı belirtildi. İşletmede çalışan dört kişinin hepsinin lakabı \"Memo\"."
+        ]
+      },
+      {
+        "id": "laz-ziya-okey",
+        "outlet": "ekspres",
+        "title": "Kıraathanedeki okey turnuvasının finali üç gün sürdü",
+        "summary": "Laz Ziya Kıraathanesi’ndeki final, taşların \"kaybolması\" nedeniyle iki kez ertelendi.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["kıraathane", "okey", "turnuva", "laz ziya"],
+        "body": [
+          "Mahallenin en eski kahvehanesinde düzenlenen turnuvada finalistler üç gün boyunca masadan kalkmadı.",
+          "Kahvehane sahibi Ziya Bey, kaybolan iki okey taşının \"masanın altında değil, birilerinin cebinde\" olduğunu iddia etti. Kazanan, ödül olarak bir yıl bedava çay hakkı kazandı."
+        ]
+      },
+      {
+        "id": "polat-fanclub",
+        "outlet": "ekspres",
+        "title": "Dizi hayranları kulübünün ilk toplantısı sessizlik içinde geçti",
+        "summary": "Üyeler dört saat boyunca birbirine ağır ağır baktı.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["hayran", "kulüp", "dizi", "polat"],
+        "body": [
+          "Takım elbiseli 23 üyenin katıldığı toplantıda kimse ilk sözü almak istemedi.",
+          "Kulüp başkanı, toplantının \"çok verimli\" geçtiğini, bir sonraki buluşmada \"belki konuşulabileceğini\" söyledi. Toplantı mekânındaki garson, siparişleri el işaretleriyle aldığını anlattı."
+        ]
+      },
+      {
+        "id": "abdulhey-hair",
+        "outlet": "ekspres",
+        "title": "Yeni kuaför ilk müşterisine bedava fön çekti",
+        "summary": "\"Abdülhey Saç Tasarım\" açılış gününde 80 müşteri ağırladı.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["açılış", "kuaför", "çarşı", "abdülhey"],
+        "body": [
+          "Çarşı içinde açılan kuaförün sahibi, ismi ağabeyinin önerdiğini, kendisinin dizi izlemediğini söyledi.",
+          "Müşterilerden biri, \"İsmini duyunca girmeye korktum ama fön gerçekten güzel\" dedi."
+        ]
+      },
+      {
+        "id": "retired-commissioner",
+        "outlet": "sehir-postasi",
+        "title": "Emekli komiser anılarını yazdı: \"Ankara’da dosyalar sabaha karşı çözülürdü\"",
+        "summary": "Kitabın en çok konuşulan bölümü, ekibine her sabah çorba ısmarlayan bir amir hakkında.",
+        "author": "Şehir Postası Kültür",
+        "tags": ["emekli", "komiser", "ankara", "kitap", "anı"],
+        "body": [
+          "Otuz yıl Ankara’da cinayet büroda görev yapan emekli komiser, anılarını kitaplaştırdı.",
+          "Kitapta adı verilmeyen, \"B.Ç.\" diye anılan, kaba ama hiçbir dosyayı yarım bırakmayan bir amirden uzun uzun bahsediliyor. Yazar, \"Öyle amir bir daha gelmez, gelse de kimse çekemez\" diyor."
+        ]
+      },
+      {
+        "id": "soup-shop",
+        "outlet": "ekspres",
+        "title": "İşkembeci 24 saat açık kalma kararı aldı",
+        "summary": "\"Gece üçte gelen polisleri geri çeviremeyiz\" dedi.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["işkembe", "çorba", "polis", "gece"],
+        "body": [
+          "Merkezdeki işkembecinin sahibi, emniyete yakınlığı nedeniyle gece vardiyasındaki polislerin en sadık müşterileri olduğunu söyledi.",
+          "İşletme duvarına asılan \"Hesabı amir öder\" yazısının ise \"tamamen şaka\" olduğu açıklandı."
+        ]
+      },
+      {
+        "id": "crosswalk",
+        "outlet": "ekspres",
+        "title": "Belediye yeni yaya geçidini yanlışlıkla nehrin üstüne çizdi",
+        "summary": "Belediye, hatanın \"ölçü biriminden\" kaynaklandığını açıkladı.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["belediye", "yaya geçidi", "nehir", "köprü"],
+        "body": [
+          "Köprü yenileme çalışmaları sırasında çizilen yaya geçidinin bir ucu karaya, diğer ucu nehrin ortasına çıkıyor.",
+          "Mahalle sakinleri geçidin önüne \"Yüzme bilmeyen geçmesin\" yazılı bir tabela astı."
+        ]
+      },
+      {
+        "id": "lost-umbrellas",
+        "outlet": "ekspres",
+        "title": "Kayıp eşya bürosunda 143 şemsiye birikti",
+        "summary": "Hiçbiri sahibine teslim edilemedi. Büro, \"yağmurlu bir günde kapıda dağıtacağız\" dedi.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["kayıp eşya", "otogar", "şemsiye"],
+        "body": [
+          "Otogar kayıp eşya bürosunda son bir yılda 143 şemsiye, 61 eldiven ve bir adet akordiyon toplandı.",
+          "Akordiyonun sahibinin aranmadığı, büro çalışanlarının öğle aralarında akordiyonu \"idare ettiği\" öğrenildi."
+        ]
+      },
+      {
+        "id": "derby-draw",
+        "outlet": "spor",
+        "title": "Yeşilkentspor üst üste 12. kez berabere kaldı",
+        "summary": "Teknik direktör: \"Beraberlik bir felsefedir.\"",
+        "author": "Tribün Spor",
+        "tags": ["spor", "futbol", "yeşilkentspor", "maç"],
+        "body": [
+          "Yerel lig ekibi Yeşilkentspor, sezonun on ikinci maçını da 1-1 bitirdi.",
+          "Teknik direktör basın toplantısında \"Ne yeniliyoruz ne yeniyoruz. Bu da bir duruştur\" dedi. Taraftarlar maç sonunda \"Bir kere de kazanın\" tezahüratı yaptı."
+        ]
+      },
+      {
+        "id": "escalator",
+        "outlet": "ekspres",
+        "title": "AVM açılışında yürüyen merdiven ters çalıştı",
+        "summary": "Davetliler kurdele kesimine yarım saat geç yetişti.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["açılış", "avm", "alışveriş", "belediye başkanı"],
+        "body": [
+          "Şehrin yeni alışveriş merkezinin açılışında, protokolün bindiği yürüyen merdivenin aşağı doğru çalıştığı fark edildi.",
+          "Belediye başkanının merdiveni üç kez çıkmaya çalıştığı anlar sosyal medyada en çok paylaşılan görüntüler oldu."
+        ]
+      },
+      {
+        "id": "cafeteria",
+        "outlet": "kampus",
+        "title": "Yemekhanede \"pilavlı tavuk\" krizi",
+        "summary": "Menüde tavuklu pilav yazıyordu, tabakta pilavlı tavuk vardı.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "yemekhane", "öğrenci", "menü"],
+        "body": [
+          "Öğrenciler, menüyle tabak arasındaki \"oran farkını\" dilekçeyle rektörlüğe bildirdi.",
+          "Yemekhane müdürü, \"Malzeme aynı, sıralama farklı. Bu bir felsefe meselesi\" açıklamasını yaptı."
+        ]
+      },
+      {
+        "id": "cat-professor",
+        "outlet": "kampus",
+        "title": "Kayıp kedi \"Profesör\", senato toplantısında bulundu",
+        "summary": "Kampüsün maskotu üç gündür aranıyordu.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "kedi", "senato", "maskot"],
+        "body": [
+          "Fen fakültesinin kedisi Profesör, senato toplantı salonunda rektörün koltuğunda uyurken bulundu.",
+          "Toplantının, kediyi uyandırmamak için yan salonda yapıldığı öğrenildi."
+        ]
+      },
+      {
+        "id": "simit-price",
+        "outlet": "ekspres",
+        "title": "Simide zam tartışması fırına taşındı",
+        "summary": "Fırıncı: \"Susamı ben mi ektim?\"",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["fırın", "simit", "zam", "mahalle"],
+        "body": [
+          "Mahalle fırınının simit fiyatını artırması, sabah kuyruğunda tartışmaya yol açtı.",
+          "Fırıncı, susam fiyatlarını gösteren bir grafiği vitrine asarak müşterileri ikna etmeye çalıştı. Grafiğin eksenlerinin ters çizildiği fark edilince tartışma büyüdü."
+        ]
+      },
+      {
+        "id": "muhtar-group",
+        "outlet": "ekspres",
+        "title": "Muhtar mahalle WhatsApp grubundan çıkarıldı",
+        "summary": "Yöneticiliği kimin aldığı hâlâ bilinmiyor.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["muhtar", "whatsapp", "mahalle"],
+        "body": [
+          "Mahalle muhtarı, yıllardır yöneticisi olduğu gruptan bir sabah çıkarılmış olarak uyandı.",
+          "Muhtar, olayın \"içeriden\" yapıldığını düşündüğünü, gruba geri eklenmezse \"kapı kapı dolaşacağını\" söyledi."
+        ]
+      },
+      {
+        "id": "tractor-drive",
+        "outlet": "ekspres",
+        "title": "Çiftçi traktörüyle hamburgercinin araç kuyruğuna girdi",
+        "summary": "Siparişi: 14 menü, hepsi büyük boy.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["traktör", "hamburger", "çiftçi"],
+        "body": [
+          "Hasat sonrası işçilerine yemek almak isteyen çiftçi, şehir girişindeki hamburgercinin araç kuyruğuna traktörüyle girdi.",
+          "Görevliler siparişi pencere yerine römorka teslim etti."
+        ]
+      },
+      {
+        "id": "wedding-band",
+        "outlet": "ekspres",
+        "title": "Düğün orkestrası 2000’lerin dizi müzikleriyle rekor kırdı",
+        "summary": "Halay, en bilinen jenerik müziğinde sekiz dakika sürdü.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["düğün", "orkestra", "dizi", "müzik"],
+        "body": [
+          "Hafta sonu düğün salonunda çalan orkestra, repertuvarını tamamen eski dizi müziklerinden oluşturdu.",
+          "Bir dizinin jenerik müziği çalarken pistteki herkesin aynı anda \"ağır adımlarla\" yürümeye başladığı anlar kayda alındı."
+        ]
+      },
+      {
+        "id": "akbaba-pigeons",
+        "outlet": "ekspres",
+        "title": "Emniyet çatısındaki güvercinler için dilekçe",
+        "summary": "Personel, araçların her sabah \"bombardımana\" uğradığından şikâyetçi.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["emniyet", "güvercin", "dilekçe"],
+        "body": [
+          "İl emniyet binasının çatısına yerleşen güvercin sürüsü için müdürlüğe ortak dilekçe verildi.",
+          "Dilekçede, sürünün başındaki iri güvercine personel arasında \"Akbaba\" lakabının takıldığı da yer aldı."
+        ]
+      },
+      {
+        "id": "streetlights",
+        "outlet": "sehir-postasi",
+        "title": "Sanayi sitesinde sokak lambaları yine yanmıyor",
+        "summary": "Esnaf, karanlıkta kapanış yapmaktan bıktı.",
+        "author": "Şehir Postası",
+        "tags": ["sanayi", "sokak lambası", "elektrik", "esnaf"],
+        "body": [
+          "Sanayi sitesindeki sokak lambaları üç haftadır yanmıyor. Esnaf, akşam altıdan sonra dükkânlarını el fenerleriyle kapattıklarını söylüyor.",
+          "Elektrik dağıtım şirketi, arızanın \"planlı bir çalışma\" kapsamında olduğunu açıkladı; çalışmanın ne zaman biteceği belirtilmedi."
+        ]
+      },
+      {
+        "id": "weather",
+        "outlet": "ekspres",
+        "title": "Meteoroloji: Yağmur bekleniyor, bekleniyor, bekleniyor",
+        "summary": "Üç haftadır beklenen yağmur yine gelmedi.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["hava durumu", "yağmur", "meteoroloji"],
+        "body": [
+          "Meteoroloji müdürlüğü üst üste yirminci kez \"yarın yağmur bekleniyor\" uyarısı yaptı.",
+          "Şemsiye satıcıları ise kayıp eşya bürosundaki 143 şemsiyenin piyasayı olumsuz etkilediğinden yakındı."
+        ]
+      },
+      {
+        "id": "chess-teahouse",
+        "outlet": "ekspres",
+        "title": "Çay ocağında satranç masası açıldı, ilk gün kimse kazanamadı",
+        "summary": "Bütün oyunlar beraberlikle bitti. Yeşilkentspor taraftarları \"Bizden etkilendiler\" dedi.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["satranç", "çay ocağı", "belediye"],
+        "body": [
+          "Belediyenin hediye ettiği satranç masasında ilk gün on bir oyun oynandı, hepsi pat ile bitti.",
+          "Masanın başındaki yaşlı bir müşterinin, rakiplerine hamle öncesi uzun uzun bakıp \"Sen bilirsin\" demesi kurala aykırı bulunmadı."
+        ]
+      },
+      {
+        "id": "bakery-opening",
+        "outlet": "ekspres",
+        "title": "Merkeze ekşi mayalı fırın açıldı: \"Ekmeği bekletin\"",
+        "summary": "Fırın, ekmeklerin \"dinlendirilmeden yenmemesi\" konusunda müşterilerini uyarıyor.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["açılış", "fırın", "ekmek", "dükkan"],
+        "body": [
+          "Yeni açılan fırının sahibi, İstanbul’daki işini bırakıp memleketine döndüğünü söyledi.",
+          "Fırının kapısında asılı kurallar listesinin on yedi madde olması, mahalle sakinleri arasında espri konusu oldu."
+        ]
+      }
+    ]
+  }
 }
