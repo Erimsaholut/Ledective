@@ -163,6 +163,7 @@
       "id": "leak-toxicology",
       "outlet": "sehir-postasi",
       "requires": "toxicology",
+      "afterMinutes": 3,
       "title": "Berat Yılmaz’a ölmeden önce ilaç verilmiş",
       "summary": "Şehir Postası’nın ulaştığı toksikoloji raporuna göre genç adam öldürülmeden önce bayıltıldı.",
       "author": "Selin Aras",
@@ -176,6 +177,7 @@
       "id": "leak-plate",
       "outlet": "sehir-postasi",
       "requires": "plate:mv",
+      "afterMinutes": 3,
       "title": "Cinayet soruşturmasında Meclis aracı iddiası",
       "summary": "06 MV 1907 plakalı makam aracının şüpheli bir isimle görüştüğü ileri sürüldü.",
       "author": "Selin Aras",
@@ -190,6 +192,7 @@
       "id": "families-anonymous",
       "outlet": "sehir-postasi",
       "requires": "press:anonymous",
+      "afterMinutes": 4,
       "title": "\"Kızım cuma görüşürüz dedi, bir daha aramadı\"",
       "summary": "Kayıp bir öğrencinin annesi Şehir Postası’na konuştu. Aile kimliğinin açıklanmasını istemedi.",
       "author": "Selin Aras",
@@ -203,6 +206,7 @@
       "id": "families-named",
       "outlet": "sehir-postasi",
       "requires": "press:named",
+      "afterMinutes": 4,
       "title": "Mezbahadaki fotoğraflardaki öğrenciler kim?",
       "summary": "Şehir Postası iki kayıp öğrencinin kimliğini ve ailelerinin anlattıklarını yayımladı.",
       "author": "Selin Aras",
@@ -216,6 +220,7 @@
       "id": "kerem-arrested",
       "outlet": "gundem24",
       "requires": "kerem:arrested",
+      "afterMinutes": 5,
       "title": "Berat Yılmaz cinayetinde gözaltı",
       "summary": "Emniyet, milletvekilinin oğlunun ölümüyle ilgili 24 yaşındaki bir şüpheliyi gözaltına aldı.",
       "author": "Gündem24 Haber Merkezi",
@@ -229,6 +234,7 @@
       "id": "melis-rescued",
       "outlet": "sehir-postasi",
       "requires": "girl:rescued",
+      "afterMinutes": 6,
       "title": "Kayıp öğrenci sanayideki depoda sağ bulundu",
       "summary": "Bir aydır kayıp olan üniversite öğrencisi Melis D., eski bir soğuk hava deposunda bulundu.",
       "author": "Selin Aras",
@@ -242,6 +248,7 @@
       "id": "storage-dead",
       "outlet": "sehir-postasi",
       "requires": "girl:found-dead",
+      "afterMinutes": 6,
       "title": "Sanayideki depoda kayıp öğrencinin cansız bedeni bulundu",
       "summary": "Bir aydır aranan üniversite öğrencisinin ölümüyle ilgili soruşturma başlatıldı.",
       "author": "Selin Aras",
@@ -252,6 +259,7 @@
       "id": "tapes",
       "outlet": "sehir-postasi",
       "requires": "phone:press",
+      "afterMinutes": 2,
       "title": "Milletvekilinin sesi: \"Bu çocuğu susturun\"",
       "summary": "Şehir Postası, Berat Yılmaz’ın ölmeden önce yaptığı kayıtları yayımladı.",
       "author": "Selin Aras",
@@ -265,6 +273,7 @@
       "id": "foundation-raid",
       "outlet": "gundem24",
       "requires": ["coverup:exposed", "phone:prosecutor"],
+      "afterMinutes": 5,
       "title": "Yılmaz Vakfı’na savcılık operasyonu",
       "summary": "Vakfın genel müdürü Halit Yener gözaltına alındı.",
       "author": "Gündem24 Haber Merkezi",
@@ -278,6 +287,7 @@
       "id": "danisman-fled",
       "outlet": "gundem24",
       "requires": "danisman:fled",
+      "afterMinutes": 3,
       "title": "Vakıf müdürü yurt dışına çıktı",
       "summary": "Halit Yener’in kayıtlar yayımlandıktan saatler sonra ülkeden ayrıldığı öğrenildi.",
       "author": "Gündem24 Haber Merkezi",
@@ -288,6 +298,7 @@
       "id": "emre-rescued",
       "outlet": "sehir-postasi",
       "requires": "emre:rescued",
+      "afterMinutes": 6,
       "title": "İkinci kayıp öğrenci bir çiftlik evinin bodrumunda bulundu",
       "summary": "Emre Y. sağ olarak kurtarıldı.",
       "author": "Selin Aras",
@@ -298,6 +309,7 @@
       "id": "adil-dead",
       "outlet": "sehir-postasi",
       "requires": "adil:dead",
+      "afterMinutes": 5,
       "title": "Sanayide bir adam ölü bulundu",
       "summary": "Uyuşturucu ve gasp suçlarından sabıkalı Adil K. sabaha karşı ölü bulundu.",
       "author": "Selin Aras",
@@ -308,6 +320,7 @@
       "id": "detective-suspended",
       "outlet": "gundem24",
       "requires": "status:suspended",
+      "afterMinutes": 4,
       "title": "Berat Yılmaz soruşturmasını yürüten amir görevden uzaklaştırıldı",
       "summary": "Emniyet, amirin basına bilgi sızdırdığı iddiasıyla idari soruşturma başlattı.",
       "author": "Gündem24 Haber Merkezi",
@@ -318,9 +331,10 @@
     }
   ],
   "filler": {
-    "minHours": 6,
-    "maxHours": 30,
-    "keep": 6,
+    "minMinutes": 5,
+    "maxMinutes": 14,
+    "start": 5,
+    "keep": 8,
     "articles": [
       {
         "id": "cakir-kebap",
@@ -585,6 +599,440 @@
           "Yeni açılan fırının sahibi, İstanbul’daki işini bırakıp memleketine döndüğünü söyledi.",
           "Fırının kapısında asılı kurallar listesinin on yedi madde olması, mahalle sakinleri arasında espri konusu oldu."
         ]
+      },
+      {
+        "id": "kebab-war",
+        "outlet": "ekspres",
+        "title": "Aynı sokağa ikinci kebapçı açıldı: \"Çakır\" ile \"Polat\" karşı karşıya",
+        "summary": "İki usta da birbirinin adını anmamaya özen gösteriyor.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["kebap", "dükkan", "rekabet"],
+        "body": [
+          "Yeşilkent Caddesi’nde Çakır Kebap’ın tam karşısına \"Polat Ocakbaşı\" açıldı.",
+          "İki dükkânın çırakları sabahları kaldırımda selamlaşmadan su döküyor. Mahalleli ise \"Biz iki taraftan da yeriz\" diyerek tarafsızlığını koruyor."
+        ]
+      },
+      {
+        "id": "vali-cay",
+        "outlet": "ekspres",
+        "title": "Kıraathanede \"kim haklı\" tartışması dört saat sürdü",
+        "summary": "Tartışmanın konusu en sonunda kimse tarafından hatırlanmadı.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["kıraathane", "tartışma"],
+        "body": [
+          "Merkezdeki kıraathanede başlayan tartışma, ocakçının \"Çaylar soğudu\" uyarısıyla sona erdi.",
+          "Masadakilerden biri \"Bu memlekette herkes haklı, o yüzden kimse haklı değil\" dedi ve hesabı ödemeden çıktı."
+        ]
+      },
+      {
+        "id": "pala-barber",
+        "outlet": "ekspres",
+        "title": "Berberde \"Pala\" tıraşı yeniden moda",
+        "summary": "Gençler bıyık bırakmaya, berberler makas bilemeye başladı.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["berber", "moda", "bıyık"],
+        "body": [
+          "Merkezdeki berberler son haftalarda \"eski dizi bıyığı\" isteyen müşteri sayısının arttığını söylüyor.",
+          "Berber Cemil Usta, \"Bıyık bırakmak kolay, taşımak zor\" dedi."
+        ]
+      },
+      {
+        "id": "lost-dog",
+        "outlet": "ekspres",
+        "title": "Kayıp köpek \"Komiser\", karakolun önünde bulundu",
+        "summary": "Sahibi, köpeğin her gün aynı saatte karakola gittiğini anlattı.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["kayıp", "köpek", "karakol"],
+        "body": [
+          "Üç gündür aranan \"Komiser\" isimli golden cinsi köpek, merkez karakolunun önünde nöbet tutarken bulundu.",
+          "Nöbetçi memur, \"Bizden daha düzenli geliyordu\" dedi."
+        ]
+      },
+      {
+        "id": "traffic-light",
+        "outlet": "ekspres",
+        "title": "Kavşaktaki trafik lambası 9 dakika kırmızıda kaldı",
+        "summary": "Sürücüler beklerken araçtan inip çay içti.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["trafik", "belediye"],
+        "body": [
+          "Sanayi kavşağındaki trafik lambası arıza nedeniyle dokuz dakika boyunca kırmızı yandı.",
+          "Araçtan inen bir sürücü, \"Ben zaten hayatta hep kırmızıda bekledim\" diyerek felsefi bir yorum yaptı."
+        ]
+      },
+      {
+        "id": "pigeon-race",
+        "outlet": "ekspres",
+        "title": "Güvercin yarışında favori güvercin eve dönmedi",
+        "summary": "Sahibi \"Kendi yolunu çizdi\" diyerek gururlandı.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["güvercin", "yarış"],
+        "body": [
+          "Geleneksel güvercin yarışında favori gösterilen \"Kara Murat\" bitiş çizgisine hiç ulaşmadı.",
+          "Sahibi, \"Belki de bir yerde ona daha çok yem veriyorlardır\" dedi."
+        ]
+      },
+      {
+        "id": "noodle-shop",
+        "outlet": "ekspres",
+        "title": "Merkeze ilk ramen dükkânı açıldı, mahalleli çorba sandı",
+        "summary": "Dükkân sahibi menüye mercimek de ekledi.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["açılış", "ramen", "dükkan"],
+        "body": [
+          "Uzak Doğu mutfağı sunan dükkânın ilk gününde müşterilerin çoğu limon istedi.",
+          "İşletme, ikinci hafta menüsüne \"mercimek ramen\" ekleyerek uyum sağladı."
+        ]
+      },
+      {
+        "id": "tea-price",
+        "outlet": "ekspres",
+        "title": "Çay ocakları arasında \"bardak boyu\" tartışması",
+        "summary": "Fiyat aynı kaldı, bardaklar küçüldü.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["çay", "zam"],
+        "body": [
+          "Sanayi sitesindeki çay ocaklarında fiyat değişmezken bardakların küçüldüğü fark edildi.",
+          "Esnaftan Rıza Bey, \"Ben bu bardaktan iki yudumda bitiriyorum, hesap üç çay\" dedi."
+        ]
+      },
+      {
+        "id": "hamam",
+        "outlet": "ekspres",
+        "title": "Tarihi hamam restorasyondan sonra yeniden açıldı",
+        "summary": "Natırlar eski usulü sürdürüyor: \"Kese sert olacak.\"",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["hamam", "açılış", "tarih"],
+        "body": [
+          "Yüz yıllık hamam iki yıllık restorasyonun ardından kapılarını açtı.",
+          "İlk gün gelen müşteriler, yenilenen kubbeden çok eski natırın kese hızından bahsetti."
+        ]
+      },
+      {
+        "id": "karaoke",
+        "outlet": "ekspres",
+        "title": "Karaoke gecesinde en çok \"Yine bir gülnihal\" söylendi",
+        "summary": "Mikrofonu bırakmayan bir emekli memur geceye damga vurdu.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["eğlence", "karaoke", "müzik"],
+        "body": [
+          "Kültür merkezindeki karaoke gecesine iki yüzü aşkın kişi katıldı.",
+          "Mikrofonu bir saat boyunca bırakmayan emekli memur, \"Sesim yok ama hissim var\" dedi."
+        ]
+      },
+      {
+        "id": "simit-delivery",
+        "outlet": "ekspres",
+        "title": "Simitçi motokuryeyle eve servise başladı",
+        "summary": "Sıcak teslim edilmezse simit bedava.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["simit", "dükkan", "servis"],
+        "body": [
+          "Merkezdeki simitçi, siparişleri motosikletle eve teslim etmeye başladı.",
+          "\"Dört dakikada gelmezse para almıyoruz\" diyen simitçi, ilk gün 30 simiti bedava dağıttı."
+        ]
+      },
+      {
+        "id": "library-cat",
+        "outlet": "kampus",
+        "title": "Kütüphanedeki kedi \"Tez\", öğrencilerden daha uzun süre kalıyor",
+        "summary": "Kedi, sınav haftasında en çok ziyaret edilen \"kaynak\" oldu.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "kedi", "kütüphane"],
+        "body": [
+          "Merkez kütüphanede yaşayan kedi \"Tez\", sabah açılıştan kapanışa kadar okuma salonunda bekliyor.",
+          "Öğrenciler, kedinin oturduğu masada çalışanların ortalamasının yükseldiğine inanıyor."
+        ]
+      },
+      {
+        "id": "exam-coffee",
+        "outlet": "kampus",
+        "title": "Final haftasında kantinde kahve bitti",
+        "summary": "Öğrenciler çay ile idare etmeye çalıştı.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "sınav", "kahve"],
+        "body": [
+          "Final haftasının üçüncü gününde kampüs kantininde hazır kahve stokları tükendi.",
+          "Bir öğrenci, \"Kahve yoksa sınav da olmasın\" yazılı pankartla kantin önünde fotoğraf çektirdi."
+        ]
+      },
+      {
+        "id": "campus-band",
+        "outlet": "kampus",
+        "title": "Öğrenci kulübü dizi müziklerinden konser verdi",
+        "summary": "Konserin en çok alkış alan parçası bir dizinin jenerik müziği oldu.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "konser", "müzik"],
+        "body": [
+          "Müzik kulübünün bahar konserinde 2000’lerin dizi müzikleri çalındı.",
+          "Bir jenerik müziği başladığında salondaki herkesin kafasını aynı anda sallaması konserin en çok konuşulan anı oldu."
+        ]
+      },
+      {
+        "id": "campus-parking",
+        "outlet": "kampus",
+        "title": "Kampüste bisiklet park yeri krizi",
+        "summary": "Bisikletler ağaçlara, ağaçlar bisikletlere bağlandı.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "bisiklet"],
+        "body": [
+          "Kampüste bisiklet kullanımının artmasıyla park yerleri yetersiz kaldı.",
+          "Bir öğrenci, bisikletini rektörlük binasının bayrak direğine bağladı."
+        ]
+      },
+      {
+        "id": "campus-cafeteria-2",
+        "outlet": "kampus",
+        "title": "Yemekhaneye \"puan sistemi\" geldi",
+        "summary": "Öğrenciler yemeğe en çok \"orta\" puan verdi.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "yemekhane"],
+        "body": [
+          "Yemekhanedeki yeni ekranlardan öğrenciler günün yemeğini puanlayabiliyor.",
+          "İlk haftanın sonuçlarına göre en yüksek puanı ayran aldı."
+        ]
+      },
+      {
+        "id": "derby-win",
+        "outlet": "spor",
+        "title": "Yeşilkentspor 12 maçlık beraberlik serisini bitirdi: 0-1 yenildi",
+        "summary": "Teknik direktör \"En azından bir şeyler değişti\" dedi.",
+        "author": "Tribün Spor",
+        "tags": ["futbol", "yeşilkentspor"],
+        "body": [
+          "Üst üste on iki beraberlik alan Yeşilkentspor, dün akşam deplasmanda 1-0 yenildi.",
+          "Taraftarlar maç sonunda \"Beraberlik özlemi\" yazılı pankart açtı."
+        ]
+      },
+      {
+        "id": "referee",
+        "outlet": "spor",
+        "title": "Amatör ligde hakem, kartını unuttu",
+        "summary": "Oyunculara sözlü uyarı vermekle yetindi.",
+        "author": "Tribün Spor",
+        "tags": ["futbol", "hakem", "amatör"],
+        "body": [
+          "Amatör lig maçında sarı kartını soyunma odasında unutan hakem, ikinci yarıda oyuncuları \"Bak sana kart gösteririm\" diye uyardı.",
+          "Maç olaysız tamamlandı."
+        ]
+      },
+      {
+        "id": "wrestling",
+        "outlet": "spor",
+        "title": "Yağlı güreşte başpehlivan \"Zaza\" unvanını korudu",
+        "summary": "Er meydanında zeytinyağı fiyatı da konuşuldu.",
+        "author": "Tribün Spor",
+        "tags": ["güreş", "spor"],
+        "body": [
+          "Geleneksel yağlı güreşlerde başpehlivanlığı üst üste ikinci kez kazanan pehlivan, kemeri annesine adadı.",
+          "Organizatörler, yağ fiyatlarının artması nedeniyle gelecek yıl \"az yağlı güreş\" konusunu tartışacak."
+        ]
+      },
+      {
+        "id": "marathon",
+        "outlet": "spor",
+        "title": "Şehir maratonunu yol kenarında çay dağıtan amca kazandı",
+        "summary": "Resmi olarak değil, ama herkesin gönlünde.",
+        "author": "Tribün Spor",
+        "tags": ["maraton", "koşu"],
+        "body": [
+          "Şehir maratonu boyunca koşuculara bedava çay dağıtan 72 yaşındaki Mehmet Amca, yarışın en çok alkışlanan ismi oldu.",
+          "\"Ben koşmam, koşana çay veririm\" diyen Mehmet Amca’ya belediye plaket verdi."
+        ]
+      },
+      {
+        "id": "chess-champion",
+        "outlet": "spor",
+        "title": "İl satranç şampiyonu 11 yaşında çıktı",
+        "summary": "Rakiplerinden biri \"Taşları bana mı veriyorsun\" diye sordu.",
+        "author": "Tribün Spor",
+        "tags": ["satranç", "spor", "çocuk"],
+        "body": [
+          "İl satranç turnuvasını 11 yaşındaki Elif Nur kazandı.",
+          "Final maçında rakibinin 30 yıllık oyuncu olduğunu öğrenen Elif Nur, \"Ne fark eder\" dedi."
+        ]
+      },
+      {
+        "id": "municipal-sign",
+        "outlet": "sehir-postasi",
+        "title": "Belediyenin yeni tabelasında yazım hatası: \"Hoşgeldiniz\"",
+        "summary": "Dilbilimciler \"ayrı yazılır\" diye belediyeye dilekçe verdi.",
+        "author": "Şehir Postası",
+        "tags": ["belediye", "tabela"],
+        "body": [
+          "Şehir girişine dikilen yeni tabelada \"hoş geldiniz\" ifadesinin bitişik yazılması tartışma yarattı.",
+          "Belediye, tabelanın \"samimiyet\" vurgusu için bilerek bitişik yazıldığını açıkladı."
+        ]
+      },
+      {
+        "id": "pothole",
+        "outlet": "sehir-postasi",
+        "title": "Çukura isim verdiler: \"Kemal\"",
+        "summary": "Mahalleli, çukur kapatılana kadar doğum gününü kutlamaya karar verdi.",
+        "author": "Şehir Postası",
+        "tags": ["belediye", "yol"],
+        "body": [
+          "Sanayi yolundaki dev çukura mahalle sakinleri \"Kemal\" adını verdi.",
+          "Çukurun birinci yaşı için pasta kesildi. Belediye, asfalt çalışmasının \"planlandığını\" bildirdi."
+        ]
+      },
+      {
+        "id": "bus-route",
+        "outlet": "sehir-postasi",
+        "title": "Yeni otobüs hattı açıldı, ilk sefere kimse binmedi",
+        "summary": "Şoför seferi tek başına tamamladı.",
+        "author": "Şehir Postası",
+        "tags": ["ulaşım", "belediye", "otobüs"],
+        "body": [
+          "Sanayi ile kampüs arasındaki yeni otobüs hattının ilk seferinde araç boş gitti.",
+          "Şoför Hüseyin Bey, \"Kendi kendime müzik dinledim, güzel oldu\" dedi."
+        ]
+      },
+      {
+        "id": "night-market",
+        "outlet": "sehir-postasi",
+        "title": "Gece pazarı ilk kez kuruldu",
+        "summary": "Domatesin gece daha ucuz olduğu iddia edildi.",
+        "author": "Şehir Postası",
+        "tags": ["pazar", "gece"],
+        "body": [
+          "Belediyenin denemesi olarak kurulan gece pazarı, mesai sonrası alışveriş yapmak isteyenleri ağırladı.",
+          "Bir pazarcı, \"Gece domates dinlenmiş olur, daha tatlı\" dedi."
+        ]
+      },
+      {
+        "id": "election-poster",
+        "outlet": "sehir-postasi",
+        "title": "Seçim afişleri yağmurda eridi",
+        "summary": "Adayların yüzleri birbirine karıştı.",
+        "author": "Şehir Postası",
+        "tags": ["siyaset", "afiş"],
+        "body": [
+          "Erken asılan seçim afişleri sağanak yağmur sonrası okunmaz hale geldi.",
+          "Bir vatandaş, \"Hepsi aynı adam gibi oldu, bence en dürüst afiş bu\" yorumunu yaptı."
+        ]
+      },
+      {
+        "id": "heritage",
+        "outlet": "sehir-postasi",
+        "title": "Eski un fabrikası kültür merkezi oluyor",
+        "summary": "Proje, mahallelinin \"fırın açın\" talebiyle tartışılıyor.",
+        "author": "Şehir Postası",
+        "tags": ["kültür", "tarih", "fabrika"],
+        "body": [
+          "Yıllardır boş duran un fabrikasının kültür merkezine dönüştürülmesi için proje hazırlandı.",
+          "Mahalle sakinleri, binanın girişine \"fırın da olsun\" yazılı bir not bıraktı."
+        ]
+      },
+      {
+        "id": "fake-police",
+        "outlet": "gundem24",
+        "title": "Kendini polis olarak tanıtan dolandırıcı, gerçek polise denk geldi",
+        "summary": "Dolandırıcı, telefonun öbür ucundaki komiserden \"kimlik numarası\" istedi.",
+        "author": "Gündem24",
+        "tags": ["dolandırıcılık", "polis", "telefon"],
+        "body": [
+          "\"Hesabınız terör örgütüne kullanılıyor\" diye arayan dolandırıcı, aradığı kişinin emniyette görevli bir komiser olduğunu fark etmedi.",
+          "Konuşma kayda alındı ve dolandırıcı iki saat sonra yakalandı."
+        ]
+      },
+      {
+        "id": "elevator",
+        "outlet": "gundem24",
+        "title": "Asansörde mahsur kalan kişi, içerideyken iş görüşmesini tamamladı",
+        "summary": "İşe alındığını kurtarıldıktan sonra öğrendi.",
+        "author": "Gündem24",
+        "tags": ["asansör", "iş"],
+        "body": [
+          "Plazanın asansöründe 40 dakika mahsur kalan genç, telefonla yaptığı iş görüşmesini sürdürdü.",
+          "İşveren, \"Baskı altında sakin kalabildiğini gördük\" diyerek işe alımı onayladı."
+        ]
+      },
+      {
+        "id": "wrong-wedding",
+        "outlet": "gundem24",
+        "title": "Davetli yanlış düğüne gitti, takı taktı, halay çekti",
+        "summary": "Gelin ile damat onu \"uzak akraba\" sandı.",
+        "author": "Gündem24",
+        "tags": ["düğün", "komik"],
+        "body": [
+          "Aynı salonun iki katında yapılan düğünlerde bir davetli yanlış kata çıktı.",
+          "Takısını taktıktan sonra durumu fark eden davetli, \"Mutlu olsunlar, emek emektir\" dedi."
+        ]
+      },
+      {
+        "id": "power-cut",
+        "outlet": "gundem24",
+        "title": "Elektrik kesintisinde mahalle sokakta mangal yaptı",
+        "summary": "Kesinti bitince kimse eve girmek istemedi.",
+        "author": "Gündem24",
+        "tags": ["elektrik", "kesinti", "mahalle"],
+        "body": [
+          "Dört saat süren elektrik kesintisinde buzdolapları çözülmeye başlayınca komşular sokakta mangal yaktı.",
+          "Mahalle muhtarı, \"Elektrik gelmese de olurmuş\" dedi."
+        ]
+      },
+      {
+        "id": "parrot",
+        "outlet": "gundem24",
+        "title": "Kayıp papağan, sahibinin telefon numarasını söyleyerek evine döndü",
+        "summary": "Papağanın ayrıca iki küfür bildiği ortaya çıktı.",
+        "author": "Gündem24",
+        "tags": ["kayıp", "papağan"],
+        "body": [
+          "Bulunduğu evde durmadan bir telefon numarası tekrarlayan papağan, sahibine bu sayede kavuştu.",
+          "Sahibi, papağanın öğrendiği diğer kelimeler için özür diledi."
+        ]
+      },
+      {
+        "id": "drone-cay",
+        "outlet": "gundem24",
+        "title": "Çay ocağı dronla sipariş taşımaya başladı",
+        "summary": "İlk teslimatta çay yarısına kadar döküldü.",
+        "author": "Gündem24",
+        "tags": ["teknoloji", "çay", "drone"],
+        "body": [
+          "Sanayi sitesinde bir çay ocağı, siparişleri dronla taşımayı denedi.",
+          "Kaldırımdaki çaycı, \"Tepsi daha güvenli\" diyerek eski usule döndü."
+        ]
+      },
+      {
+        "id": "mafia-series-tour",
+        "outlet": "gundem24",
+        "title": "Dizi mekânları turu ilgi görüyor",
+        "summary": "Turistler bir kafede saatlerce \"o sahnenin\" masasını bekledi.",
+        "author": "Gündem24",
+        "tags": ["dizi", "turizm"],
+        "body": [
+          "Eski bir mafya dizisinin çekildiği mekânlar için düzenlenen tur, hafta sonu dolup taştı.",
+          "Tur rehberi, \"Kurtlar uluyor, biz rehberlik ediyoruz\" dedi."
+        ]
+      },
+      {
+        "id": "sanayi-guard",
+        "outlet": "sehir-postasi",
+        "title": "Sanayi esnafı gece bekçisi tuttu",
+        "summary": "Esnaf, son olayların ardından nöbet çizelgesi hazırladı.",
+        "author": "Şehir Postası",
+        "tags": ["sanayi", "güvenlik", "esnaf"],
+        "body": [
+          "Sanayi sitesindeki esnaf, son günlerde yaşananların ardından ortak bir gece bekçisi tuttu.",
+          "Bekçi Necati Bey, \"Ben buradayken kimse o binalara giremez\" dedi."
+        ],
+        "requires": "mezbaha-found"
+      },
+      {
+        "id": "scholarship-fair",
+        "outlet": "kampus",
+        "title": "Burs fuarına bu yıl az ilgi",
+        "summary": "Öğrenciler vakıfların masalarının önünden hızlı geçti.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "burs", "vakıf"],
+        "body": [
+          "Her yıl düzenlenen burs fuarında bu sene öğrencilerin ilgisi beklenenin altında kaldı.",
+          "Bir öğrenci, \"Önce sözleşmeyi okuyoruz artık\" dedi."
+        ],
+        "requires": "coverup:exposed"
       }
     ]
   }

@@ -6,6 +6,7 @@ import 'package:ledective/apps/news/news_app.dart';
 import 'package:ledective/apps/poltel/poltel_app.dart';
 import 'package:ledective/apps/sinstagram/sinstagram_app.dart';
 import 'package:ledective/story/dialogue.dart';
+import 'package:ledective/story/drip_feed.dart';
 import 'package:ledective/story/news_feed.dart';
 import 'package:ledective/story/story_data.dart';
 import 'package:ledective/story/story_validator.dart';
@@ -356,6 +357,8 @@ void main() {
         DocumentCategory.personnel,
       });
       expect(progress.unreadCount('Özge'), 1);
+      expect(progress.awaitsReply('Özge'), isTrue);
+      expect(progress.chatsNeedingAttention, greaterThanOrEqualTo(1));
       expect(progress.restore('Orhun').$1.canReply, isFalse);
 
       await say('Özge', 'Neymiş bu kadar önemli olan durum');
@@ -363,7 +366,7 @@ void main() {
       await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
       expect(progress.has(StoryFlags.part1Done), isTrue);
       expect(caseFiles().map((d) => d.id), ['autopsy', 'deniz', 'yusuf']);
-      expect(progress.alerts.current, isNotNull, reason: 'Orhun wrote');
+      expect(progress.alerts.latest, isNotNull, reason: 'Orhun wrote');
       expect(progress.unreadCount('Orhun'), 1);
       expect(progress.unreadCount('Erdi'), 1);
 
@@ -393,6 +396,19 @@ void main() {
         "Adil'i nerede bulabiliriz?",
       ]);
       expect(progress.unreadCount('Behram'), 2);
+      // Each message has its own notification.
+      final behram = progress
+          .restore('Behram')
+          .$2
+          .whereType<IncomingMessage>()
+          .map((m) => m.text)
+          .toList();
+      expect(
+        progress.alerts.items
+            .where((a) => a.thread == 'Behram')
+            .map((a) => a.body),
+        behram.sublist(behram.length - 2),
+      );
       expect(progress.trait(Trait.curiosity), 4);
       expect(progress.trait(Trait.mercy), 1);
     });
@@ -434,7 +450,7 @@ void main() {
       expect(progress.has('ev:torn-photo'), isTrue);
       // The crime scene, plus the photo and the glass from the search.
       expect(newEvidenceCount(progress), 3);
-      expect(progress.alerts.current?.app, 'Harita');
+      expect(progress.alerts.items.first.app, 'Harita');
       expect(progress.missionOf('Atakan'), isNull);
       expect(
         await progress.startMission(task, 'Doğa'),
@@ -947,24 +963,8 @@ void main() {
           now: now,
           meets: (c) => c.isMetBy(StoryState.of(flags)),
         );
-    bool isFiller(NewsItem i) => news().filler.articles.contains(i.article);
     bool shows(DateTime now, String id, {Set<String> flags = const {}}) =>
         feedAt(now, flags: flags).any((i) => i.article.id == id);
-    // Long enough for every everyday article to run a few times.
-    DateTime muchLater() => firstOpen.add(
-      Duration(
-        hours: news().filler.maxHours * news().filler.articles.length * 3,
-      ),
-    );
-
-    test('everyday news is there from the start', () {
-      final feed = feedAt(firstOpen.add(const Duration(hours: 9)));
-      final everyday = feed.where(isFiller).toList();
-      expect(everyday, isNotEmpty);
-      expect(everyday.length, lessThanOrEqualTo(news().filler.keep));
-      final times = feed.map((i) => i.published).toList();
-      expect(times, [...times]..sort((a, b) => b.compareTo(a)));
-    });
 
     test('scheduled news comes out on its day', () {
       expect(shows(DateTime(2026, 3, 8, 23), 'one-week'), isFalse);
@@ -978,38 +978,131 @@ void main() {
       );
     });
 
-    test('everyday news runs again once it has all run', () {
-      final later = muchLater();
-      final everyday = feedAt(later).where(isFiller).toList();
+    test('only the latest everyday news stays in the feed', () {
+      final pool = news().filler.articles;
+      final feed = newsFeed(
+        news(),
+        firstOpen: firstOpen,
+        now: firstOpen,
+        meets: (_) => true,
+        filler: [
+          for (final (i, a) in pool.indexed)
+            NewsItem(a, firstOpen.subtract(Duration(minutes: i))),
+        ],
+      );
+      final everyday = feed.where((i) => pool.contains(i.article)).toList();
       expect(everyday.length, news().filler.keep);
-      expect(everyday.every((i) => i.run >= 1), isTrue);
-      expect(everyday.map((i) => i.key).toSet().length, everyday.length);
-      // The schedule is the same every time it is worked out.
+      expect(everyday.first.article, pool.first);
+    });
+  });
+
+  group('DripFeed', () {
+    final at = DateTime(2026, 3, 2);
+    final ids = [for (var i = 0; i < 6; i++) 'item$i'];
+
+    test('every item comes once before any comes again', () {
+      final feed = DripFeed();
+      for (var i = 0; i < ids.length * 3; i++) {
+        feed.drops.add(feed.next(ids, at: at, seed: 7)!);
+      }
+      for (var round = 0; round < 3; round++) {
+        final ofRound = feed.drops.skip(round * ids.length).take(ids.length);
+        expect(ofRound.map((d) => d.id).toSet(), ids.toSet());
+        expect(ofRound.every((d) => d.run == round), isTrue);
+      }
+      for (var i = 1; i < feed.drops.length; i++) {
+        expect(feed.drops[i].id, isNot(feed.drops[i - 1].id));
+      }
+      expect(feed.drops.map((d) => d.key).toSet().length, feed.drops.length);
+    });
+
+    test('items wait for their condition and can come only once', () {
+      final feed = DripFeed();
+      bool early(String id) => id != 'item0';
+      for (var i = 0; i < ids.length - 1; i++) {
+        feed.drops.add(
+          feed.next(ids, at: at, seed: 7, eligible: early, recycle: false)!,
+        );
+      }
+      expect(feed.drops.map((d) => d.id), isNot(contains('item0')));
       expect(
-        feedAt(later).map((i) => i.key).toList(),
-        feedAt(later).map((i) => i.key).toList(),
+        feed.next(ids, at: at, seed: 7, eligible: early, recycle: false),
+        isNull,
+      );
+      expect(feed.next(ids, at: at, seed: 7, recycle: false)!.id, 'item0');
+    });
+  });
+
+  group('Everyday mail and news', () {
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      StoryProgress.instance.load(await SharedPreferences.getInstance());
+    });
+
+    final start = DateTime(2026, 3, 2, 10);
+    var clock = start;
+
+    /// Plays for [time] in steps short enough to count as play.
+    Future<void> play(Duration time) async {
+      final end = clock.add(time);
+      while (clock.isBefore(end)) {
+        clock = clock.add(const Duration(seconds: 10));
+        await StoryProgress.instance.tick(now: clock);
+      }
+    }
+
+    setUp(() => clock = start);
+
+    test('some were there before the game began, without banners', () async {
+      final progress = StoryProgress.instance;
+      await progress.tick(now: clock);
+      final inbox = progress.inbox;
+      expect(inbox.length, StoryData.current.mailPool.start);
+      expect(inbox.every((e) => e.$2.isBefore(clock)), isTrue);
+      final filler = StoryData.current.news.filler;
+      expect(
+        progress
+            .newsFeedAt(clock)
+            .where((i) => filler.articles.contains(i.article))
+            .length,
+        filler.start,
+      );
+      expect(progress.alerts.items, isEmpty);
+    });
+
+    test('more come as the player plays, each with a banner', () async {
+      final progress = StoryProgress.instance;
+      await progress.tick(now: clock);
+      final before = progress.inbox.length;
+      await play(
+        Duration(minutes: StoryData.current.mailPool.maxMinutes * 2 + 6),
+      );
+      expect(progress.inbox.length, greaterThan(before));
+      expect(progress.alerts.items.map((a) => a.app), contains('Mail'));
+      expect(progress.alerts.items.map((a) => a.app), contains('News'));
+      // Mail that waits for the story doesn't come before it.
+      expect(
+        progress.inbox.map((e) => e.$1.id),
+        isNot(contains('journalist-1')),
       );
     });
 
-    test('the same everyday article never runs twice in a row', () {
-      final end = muchLater();
-      for (
-        var t = firstOpen;
-        t.isBefore(end);
-        t = t.add(const Duration(days: 1))
-      ) {
-        final ids = feedAt(t).where(isFiller).map((i) => i.article.id).toList();
-        for (var i = 1; i < ids.length; i++) {
-          expect(ids[i], isNot(ids[i - 1]), reason: '$t');
-        }
-      }
+    test('story mail can take a while to arrive', () async {
+      final progress = StoryProgress.instance;
+      await progress.tick(now: clock);
+      await progress.discover([StoryFlags.part1Done]);
+      List<String> ids() => [for (final (m, _) in progress.inbox) m.id];
+      expect(ids(), contains('berat-priority'));
+      expect(ids(), isNot(contains('leave-cancelled')));
+      await play(const Duration(minutes: 7));
+      expect(ids(), contains('leave-cancelled'));
     });
   });
 }
 
 Object _emptyFile(String file) => switch (file) {
   'chats.json' => <String, Object>{},
-  'mails.json' => {'inbox': [], 'story': []},
+  'mails.json' => {'story': []},
   'sinstagram.json' => {'feed': []},
   'map.json' => {
     'image': 'x.png',

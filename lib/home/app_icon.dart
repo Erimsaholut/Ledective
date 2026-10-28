@@ -50,31 +50,36 @@ class AppIcon extends StatelessWidget {
         center.dy / screen.height * 2 - 1,
       );
     }
-    Navigator.of(context).push(
-      PageRouteBuilder<void>(
-        settings: RouteSettings(name: title),
-        transitionDuration: const Duration(milliseconds: 380),
-        reverseTransitionDuration: const Duration(milliseconds: 300),
-        pageBuilder: (_, _, _) => AccessGate(app: title, child: app),
-        transitionsBuilder: (_, animation, _, child) {
-          final curved = CurvedAnimation(
+    Navigator.of(context).push(route(origin: origin));
+  }
+
+  /// Opens the app, zooming it out of [origin]. Its notifications count as
+  /// seen.
+  Route<void> route({Alignment origin = Alignment.center}) {
+    StoryProgress.instance.alerts.clearApp(title);
+    return PageRouteBuilder<void>(
+      settings: RouteSettings(name: title),
+      transitionDuration: const Duration(milliseconds: 380),
+      reverseTransitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, _, _) => AccessGate(app: title, child: app),
+      transitionsBuilder: (_, animation, _, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+        return FadeTransition(
+          opacity: CurvedAnimation(
             parent: animation,
-            curve: Curves.easeOutCubic,
-            reverseCurve: Curves.easeInCubic,
-          );
-          return FadeTransition(
-            opacity: CurvedAnimation(
-              parent: animation,
-              curve: const Interval(0, 0.5),
-            ),
-            child: ScaleTransition(
-              alignment: origin,
-              scale: Tween(begin: 0.1, end: 1.0).animate(curved),
-              child: child,
-            ),
-          );
-        },
-      ),
+            curve: const Interval(0, 0.5),
+          ),
+          child: ScaleTransition(
+            alignment: origin,
+            scale: Tween(begin: 0.1, end: 1.0).animate(curved),
+            child: child,
+          ),
+        );
+      },
     );
   }
 

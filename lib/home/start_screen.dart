@@ -13,6 +13,7 @@ import '../apps/contacts/contacts_app.dart';
 import '../apps/games/games_app.dart';
 import '../apps/mail/mail_app.dart';
 import '../apps/map/map_app.dart';
+import '../apps/mates/chat_page.dart';
 import '../apps/mates/mates_app.dart';
 import '../apps/messages/messages_app.dart';
 import '../apps/music/music_app.dart';
@@ -27,12 +28,13 @@ import '../apps/settings/settings_app.dart';
 import '../apps/shopper/shopper_app.dart';
 import '../apps/sinstagram/sinstagram_app.dart';
 import '../apps/unavailable/unavailable_app.dart';
+import '../data/contacts_repository.dart';
 import '../data/wallpaper.dart';
 import '../story/story_progress.dart';
 import '../theme/turkish_dates.dart';
 import 'app_icon.dart';
 
-int _unreadChats(StoryProgress progress) => progress.totalUnread;
+int _chatsToCheck(StoryProgress progress) => progress.chatsNeedingAttention;
 
 const List<List<AppIcon>> _pages = [
   [
@@ -41,6 +43,7 @@ const List<List<AppIcon>> _pages = [
       app: MailApp(),
       iconData: Icons.mail_rounded,
       colors: [Color(0xFF3FA9FF), Color(0xFF0A6CFF)],
+      badgeCount: unreadMailCount,
     ),
     AppIcon(title: "Photos", app: PhotosApp(), artwork: photosArtwork),
     AppIcon(
@@ -165,7 +168,7 @@ const List<AppIcon> _dock = [
     app: MatesApp(),
     iconData: Icons.forum_rounded,
     colors: [Color(0xFF3DDC84), Color(0xFF128C7E)],
-    badgeCount: _unreadChats,
+    badgeCount: _chatsToCheck,
     showLabel: false,
   ),
   AppIcon(
@@ -176,6 +179,35 @@ const List<AppIcon> _dock = [
     showLabel: false,
   ),
 ];
+
+/// Opens what [alert] is about on top of the home screen: its app, and for
+/// a message the chat it came in.
+Future<void> openAlert(NavigatorState navigator, StoryAlert alert) async {
+  final icon = homeIcon(alert.app);
+  if (icon == null) return;
+  navigator.popUntil((route) => route.isFirst);
+  unawaited(navigator.push(icon.route()));
+  final person = alert.thread;
+  if (alert.app != 'MatesApp' || person == null) return;
+  final contacts = await ContactsRepository().loadAll();
+  final number = contacts
+      .where((c) => !c.userAdded && c.name == person)
+      .firstOrNull
+      ?.number;
+  unawaited(
+    navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) => ChatPage(person: person, number: number),
+      ),
+    ),
+  );
+}
+
+/// The home screen icon of the app called [title].
+AppIcon? homeIcon(String title) => [
+  ..._pages.expand((page) => page),
+  ..._dock,
+].where((icon) => icon.title == title).firstOrNull;
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});

@@ -1,50 +1,97 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/game_clock.dart';
 import 'dialogue.dart';
+import 'drip_feed.dart';
 import 'news_feed.dart';
 import 'story_data.dart';
 
 export 'story_flags.dart';
 
-/// A banner the phone shows when something new arrives.
+/// A notification the phone shows when something new arrives.
 class StoryAlert {
-  const StoryAlert({
+  StoryAlert({
     required this.app,
     required this.title,
     required this.body,
-  });
+    String? source,
+    this.thread,
+    DateTime? time,
+  }) : source = source ?? app,
+       time = time ?? DateTime.now();
 
-  /// Name of the app the news belongs to, e.g. "MatesApp".
+  /// The home screen app it opens, e.g. "MatesApp".
   final String app;
+
+  /// The name in the header, e.g. the paper for a news alert.
+  final String source;
   final String title;
   final String body;
+
+  /// What it opens inside [app], such as the chat with a person.
+  final String? thread;
+  final DateTime time;
+
+  /// Notifications of the same group stack together, e.g. one person's
+  /// messages.
+  String get group => '$app|${thread ?? title}';
 }
 
-/// Banners waiting to be shown, oldest first.
+/// The phone's notifications, oldest first. The banner shows the fresh
+/// ones; the notification centre lists them all until they're cleared.
 class AlertQueue extends ChangeNotifier {
-  final List<StoryAlert> _items = [];
+  static const _limit = 80;
 
-  StoryAlert? get current => _items.firstOrNull;
+  final List<StoryAlert> _items = [];
+  final List<StoryAlert> _fresh = [];
+
+  List<StoryAlert> get items => List.unmodifiable(_items);
+
+  StoryAlert? get latest => _items.lastOrNull;
 
   void push(StoryAlert alert) {
     _items.add(alert);
+    if (_items.length > _limit) _items.removeAt(0);
+    _fresh.add(alert);
     notifyListeners();
   }
 
-  /// Drops the banner on screen and moves on to the next one.
-  void dismiss() {
-    if (_items.isEmpty) return;
-    _items.removeAt(0);
-    notifyListeners();
+  void pushAll(Iterable<StoryAlert> alerts) {
+    for (final alert in alerts) {
+      _items.add(alert);
+      _fresh.add(alert);
+    }
+    while (_items.length > _limit) {
+      _items.removeAt(0);
+    }
+    if (alerts.isNotEmpty) notifyListeners();
   }
 
-  void clear() {
-    _items.clear();
-    notifyListeners();
+  /// Notifications that came since the banner last took them.
+  List<StoryAlert> takeFresh() {
+    final fresh = List.of(_fresh);
+    _fresh.clear();
+    return fresh;
+  }
+
+  void remove(StoryAlert alert) => _removeWhere((a) => identical(a, alert));
+
+  /// Clears [app]'s notifications, e.g. once the player opens it.
+  void clearApp(String app) => _removeWhere((a) => a.app == app);
+
+  void clearGroup(String group) => _removeWhere((a) => a.group == group);
+
+  void clear() => _removeWhere((_) => true);
+
+  void _removeWhere(bool Function(StoryAlert alert) test) {
+    final before = _items.length + _fresh.length;
+    _items.removeWhere(test);
+    _fresh.removeWhere(test);
+    if (_items.length + _fresh.length != before) notifyListeners();
   }
 }
 
@@ -107,9 +154,24 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /// When each story article reached the feed.
   final Map<String, DateTime> _newsArrivals = {};
 
-  /// Scheduled and everyday news already in the feed, so only new ones
-  /// raise a banner. Null until the first tick.
+  /// When each story mail reached the inbox.
+  final Map<String, DateTime> _mailArrivals = {};
+
+  /// Scheduled news already in the feed, so only new ones raise a banner.
+  /// Null until the first tick.
   Set<String>? _newsOnTick;
+
+  /// Play time so far, in milliseconds.
+  int _playMs = 0;
+
+  /// Play time mails and articles with `afterMinutes` have waited since
+  /// their condition started holding, and the ones that are done waiting.
+  final Map<String, int> _waiting = {};
+  final Set<String> _waited = {};
+
+  /// Everyday mail and news.
+  final DripFeed _mailDrip = DripFeed();
+  final DripFeed _newsDrip = DripFeed();
 
   /// Divides mission durations, so story writers can test quickly.
   bool fastMissions = false;
@@ -170,7 +232,13 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     _timersDone.clear();
     _lastTick = null;
     _newsArrivals.clear();
+    _mailArrivals.clear();
     _newsOnTick = null;
+    _playMs = 0;
+    _waiting.clear();
+    _waited.clear();
+    _mailDrip.clear();
+    _newsDrip.clear();
     alerts.clear();
     fastMissions = prefs.getBool('fastMissions') ?? false;
 
@@ -210,6 +278,16 @@ class StoryProgress extends ChangeNotifier implements StoryState {
           time as int,
         ),
       );
+      (data['mail'] as Map<String, dynamic>? ?? const {}).forEach(
+        (id, time) => _mailArrivals[id] = DateTime.fromMillisecondsSinceEpoch(
+          time as int,
+        ),
+      );
+      _playMs = data['play'] as int? ?? 0;
+      _waiting.addAll((data['waiting'] as Map? ?? const {}).cast());
+      _waited.addAll((data['waited'] as List? ?? const []).cast());
+      _mailDrip.load(data['mailDrip'] as Map<String, dynamic>?);
+      _newsDrip.load(data['newsDrip'] as Map<String, dynamic>?);
     }
     notifyListeners();
   }
@@ -238,6 +316,15 @@ class StoryProgress extends ChangeNotifier implements StoryState {
           for (final e in _newsArrivals.entries)
             e.key: e.value.millisecondsSinceEpoch,
         },
+        'mail': {
+          for (final e in _mailArrivals.entries)
+            e.key: e.value.millisecondsSinceEpoch,
+        },
+        'play': _playMs,
+        'waiting': _waiting,
+        'waited': _waited.toList(),
+        'mailDrip': _mailDrip.toJson(),
+        'newsDrip': _newsDrip.toJson(),
       }),
     );
   }
@@ -273,10 +360,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
       for (final t in _story.smsThreads)
         if (meets(t.requires)) t.sender,
     },
-    'mail': {
-      for (final m in _story.storyMails)
-        if (meets(m.requires)) m.id,
-    },
+    'mail': {for (final (m, _) in inbox) m.id},
     'bank': {
       for (final t in _story.bank.transactions)
         if (meets(t.requires)) t.id,
@@ -288,9 +372,35 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     // Scheduled news arrives with time, see [_announceNews].
     'news': {
       for (final a in _story.news.articles)
-        if (!a.archive && a.dayOffset == null && meets(a.requires)) a.id,
+        if (!a.archive && a.dayOffset == null && _isReady(a)) a.id,
+      for (final d in _newsDrip.drops) d.key,
     },
   };
+
+  /// Whether an article's condition holds and its `afterMinutes` are up.
+  bool _isReady(Article a) => _hasArrived('news:${a.id}', a.requires, a.after);
+
+  bool _hasArrived(String key, Condition requires, Duration after) =>
+      meets(requires) && (after <= Duration.zero || _waited.contains(key));
+
+  Mail? _poolMail(String id) =>
+      _story.mailPool.mails.where((m) => m.id == id).firstOrNull;
+
+  Article? _fillerArticle(String id) =>
+      _story.news.filler.articles.where((a) => a.id == id).firstOrNull;
+
+  /// Mail that has arrived, newest first, with the time it came.
+  List<(Mail, DateTime)> get inbox {
+    final firstOpen = GameClock.current.firstOpen;
+    final mails = <(Mail, DateTime)>[
+      for (final m in _story.storyMails)
+        if (_hasArrived('mail:${m.id}', m.requires, m.after))
+          (m, _mailArrivals[m.id] ?? firstOpen),
+      for (final d in _mailDrip.drops)
+        if (_poolMail(d.id) case final m?) (m, d.at),
+    ];
+    return mails..sort((a, b) => b.$2.compareTo(a.$2));
+  }
 
   /// The News feed right now, newest first.
   List<NewsItem> newsFeedAt([DateTime? now]) => newsFeed(
@@ -298,17 +408,20 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     firstOpen: GameClock.current.firstOpen,
     now: now ?? DateTime.now(),
     meets: meets,
+    ready: _isReady,
     arrivedAt: (id) => _newsArrivals[id],
+    filler: [
+      for (final d in _newsDrip.drops)
+        if (_fillerArticle(d.id) case final a?) NewsItem(a, d.at, run: d.run),
+    ],
   );
 
-  /// Raises a banner for scheduled and everyday news that came out since
-  /// the last tick. Returns whether any did.
+  /// Raises a banner for scheduled news that came out since the last tick.
+  /// Returns whether any did.
   bool _announceNews(DateTime now) {
     final items = {
       for (final item in newsFeedAt(now))
-        if (item.article.dayOffset != null ||
-            _story.news.filler.articles.contains(item.article))
-          item.key: item,
+        if (item.article.dayOffset != null) item.key: item,
     };
     final before = _newsOnTick;
     _newsOnTick = items.keys.toSet();
@@ -319,7 +432,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
       arrived = true;
       alerts.push(
         StoryAlert(
-          app: _story.news.outlet(item.article.outlet).name,
+          app: 'News',
+          source: _story.news.outlet(item.article.outlet).name,
           title: 'Gündem',
           body: item.article.title,
         ),
@@ -331,8 +445,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /// Applies [effects] (see [Effect]) and raises a banner for everything
   /// that arrives because of them. Chats with [except] don't raise one (the
   /// player is in it). Returns whether anything changed.
-  bool _apply(Iterable<String> effects, {String? except}) {
-    final before = _snapshot();
+  bool _apply(Iterable<String> effects, {String? except}) => _announce(() {
     var changed = false;
     for (final term in effects) {
       switch (Effect.parse(term)) {
@@ -346,18 +459,71 @@ class StoryProgress extends ChangeNotifier implements StoryState {
           changed |= _setValue(stat, v);
       }
     }
-    if (!changed) return false;
-    _startTimers();
-    _fireEvents();
+    if (changed) {
+      _startTimers();
+      _fireEvents();
+    }
+    return changed;
+  }, except: except);
+
+  /// Runs [change] and raises a banner for everything that arrives because
+  /// of it. Returns what [change] returned: whether anything changed.
+  bool _announce(bool Function() change, {String? except}) {
+    final before = _snapshot();
+    if (!change()) return false;
     final after = _snapshot();
+    final now = DateTime.now();
     for (final MapEntry(key: kind, value: items) in after.entries) {
-      for (final item in items.difference(before[kind]!)) {
-        if (kind == 'news') _newsArrivals[item] = DateTime.now();
-        final alert = _alertFor(kind, item, except);
+      final added = items.difference(before[kind]!);
+      if (kind == 'news') {
+        for (final id in added) {
+          if (_fillerArticle(id.split('#').first) == null) {
+            _newsArrivals[id] = now;
+          }
+        }
+      }
+      if (kind == 'mail') {
+        for (final id in added) {
+          _mailArrivals[id] ??= now;
+        }
+      }
+      if (kind == 'chat') {
+        alerts.pushAll(_chatAlerts(added, except));
+        continue;
+      }
+      for (final item in added) {
+        final alert = _alertFor(kind, item);
         if (alert != null) alerts.push(alert);
       }
     }
     return true;
+  }
+
+  /// One notification per new message, each with its own text.
+  List<StoryAlert> _chatAlerts(Set<String> added, String? except) {
+    final byPerson = <String, int>{};
+    for (final item in added) {
+      final person = item.split('#').first;
+      if (person != except) byPerson[person] = (byPerson[person] ?? 0) + 1;
+    }
+    return [
+      for (final MapEntry(key: person, value: count) in byPerson.entries)
+        for (final text
+            in restore(person).$2
+                .whereType<IncomingMessage>()
+                .map((m) => m.text)
+                .toList()
+                .reversed
+                .take(count)
+                .toList()
+                .reversed)
+          StoryAlert(
+            app: 'MatesApp',
+            title: person,
+            body: text,
+            thread: person,
+          ),
+    ];
   }
 
   bool _setValue(String stat, int v) {
@@ -367,24 +533,16 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     return true;
   }
 
-  StoryAlert? _alertFor(String kind, String item, String? except) {
+  StoryAlert? _alertFor(String kind, String item) {
     switch (kind) {
-      case 'chat':
-        final person = item.split('#').first;
-        if (person == except) return null;
-        final last = restore(person).$2.whereType<IncomingMessage>().lastOrNull;
-        return StoryAlert(
-          app: 'MatesApp',
-          title: person,
-          body: last?.text ?? '',
-        );
       case 'poltel':
         final d = _story.documents.firstWhere((d) => d.id == item);
         return StoryAlert(app: 'Poltel', title: 'Yeni belge', body: d.title);
       case 'evidence':
         final e = _story.evidence.firstWhere((e) => e.id == item);
         return StoryAlert(
-          app: 'Delil Panosu',
+          app: 'Pano',
+          source: 'Delil Panosu',
           title: 'Yeni delil',
           body: e.name,
         );
@@ -397,14 +555,23 @@ class StoryProgress extends ChangeNotifier implements StoryState {
           app: 'Messages',
           title: t.sender,
           body: t.messages.last,
+          thread: t.sender,
         );
       case 'mail':
-        final m = _story.storyMails.firstWhere((m) => m.id == item);
-        return StoryAlert(app: 'Mail', title: m.sender, body: m.body);
+        final m =
+            _story.storyMails.where((m) => m.id == item).firstOrNull ??
+            _poolMail(item);
+        if (m == null) return null;
+        return StoryAlert(
+          app: 'Mail',
+          title: m.sender,
+          body: m.subject.isEmpty ? m.body : m.subject,
+        );
       case 'bank':
         final t = _story.bank.transactions.firstWhere((t) => t.id == item);
         return StoryAlert(
-          app: _story.bank.bank,
+          app: 'ZaferBank',
+          source: _story.bank.bank,
           title: t.title,
           body: t.detail,
         );
@@ -418,10 +585,13 @@ class StoryProgress extends ChangeNotifier implements StoryState {
           body: r.from,
         );
       case 'news':
-        final a = _story.news.articles.firstWhere((a) => a.id == item);
+        final id = item.split('#').first;
+        final filler = _fillerArticle(id);
+        final a = filler ?? _story.news.articles.firstWhere((a) => a.id == id);
         return StoryAlert(
-          app: _story.news.outlet(a.outlet).name,
-          title: 'Son dakika',
+          app: 'News',
+          source: _story.news.outlet(a.outlet).name,
+          title: filler == null ? 'Son dakika' : 'Gündem',
           body: a.title,
         );
     }
@@ -499,7 +669,16 @@ class StoryProgress extends ChangeNotifier implements StoryState {
 
   static int _sum(int a, int b) => a + b;
 
+  /// Whether [person] asked something the player hasn't answered yet.
+  bool awaitsReply(String person) => restore(person).$1.expectsReply;
+
+  /// Chats with unread messages or a question waiting for an answer.
+  int get chatsNeedingAttention => _story.conversations.keys
+      .where((p) => unreadCount(p) > 0 || awaitsReply(p))
+      .length;
+
   Future<void> markRead(String person) async {
+    alerts.clearGroup('MatesApp|$person');
     final count = _incomingCount(person);
     if (_seenIncoming[person] == count) return;
     _seenIncoming[person] = count;
@@ -701,16 +880,187 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /// seconds (the phone was asleep) counts as one tick.
   Future<void> tick({DateTime? now}) async {
     final time = now ?? DateTime.now();
+    var changed = _startDrips(time);
     await completeDueMissions(now: time);
-    if (_announceNews(time)) notifyListeners();
+    changed |= _announceNews(time);
     final last = _lastTick;
     _lastTick = time;
-    if (last == null) return;
-    var elapsed = time.difference(last);
-    if (elapsed.isNegative) return;
+    var elapsed = last == null ? Duration.zero : time.difference(last);
+    if (elapsed.isNegative) elapsed = Duration.zero;
     if (elapsed > const Duration(seconds: 10)) {
       elapsed = const Duration(seconds: 2);
     }
-    await advanceTimers(elapsed);
+    if (elapsed > Duration.zero) {
+      _playMs += elapsed.inMilliseconds;
+      changed |= _announce(() => _advanceWaits(elapsed) | _drip(time));
+      // Play time is worth keeping even when nothing else changed.
+      await _save();
+    }
+    if (changed) notifyListeners();
+    if (elapsed > Duration.zero) await advanceTimers(elapsed);
+  }
+
+  /* ---------- Mail and news that come with time ---------- */
+
+  /// Play time so far.
+  Duration get playTime => Duration(milliseconds: _playMs);
+
+  int get _seed {
+    final day = GameClock.current.firstOpen;
+    return day.year * 10000 + day.month * 100 + day.day;
+  }
+
+  /// Moves on the mails and articles that come `afterMinutes` after their
+  /// condition. Returns whether any arrived.
+  bool _advanceWaits(Duration elapsed) {
+    var arrived = false;
+    void wait(String key, Condition requires, Duration after) {
+      if (after <= Duration.zero || _waited.contains(key)) return;
+      if (!meets(requires)) return;
+      final ran = (_waiting[key] ?? 0) + elapsed.inMilliseconds;
+      final due = fastMissions ? after ~/ 30 : after;
+      if (ran < due.inMilliseconds) {
+        _waiting[key] = ran;
+        return;
+      }
+      _waiting.remove(key);
+      _waited.add(key);
+      arrived = true;
+    }
+
+    for (final m in _story.storyMails) {
+      wait('mail:${m.id}', m.requires, m.after);
+    }
+    for (final a in _story.news.articles) {
+      wait('news:${a.id}', a.requires, a.after);
+    }
+    return arrived;
+  }
+
+  /// A random gap between everyday items, shorter with [fastMissions].
+  int _gap(int minMinutes, int maxMinutes, int salt) {
+    final low = minMinutes < 1 ? 1 : minMinutes;
+    final high = maxMinutes < low ? low : maxMinutes;
+    final minutes = low + Random(_seed * 31 + salt).nextInt(high - low + 1);
+    final ms = minutes * 60000;
+    return fastMissions ? ms ~/ 30 : ms;
+  }
+
+  List<String> get _mailIds => [for (final m in _story.mailPool.mails) m.id];
+
+  List<String> get _fillerIds => [
+    for (final a in _story.news.filler.articles) a.id,
+  ];
+
+  bool _mailFits(String id) {
+    final mail = _poolMail(id);
+    return mail != null && meets(mail.requires);
+  }
+
+  bool _articleFits(String id) {
+    final article = _fillerArticle(id);
+    return article != null && meets(article.requires);
+  }
+
+  /// Fills the inbox and the feed with what came before the game began, the
+  /// first time it runs. No banners for these. Returns whether it did.
+  bool _startDrips(DateTime now) {
+    if (_mailDrip.started && _newsDrip.started) return false;
+    void start(
+      DripFeed feed,
+      List<String> ids,
+      int count,
+      bool Function(String id) fits,
+      int salt, {
+      required bool recycle,
+    }) {
+      if (feed.started) return;
+      // Spread over the last day or two, oldest first.
+      for (var i = 0; i < count; i++) {
+        final hours = (count - i) * (3 + Random(_seed + salt + i).nextInt(6));
+        final drop = feed.next(
+          ids,
+          at: now.subtract(Duration(hours: hours)),
+          seed: _seed + salt,
+          eligible: fits,
+          recycle: recycle,
+        );
+        if (drop == null) break;
+        feed.drops.add(drop);
+      }
+      feed.dueAt = _playMs + _gap(2, 6, salt);
+    }
+
+    start(
+      _mailDrip,
+      _mailIds,
+      _story.mailPool.start,
+      _mailFits,
+      1,
+      recycle: false,
+    );
+    final filler = _story.news.filler;
+    start(_newsDrip, _fillerIds, filler.start, _articleFits, 2, recycle: true);
+    return true;
+  }
+
+  /// Delivers the everyday mail and news that are due. Returns whether any
+  /// came.
+  bool _drip(DateTime now) {
+    bool step(
+      DripFeed feed,
+      List<String> ids,
+      bool Function(String id) fits,
+      int minMinutes,
+      int maxMinutes,
+      int salt, {
+      required bool recycle,
+    }) {
+      final due = feed.dueAt;
+      if (due == null || _playMs < due) return false;
+      final drop = feed.next(
+        ids,
+        at: now,
+        seed: _seed + salt,
+        eligible: fits,
+        recycle: recycle,
+      );
+      if (drop != null) feed.drops.add(drop);
+      feed.dueAt =
+          _playMs + _gap(minMinutes, maxMinutes, salt + feed.drops.length * 13);
+      return drop != null;
+    }
+
+    final pool = _story.mailPool;
+    final filler = _story.news.filler;
+    final mail = step(
+      _mailDrip,
+      _mailIds,
+      _mailFits,
+      pool.minMinutes,
+      pool.maxMinutes,
+      1,
+      recycle: false,
+    );
+    final news = step(
+      _newsDrip,
+      _fillerIds,
+      _articleFits,
+      filler.minMinutes,
+      filler.maxMinutes,
+      2,
+      recycle: true,
+    );
+    return mail || news;
+  }
+
+  /// Delivers the next everyday mail or article right away, for the story
+  /// writer's debug page.
+  Future<void> dripNow({bool mail = true}) async {
+    final feed = mail ? _mailDrip : _newsDrip;
+    if (!feed.started) _startDrips(DateTime.now());
+    feed.dueAt = _playMs;
+    if (_announce(() => _drip(DateTime.now()))) notifyListeners();
+    await _save();
   }
 }

@@ -1,63 +1,452 @@
 {
-  "inbox": [
-    {"sender": "emniyet.gov.tr", "body": "Konferansa davetlisiniz !"},
-    {
-      "sender": "zaferbank.com",
-      "body": "Paranızı tanımadığınız milyonlarca kişi ile paylaştığınızın farkında mısınız ?"
-    },
-    {"sender": "besiktas.com", "body": "Yeni sezon formalarda indirim. Sakın kaçırmayın"},
-    {
-      "sender": "kargo.com.tr",
-      "body": "Kargonuz dağıtıma çıktı. Adresinizde bulunamadığınız için şubemizde bekletilecektir."
-    },
-    {
-      "sender": "havayolu.com.tr",
-      "body": "Dönüş uçuşunuz için online check-in açılmıştır. İyi yolculuklar dileriz."
-    },
-    {
-      "sender": "github.com",
-      "body": "Hesabınıza yeni bir cihazdan giriş yapıldı. Siz değilseniz şifrenizi değiştirin."
-    },
-    {
-      "sender": "cbu.com",
-      "body": "Tebrikler sınıfınızın %10 kontenjanına girdiğiniz için bu sene harç ücretiniz %75 indirimli."
-    }
-  ],
+  "pool": {
+    "minMinutes": 6,
+    "maxMinutes": 16,
+    "start": 3,
+    "mails": [
+      {
+        "id": "conference",
+        "sender": "emniyet.gov.tr",
+        "subject": "Konferans daveti",
+        "body": "Sayın Başkomiserim, \"Dijital Çağda Cinayet Soruşturmacılığı\" konferansına davetlisiniz! Kahve arasında simit ikram edilecektir."
+      },
+      {
+        "id": "bank-share",
+        "sender": "zaferbank.com",
+        "subject": "Önemli: Paylaşım ayarlarınız",
+        "body": "Paranızı tanımadığınız milyonlarca kişi ile paylaştığınızın farkında mısınız? Kampanya koşulları için tıklayınız."
+      },
+      {
+        "id": "jersey",
+        "sender": "besiktas.com",
+        "subject": "Yeni sezon formalarda indirim",
+        "body": "Yeni sezon formalarda %30 indirim. Sakın kaçırmayın, stoklar tükenmeden siparişinizi verin."
+      },
+      {
+        "id": "cargo-missed",
+        "sender": "kargo.com.tr",
+        "subject": "Gönderiniz şubede bekliyor",
+        "body": "Kargonuz dağıtıma çıktı. Adresinizde bulunamadığınız için şubemizde 3 gün bekletilecektir."
+      },
+      {
+        "id": "checkin",
+        "sender": "havayolu.com.tr",
+        "subject": "Online check-in açıldı",
+        "body": "Dönüş uçuşunuz için online check-in açılmıştır. İyi yolculuklar dileriz."
+      },
+      {
+        "id": "github",
+        "sender": "github.com",
+        "subject": "Yeni cihazdan giriş",
+        "body": "Hesabınıza yeni bir cihazdan giriş yapıldı. Siz değilseniz şifrenizi değiştirin."
+      },
+      {
+        "id": "tuition",
+        "sender": "cbu.com",
+        "subject": "Harç indirimi",
+        "body": "Tebrikler, sınıfınızın %10 kontenjanına girdiğiniz için bu sene harç ücretiniz %75 indirimli. (Mezun olalı 14 yıl olduğunu biliyoruz, sistem öyle diyor.)"
+      },
+      {
+        "id": "pizza",
+        "sender": "pizzaci.com.tr",
+        "subject": "Seni özledik! 🍕",
+        "body": "Son siparişinin üzerinden 41 gün geçti. Bugün geçerli kod: AÇIMBEN. Dosyalar bekler, pizza soğur."
+      },
+      {
+        "id": "gym",
+        "sender": "fitlife.com.tr",
+        "subject": "Üyeliğin donduruldu mu?",
+        "body": "Salonumuza en son 7 ay önce geldin. Sorun bizde değilse sende de değil, kesin işte. Bu ay yenilersen havlu hediye."
+      },
+      {
+        "id": "dentist",
+        "sender": "dishekimi-gulus.com",
+        "subject": "Randevu hatırlatma",
+        "body": "Altı aylık kontrolünüz gecikti. Diş ağrısı beklemez, ama siz bekletiyorsunuz."
+      },
+      {
+        "id": "insurance",
+        "sender": "sigortam.com",
+        "subject": "Kasko yenileme",
+        "body": "Aracınızın kasko poliçesi 12 gün içinde sona eriyor. Resmi araçlar kapsam dışıdır, sormayın."
+      },
+      {
+        "id": "electric",
+        "sender": "yesilkent-elektrik.com.tr",
+        "subject": "Fatura bildirimi",
+        "body": "Ekim ayı faturanız 1.284,60 TL. Geçen aya göre %34 fazla tükettiniz. Evde birileri mi var?"
+      },
+      {
+        "id": "water",
+        "sender": "yesilkent-su.gov.tr",
+        "subject": "Planlı su kesintisi",
+        "body": "Mahallenizde yarın 09.00 ile 17.00 arasında planlı su kesintisi yapılacaktır. Bidonlarınızı doldurun."
+      },
+      {
+        "id": "internet",
+        "sender": "hizlinet.com.tr",
+        "subject": "Taahhüdünüz bitiyor",
+        "body": "Taahhüdünüz bitiyor! Kalırsanız aynı hız, aynı fiyat, aynı müşteri hizmetleri müziği."
+      },
+      {
+        "id": "newsletter-crime",
+        "sender": "suckaynagi.com",
+        "subject": "Haftalık bülten: Gerçek suç",
+        "body": "Bu hafta: \"Kusursuz cinayet yoktur, kusurlu tutanak vardır.\" Yazının devamı için abone olun."
+      },
+      {
+        "id": "book-club",
+        "sender": "kitapkulubu.org",
+        "subject": "Bu ayın kitabı",
+        "body": "Bu ayın kitabı: \"Suç ve Ceza\". Toplantıda kimse sonunu söylemeyecek, söz."
+      },
+      {
+        "id": "cinema",
+        "sender": "sinemagezi.com",
+        "subject": "Vizyondakiler",
+        "body": "Bu hafta vizyonda: bir polisiye, iki romantik komedi, bir de \"aslında hepsi rüyaymış\" diye biten bir gerilim."
+      },
+      {
+        "id": "cargo-delivered",
+        "sender": "kargo.com.tr",
+        "subject": "Gönderiniz teslim edildi",
+        "body": "Gönderiniz \"kapıcıya\" teslim edilmiştir. Binanızda kapıcı olmadığını biliyoruz, araştırıyoruz."
+      },
+      {
+        "id": "survey",
+        "sender": "anket.com",
+        "subject": "5 dakikanızı alır",
+        "body": "Müşteri memnuniyeti anketimize katılın. 47 soru, ortalama 5 dakika."
+      },
+      {
+        "id": "lottery",
+        "sender": "sanslisiniz.biz",
+        "subject": "TEBRİKLER! Kazandınız!!!",
+        "body": "Sayın Bay/Bayan KULLANICI, 1.000.000 € kazandınız. Ödülünüzü almak için kimlik ve kart bilgilerinizi yanıtlayın. (Siz polissiniz, bunu zaten biliyorsunuz.)"
+      },
+      {
+        "id": "prince",
+        "sender": "kraliyet.mail",
+        "subject": "Acil yardım",
+        "body": "Ben uzak bir ülkenin prensiyim. Servetimi aktarmak için hesabınıza ihtiyacım var. Bu sefer gerçekten."
+      },
+      {
+        "id": "bank-campaign",
+        "sender": "zaferbank.com",
+        "subject": "İhtiyaç kredisi ön onayı",
+        "body": "Size özel 250.000 TL ihtiyaç kredisi ön onayı! Faizi sormayın, gönlünüzü kırmayalım."
+      },
+      {
+        "id": "password",
+        "sender": "eposta.gov.tr",
+        "subject": "Şifrenizin süresi doluyor",
+        "body": "Kurumsal e-posta şifrenizin süresi 3 gün içinde dolacaktır. Yeni şifre eski 12 şifrenizden farklı olmalı, en az bir emoji içermelidir."
+      },
+      {
+        "id": "hr-survey",
+        "sender": "personel.emniyet.gov.tr",
+        "subject": "Çalışan memnuniyeti anketi",
+        "body": "Kurumumuzdan memnun musunuz? Cevaplar anonim değildir."
+      },
+      {
+        "id": "training",
+        "sender": "egitim.emniyet.gov.tr",
+        "subject": "Zorunlu eğitim: Yeni tutanak sistemi",
+        "body": "Yeni tutanak sistemi eğitimine katılımınız zorunludur. Eğitim 6 saat sürecek, sistem 2 hafta sonra değişecektir."
+      },
+      {
+        "id": "cafeteria",
+        "sender": "idari.emniyet.gov.tr",
+        "subject": "Yemekhane menüsü",
+        "body": "Bu haftanın menüsü: Pazartesi kuru fasulye, salı kuru fasulye (dünden), çarşamba sürpriz."
+      },
+      {
+        "id": "parking",
+        "sender": "idari.emniyet.gov.tr",
+        "subject": "Otopark düzeni",
+        "body": "Müdürlük otoparkında ekip araçlarının amir park yerine park etmesi yasaktır. Başkomiserlerimiz dahil."
+      },
+      {
+        "id": "blood",
+        "sender": "kizilay.org.tr",
+        "subject": "Kan bağışı günü",
+        "body": "Müdürlüğünüzde kan bağışı günü düzenlenecektir. Bağış yapanlara ayran ve kurabiye ikram edilecektir."
+      },
+      {
+        "id": "union",
+        "sender": "polis-dayanisma.org",
+        "subject": "Aidat hatırlatma",
+        "body": "Dayanışma derneği aidatınız 3 aydır yatmamıştır. Dayanışma karşılıklıdır."
+      },
+      {
+        "id": "reunion",
+        "sender": "mezunlar.org",
+        "subject": "Mezuniyetin 15. yılı",
+        "body": "Dönem arkadaşlarınızla buluşuyoruz! Kim neredeymiş, kim ne olmuş, kim hâlâ aynı montu giyiyor?"
+      },
+      {
+        "id": "old-friend",
+        "sender": "tolga.k@eposta.com",
+        "subject": "Nerelerdesin?",
+        "body": "Abi kaç zamandır ses yok. Şehirde misin? Bir çay içelim, eski günleri anarız. Hâlâ o kırmızı defteri taşıyor musun?"
+      },
+      {
+        "id": "mother-recipe",
+        "sender": "annem@eposta.com",
+        "subject": "Fwd: Fwd: Fwd: Sağlık için 10 altın kural",
+        "body": "Oğlum bunu oku, sabahları limonlu su iç. Bir de yemek yiyor musun? Sesin yorgun geliyordu."
+      },
+      {
+        "id": "neighbour",
+        "sender": "apartman.yonetimi@eposta.com",
+        "subject": "Apartman toplantısı",
+        "body": "Aidatlar ve çatıdaki güvercin sorunu konuşulacaktır. Toplantıya katılmayanlar karara itiraz edemez."
+      },
+      {
+        "id": "car-service",
+        "sender": "oto-servis.com",
+        "subject": "Bakım zamanı",
+        "body": "Aracınızın 30.000 km bakımı geldi. Arka sağ lambanız da yanmıyormuş, polis görürse ceza yer."
+      },
+      {
+        "id": "streaming",
+        "sender": "dizifilm.tv",
+        "subject": "Kaldığın yerden devam et",
+        "body": "\"Ezel\" 2. sezon 14. bölümde kaldın. Ramiz Dayı hâlâ seni bekliyor."
+      },
+      {
+        "id": "music",
+        "sender": "muzikkutusu.com",
+        "subject": "Yıllık özetin hazır",
+        "body": "Bu yıl en çok dinlediğin şarkı: \"Gesi Bağları\". 312 kez. İyi misin?"
+      },
+      {
+        "id": "marketplace",
+        "sender": "alsat.com",
+        "subject": "İlanınız yayında",
+        "body": "\"Az kullanılmış kelepçe, anahtarı kayıp\" başlıklı ilanınız incelemeye alınmıştır."
+      },
+      {
+        "id": "domain",
+        "sender": "alanadi.com",
+        "subject": "Alan adınızın süresi doluyor",
+        "body": "\"dedektifiz.com\" alan adınızın süresi doluyor. 2011’de neden aldığınızı biz de merak ediyoruz."
+      },
+      {
+        "id": "tax",
+        "sender": "gib.gov.tr",
+        "subject": "Beyanname hatırlatma",
+        "body": "Beyanname verme süresinin son gününe 2 gün kalmıştır. Hatırlatma 9. kez gönderilmiştir."
+      },
+      {
+        "id": "library",
+        "sender": "halk-kutuphanesi.gov.tr",
+        "subject": "Gecikmiş iade",
+        "body": "\"Adli Tıpta Kemik İncelemesi\" adlı kitabın iade süresi 214 gün geçmiştir."
+      },
+      {
+        "id": "plant",
+        "sender": "cicekci.com",
+        "subject": "Çiçeğiniz susadı",
+        "body": "Geçen ay aldığınız orkide için sulama hatırlatması. Hâlâ yaşıyorsa."
+      },
+      {
+        "id": "crypto",
+        "sender": "koin-firsati.net",
+        "subject": "Paranı 100 katına çıkar",
+        "body": "Yeni koin: KOMİSERCOİN. Ön satışta! Yatırım tavsiyesi değildir, ama tavsiye ederiz."
+      },
+      {
+        "id": "travel-deal",
+        "sender": "tatilfirsati.com",
+        "subject": "Son dakika tatil",
+        "body": "Hak ettiğiniz tatile şimdi çıkın! Hangi ülke mi? Siz söyleyin, biz ayarlayalım."
+      },
+      {
+        "id": "photo-print",
+        "sender": "fotobaski.com",
+        "subject": "Fotoğraflarınız hazır",
+        "body": "Baskıya gönderdiğiniz 0 fotoğraf hazırlanmıştır. Teslim almak için şubemize uğrayın."
+      },
+      {
+        "id": "hotel",
+        "sender": "oteller.com",
+        "subject": "Konaklamanızı değerlendirin",
+        "body": "Son konaklamanız nasıldı? Rezervasyon numaranız sistemde görünmüyor, ama yine de puan verebilirsiniz."
+      },
+      {
+        "id": "ramazan-usta",
+        "sender": "cakirkebap.com.tr",
+        "subject": "Kebapta 2. porsiyon bizden",
+        "body": "Bilenler bilir: Bu hafta karışık kebapta ikinci porsiyon yarı fiyatına. Polise ayran bedava."
+      },
+      {
+        "id": "journalist-1",
+        "sender": "haber@gundem24.com.tr",
+        "subject": "Görüşme talebi",
+        "body": "Merhaba, Gündem24’ten yazıyorum. Berat Yılmaz dosyası hakkında iki dakikanızı alabilir miyim? İsminiz geçmeyecek.",
+        "requires": "part1Done"
+      },
+      {
+        "id": "tv-show",
+        "sender": "program@kanalbir.tv",
+        "subject": "Canlı yayın daveti",
+        "body": "\"Gece Yarısı Dosyası\" programımıza konuk olmanızı isteriz. Yayında yorum yapmanız yeterli, gerisini biz hallederiz.",
+        "requires": "part1Done"
+      },
+      {
+        "id": "reader-angry",
+        "sender": "okur@eposta.com",
+        "subject": "Utanın!",
+        "body": "Bir çocuğun katili hâlâ dışarıda ve siz ne yapıyorsunuz? Vergilerimizle maaş alıyorsunuz!",
+        "requires": "press:story-published"
+      },
+      {
+        "id": "reader-tip",
+        "sender": "ihbar.hatti@eposta.com",
+        "subject": "Bir şey biliyorum",
+        "body": "Sanayi tarafında geceleri bir minibüs dolaşıyor. Plakasını alamadım. Adımı yazmayın lütfen.",
+        "requires": "mezbaha-found"
+      },
+      {
+        "id": "esnaf",
+        "sender": "sanayi-esnaf.org",
+        "subject": "Esnaf derneğinden",
+        "body": "Sanayideki olaylardan sonra esnafımız tedirgin. Bölgede devriye artırılması için dilekçemizi ekte sunarız.",
+        "requires": "mezbaha-found"
+      },
+      {
+        "id": "foundation-bulletin",
+        "sender": "bulten@yilmazvakfi.org",
+        "subject": "Vakıf bülteni: Geleceği birlikte kuruyoruz",
+        "body": "Bu dönem 140 öğrencimize burs verdik. Bursiyerlerimizin başarısı, vakfımızın gururudur. Bağışlarınız için teşekkür ederiz.",
+        "requires": "mp:wrote"
+      },
+      {
+        "id": "lawyer-ad",
+        "sender": "hukuk-burosu.av.tr",
+        "subject": "Memurlar için hukuki destek",
+        "body": "Hakkınızda disiplin soruşturması mı var? Uzman kadromuzla yanınızdayız. İlk görüşme ücretsiz.",
+        "requires": "case:internal-investigation"
+      },
+      {
+        "id": "colleague-support",
+        "sender": "ayhan.k@emniyet.gov.tr",
+        "subject": "Moral olsun",
+        "body": "Başkomiserim, olanları duydum. Koridorda herkes bir şey konuşuyor ama ben sizin yanınızdayım. Bir şeye ihtiyacınız olursa yazın.",
+        "requires": "status:suspended"
+      },
+      {
+        "id": "union-legal",
+        "sender": "polis-dayanisma.org",
+        "subject": "Hukuki yardım başvurusu",
+        "body": "Görevden uzaklaştırılan üyelerimize hukuki destek veriyoruz. Aidat borcunuz olsa da.",
+        "requires": "status:suspended"
+      },
+      {
+        "id": "journalist-2",
+        "sender": "selin.aras@sehirpostasi.com.tr",
+        "subject": "Okurlardan gelenler",
+        "body": "Haberden sonra bize onlarca mesaj geldi. Bir kısmı sizinle ilgili. İsterseniz iletirim.",
+        "requires": "press:named"
+      },
+      {
+        "id": "clinic",
+        "sender": "randevu@ruhsagligi-poliklinigi.gov.tr",
+        "subject": "Kontrol randevunuz",
+        "body": "Sayın hastamız, 3 hafta önceki kontrol randevunuza gelmediğiniz görülmüştür. İlaçlarınızın düzenli kullanımı için Dr. S. Arıkan sizi bekliyor.",
+        "requires": "leak:traced"
+      },
+      {
+        "id": "airline-points",
+        "sender": "havayolu.com.tr",
+        "subject": "Mil puanlarınız",
+        "body": "Son 12 ayda uçuş kaydınız bulunmadığından mil puanlarınızın süresi dolmak üzere.",
+        "requires": "leak:traced"
+      }
+    ]
+  },
   "story": [
     {
+      "id": "berat-priority",
       "sender": "emniyet.gov.tr",
+      "subject": "Berat Yılmaz dosyası hakkında",
       "body": "İl Emniyet Müdürlüğü: Berat Yılmaz dosyası tüm birimlerin önceliğidir. Gelişmeler günlük olarak şube müdürlüğüne raporlanacaktır.",
       "requires": "part1Done"
     },
     {
+      "id": "leave-cancelled",
+      "sender": "personel.emniyet.gov.tr",
+      "subject": "Yıllık izniniz hakkında",
+      "body": "Personel Şube Müdürlüğü: Berat Yılmaz soruşturması nedeniyle yıllık izninizin kalan 9 günü askıya alınmıştır. Göreve dönüş tarihiniz sisteme bugün olarak işlenmiştir.",
+      "requires": "part1Done",
+      "afterMinutes": 6
+    },
+    {
+      "id": "adil-file",
       "sender": "narkotik.emniyet.gov.tr",
+      "subject": "Adil Karaca hakkında açık dosya",
       "body": "Adil Karaca (lakabı \"Adil abi\") hakkında açık soruşturma dosyası mevcuttur. Bilgi paylaşımı için Narkotik Büro Başkomiseri Behram ile irtibata geçiniz.",
       "requires": "furkanStatement"
     },
     {
+      "id": "internal-investigation",
       "sender": "icdenetim.emniyet.gov.tr",
+      "subject": "İdari inceleme başlatılması",
       "body": "İç Denetim Şube Müdürlüğü: Banka hesabınıza 'Y. Eğitim Vakfı Danışmanlık' unvanlı hesaptan yapılan ve iade edilmeyen 50.000,00 TL tutarındaki EFT hakkında idari inceleme başlatılmıştır. Savunmanızı yedi gün içinde yazılı olarak bildiriniz.",
       "requires": "case:internal-investigation"
     },
     {
+      "id": "suspension",
       "sender": "icdenetim.emniyet.gov.tr",
-      "requires": "status:suspended",
-      "body": "İç Denetim Şube Müdürlüğü: Hakkınızda yürütülen idari soruşturma kapsamında görevden uzaklaştırılmanıza karar verilmiştir. Kurum sistemlerine erişiminiz askıya alınmıştır."
+      "subject": "Görevden uzaklaştırma",
+      "body": "İç Denetim Şube Müdürlüğü: Hakkınızda yürütülen idari soruşturma kapsamında görevden uzaklaştırılmanıza karar verilmiştir. Kurum sistemlerine erişiminiz askıya alınmıştır.",
+      "requires": "status:suspended"
     },
     {
+      "id": "reprimand",
       "sender": "icdenetim.emniyet.gov.tr",
-      "requires": "status:warned",
-      "body": "İç Denetim Şube Müdürlüğü: Hakkınızdaki idari soruşturma kınama cezası ile sonuçlanmıştır."
+      "subject": "İdari soruşturma sonucu",
+      "body": "İç Denetim Şube Müdürlüğü: Hakkınızdaki idari soruşturma kınama cezası ile sonuçlanmıştır.",
+      "requires": "status:warned"
     },
     {
+      "id": "dismissal",
       "sender": "personel.emniyet.gov.tr",
-      "requires": "status:dismissed",
-      "body": "Personel Daire Başkanlığı: Hukuka aykırı arama ve delil toplama fiilleri nedeniyle meslekten çıkarılmanıza karar verilmiştir."
+      "subject": "Meslekten çıkarma kararı",
+      "body": "Personel Daire Başkanlığı: Hukuka aykırı arama ve delil toplama fiilleri nedeniyle meslekten çıkarılmanıza karar verilmiştir.",
+      "requires": "status:dismissed"
     },
     {
+      "id": "warrant",
       "sender": "uyap.adalet.gov.tr",
-      "requires": "legal:warrant-issued",
-      "body": "Adınıza düzenlenmiş bir yakalama kararı bulunmaktadır. \"Suçluyu kayırma\" suçundan hakkınızda soruşturma başlatılmıştır."
+      "subject": "Yakalama kararı bildirimi",
+      "body": "Adınıza düzenlenmiş bir yakalama kararı bulunmaktadır. \"Suçluyu kayırma\" suçundan hakkınızda soruşturma başlatılmıştır.",
+      "requires": "legal:warrant-issued"
+    },
+    {
+      "id": "foundation-receipt",
+      "sender": "muhasebe@yilmazvakfi.org",
+      "subject": "Ödeme kaydı",
+      "body": "Y. Eğitim Vakfı Muhasebe: Hesabınıza yapılan 50.000,00 TL ödeme \"danışmanlık hizmeti\" olarak kayda geçmiştir. Fatura kesmenize gerek yoktur. Geçmiş olsun.",
+      "requires": ["mp:wrote", "!bribe:returned"],
+      "afterMinutes": 12
+    },
+    {
+      "id": "melis-mother",
+      "sender": "aysel.d@eposta.com",
+      "subject": "Teşekkür",
+      "body": "Adresinizi Özge Hanım verdi. Melis’in annesiyim. Kızım uyuyor, ilk defa iki gecedir uyuyabiliyor. Size nasıl teşekkür edeceğimi bilmiyorum. Allah sizden razı olsun.",
+      "requires": "girl:rescued",
+      "afterMinutes": 8
+    },
+    {
+      "id": "emre-sister",
+      "sender": "zeynep.ak@eposta.com",
+      "subject": "Emre",
+      "body": "Ben Emre’nin ablasıyım. Hastanede yanındayım. Konuşmuyor ama bir ara gözlerini açıp \"polis abi geldi mi\" diye sordu. Geldi dedim. Sağ olun.",
+      "requires": "emre:rescued",
+      "afterMinutes": 8
     }
   ]
 }

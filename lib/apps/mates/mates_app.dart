@@ -53,7 +53,9 @@ class _MatesAppState extends State<MatesApp> {
     required String preview,
     required VoidCallback onTap,
     int unread = 0,
+    bool awaitsReply = false,
   }) {
+    final waiting = awaitsReply && unread == 0;
     return ListTile(
       tileColor: Colors.white,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -66,14 +68,33 @@ class _MatesAppState extends State<MatesApp> {
           color: MatesColors.text,
         ),
       ),
-      subtitle: Text(
-        preview,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color: unread > 0 ? MatesColors.text : MatesColors.secondaryText,
-          fontWeight: unread > 0 ? FontWeight.w500 : FontWeight.normal,
-        ),
+      subtitle: Row(
+        children: [
+          if (waiting)
+            const Padding(
+              padding: EdgeInsets.only(right: 4),
+              child: Icon(
+                Icons.reply_rounded,
+                size: 16,
+                color: MatesColors.accent,
+              ),
+            ),
+          Expanded(
+            child: Text(
+              preview,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: unread > 0 || waiting
+                    ? MatesColors.text
+                    : MatesColors.secondaryText,
+                fontWeight: unread > 0 || waiting
+                    ? FontWeight.w500
+                    : FontWeight.normal,
+              ),
+            ),
+          ),
+        ],
       ),
       trailing: unread > 0
           ? Container(
@@ -87,6 +108,22 @@ class _MatesAppState extends State<MatesApp> {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            )
+          : waiting
+          ? Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                border: Border.all(color: MatesColors.accent),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Text(
+                'Yanıt bekliyor',
+                style: TextStyle(
+                  color: MatesColors.accent,
+                  fontSize: 11.5,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -123,11 +160,11 @@ class _MatesAppState extends State<MatesApp> {
       body: ListenableBuilder(
         listenable: Listenable.merge([_progress, PrivateChats.instance]),
         builder: (context, _) {
-          final story = _contacts.where((c) => !c.userAdded);
+          final saved = _contacts.where((c) => !c.userAdded);
           final private = {
             for (final c in _contacts.where((c) => c.userAdded)) c.number: c,
           };
-          final numbers = {for (final c in story) c.name: c.number};
+          final numbers = {for (final c in saved) c.name: c.number};
           // Story chats show up once there is something in them, including
           // ones from numbers that aren't in the contacts.
           final people = [
@@ -135,17 +172,33 @@ class _MatesAppState extends State<MatesApp> {
             for (final person in StoryData.current.conversations.keys)
               if (!numbers.containsKey(person)) person,
           ];
-          final tiles = [
+          // Chats with something new come first, as on a real phone.
+          int rank(String person) => _progress.unreadCount(person) > 0
+              ? 0
+              : _progress.awaitsReply(person)
+              ? 1
+              : 2;
+          final story = [
             for (final person in people)
               if (_progress.restore(person).$2 case final transcript
                   when transcript.isNotEmpty)
-                _tile(
-                  name: person,
-                  preview: _preview(transcript),
-                  unread: _progress.unreadCount(person),
-                  onTap: () =>
-                      _open(ChatPage(person: person, number: numbers[person])),
-                ),
+                (person, transcript),
+          ];
+          final order = {for (final (i, c) in story.indexed) c.$1: i};
+          story.sort((a, b) {
+            final byRank = rank(a.$1).compareTo(rank(b.$1));
+            return byRank != 0 ? byRank : order[a.$1]!.compareTo(order[b.$1]!);
+          });
+          final tiles = [
+            for (final (person, transcript) in story)
+              _tile(
+                name: person,
+                preview: _preview(transcript),
+                unread: _progress.unreadCount(person),
+                awaitsReply: _progress.awaitsReply(person),
+                onTap: () =>
+                    _open(ChatPage(person: person, number: numbers[person])),
+              ),
             for (final number in PrivateChats.instance.numbers)
               if (private[number] case final contact?)
                 _tile(

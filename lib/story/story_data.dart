@@ -11,7 +11,7 @@ class StoryData {
   StoryData({
     required this.conversations,
     required this.documents,
-    required this.inboxMails,
+    required this.mailPool,
     required this.storyMails,
     required this.smsThreads,
     required this.feed,
@@ -50,7 +50,7 @@ class StoryData {
   factory StoryData.empty() => StoryData(
     conversations: const {},
     documents: const [],
-    inboxMails: const [],
+    mailPool: const MailPool(),
     storyMails: const [],
     smsThreads: const [],
     feed: const [],
@@ -75,8 +75,8 @@ class StoryData {
   final Map<String, Conversation> conversations;
   final List<StoryDocument> documents;
 
-  /// Mails that arrive one by one when the player checks for new mail.
-  final List<Mail> inboxMails;
+  /// Everyday mail that drips in at random moments of play.
+  final MailPool mailPool;
 
   /// Mails the story sends once their condition is met.
   final List<Mail> storyMails;
@@ -120,7 +120,13 @@ class StoryData {
         },
       ),
       documents: parse('documents.json', (r) => r.list(_document)),
-      inboxMails: parse('mails.json', (r) => r.field('inbox').list(_mail)),
+      mailPool: parse(
+        'mails.json',
+        (r) => switch (r.optional('pool')) {
+          null => const MailPool(),
+          final pool => _mailPool(pool),
+        },
+      ),
       storyMails: parse('mails.json', (r) => r.field('story').list(_mail)),
       smsThreads: parse('sms.json', (r) => r.list(_sms)),
       feed: parse('sinstagram.json', (r) => r.field('feed').list(_post)),
@@ -256,14 +262,39 @@ class Mail {
   const Mail({
     required this.sender,
     required this.body,
+    String? id,
+    this.subject = '',
     this.requires = Condition.always,
-  });
+    this.after = Duration.zero,
+  }) : _id = id;
 
+  final String? _id;
   final String sender;
+  final String subject;
   final String body;
   final Condition requires;
 
-  String get id => '$sender|$body';
+  /// Play time the mail takes to arrive once [requires] holds.
+  final Duration after;
+
+  String get id => _id ?? '$sender|$body';
+}
+
+/// Everyday mail: one of [mails] every [minMinutes] to [maxMinutes] minutes
+/// of play, in a shuffled order. A mail with a condition waits for it. Each
+/// mail arrives once; the first [start] were there before the game began.
+class MailPool {
+  const MailPool({
+    this.mails = const [],
+    this.minMinutes = 5,
+    this.maxMinutes = 15,
+    this.start = 3,
+  });
+
+  final List<Mail> mails;
+  final int minMinutes;
+  final int maxMinutes;
+  final int start;
 }
 
 class SmsThread {
@@ -735,6 +766,7 @@ class Article {
     this.tags = const [],
     this.archive = false,
     this.requires = Condition.always,
+    this.after = Duration.zero,
     this.unlocksOnRead = const [],
   });
 
@@ -761,23 +793,29 @@ class Article {
   final List<String> tags;
   final bool archive;
   final Condition requires;
+
+  /// Play time the article takes to come out once [requires] holds.
+  final Duration after;
   final List<String> unlocksOnRead;
 }
 
 /// Everyday news that keeps the feed alive: one article from [articles]
-/// every [minHours] to [maxHours] hours, in a shuffled order that starts
-/// over once every article has run.
+/// every [minMinutes] to [maxMinutes] minutes of play, in a shuffled order
+/// that starts over once every article has run. The first [start] ran
+/// before the game began.
 class FillerNews {
   const FillerNews({
     this.articles = const [],
-    this.minHours = 6,
-    this.maxHours = 30,
+    this.minMinutes = 4,
+    this.maxMinutes = 12,
+    this.start = 4,
     this.keep = 6,
   });
 
   final List<Article> articles;
-  final int minHours;
-  final int maxHours;
+  final int minMinutes;
+  final int maxMinutes;
+  final int start;
 
   /// How many of the latest ones stay in the feed.
   final int keep;
@@ -1024,10 +1062,26 @@ StoryDocument _document(_Reader r) {
 }
 
 Mail _mail(_Reader r) => Mail(
+  id: r.textOr('id'),
   sender: r.text('sender'),
+  subject: r.textOr('subject') ?? '',
   body: r.text('body'),
   requires: r.condition(),
+  after: _after(r),
 );
+
+MailPool _mailPool(_Reader r) => MailPool(
+  mails: r.field('mails').list(_mail),
+  minMinutes: r.intOr('minMinutes', 5),
+  maxMinutes: r.intOr('maxMinutes', 15),
+  start: r.intOr('start', 3),
+);
+
+/// The optional `afterMinutes` wait of mails and articles.
+Duration _after(_Reader r) => switch (r.optional('afterMinutes')) {
+  null => Duration.zero,
+  final m => Duration(milliseconds: (m.number * 60000).round()),
+};
 
 SmsThread _sms(_Reader r) => SmsThread(
   sender: r.text('sender'),
@@ -1282,8 +1336,9 @@ NewsData _news(_Reader r) => NewsData(
     null => const FillerNews(),
     final f => FillerNews(
       articles: f.optional('articles')?.list(_article) ?? const [],
-      minHours: f.intOr('minHours', 6),
-      maxHours: f.intOr('maxHours', 30),
+      minMinutes: f.intOr('minMinutes', 4),
+      maxMinutes: f.intOr('maxMinutes', 12),
+      start: f.intOr('start', 4),
       keep: f.intOr('keep', 6),
     ),
   },
@@ -1307,6 +1362,7 @@ Article _article(_Reader a) => Article(
   tags: a.stringsOr('tags'),
   archive: a.boolOr('archive'),
   requires: a.condition(),
+  after: _after(a),
   unlocksOnRead: a.stringsOr('unlocksOnRead'),
 );
 

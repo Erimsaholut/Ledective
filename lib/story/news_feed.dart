@@ -19,17 +19,17 @@ class NewsItem {
 }
 
 /// The News feed at [now], newest first: story articles whose condition
-/// holds (published when they arrived, see [arrivedAt]), articles
-/// scheduled for a day after [firstOpen], and the latest everyday news.
-///
-/// Everyday news follows a schedule fixed by [firstOpen], so it is the same
-/// every time it is worked out and needs no saving.
+/// holds (published when they arrived, see [arrivedAt]; [ready] holds back
+/// the ones still on their way), articles scheduled for a day after
+/// [firstOpen], and the latest of the everyday news in [filler].
 List<NewsItem> newsFeed(
   NewsData news, {
   required DateTime firstOpen,
   required DateTime now,
   required bool Function(Condition condition) meets,
+  bool Function(Article article)? ready,
   DateTime? Function(String articleId)? arrivedAt,
+  Iterable<NewsItem> filler = const [],
 }) {
   final day = DateTime(firstOpen.year, firstOpen.month, firstOpen.day);
   final items = <NewsItem>[];
@@ -42,6 +42,7 @@ List<NewsItem> newsFeed(
       if (!time.isAfter(now)) items.add(NewsItem(a, time));
       continue;
     }
+    if (!(ready?.call(a) ?? true)) continue;
     final arrived = arrivedAt?.call(a.id);
     if (arrived != null) {
       items.add(NewsItem(a, arrived));
@@ -60,7 +61,14 @@ List<NewsItem> newsFeed(
     final limit = earliest.subtract(const Duration(minutes: 1));
     items.add(NewsItem(a, time.isAfter(limit) ? limit : time));
   }
-  items.addAll(_filler(news.filler, day, now, meets));
+  final everyday = filler.toList()
+    ..sort((a, b) => a.published.compareTo(b.published));
+  final keep = max(1, news.filler.keep);
+  items.addAll(
+    everyday.length <= keep
+        ? everyday
+        : everyday.sublist(everyday.length - keep),
+  );
   // Same time: the article listed later in the file is the newer one.
   final order = {for (final (i, a) in news.articles.indexed) a.id: i};
   items.sort((a, b) {
@@ -69,48 +77,4 @@ List<NewsItem> newsFeed(
     return (order[b.article.id] ?? 0).compareTo(order[a.article.id] ?? 0);
   });
   return items;
-}
-
-Iterable<NewsItem> _filler(
-  FillerNews filler,
-  DateTime day,
-  DateTime now,
-  bool Function(Condition condition) meets,
-) {
-  final pool = filler.articles;
-  if (pool.isEmpty) return const [];
-  final seed = day.year * 10000 + day.month * 100 + day.day;
-  final low = max(1, filler.minHours);
-  final high = max(low, filler.maxHours);
-
-  // A different order each time the pool starts over, never running the
-  // same article twice in a row.
-  final orders = <int, List<int>>{};
-  List<int> orderOf(int cycle) => orders[cycle] ??= () {
-    final order = List.generate(pool.length, (i) => i)
-      ..shuffle(Random(seed + cycle * 7919));
-    final previous = cycle == 0 ? null : orderOf(cycle - 1).last;
-    if (order.length > 1 && order.first == previous) {
-      order.add(order.removeAt(0));
-    }
-    return order;
-  }();
-
-  // The first ones ran during the two days before the game started, so the
-  // feed is never empty.
-  var time = day
-      .subtract(const Duration(days: 2))
-      .add(const Duration(hours: 8));
-  final items = <NewsItem>[];
-  for (var slot = 0; !time.isAfter(now); slot++) {
-    final cycle = slot ~/ pool.length;
-    final article = pool[orderOf(cycle)[slot % pool.length]];
-    if (meets(article.requires)) {
-      items.add(NewsItem(article, time, run: cycle));
-    }
-    final gap = low + Random(seed * 31 + slot).nextInt(high - low + 1);
-    time = time.add(Duration(hours: gap));
-  }
-  final keep = min(max(1, filler.keep), pool.length);
-  return items.length <= keep ? items : items.sublist(items.length - keep);
 }

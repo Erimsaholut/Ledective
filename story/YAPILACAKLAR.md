@@ -121,6 +121,18 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
   araştırmak.
 - [ ] **Senaryolu telefon aramaları.** Avukat, gazeteci, tanık (Phone uygulaması).
 - [ ] **Silinen mesaj izleri.**
+- [x] **Bildirimler.** Gerçek telefon gibi: arka arkaya gelenler üst üste
+  yığılır, aynı kişinin mesajları tek kartta toplanır, yukarıdan aşağı
+  çekince bildirim merkezi açılır.
+- [x] **Mail ve haber zamanlaması.** Aşağı çekip yenileme kalktı; oyun
+  süresinde rastgele aralıklarla gelir, bazıları olaylardan sonra
+  (`afterMinutes`, `requires`). Havuzlar: 58 mail, 58 gündelik haber.
+- [ ] [ÖNERİ] Gizli son ipucu olarak üç mail eklendi; kalsın mı karar ver:
+  ruh sağlığı polikliniğinden "kaçırılan kontrol randevusu", havayolundan
+  "son 12 ayda uçuş kaydınız yok" (ikisi de `leak:traced` sonrası) ve
+  otelin "rezervasyon numaranız sistemde görünmüyor" maili.
+- [ ] Sohbetlerde mesajlar şu an toplu düşüyor; istenirse olaylarla gelen
+  mesajlar da birkaç saniye arayla tek tek gelebilir.
 
 ## Hikâye planı (bible) adımları
 

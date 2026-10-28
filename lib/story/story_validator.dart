@@ -192,8 +192,27 @@ List<StoryIssue> validateStory(
   }
 
   // Mails, SMS, bank, recordings, Sinstagram.
+  final mailIds = <String>{};
   for (final m in story.storyMails) {
-    uses(m.requires, 'mails.json › ${m.sender}');
+    final where = 'mails.json › story › ${m.sender}';
+    uses(m.requires, where);
+    if (!mailIds.add(m.id)) error(where, 'aynı mail iki kez var');
+    if (m.after.isNegative) error(where, '"afterMinutes" eksi olamaz');
+  }
+  final pool = story.mailPool;
+  for (final m in pool.mails) {
+    final where = 'mails.json › pool › ${m.id}';
+    uses(m.requires, where);
+    if (!mailIds.add(m.id)) error(where, 'aynı mail iki kez var');
+    if (m.after != Duration.zero) {
+      error(where, 'havuzdaki maillerde "afterMinutes" olmaz');
+    }
+  }
+  if (pool.minMinutes < 1 || pool.maxMinutes < pool.minMinutes) {
+    error(
+      'mails.json › pool',
+      '"minMinutes" en az 1, "maxMinutes" da en az "minMinutes" olmalı',
+    );
   }
   for (final t in story.smsThreads) {
     uses(t.requires, 'sms.json › ${t.sender}');
@@ -286,9 +305,14 @@ List<StoryIssue> validateStory(
   for (final a in [...story.news.articles, ...filler.articles]) {
     final where = 'news.json › ${a.id}';
     final isFiller = filler.articles.contains(a);
-    if (isFiller && (a.archive || a.dayOffset != null)) {
-      error(where, 'zamansız haberde "archive" ya da "dayOffset" olmaz');
+    if (isFiller &&
+        (a.archive || a.dayOffset != null || a.after != Duration.zero)) {
+      error(
+        where,
+        'zamansız haberde "archive", "dayOffset" ya da "afterMinutes" olmaz',
+      );
     }
+    if (a.after.isNegative) error(where, '"afterMinutes" eksi olamaz');
     if ((a.dayOffset ?? 0) < 0) error(where, '"dayOffset" eksi olamaz');
     if (a.hour < 0 || a.hour > 23) {
       error(where, '"hour" 0 ile 23 arasında olmalı');
@@ -303,10 +327,10 @@ List<StoryIssue> validateStory(
     if (a.body.isEmpty && a.summary.isEmpty) warn(where, 'haberin metni yok');
   }
 
-  if (filler.minHours < 1 || filler.maxHours < filler.minHours) {
+  if (filler.minMinutes < 1 || filler.maxMinutes < filler.minMinutes) {
     error(
       'news.json › filler',
-      '"minHours" en az 1, "maxHours" da en az "minHours" olmalı',
+      '"minMinutes" en az 1, "maxMinutes" da en az "minMinutes" olmalı',
     );
   }
 

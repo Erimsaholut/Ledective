@@ -80,9 +80,14 @@ class _LedectiveAppState extends State<LedectiveApp> {
       builder: (context, child) => Stack(
         children: [
           HomeIndicator(observer: _routes, child: child!),
-          Align(
-            alignment: Alignment.topCenter,
-            child: AlertBanner(alerts: StoryProgress.instance.alerts),
+          Positioned.fill(
+            child: AlertBanner(
+              alerts: StoryProgress.instance.alerts,
+              onOpen: (alert) {
+                final navigator = _navigator.currentState;
+                if (navigator != null) openAlert(navigator, alert);
+              },
+            ),
           ),
         ],
       ),

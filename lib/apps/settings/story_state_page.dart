@@ -90,6 +90,24 @@ class StoryStatePage extends StatelessWidget {
                   ],
                 ),
               GroupedSection(
+                header: "Gündelik mail ve haber",
+                footer:
+                    "Oyun süresi: ${progress.playTime.inMinutes} dk. "
+                    "Havuzdan sıradakini beklemeden getirir.",
+                children: [
+                  ListTile(
+                    title: const Text("Sıradaki maili getir"),
+                    trailing: const Icon(Icons.mail_outline_rounded),
+                    onTap: () => progress.dripNow(),
+                  ),
+                  ListTile(
+                    title: const Text("Sıradaki haberi getir"),
+                    trailing: const Icon(Icons.newspaper_rounded),
+                    onTap: () => progress.dripNow(mail: false),
+                  ),
+                ],
+              ),
+              GroupedSection(
                 header: "Açık bayraklar",
                 children: [
                   Padding(

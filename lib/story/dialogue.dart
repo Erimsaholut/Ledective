@@ -266,6 +266,11 @@ class DialogueState {
   /// True when there is something to answer or ask.
   bool get canReply => _keyboard.isNotEmpty;
 
+  /// True when the other person asked something and waits for an answer,
+  /// not just when the player could ask a question of their own.
+  bool get expectsReply =>
+      _answering && _node!.options.any((o) => o.requires.isMetBy(_state));
+
   /// True when the conversation has reached its end.
   bool get isFinished => _node == null || (_arrived && _node!.options.isEmpty);
 

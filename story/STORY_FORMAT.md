@@ -404,6 +404,9 @@ değerlendirmesi yanlış, önyargılı ya da kasıtlı olabilir.
   `hour`'da (varsayılan 9) yayımlanır ve bildirim çıkarır:
   `"dayOffset": 7, "hour": 8` bir hafta sonra sabah sekizde. `requires` ile
   birlikte kullanılırsa ikisini de bekler.
+- `afterMinutes` verilirse haber, koşulu açıldıktan o kadar dakika **oyun
+  süresi** sonra çıkar: basının olayı öğrenip yazması zaman alır.
+  `"requires": "plate:mv", "afterMinutes": 3`.
 
 ### Zamansız haberler (`filler`)
 
@@ -412,16 +415,18 @@ komik haberler bir havuzda durur:
 
 ```json
 "filler": {
-  "minHours": 6, "maxHours": 30, "keep": 6,
+  "minMinutes": 5, "maxMinutes": 14, "start": 5, "keep": 8,
   "articles": [
     {"id": "cakir-kebap", "outlet": "ekspres", "title": "...", "summary": "...", "body": ["..."]}
   ]
 }
 ```
 
-- Her `minHours`–`maxHours` saatte bir havuzdan bir haber yayımlanır.
-  Aralıklar ve sıra rastgeledir ama her oyuncu için sabittir.
-- Oyun başladığında son iki günün haberleri zaten akıştadır.
+- Oyuncu oynadıkça her `minMinutes`–`maxMinutes` dakikada bir havuzdan bir
+  haber yayımlanır ve bildirim çıkarır. Telefon kapalıyken geçen süre
+  sayılmaz. Aralıklar ve sıra rastgeledir.
+- Oyun başladığında ilk `start` haber zaten akıştadır (son bir iki güne
+  yayılmış, bildirimsiz).
 - Akışta en son `keep` zamansız haber durur, eskileri düşer.
 - Havuz bitince karıştırılıp baştan yayımlanır. Aynı haber üst üste iki kez
   gelmez ve her yeniden yayın okunmamış sayılır.
@@ -454,8 +459,35 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
 
 ## Diğer dosyalar
 
-- **mails.json**: `inbox` aşağı çekince sırayla gelen sıradan mailler,
-  `story` ise `requires` açılınca en üstte beliren mailler.
+- **mails.json**: iki bölüm. Mailler kendiliğinden gelir, aşağı çekip
+  yenilemek yoktur.
+
+  ```json
+  {
+    "pool": {"minMinutes": 6, "maxMinutes": 16, "start": 3, "mails": [
+      {"id": "pizza", "sender": "pizzaci.com.tr", "subject": "Seni özledik!", "body": "..."},
+      {"id": "journalist-1", "sender": "haber@gundem24.com.tr", "subject": "Görüşme talebi",
+       "body": "...", "requires": "part1Done"}
+    ]},
+    "story": [
+      {"id": "leave-cancelled", "sender": "personel.emniyet.gov.tr", "subject": "Yıllık izniniz hakkında",
+       "body": "...", "requires": "part1Done", "afterMinutes": 6}
+    ]
+  }
+  ```
+
+  - `pool`: gündelik mailler (reklam, fatura, kargo, eski arkadaş...). Oyun
+    süresinde her `minMinutes`–`maxMinutes` dakikada bir, karışık sırayla
+    biri gelir; her mail bir kez gelir. İlk `start` tanesi oyun başında
+    gelen kutusundadır. `requires` taşıyan mail koşulu açılana kadar
+    sırasını bekler: olaylardan sonra gelen gazeteci, okur, avukat mailleri.
+  - `story`: hikâyenin mailleri, `requires` açılınca gelir. `afterMinutes`
+    ile koşuldan o kadar dakika oyun süresi sonra gelir.
+  - `subject` listede ve bildirimde görünür; `id` verilmezse gönderen ve
+    metinden üretilir (sonradan metni değiştirince "okundu" bilgisi
+    kaybolmasın diye `id` ver).
+  - Yazarın hata ayıklama sayfasında (Ayarlar › Hikâye durumu) sıradaki
+    maili ya da haberi beklemeden getiren düğmeler var.
 - **sms.json**: `sender`, `messages`, `daysAgo`, isteğe bağlı `requires`.
 - **bank.json**: tutarlar **kuruş** cinsindendir (`5000000` = 50.000,00 TL),
   eksi değer ödemedir. `requires` taşıyan işlemler hikâyede gelir ve bakiyeyi

@@ -424,7 +424,14 @@ class _TableWriter {
       _sets(d.unlocksOnView, 'Poltel › ${d.title} açılınca');
     }
     for (final m in story.storyMails) {
-      _uses(m.requires, 'Mail › ${m.sender}');
+      final wait = m.after > Duration.zero
+          ? ' (${m.after.inMinutes} dk sonra)'
+          : '';
+      _uses(m.requires, 'Mail › ${m.sender}$wait');
+    }
+    for (final m in story.mailPool.mails) {
+      if (m.requires.isAlways) continue;
+      _uses(m.requires, 'Mail havuzu › ${m.sender} gelebilir');
     }
     for (final t in story.smsThreads) {
       _uses(t.requires, 'Messages › ${t.sender}');
