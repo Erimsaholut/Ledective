@@ -239,6 +239,7 @@ List<StoryIssue> validateStory(
   for (final l in story.map.locations) {
     final where = 'map.json › ${l.id}';
     uses(l.requires, where);
+    asset(l.image, where);
     if (l.x < 0 || l.x > 1 || l.y < 0 || l.y > 1) {
       error(where, 'x ve y 0 ile 1 arasında olmalı');
     }

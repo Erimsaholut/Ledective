@@ -29,21 +29,21 @@ işaretle, bağlantısını ben yaparım.
 - [ ] @kedi.dunyasi hâlâ `myCat.jpeg` kullanıyor: senin kedinse kalsın.
 - [ ] Fotoğraflar uygulamasındaki (komiserin galerisi) eski test görselleri:
   aşağıdaki "Komiserin galerisi" maddeleri gelince değişecek.
-- [ ] Şüphelilerin gönderileri: `berat_kafe.jpg`, `berat_kapi.jpg`,
+- [x] Şüphelilerin gönderileri: `berat_kafe.jpg`, `berat_kapi.jpg`,
   `furkan_borc.jpg`, `yusuf_sinav.jpg`, `deniz_yas.jpg`
 - [ ] `my_foto1.jpg`, `my_foto2.jpg` (Behzat Ç.) ve @dizi.replikleri gönderisini
   kaldır; yerine bir şey gerekmez.
 
 ### Delil ve olay yeri (sonraki bölümler)
 
-- [ ] `olay_yeri.jpg`: Berat'ın dağınık salonu
-- [ ] `mezbaha_ic.jpg`: vidalı sandalye, karo duvarlar
-- [ ] `mezbaha_duvar.jpg`: duvarda tarihli üç fotoğraf
-- [ ] `mezbaha_dis.jpg`: gece, polis şeridi
-- [ ] `cay_ocagi.jpg`
-- [ ] `makam_araci.jpg`: plakası okunmayan siyah sedan
-- [ ] `burs_sozlesmesi.jpg` (ben de üretebilirim)
-- [ ] `kayip_ilani_1.jpg`, `kayip_ilani_2.jpg`
+- [x] `olay_yeri.jpg`: Berat'ın dağınık salonu
+- [x] `mezbaha_ic.jpg`: vidalı sandalye, karo duvarlar
+- [x] `mezbaha_duvar.jpg`: duvarda tarihli üç fotoğraf
+- [x] `mezbaha_dis.jpg`: gece, polis şeridi
+- [x] `cay_ocagi.jpg`
+- [x] `makam_araci.jpg`: plakası okunmayan siyah sedan
+- [x] `burs_sozlesmesi.jpg` (ben de üretebilirim)
+- [x] `kayip_ilani_1.jpg`, `kayip_ilani_2.jpg`
 
 ### Kişiler (profil fotoğrafı desteği gelince)
 

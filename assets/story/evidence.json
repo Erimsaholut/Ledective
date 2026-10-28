@@ -68,5 +68,59 @@
       "result": "Haritada şehrin dışındaki eski mezbaha kırmızıyla işaretlenmiş: 'Cuma 03:00'. Konum haritana eklendi.",
       "unlocks": ["map-restored"]
     }
+  },
+  {
+    "id": "scene",
+    "name": "Olay Yeri",
+    "image": "assets/story/images/olay_yeri.jpg",
+    "requires": "part1Done",
+    "description": "Berat’ın salonu. Devrilmiş sehpa, kırık bardaklar, yerdeki lamba hâlâ yanıyor. Kapı aralık bulunmuş.",
+    "links": ["glass", "torn-photo"]
+  },
+  {
+    "id": "car",
+    "name": "Makam Aracı",
+    "image": "assets/story/images/makam_araci.jpg",
+    "requires": "plate:mv",
+    "description": "06 MV 1907. Meclis otoparkına kayıtlı, milletvekilinin danışmanına zimmetli. Çay ocağında Adil’le görüştü.",
+    "links": ["glass"]
+  },
+  {
+    "id": "chair",
+    "name": "Mezbahadaki Sandalye",
+    "image": "assets/story/images/mezbaha_ic.jpg",
+    "requires": "mezbaha-found",
+    "description": "Yere vidalanmış bir sandalye, kesik ipler. Kanın bir kısmı aylar öncesine ait.",
+    "links": ["torn-map", "wall-photos"]
+  },
+  {
+    "id": "wall-photos",
+    "name": "Duvardaki Fotoğraflar",
+    "image": "assets/story/images/mezbaha_duvar.jpg",
+    "requires": "mezbaha-found",
+    "description": "Berat’ın ve iki öğrencinin fotoğrafları, paslı çivilerle duvara çakılmış. Altlarındaki tarihler nemden dağılmış; biri önümüzdeki cuma.",
+    "links": ["missing-1", "missing-2"]
+  },
+  {
+    "id": "missing-1",
+    "name": "Kayıp İlanı",
+    "image": "assets/story/images/kayip_ilani_1.jpg",
+    "requires": "mezbaha-found",
+    "description": "Geçen ay kaybolan burslu bir öğrenci. Fotoğrafı mezbahanın duvarında."
+  },
+  {
+    "id": "missing-2",
+    "name": "Kayıp İlanı",
+    "image": "assets/story/images/kayip_ilani_2.jpg",
+    "requires": "mezbaha-found",
+    "description": "Geçen ay kaybolan bir başka burslu öğrenci. Ailesi kaçtığına inanmıyor."
+  },
+  {
+    "id": "contract",
+    "name": "Ece’nin Burs Sözleşmesi",
+    "image": "assets/story/images/burs_sozlesmesi.jpg",
+    "requires": "heard:kerem-board",
+    "description": "Ece’nin odasındaki panoda asılıydı. \"Geri ödeme\" maddesinin altı iki kez çizilmiş: bursu bırakan öğrenci aldığının üç katını öder.",
+    "links": ["missing-1", "missing-2"]
   }
 ]

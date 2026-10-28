@@ -123,7 +123,8 @@
             {"author": "furkan.shn", "text": "abi bu akşam yine orda mısın"},
             {"author": "adil.abi", "text": "borçlar ödenmeden kahve içilmez 😉"},
             {"author": "deniz.yilmaz", "text": "Kuzen bi ara arasana"}
-          ]
+          ],
+          "image": "assets/story/images/berat_kafe.jpg"
         },
         {
           "id": "berat-dad",
@@ -142,7 +143,8 @@
           "daysAgo": 3,
           "comments": [
             {"author": "deniz.yilmaz", "text": "Ne demek bu? Beni ara."}
-          ]
+          ],
+          "image": "assets/story/images/berat_kapi.jpg"
         }
       ]
     },
@@ -161,7 +163,8 @@
           "daysAgo": 6,
           "comments": [
             {"author": "adil.abi", "text": "👀"}
-          ]
+          ],
+          "image": "assets/story/images/furkan_borc.jpg"
         }
       ]
     },
@@ -177,7 +180,8 @@
           "id": "yusuf-exam",
           "caption": "Sınav haftası. Kahve olmadan yaşanmıyor ☕",
           "likes": 45,
-          "daysAgo": 5
+          "daysAgo": 5,
+          "image": "assets/story/images/yusuf_sinav.jpg"
         }
       ]
     },
@@ -193,7 +197,8 @@
           "id": "deniz-grief",
           "caption": "Kuzenim, sana bunu kim yaptıysa bulacağız. 🖤",
           "likes": 230,
-          "daysAgo": 1
+          "daysAgo": 1,
+          "image": "assets/story/images/deniz_yas.jpg"
         }
       ]
     },

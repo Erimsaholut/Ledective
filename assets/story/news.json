@@ -45,7 +45,8 @@
       "tags": ["mezbaha", "sanayi"],
       "body": [
         "Bölge sakinleri gece boyunca çok sayıda ekip aracının mezbahaya girip çıktığını anlattı. Çalışmanın Berat Yılmaz soruşturmasıyla bağlantılı olup olmadığı bilinmiyor."
-      ]
+      ],
+      "image": "assets/story/images/mezbaha_dis.jpg"
     },
     {
       "id": "old-case",
@@ -182,7 +183,8 @@
       "body": [
         "Berat Yılmaz soruşturmasını yürüten ekibin, Meclis otoparkına kayıtlı bir makam aracını sanayi bölgesinde tespit ettiği öğrenildi.",
         "Aracın, uyuşturucu suçlarından sabıkalı bir şahısla görüştüğü iddia ediliyor. Milletvekili Yılmaz’ın ofisi iddiaları \"mesnetsiz\" olarak nitelendirdi."
-      ]
+      ],
+      "image": "assets/story/images/makam_araci.jpg"
     },
     {
       "id": "families-anonymous",

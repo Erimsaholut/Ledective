@@ -382,11 +382,15 @@ class MapLocation {
     required this.y,
     required this.tasks,
     this.requires = Condition.always,
+    this.image,
   });
 
   final String id;
   final String name;
   final String description;
+
+  /// A photo of the place, shown above its tasks.
+  final String? image;
 
   /// Position on the map image, from 0 (left/top) to 1 (right/bottom).
   final double x;
@@ -1078,6 +1082,7 @@ MapData _map(_Reader r) => MapData(
           id: l.text('id'),
           name: l.text('name'),
           description: l.textOr('description') ?? '',
+          image: l.textOr('image'),
           x: l.field('x').number,
           y: l.field('y').number,
           requires: l.condition(),

@@ -432,7 +432,8 @@ void main() {
       await progress.completeDueMissions(now: start.add(task.duration));
       expect(progress.reports.single.officer, 'Atakan');
       expect(progress.has('ev:torn-photo'), isTrue);
-      expect(newEvidenceCount(progress), 2);
+      // The crime scene, plus the photo and the glass from the search.
+      expect(newEvidenceCount(progress), 3);
       expect(progress.alerts.current?.app, 'Harita');
       expect(progress.missionOf('Atakan'), isNull);
       expect(

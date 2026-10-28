@@ -176,6 +176,16 @@ void main() {
     await tester.tap(find.text("Berat'ın Evi"), kind: PointerDeviceKind.mouse);
     await tester.pumpAndSettle(const Duration(milliseconds: 100));
     expect(find.text("Olay yerini yeniden ara"), findsOneWidget);
+    // The place's photo is above its tasks.
+    expect(
+      find.byWidgetPredicate(
+        (w) =>
+            w is Image &&
+            w.image is AssetImage &&
+            (w.image as AssetImage).assetName.endsWith('olay_yeri.jpg'),
+      ),
+      findsOneWidget,
+    );
 
     await tester.tap(find.widgetWithText(FilledButton, 'Gönder').first);
     await tester.pumpAndSettle(const Duration(milliseconds: 100));

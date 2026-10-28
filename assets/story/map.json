@@ -41,7 +41,8 @@
           "report": "Karşı daireden yaşlı bir kadın olay gecesi saat ikiye doğru bağırışlar duymuş. Biri durmadan 'Adil abi, yemin ederim ödeyeceğim' diye yalvarıyormuş. Sonra her şey birden susmuş.",
           "unlocks": ["heard:adil"]
         }
-      ]
+      ],
+      "image": "assets/story/images/olay_yeri.jpg"
     },
     {
       "id": "cafe",
@@ -131,7 +132,8 @@
           "report": "Adil kaçmış, tezgahın altındaki sobada bir şeyler yakmış. Ateşten kurtarabildiğimiz tek şey yarısı yanmış bir harita. Parçaları laboratuvara gönderdim.",
           "unlocks": ["ev:torn-map"]
         }
-      ]
+      ],
+      "image": "assets/story/images/cay_ocagi.jpg"
     },
     {
       "id": "slaughterhouse",
@@ -148,7 +150,8 @@
           "report": "Amirim... burası boş değil. Ortada vidalanmış bir sandalye, kesik ip parçaları ve kurumuş kan var. Duvara Berat'ın ve iki öğrencinin daha fotoğrafları asılmış. Fotoğrafların altına tarih yazılmış. Bir tanesinin tarihi önümüzdeki cuma.",
           "unlocks": ["mezbaha-found"]
         }
-      ]
+      ],
+      "image": "assets/story/images/mezbaha_dis.jpg"
     },
     {
       "id": "foundation",
