@@ -8,7 +8,8 @@
     "trust:Behram": {"label": "Behram'ın komisere güveni", "start": 50, "min": 0, "max": 100},
     "pressure": {"label": "Üstlerden gelen baskı", "start": 20, "min": 0, "max": 100},
     "integrity": {"label": "Mesleki dürüstlük", "start": 70, "min": 0, "max": 100},
-    "witnessDanger": {"label": "Tanıkların tehlike düzeyi", "start": 10, "min": 0, "max": 100}
+    "witnessDanger": {"label": "Tanıkların tehlike düzeyi", "start": 10, "min": 0, "max": 100},
+    "doubt": {"label": "Komiserin gerçekte nerede olduğuna dair şüphe (gizli son)", "start": 0, "min": 0}
   },
   "flags": {
     "case:internal-investigation": "Komiser hakkında idari inceleme başladı",
@@ -65,7 +66,19 @@
     "heard:orhun-debt": "Orhun’un 80.000 TL icra borcu öğrenildi",
     "orhun:helped": "Komiser Orhun’un borcuna para gönderdi",
     "behram:helps": "Behram Adil’i aramaya yardım ediyor",
-    "heard:witness": "Korkmuş tanığın sesli mesajı dinlendi"
+    "heard:witness": "Korkmuş tanığın sesli mesajı dinlendi",
+    "kerem:same-man": "Yırtık fotoğraftaki ve kameradaki adam aynı kişi",
+    "card:enhanced": "Karttaki vakıf logosu netleşti (süreli olay)",
+    "heard:volunteer-card": "Kameradaki kartın vakıf gönüllü kartı olduğu anlaşıldı",
+    "heard:ece": "Ece Aydın’ın adı öğrenildi",
+    "heard:kerem": "Kerem Aydın’ın adı öğrenildi",
+    "kerem:volunteer": "Kerem’in vakıfta gönüllü olduğu öğrenildi",
+    "kerem:identified": "Berat’ın peşinden çıkan adamın Kerem olduğu anlaşıldı",
+    "kerem:contact": "Kerem komisere yazdı",
+    "kerem:meeting": "Kerem’le buluşma (Bölüm IV, henüz yazılmadı)",
+    "heard:3am-caller": "Selin’e numarayı gece üçte arayan biri vermiş",
+    "heard:kaymakam-rival": "Kaymakamın Yılmaz’ın koltuğuna aday olacağı öğrenildi",
+    "behram:guilt": "Behram narkotiğin cuma gecelerine göz yumduğunu itiraf etti"
   },
   "locks": [
     {
@@ -102,6 +115,12 @@
       "when": "furkanStatement",
       "minutes": 6,
       "unlocks": ["adil:warns"]
+    },
+    {
+      "id": "card-enhance",
+      "when": "kerem:same-man",
+      "minutes": 8,
+      "unlocks": ["card:enhanced"]
     }
   ],
   "milestones": [
@@ -115,6 +134,10 @@
     {"flag": "mp:wrote", "title": "Milletvekili baba yazar, para gelir"},
     {"flag": "map-restored", "title": "Yanık harita birleştirilir"},
     {"flag": "mezbaha-found", "title": "Eski mezbaha bulunur"},
+    {"flag": "heard:ece", "title": "Ece Aydın’ın adı çıkar"},
+    {"flag": "heard:kerem", "title": "Kerem Aydın’ın adı çıkar"},
+    {"flag": "kerem:identified", "title": "Kameradaki adamın Kerem olduğu anlaşılır"},
+    {"flag": "kerem:contact", "title": "Kerem ilk kez yazar"},
     {"flag": "final:ready", "title": "Final soruşturması (henüz yazılmadı)"}
   ]
 }

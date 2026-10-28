@@ -73,14 +73,16 @@ işaretle, bağlantısını ben yaparım.
 
 Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 
-- [ ] **Kerem'e ulaşma yolları.** En az ikisi, birbirinden bağımsız:
-  - [ ] Vakfın gönüllü listesi (Harita görevi: vakıf binası)
-  - [ ] Kafe kamerasındaki kart (netleştirilmiş görüntü: Atakan'ın teknik birimi)
-  - [ ] Yırtık fotoğraf ile kamera karesindeki adamın aynı kişi olduğu
-  - [ ] Ece'nin eski hattı (Özge'nin sorgusu: "üç yıl önce ölmüş bir kadın")
-  - [ ] Sinstagram'da Ece'nin eski hesabı ve Kerem'in yorumları
+- [x] **Kerem'e ulaşma yolları** (Bölüm III, `bible/04-bolumler.md`):
+  - [x] Vakfın gönüllü listesi (Harita görevi: vakıf binası)
+  - [x] Kafe kamerasındaki kart (netleştirilmiş görüntü: Atakan'ın teknik birimi)
+  - [x] Yırtık fotoğraf ile kamera karesindeki adamın aynı kişi olduğu
+  - [x] Ece'nin eski hattı (Özge'nin sorgusu: "üç yıl önce ölmüş bir kadın")
+  - [x] Sinstagram'da Ece'nin eski hesabı ve Kerem'in yorumları
 - [ ] **Berat'ın kanıtları.** Telefonu Kerem'de; oyuncu bunu nasıl öğrenir,
   kanıtlara nasıl ulaşır?
+- [ ] **Kerem'le buluşma (`kerem:meeting`) ve İkilem 2.** Bölüm IV'ün başı.
+- [ ] Sızıntı için yanlış kişiyi suçlamanın bedeli (Atakan, Orhun, kaymakam, Erdi).
 - [ ] **Kerem'le yüzleşme ve İkilem 2.** Gözaltı, savcıyla iş birliği ya da kaçmasına
   göz yumup kayıpların yerini öğrenmek.
 - [ ] **Kayıp öğrenci (hayatta olan) ve İkilem 5.**
@@ -90,19 +92,18 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 
 ## Açık sorular (önce karar)
 
-- [ ] Erdi neyi biliyor, kimden emir alıyor?
-- [ ] Kaymakamın vakıfla bağı ne?
-- [ ] Behram'ın sırrı: "Adil bir zamanlar muhbirdi." Narkotik bu ağı biliyor muydu?
-- [ ] Basına kim sızdırıyor? (Adaylar: Atakan, Orhun, kaymakam/milletvekili
-  çevresi, Erdi, komiserin kendisi.)
+- [x] Erdi neyi biliyor? Korkak bürokrat, vakfı bilmiyor.
+- [x] Kaymakamın vakıfla bağı ne? Bağı yok, milletvekilinin rakibi.
+- [x] Behram'ın sırrı: narkotik, Adil muhbir olduğu için cuma gecelerine göz yumdu.
+- [x] Basına kim sızdırıyor? Komiserin kendisi (hatırlamadığı gece aramaları).
 - [ ] Adil'in deposundaki listede geçen "H.Y." kim?
 - [ ] Hakan Demir'in hedefi kim? (Berat'ın katili artık o değil.)
 - [ ] Gizli son ("hiç yurt dışında değildi") diğer finallerle nasıl birleşir?
 
 ## Sistemler
 
-- [ ] **Gizli son için şüphe sayısı.** `doubt` sayısı; iki türlü okunabilen her
-  ipucu artırsın; finalde yeterliyse son bir seçenek çıksın.
+- [ ] **Gizli son için şüphe sayısı.** `doubt` var ve beş ipucu artırıyor;
+  finalde yeterliyse çıkacak son seçenek henüz yazılmadı.
 - [ ] **Görevden uzaklaştırma kilidi.** Poltel kilitlenince laboratuvar da
   kapanıyor. Ya laboratuvar ayrı bir uygulama olsun ya da kilitliyken
   bekleyen incelemeler başka yoldan çözülsün.

@@ -51,15 +51,35 @@ Yollar birleşebilir, ama önceki seçimlerin sonuçlarını taşımalıdır
 - **Yan hikâyeler:** ilk bağımsız dosyalar (05).
 
 ## Bölüm III — Unutulan Dosyalar
-**Durum:** [ÖNERİ]
-**Açılış:** [?] (`mezbaha-found` + `news:old-case-found`?)
-**Kapanış:** [?]
+**Durum:** [KANON, taslak] (28.10.2026)
+**Açılış:** `mezbaha-found` (ya da daha önce: `heard:dead-line`, `news:old-case-found`)
+**Kapanış:** `kerem:contact` (Kerem ilk kez yazar)
 
-- **Oyuncunun amacı:** Mezbahadaki diğer fotoğrafların peşine düşmek.
-- **Öğrenilebilecekler:** Yıllar önce örtbas edilen olay, milletvekilinin
-  geçmişi, personel sicillerindeki şüpheli ayrıntılar.
-- **Uygulamalar:** News arşivi (temel araç), Poltel sicilleri, Sinstagram eski
-  gönderileri.
+- **Oyuncunun amacı:** Berat'ın peşinden çıkan deri ceketli adamı bulmak.
+- **Öğrenilebilecekler:** Ece Aydın'ın adı ve ölümü; Kerem'in adı, vakıfta
+  gönüllü olduğu ve kameradaki adam olduğu; Berat'ı son iki ayda en çok Ece'nin
+  hattından arandığı; narkotiğin cuma gecelerine göz yumduğu; kaymakamın
+  Yılmaz'ın rakibi olduğu.
+- **Kerem'e giden yollar** (birbirinden bağımsız):
+  1. Yırtık fotoğraf + kamera karesi → Atakan'a sor (aynı adam mı?) → 8 dk
+     sonra kart netleşir: vakıf gönüllü kartı → vakıf haritada → "Gönüllü
+     kartının fotoğrafını göster" → Kerem'in adı.
+  2. Sesli mesaj → Özge hattı sorgular (üç yıl önce ölmüş bir kadın) → "Hattın
+     sahibi kim?" → Ece Aydın.
+  3. News arşivinde takipsizlik haberi → Özge'ye kızın adını sor → Ece Aydın.
+  4. Ece'nin adıyla → Sinstagram'da `ece.aydin` (Berat'ın "Aramıza hoş geldin"
+     yorumu) → yorumlardaki `k.aydin` (bio: "Kardeşi.") → Kerem'in adı.
+  5. Ece'nin adıyla → haritada Aydın ailesinin evi → komşular: "sakallı, deri
+     ceketli" → Kerem'in adı.
+- **Kimlik:** Kerem'in adı + kamera karesi + (aynı adam ya da gönüllü olduğu)
+  → Atakan ehliyet fotoğrafını karşılaştırır → `kerem:identified`.
+- **Kerem yazar:** Ece'nin hattından: "Kızlardan biri hâlâ hayatta. Cumaya
+  kadar." Buluşma (`kerem:meeting`) Bölüm IV'te.
+- **Kararlar:** Kerem'i sessizce mi aramalı, herkese mi duyurmalı
+  (`kerem:wanted`); Ece'nin odasına izinsiz girmek (`player:dirty-hands`).
+- **Gizli son ipuçları (`doubt`):** annenin sesli mesajı, Özge'nin sızıntı
+  cevabı, İnanç'ın telefon kaydı, Erdi'nin "nerede olduğunu bilmiyoruz"u,
+  Selin'in "gece üçte arayan".
 
 ## Bölüm IV — Kimse Masum Değil
 **Durum:** [ÖNERİ]

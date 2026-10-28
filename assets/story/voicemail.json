@@ -5,7 +5,8 @@
     "from": "Annem",
     "daysAgo": 2,
     "seconds": 21,
-    "transcript": "Ararsın beni. Haberlerde bir öğrenci ölmüş, senin oralarda diyorlar. Çok korktum. Kendine dikkat et."
+    "transcript": "Ararsın beni. Haberlerde bir öğrenci ölmüş, senin oralarda diyorlar. Çok korktum. Kendine dikkat et.",
+    "unlocksOnListen": ["doubt += 1"]
   },
   {
     "id": "unknown-1",

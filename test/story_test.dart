@@ -580,6 +580,62 @@ void main() {
       },
     );
 
+    test('the torn photo and the camera still lead to Kerem', () async {
+      final progress = StoryProgress.instance;
+      bool kerem() => progress.restore('0543 112 07 21').$2.isNotEmpty;
+      await progress.discover([StoryFlags.part1Done]);
+      await say('Atakan', 'Neden öyle düşündün?');
+      await progress.discover(['photo-restored', 'ev:cctv']);
+      // Atakan writes about the camera first.
+      await say('Atakan', 'Görüntüyü netleştirmeye çalış.');
+      await say(
+        'Atakan',
+        'Yırtık fotoğraftaki adamla kameradaki adam aynı kişi mi?',
+      );
+      // The lab needs time to read the card.
+      expect(progress.has('card:enhanced'), isFalse);
+      await progress.advanceTimers(const Duration(minutes: 8));
+      await say('Atakan', 'Vakfa git, gönüllüleri sor.');
+      expect(progress.has('heard:volunteer-card'), isTrue);
+
+      final foundation = StoryData.current.map.locations.firstWhere(
+        (l) => l.id == 'foundation',
+      );
+      expect(progress.meets(foundation.requires), isTrue);
+      final start = DateTime(2026, 1, 1);
+      await progress.startMission(
+        StoryData.current.map.task('foundation-photo')!,
+        'Orhun',
+        now: start,
+      );
+      await progress.completeDueMissions(
+        now: start.add(const Duration(hours: 1)),
+      );
+      expect(progress.has('heard:kerem'), isTrue);
+      expect(kerem(), isFalse);
+      await say('Atakan', 'Aramaya başlayın. Ama sessizce.');
+      expect(progress.has('kerem:identified'), isTrue);
+      expect(kerem(), isTrue);
+    });
+
+    test('Ece\'s old account names her brother', () async {
+      final progress = StoryProgress.instance;
+      expect(searchProfiles('ece', progress), isEmpty);
+      await progress.discover(['heard:ece']);
+      expect(searchProfiles('ece aydin', progress).single.handle, 'ece.aydin');
+      final brother = findProfile('k.aydin')!;
+      expect(brother.bio, 'Kardeşi.');
+      await progress.discover(brother.unlocksOnView);
+      expect(progress.has('heard:kerem'), isTrue);
+    });
+
+    test('clues about where the detective really is add up', () async {
+      final progress = StoryProgress.instance;
+      final mom = StoryData.current.recordings.firstWhere((r) => r.id == 'mom');
+      await progress.discover(mom.unlocksOnListen);
+      expect(progress.value('doubt'), 1);
+    });
+
     test('choices change numbers within their limits', () async {
       final progress = StoryProgress.instance;
       expect(progress.value('trust:Özge'), 50);

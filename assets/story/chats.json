@@ -188,7 +188,8 @@
             "replies": [
               "Bilmiyorum amirim. Ama Selin Aras benim de numaramı biliyor, iki kere aradı. Açmadım.",
               "Bir de... gazeteye çıkan her şeyi siz biliyordunuz. Biz değil, siz. Sadece söylüyorum."
-            ]
+            ],
+            "unlocks": ["doubt += 1"]
           },
           {
             "label": "Berat’ın telefonu bulundu mu?",
@@ -229,6 +230,39 @@
               "Hat bir kadın adına kayıtlı. Kadın üç yıl önce ölmüş."
             ],
             "unlocks": ["heard:dead-line"]
+          },
+          {
+            "label": "O ölmüş kadının hattı kimin adına?",
+            "requires": "heard:dead-line",
+            "replies": [
+              "Ece Aydın amirim. Üç yıl önce öldü, ölümü intihar sayılıp takipsizlikle kapanmış.",
+              "Biri onun hattını hâlâ kullanıyor."
+            ],
+            "unlocks": ["heard:ece"]
+          },
+          {
+            "label": "Arşivdeki takipsizlik haberindeki kızın adını bulabilir misin?",
+            "requires": "news:old-case-found",
+            "replies": [
+              "Buldum amirim. Ece Aydın. Burslu bir öğrenciymiş.",
+              "Dosyada Berat’ın adı yok. Ama o gece birlikte olduğu kişilerin kimse ifadesini almamış."
+            ],
+            "unlocks": ["heard:ece"]
+          },
+          {
+            "label": "Ece Aydın’ın ailesinden kim kaldı?",
+            "requires": "heard:ece",
+            "replies": ["Annesi geçen yıl ölmüş amirim. Ailenin evi Eski Mahalle’de, haritana ekledim."]
+          },
+          {
+            "label": "Kerem’in Berat’la bir bağı var mı?",
+            "requires": "kerem:identified",
+            "replies": [
+              "Berat’ın operatör kayıtlarını istettim amirim.",
+              "Son iki ayda onu en çok arayan numara... Ece Aydın adına kayıtlı o hat.",
+              "Berat ölmüş bir kızın numarasından gelen aramaları açıyormuş."
+            ],
+            "unlocks": ["heard:kerem-berat"]
           }
         ],
         "events": [
@@ -267,7 +301,8 @@
             "requiresAny": ["leak:hunt", "leak:defended", "leak:sources"],
             "replies": [
               "Bilmiyorum amirim. Ama Selin Aras benim de numaramı biliyor, iki kere aradı. Açmadım."
-            ]
+            ],
+            "unlocks": ["doubt += 1"]
           },
           {
             "label": "Berat’ın telefonu bulundu mu?",
@@ -308,6 +343,39 @@
               "Hat bir kadın adına kayıtlı. Kadın üç yıl önce ölmüş."
             ],
             "unlocks": ["heard:dead-line"]
+          },
+          {
+            "label": "O ölmüş kadının hattı kimin adına?",
+            "requires": "heard:dead-line",
+            "replies": [
+              "Ece Aydın amirim. Üç yıl önce öldü, ölümü intihar sayılıp takipsizlikle kapanmış.",
+              "Biri onun hattını hâlâ kullanıyor."
+            ],
+            "unlocks": ["heard:ece"]
+          },
+          {
+            "label": "Arşivdeki takipsizlik haberindeki kızın adını bulabilir misin?",
+            "requires": "news:old-case-found",
+            "replies": [
+              "Buldum amirim. Ece Aydın. Burslu bir öğrenciymiş.",
+              "Dosyada Berat’ın adı yok. Ama o gece birlikte olduğu kişilerin kimse ifadesini almamış."
+            ],
+            "unlocks": ["heard:ece"]
+          },
+          {
+            "label": "Ece Aydın’ın ailesinden kim kaldı?",
+            "requires": "heard:ece",
+            "replies": ["Annesi geçen yıl ölmüş amirim. Ailenin evi Eski Mahalle’de, haritana ekledim."]
+          },
+          {
+            "label": "Kerem’in Berat’la bir bağı var mı?",
+            "requires": "kerem:identified",
+            "replies": [
+              "Berat’ın operatör kayıtlarını istettim amirim.",
+              "Son iki ayda onu en çok arayan numara... Ece Aydın adına kayıtlı o hat.",
+              "Berat ölmüş bir kızın numarasından gelen aramaları açıyormuş."
+            ],
+            "unlocks": ["heard:kerem-berat"]
           }
         ],
         "events": [
@@ -553,6 +621,14 @@
               "Son üç yılda bu şehirde altı öğrenci için kayıp ilanı verilmiş amirim.",
               "İkisi mezbahadaki fotoğraflarda. Dördü hiç bulunmamış."
             ]
+          },
+          {
+            "label": "Kerem Aydın diye birini tanıyor musun?",
+            "requires": "heard:kerem",
+            "replies": [
+              "Adını duymadım amirim. Ama Ece Aydın dosyasını hatırlıyorum.",
+              "O zaman ben yeni gelmiştim. Dosya bir haftada kapandı, herkes şaşırmıştı."
+            ]
           }
         ],
         "events": [
@@ -591,6 +667,14 @@
             "replies": [
               "Son üç yılda bu şehirde altı öğrenci için kayıp ilanı verilmiş amirim.",
               "İkisi mezbahadaki fotoğraflarda. Dördü hiç bulunmamış."
+            ]
+          },
+          {
+            "label": "Kerem Aydın diye birini tanıyor musun?",
+            "requires": "heard:kerem",
+            "replies": [
+              "Adını duymadım amirim. Ama Ece Aydın dosyasını hatırlıyorum.",
+              "O zaman ben yeni gelmiştim. Dosya bir haftada kapandı, herkes şaşırmıştı."
             ]
           }
         ],
@@ -764,12 +848,32 @@
             "requires": "heard:atakan-secret",
             "replies": ["İyiyim amirim.", "...Sadece yorgunum."],
             "traits": ["merhamet"]
+          },
+          {
+            "label": "Yırtık fotoğraftaki adamla kameradaki adam aynı kişi mi?",
+            "requires": ["photo-restored", "ev:cctv"],
+            "replies": [
+              "Bakıyorum amirim...",
+              "Bence aynı. Ceket aynı, duruş aynı. Kameradakinin boynunda bir kart var.",
+              "Kareyi teknik birime yollayayım, karttaki logoyu netleştirmeye çalışsınlar."
+            ],
+            "traits": ["merak"],
+            "unlocks": ["kerem:same-man"]
           }
         ],
         "events": [
           {
             "requires": ["mezbaha-found", "!atakan:mezbaha"],
             "next": "atakanPhoto"
+          },
+          {
+            "requires": ["card:enhanced", "!atakan:card"],
+            "next": "atakanCard"
+          },
+          {
+            "requires": ["heard:kerem", "ev:cctv", "!atakan:match"],
+            "next": "atakanMatch",
+            "requiresAny": ["kerem:same-man", "kerem:volunteer"]
           }
         ]
       },
@@ -791,12 +895,32 @@
             "requires": "heard:atakan-secret",
             "replies": ["İyiyim amirim.", "...Sadece yorgunum."],
             "traits": ["merhamet"]
+          },
+          {
+            "label": "Yırtık fotoğraftaki adamla kameradaki adam aynı kişi mi?",
+            "requires": ["photo-restored", "ev:cctv"],
+            "replies": [
+              "Bakıyorum amirim...",
+              "Bence aynı. Ceket aynı, duruş aynı. Kameradakinin boynunda bir kart var.",
+              "Kareyi teknik birime yollayayım, karttaki logoyu netleştirmeye çalışsınlar."
+            ],
+            "traits": ["merak"],
+            "unlocks": ["kerem:same-man"]
           }
         ],
         "events": [
           {
             "requires": ["mezbaha-found", "!atakan:mezbaha"],
             "next": "atakanPhoto2"
+          },
+          {
+            "requires": ["card:enhanced", "!atakan:card"],
+            "next": "atakanCard2"
+          },
+          {
+            "requires": ["heard:kerem", "ev:cctv", "!atakan:match"],
+            "next": "atakanMatch2",
+            "requiresAny": ["kerem:same-man", "kerem:volunteer"]
           }
         ]
       },
@@ -841,6 +965,94 @@
             "replies": ["Söylerim amirim."],
             "next": "afterCctv",
             "unlocks": ["atakan:mezbaha"]
+          }
+        ]
+      },
+      "atakanCard": {
+        "incoming": [
+          "Amirim teknik birim kartı netleştirdi.",
+          "Y. Eğitim Vakfı’nın gönüllü kartı. İsim okunmuyor ama vakfın logosu net.",
+          "Vakfı haritana ekledim."
+        ],
+        "options": [
+          {
+            "label": "Vakfa git, gönüllüleri sor.",
+            "replies": ["Ekip ayarlıyorum amirim."],
+            "next": "idle",
+            "unlocks": ["atakan:card", "heard:volunteer-card"]
+          },
+          {
+            "label": "Kimseye söyleme. Vakfın kulağına gitmesin.",
+            "replies": ["Anlaşıldı amirim."],
+            "traits": ["temkinli"],
+            "next": "idle",
+            "unlocks": ["atakan:card", "heard:volunteer-card"]
+          }
+        ]
+      },
+      "atakanCard2": {
+        "incoming": [
+          "Amirim teknik birim kartı netleştirdi.",
+          "Y. Eğitim Vakfı’nın gönüllü kartı. İsim okunmuyor ama vakfın logosu net.",
+          "Vakfı haritana ekledim."
+        ],
+        "options": [
+          {
+            "label": "Vakfa git, gönüllüleri sor.",
+            "replies": ["Ekip ayarlıyorum amirim."],
+            "next": "afterCctv",
+            "unlocks": ["atakan:card", "heard:volunteer-card"]
+          },
+          {
+            "label": "Kimseye söyleme. Vakfın kulağına gitmesin.",
+            "replies": ["Anlaşıldı amirim."],
+            "traits": ["temkinli"],
+            "next": "afterCctv",
+            "unlocks": ["atakan:card", "heard:volunteer-card"]
+          }
+        ]
+      },
+      "atakanMatch": {
+        "incoming": [
+          "Amirim, Kerem Aydın’ın ehliyet fotoğrafını kamera karesiyle karşılaştırdım.",
+          "Aynı adam. Berat’ın peşinden çıkan oydu."
+        ],
+        "options": [
+          {
+            "label": "Aramaya başlayın. Ama sessizce.",
+            "replies": ["Emredersiniz amirim."],
+            "traits": ["temkinli"],
+            "unlocks": ["atakan:match", "kerem:identified"],
+            "next": "idle"
+          },
+          {
+            "label": "Bütün birimlere bildir. Yakalama kararı isteyeceğim.",
+            "replies": ["Hemen amirim."],
+            "traits": ["cesur"],
+            "unlocks": ["atakan:match", "kerem:identified", "kerem:wanted", "pressure += 5"],
+            "next": "idle"
+          }
+        ]
+      },
+      "atakanMatch2": {
+        "incoming": [
+          "Amirim, Kerem Aydın’ın ehliyet fotoğrafını kamera karesiyle karşılaştırdım.",
+          "Aynı adam. Berat’ın peşinden çıkan oydu."
+        ],
+        "options": [
+          {
+            "label": "Aramaya başlayın. Ama sessizce.",
+            "replies": ["Emredersiniz amirim."],
+            "traits": ["temkinli"],
+            "unlocks": ["atakan:match", "kerem:identified"],
+            "next": "afterCctv"
+          },
+          {
+            "label": "Bütün birimlere bildir. Yakalama kararı isteyeceğim.",
+            "replies": ["Hemen amirim."],
+            "traits": ["cesur"],
+            "unlocks": ["atakan:match", "kerem:identified", "kerem:wanted", "pressure += 5"],
+            "next": "afterCctv"
           }
         ]
       }
@@ -940,6 +1152,16 @@
             "label": "Adil şimdi nerede olabilir?",
             "requires": "ev:torn-map",
             "replies": ["Şehirden çıkmadı, bundan eminim. Birileri onu saklıyor."]
+          },
+          {
+            "label": "Cuma gecelerini biliyor muydunuz?",
+            "requires": "heard:adil-informant",
+            "replies": [
+              "...",
+              "Biliyorduk. Borç tahsilatı sandık. Adil bize yukarıyı veriyordu, biz de aşağıya bakmıyorduk.",
+              "O çocukların fotoğraflarını gördüğümden beri uyuyamıyorum komiserim."
+            ],
+            "unlocks": ["behram:guilt", "trust:Behram += 5"]
           }
         ]
       },
@@ -1063,7 +1285,7 @@
               "Baktılar amirim. Sizin kaydınızla ilgili bir şey sordular, \"yurt dışından aranmış gibi görünmüyor\" dediler.",
               "Ben de bilmem dedim."
             ],
-            "unlocks": ["heard:records-odd"]
+            "unlocks": ["heard:records-odd", "doubt += 1"]
           }
         ],
         "events": [
@@ -1347,6 +1569,14 @@
             "label": "Furkan’ın ailesiyle sen mi konuşuyorsun?",
             "requires": "furkanStatement",
             "replies": ["Evet amirim. Annesi her gün arıyor. Ona yalan söylemekten yoruldum."]
+          },
+          {
+            "label": "Furkan’a Kerem Aydın’ı sor.",
+            "requires": "heard:kerem",
+            "requiresAny": ["furkan:held", "furkan:protected"],
+            "replies": [
+              "Sordum amirim. \"Berat’la gezen sakallı abi\" dedi. \"Berat ona güveniyordu, ona her şeyi anlatırdı.\""
+            ]
           }
         ],
         "events": [
@@ -1537,7 +1767,8 @@
           {
             "label": "Ne zaman döneceğimi soran oldu mu?",
             "requires": "pressure:erdi",
-            "replies": ["Herkes soruyor. Ben de soruyorum. Nerede olduğunu bile bilmiyoruz."]
+            "replies": ["Herkes soruyor. Ben de soruyorum. Nerede olduğunu bile bilmiyoruz."],
+            "unlocks": ["doubt += 1"]
           }
         ],
         "events": [
@@ -1942,12 +2173,26 @@
           {
             "label": "Kaymakamı araştırıyor musun?",
             "requires": ["selin:talked", "pressure:kaymakam"],
-            "replies": ["Herkes gibi onu da araştırıyorum Komiser Bey. Siz de mi?"]
+            "replies": [
+              "Herkes gibi onu da araştırıyorum Komiser Bey.",
+              "Bir sonraki seçimde Yılmaz’ın koltuğuna aday olacağı konuşuluyor.",
+              "Size bilgi sorduysa, aileye iletmek için sormamıştır."
+            ],
+            "unlocks": ["heard:kaymakam-rival"]
           },
           {
             "label": "Sana bilgi verirsem ne yaparsın?",
             "requires": "selin:talked",
             "replies": ["Doğrulamadan hiçbir şey yayımlamam. Kaynağımı da ölene kadar korurum."]
+          },
+          {
+            "label": "Numaramı kimden aldın?",
+            "requires": "selin:talked",
+            "replies": [
+              "Bir gece biri aradı ve numaranızı verdi. Kendini tanıtmadı.",
+              "Saat üçtü. Konuşması bir polis gibiydi. Toksikoloji raporunu bana o okudu."
+            ],
+            "unlocks": ["heard:3am-caller", "doubt += 1"]
           }
         ],
         "events": [
@@ -1983,6 +2228,67 @@
             "replies": ["Bunu bir polisten ilk kez duymuyorum.", "Düşüneceğim."],
             "unlocks": ["selin:families", "press:held"],
             "next": "desk"
+          }
+        ]
+      }
+    }
+  },
+  "0543 112 07 21": {
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "kerem:identified",
+        "incoming": [
+          "Adımı öğrenmişsiniz.",
+          "Beni aramayın. Bu hat da birkaç gün sonra olmayacak.",
+          "Size yazıyorum çünkü dinleyecek başka kimse kalmadı: kızlardan biri hâlâ hayatta. Cumaya kadar.",
+          "Nerede olduğunu biliyorum. Ama önce beni dinleyeceksiniz."
+        ],
+        "options": [
+          {
+            "label": "Berat’ı sen mi öldürdün?",
+            "replies": ["Ece’yi o gece oraya o götürdü.", "Sizce bu sorunun cevabı bu mu?"],
+            "next": "wait",
+            "traits": ["merak"],
+            "unlocks": ["kerem:contact"]
+          },
+          {
+            "label": "Kız nerede Kerem?",
+            "replies": ["Yüz yüze söylerim. Sadece size. Yanınızda kimse olmayacak."],
+            "next": "wait",
+            "traits": ["cesur"],
+            "unlocks": ["kerem:contact", "kerem:wants-meeting"]
+          },
+          {
+            "label": "Teslim ol. Sana zarar gelmez.",
+            "replies": ["Ece’ye de böyle söylemişlerdi."],
+            "next": "wait",
+            "traits": ["temkinli"],
+            "unlocks": ["kerem:contact"]
+          }
+        ]
+      },
+      "wait": {
+        "waitFor": "kerem:meeting",
+        "ask": [
+          {
+            "label": "Neden şimdi?",
+            "replies": ["Çünkü Berat’ın telefonunu açtım.", "Keşke açmasaydım."],
+            "unlocks": ["heard:kerem-has-phone"]
+          },
+          {
+            "label": "Berat’ın telefonu sende mi?",
+            "requires": "heard:phone-signal",
+            "replies": ["Evet. Her şey içinde. Onun da, benim de."],
+            "unlocks": ["heard:kerem-has-phone"]
+          },
+          {
+            "label": "Ece’yi anlat.",
+            "replies": [
+              "Kimyaya bayılırdı. Bursu alınca bütün mahalleye lokum dağıttı.",
+              "Altı ay sonra borçlu çıktı. Bir ay sonra öldü."
+            ],
+            "traits": ["merhamet"]
           }
         ]
       }

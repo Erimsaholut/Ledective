@@ -206,6 +206,56 @@
       "private": true,
       "requiresAny": ["heard:adil", "furkanStatement"],
       "unlocksOnView": ["seen:adil"]
+    },
+    {
+      "handle": "ece.aydin",
+      "name": "Ece Aydın",
+      "bio": "Kimya ve kahve ☕",
+      "followers": 412,
+      "following": 380,
+      "requires": "heard:ece",
+      "unlocksOnView": ["seen:ece"],
+      "posts": [
+        {
+          "id": "ece-last",
+          "caption": "Bu ay ödeme yapamazsam ne olacak bilmiyorum.",
+          "likes": 9,
+          "daysAgo": 1115,
+          "comments": [
+            {"author": "k.aydin", "text": "Bana neden söylemedin?"},
+            {"author": "k.aydin", "text": "Seni unutmayacağım."}
+          ]
+        },
+        {
+          "id": "ece-scholarship",
+          "caption": "Kabul edildim!!! Yılmaz Vakfı bursu 🎓",
+          "likes": 87,
+          "daysAgo": 1170,
+          "comments": [
+            {"author": "berat.ylmz", "text": "Aramıza hoş geldin 😉"},
+            {"author": "k.aydin", "text": "Gurur duyuyorum kardeşim."}
+          ]
+        },
+        {
+          "id": "ece-interview",
+          "caption": "Burs mülakatı! Dua edin 🙏",
+          "likes": 54,
+          "daysAgo": 1180,
+          "comments": [
+            {"author": "k.aydin", "text": "Alacaksın, biliyorum."}
+          ]
+        }
+      ]
+    },
+    {
+      "handle": "k.aydin",
+      "name": "Kerem",
+      "bio": "Kardeşi.",
+      "followers": 31,
+      "following": 2,
+      "private": true,
+      "requires": "heard:ece",
+      "unlocksOnView": ["heard:kerem"]
     }
   ]
 }

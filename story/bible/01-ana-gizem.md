@@ -144,11 +144,24 @@ hazırlanıyordu ve kanıtlarını Kerem'e vermeyi planlıyordu.
 - [?] Adil'in deposundaki listede geçen "H.Y." o mu, başka biri mi? Bilerek
   bırakılmış bir yanlış iz de olabilir.
 
+### Erdi, kaymakam ve narkotik [KARAR 28.10.2026]
+
+- **Erdi: korkak bürokrat.** Vakfı bilmiyor; il müdürlüğünden ve Ankara'dan
+  gelen baskıyı aşağıya iletiyor. Kendi koltuğu için korkuyor. Sonunda ya
+  doğru tarafa geçer ya da ilk feda edilen olur. [ÖNERİ]
+- **Kaymakam: milletvekilinin rakibi.** Vakıfla bağı yok. Bir sonraki seçimde
+  Yılmaz'ın koltuğuna aday olacak. "Gelişmeleri önce benimle paylaşın, aileye
+  ben ileteyim" demesi aileyi korumak için değil, skandalı kullanmak için.
+  Erdi onu milletvekilinin kanalı sanıyor ("Kaymakam bile işin içinde").
+  [ÖNERİ] Milletvekilinin yazıp para göndermesi de kaymakamın kurcaladığını
+  öğrenip panikleyince oluyor.
+- **Narkotik: göz yumdu.** Adil narkotiğin muhbiriydi; bu yüzden cuma
+  gecelerine "borç tahsilatı" deyip göz yumdular. Behram gerçeği mezbaha
+  fotoğraflarıyla anlıyor ve suçluluk duyuyor. [ÖNERİ] Altı aylık
+  operasyonu aslında Adil'i koruyordu.
+
 ### Açık sorular
 
-- [?] Erdi neyi biliyor, kimden emir alıyor?
-- [?] Kaymakamın vakıfla bağı ne?
-- [?] Behram'ın "Adil bir zamanlar muhbirdi" sırrı: narkotik bu ağı biliyor muydu?
 - [?] Kerem nasıl yakalanır? Oyuncunun ona ulaşma yolları (Sinstagram'da
   Ece'nin eski hesabı, vakfın gönüllü listesi, kafe kamerasındaki kart,
   sesli mesajın hattı).
@@ -159,15 +172,15 @@ yapmadan Şehir Postası'nda (Selin Aras) çıkar. Erdi her seferinde komisere
 "Kim sızdırıyor? Senin ekibinden biri mi, yoksa sen mi?" diye çıkışır.
 [KANON, taslak]
 
-- [?] Kaynak kim? Adaylar:
-  - Atakan: gizli ilişkisi yüzünden şantaj altında olabilir; sorulunca gerilir.
-  - Orhun: plaka sorgusu onun adıyla sisteme düştü.
-  - Kaymakam ya da milletvekilinin çevresi: plakanın gazetede olması kimin
-    işine yarar? (Erdi: "Telefonda olmaz bu konuşma.")
-  - Erdi'nin kendisi.
-  - **Komiserin kendisi** [ÖNERİ]: Özge fark eder: "Gazeteye çıkan her şeyi
-    siz biliyordunuz. Biz değil, siz." Aşağıdaki son ile birleşebilir.
-- [?] Sızıntılar soruşturmaya yarıyor mu, zarar mı veriyor?
+- **[KARAR 28.10.2026] Kaynak komiserin kendisi.** Hatırlamadığı gece
+  aramalarıyla Selin Aras'a anlatıyor. Selin'in "Numaranızı nereden bulduğumu
+  sormayın" ve "bana ilk ulaşan sizin binanızdan değildi" demesi bu yüzden:
+  komiser binada değil. [ÖNERİ] Aramalar hep gece saat üçte.
+- Gizli son açılmayan oyunlarda sızıntı çözülemeden kalır ya da oyuncu
+  yanlış kişiyi suçlar: Atakan (sorulunca gerilir), Orhun (plaka sorgusu
+  onun adıyla), kaymakam (gerçekten skandaldan yararlanıyor), Erdi.
+- Bu kişileri suçlamak oyunda gerçek bir bedel olmalı (güven kaybı, haksız
+  ihbar). [?] Nasıl?
 
 ### Komiser gerçekte nerede?
 **[KARAR] Gizli bir son:** komiser **hiç yurt dışında değildi**; şizofreni ya
@@ -238,3 +251,7 @@ Kesinleşen her şeyi buraya tarihle yaz ve ilgili dosyalara işle.
 | 27.10.2026 | Berat suçlu ama pişman; öldüğü gece ifşaya hazırlanıyordu | 02, 03 |
 | 27.10.2026 | Mezbaha, Yılmaz Vakfı burs programının karanlık yüzü | 02, 03, 07 |
 | 27.10.2026 | "Hiç yurt dışında değildi" gizli bir son | 08 |
+| 28.10.2026 | Sızıntıların kaynağı komiserin kendisi (hatırlamadığı gece aramaları) | 08, 09 |
+| 28.10.2026 | Erdi korkak bürokrat; vakfı bilmiyor | 02 |
+| 28.10.2026 | Kaymakam milletvekilinin rakibi; vakıfla bağı yok | 02 |
+| 28.10.2026 | Narkotik, Adil muhbir olduğu için cuma gecelerine göz yumdu | 02 |

@@ -149,6 +149,65 @@
           "unlocks": ["mezbaha-found"]
         }
       ]
+    },
+    {
+      "id": "foundation",
+      "name": "Yılmaz Eğitim Vakfı",
+      "description": "Merkezde cam ve taş bir bina. Burs başvuruları burada alınıyor.",
+      "x": 0.68,
+      "y": 0.36,
+      "requiresAny": ["heard:volunteer-card", "heard:kerem", "plate:mv"],
+      "tasks": [
+        {
+          "id": "foundation-photo",
+          "label": "Gönüllü kartının fotoğrafını göster",
+          "minutes": 3,
+          "requires": "heard:volunteer-card",
+          "report": "Resepsiyondaki kız kamera karesine bakınca rengi attı. \"Kerem. Kerem Aydın. İki aydır gelmiyor.\" Sonra müdür geldi, bizi kapıya kadar geçirdi.",
+          "unlocks": ["heard:kerem", "kerem:volunteer", "pressure += 5"]
+        },
+        {
+          "id": "foundation-volunteers",
+          "label": "Gönüllü listesini iste",
+          "minutes": 3,
+          "requires": "heard:kerem",
+          "report": "Liste vermediler, avukat getirdiler. Çıkışta bir sekreter elime kâğıt sıkıştırdı: \"Kerem Aydın. Burs arşivine giren tek gönüllü oydu. Sonra arşiv mühürlendi.\"",
+          "unlocks": ["kerem:volunteer", "heard:archive-sealed", "pressure += 5"]
+        },
+        {
+          "id": "foundation-watch",
+          "label": "Binayı gözetle",
+          "minutes": 4,
+          "requires": "plate:mv",
+          "report": "Akşam altıda çay ocağındaki makam aracı geldi. Danışman arka kapıdan girdi, bir saat sonra iki karton koliyle çıktı.",
+          "unlocks": ["heard:boxes"]
+        }
+      ]
+    },
+    {
+      "id": "aydin-home",
+      "name": "Aydın Ailesinin Evi",
+      "description": "Eski Mahalle’de iki katlı, perdeleri kapalı bir ev.",
+      "x": 0.62,
+      "y": 0.84,
+      "requires": "heard:ece",
+      "tasks": [
+        {
+          "id": "aydin-neighbours",
+          "label": "Komşularla konuş",
+          "minutes": 2,
+          "report": "Annesi geçen yıl ölmüş. Oğlu Kerem aylardır eve uğramıyormuş. \"Sakallı, deri ceketli, kızın ölümünden sonra bir daha gülmedi\" diyorlar. Posta kutusu vakıftan gelen zarflarla dolu.",
+          "unlocks": ["heard:kerem", "kerem:volunteer"]
+        },
+        {
+          "id": "aydin-room",
+          "label": "Ece’nin odasına bak (izinsiz)",
+          "minutes": 3,
+          "requires": "heard:kerem",
+          "report": "Kapı açıktı amirim. Ece’nin odası olduğu gibi duruyor. Duvarda burslu öğrencilerin fotoğrafları ve aralarına çekilmiş kırmızı ipler var. Biri bizden önce bu dosyayı çözmeye çalışmış.",
+          "unlocks": ["heard:kerem-board", "player:dirty-hands", "integrity -= 5"]
+        }
+      ]
     }
   ]
 }

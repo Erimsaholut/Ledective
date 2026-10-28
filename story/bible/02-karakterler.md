@@ -115,6 +115,11 @@ bira ok?" mesajı geçmişte duruyor. [KANON]
 ### Behram
 **Rol:** Narkotik Büro Başkomiseri. Adil aylardır onun dosyasında. [KANON]
 
+- **Ne saklıyor:** [KARAR] Adil narkotiğin muhbiriydi; cuma gecelerine "borç
+  tahsilatı" deyip göz yumdular.
+- **Neyden korkuyor:** Mezbaha fotoğraflarıyla gerçeği anladı; o çocukların
+  kaybolmasında payı olması.
+
 - **Sicil ipucu:** [ÖNERİ] Başarısız bir operasyonda muhbir kaybedilmiş;
   sorumluluğu konusunda farklı değerlendirmeler var.
 - **Ne istiyor / saklıyor:** [?]
@@ -123,8 +128,10 @@ bira ok?" mesajı geçmişte duruyor. [KANON]
 **Rol:** Komiserin üstü. Komiser izindeyken onu aramaya çalışır; komiserin
 onu engellediği ima edilir. [KANON]
 
-- **Ne istiyor:** [?]
-- **Ne saklıyor:** [ÖNERİ] İnanç'a delili ortadan kaldırma emrini veren kişi.
+- **Ne istiyor:** [KARAR] Koltuğunu korumak. Korkak bir bürokrat; vakfı
+  bilmiyor, yukarıdan geleni aşağıya iletiyor.
+- **Ne saklıyor:** [ÖNERİ] İnanç'a delili ortadan kaldırma emrini veren kişi
+  (ama o da emri yukarıdan aldı).
   Komiserin yetkilerini aştığını söyleyip hakkında inceleme başlatan da o
   olabilir.
 - **Sicil ipucu:** [ÖNERİ] Bir soruşturmanın yönünü değiştirmek için baskı
@@ -220,7 +227,10 @@ News'te geçen "Selin Aras" adı şimdilik yer tutucu.
 Milletvekilinin ilçesinin kaymakamı. Erdi'nin baskısından sonra komisere
 doğrudan yazar; gelişmeleri "aileye iletmek için" önce kendisine anlatmasını
 ister. Kibar ama tehditkâr: "Usul her zaman insanı korumaz."
-- **Ne istiyor / saklıyor:** [?]
+- **Ne istiyor:** [KARAR] Yılmaz'ın koltuğu. Bir sonraki seçimde aday olacak.
+- **Ne saklıyor:** Milletvekilinin değil, kendi adına bilgi topladığını.
+- **Neyden korkuyor:** Skandalın onu da kirletmesi; vakfa adının hiç
+  karışmamış olması işine geliyor.
 
 ### Milletvekilinin danışmanı
 Rüşvet teklifini getiren kişi (İkilem 1). [?] Makam aracındaki kişi o mu?

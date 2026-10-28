@@ -40,6 +40,10 @@
           "requires": "integrity < 40",
           "text": "[Taslak] Görevde kaldı ama artık kimse ona eskisi gibi bakmıyor."
         },
+        {
+          "requires": "doubt >= 3",
+          "text": "[Taslak] Dosya kapandığında bile bir şey yerine oturmadı: kimse tatilde olduğunuzu doğrulayamadı."
+        },
         {"text": "[Taslak] Görevine devam ediyor."}
       ]
     },
