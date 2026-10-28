@@ -12,7 +12,7 @@ class StoreGame {
     required this.description,
     required this.icon,
     required this.colors,
-    required this.app,
+    this.app,
     this.glyphColor = Colors.white,
     this.dataKeys = const [],
   });
@@ -26,14 +26,20 @@ class StoreGame {
   /// Icon gradient, top to bottom.
   final List<Color> colors;
   final Color glyphColor;
-  final Widget app;
+
+  /// The game itself, or null for one not offered in the player's country:
+  /// the store lists it but won't download it.
+  final Widget? app;
 
   /// SharedPreferences keys the game saves to, removed when it's deleted.
   final List<String> dataKeys;
 
+  bool get isAvailable => app != null;
+
+  /// The icon of an available game.
   AppIcon get homeIcon => AppIcon(
     title: title,
-    app: app,
+    app: app!,
     iconData: icon,
     colors: colors,
     glyphColor: glyphColor,
@@ -52,9 +58,26 @@ const List<StoreGame> storeGames = [
     app: SudokuApp(),
     dataKeys: [SudokuApp.saveKey],
   ),
+  StoreGame(
+    id: 'space-runner',
+    title: "Uzay Kaçağı",
+    description:
+        "Asteroitlerin arasından geç, yakıtın bitmeden galaksiden kaç.",
+    icon: Icons.rocket_launch_rounded,
+    colors: [Color(0xFF7F5AF0), Color(0xFF16123F)],
+  ),
+  StoreGame(
+    id: 'word-hunt',
+    title: "Kelime Avı",
+    description: "Harfleri birleştir, süre dolmadan en uzun kelimeyi bul.",
+    icon: Icons.abc_rounded,
+    colors: [Color(0xFFFFD166), Color(0xFFF77F00)],
+  ),
 ];
 
-/// The store games in [ids], in that order; unknown ids are skipped.
+/// The store games in [ids], in that order; unknown and unavailable ids
+/// are skipped.
 List<StoreGame> storeGamesWithIds(Iterable<String> ids) => [
-  for (final id in ids) ...storeGames.where((game) => game.id == id),
+  for (final id in ids)
+    ...storeGames.where((game) => game.id == id && game.isAvailable),
 ];

@@ -38,6 +38,12 @@ Future<void> _pumpApp(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+/// The [label] button of [game] in AppShop.
+Finder _storeButton(String game, String label) => find.descendant(
+  of: find.widgetWithText(Card, game),
+  matching: find.text(label),
+);
+
 Finder _homeIcon(String title) => find
     .byWidgetPredicate((w) => w is AppIcon && w.title == title)
     .hitTestable();
@@ -363,7 +369,7 @@ void main() {
     await tester.tap(_homeIcon('AppShop'));
     await tester.pumpAndSettle();
     expect(find.text('Sudoku'), findsOneWidget);
-    await tester.tap(find.text('İndir'));
+    await tester.tap(_storeButton('Sudoku', 'İndir'));
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(find.text('Aç'), findsNothing);
@@ -405,14 +411,34 @@ void main() {
     // The store offers it again, and can delete it as well.
     await tester.tap(_homeIcon('AppShop'));
     await tester.pumpAndSettle();
-    expect(find.text('İndir'), findsOneWidget);
-    await tester.tap(find.text('İndir'));
+    expect(_storeButton('Sudoku', 'İndir'), findsOneWidget);
+    await tester.tap(_storeButton('Sudoku', 'İndir'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, 'Sil'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, 'Sil').last);
     await tester.pumpAndSettle();
-    expect(find.text('İndir'), findsOneWidget);
+    expect(_storeButton('Sudoku', 'İndir'), findsOneWidget);
+    expect(InstalledGames.ids.value, isEmpty);
+  });
+
+  testWidgets('games not sold in the country cannot be downloaded', (
+    tester,
+  ) async {
+    await _pumpApp(tester);
+    await _toSecondPage(tester);
+    await tester.tap(_homeIcon('AppShop'));
+    await tester.pumpAndSettle();
+
+    for (final game in ['Uzay Kaçağı', 'Kelime Avı']) {
+      await tester.tap(_storeButton(game, 'İndir'));
+      await tester.pumpAndSettle();
+      expect(find.text('Ülkenizde kullanılamıyor'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      await tester.tap(find.text('Tamam'));
+      await tester.pumpAndSettle();
+      expect(_storeButton(game, 'İndir'), findsOneWidget);
+    }
     expect(InstalledGames.ids.value, isEmpty);
   });
 

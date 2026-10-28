@@ -115,6 +115,7 @@ class _GameRowState extends State<_GameRow>
   }
 
   Future<void> _startDownload() async {
+    if (!widget.game.isAvailable) return _showUnavailable();
     try {
       await _download.forward(from: 0).orCancel;
     } on TickerCanceled {
@@ -123,6 +124,24 @@ class _GameRowState extends State<_GameRow>
     await InstalledGames.install(widget.game.id);
     if (mounted) _download.reset();
   }
+
+  /// What a store says about an app it can't sell in your country.
+  Future<void> _showUnavailable() => showDialog<void>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Ülkenizde kullanılamıyor"),
+      content: Text(
+        "“${widget.game.title}” şu anda ülkenizde veya bölgenizde "
+        "indirilemiyor.",
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Tamam"),
+        ),
+      ],
+    ),
+  );
 
   void _cancelDownload() {
     _download.stop();
