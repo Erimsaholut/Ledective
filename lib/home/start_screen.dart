@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../apps/appshop/appshop_app.dart';
+import '../apps/appshop/store_catalog.dart';
 import '../apps/bank/bank_app.dart';
 import '../apps/board/board_app.dart';
 import '../apps/calendar/calendar_app.dart';
@@ -27,8 +29,8 @@ import '../apps/recordings/recordings_app.dart';
 import '../apps/settings/settings_app.dart';
 import '../apps/shopper/shopper_app.dart';
 import '../apps/sinstagram/sinstagram_app.dart';
-import '../apps/unavailable/unavailable_app.dart';
 import '../data/contacts_repository.dart';
+import '../data/installed_games.dart';
 import '../data/wallpaper.dart';
 import '../story/story_progress.dart';
 import '../theme/turkish_dates.dart';
@@ -140,7 +142,7 @@ const List<List<AppIcon>> _pages = [
     ),
     AppIcon(
       title: "AppShop",
-      app: UnavailableApp(title: "AppShop"),
+      app: AppShopApp(),
       iconData: Icons.apps_rounded,
       colors: [Color(0xFF5AC8FA), Color(0xFF007AFF)],
     ),
@@ -255,7 +257,17 @@ class _StartScreenState extends State<StartScreen> {
                           apps: _pages[0],
                           header: const _ClockWidget(),
                         ),
-                        _HomePage(apps: _pages[1]),
+                        // Games from AppShop follow the built-in apps.
+                        ValueListenableBuilder<List<String>>(
+                          valueListenable: InstalledGames.ids,
+                          builder: (context, ids, _) => _HomePage(
+                            apps: [
+                              ..._pages[1],
+                              for (final game in storeGamesWithIds(ids))
+                                InstalledGameIcon(game: game),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -279,7 +291,7 @@ class _HomePage extends StatelessWidget {
 
   static const _columns = 4;
 
-  final List<AppIcon> apps;
+  final List<Widget> apps;
   final Widget? header;
 
   @override

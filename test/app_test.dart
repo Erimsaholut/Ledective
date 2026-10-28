@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'dart:math';
 import 'dart:ui' show PointerDeviceKind;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/bank/transfer_page.dart';
+import 'package:ledective/apps/games/sudoku/sudoku_app.dart';
+import 'package:ledective/apps/games/sudoku/sudoku_game.dart';
+import 'package:ledective/apps/games/sudoku/sudoku_puzzle.dart';
 import 'package:ledective/apps/map/map_app.dart';
 import 'package:ledective/apps/news/news_app.dart';
 import 'package:ledective/apps/settings/story_state_page.dart';
@@ -14,6 +19,7 @@ import 'package:ledective/apps/mates/chat_page.dart';
 import 'package:ledective/apps/phone/call_screen.dart';
 import 'package:ledective/data/bank_account.dart';
 import 'package:ledective/data/game_state.dart';
+import 'package:ledective/data/installed_games.dart';
 import 'package:ledective/home/epilogue_page.dart';
 import 'package:ledective/data/recent_calls.dart';
 import 'package:ledective/home/app_icon.dart';
@@ -29,6 +35,16 @@ Future<void> _pumpApp(WidgetTester tester) async {
   addTearDown(tester.view.reset);
   await tester.runAsync(loadGameState);
   await tester.pumpWidget(const LedectiveApp());
+  await tester.pumpAndSettle();
+}
+
+Finder _homeIcon(String title) => find
+    .byWidgetPredicate((w) => w is AppIcon && w.title == title)
+    .hitTestable();
+
+/// Swipes the home screen to its second page.
+Future<void> _toSecondPage(WidgetTester tester) async {
+  await tester.fling(find.byType(PageView).first, const Offset(-500, 0), 1000);
   await tester.pumpAndSettle();
 }
 
@@ -335,5 +351,135 @@ void main() {
     expect(StoryProgress.instance.value('trust:Özge'), 60);
     expect(find.text('60'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a game downloaded from AppShop can be opened and deleted', (
+    tester,
+  ) async {
+    await _pumpApp(tester);
+    await _toSecondPage(tester);
+    expect(_homeIcon('Sudoku'), findsNothing);
+
+    await tester.tap(_homeIcon('AppShop'));
+    await tester.pumpAndSettle();
+    expect(find.text('Sudoku'), findsOneWidget);
+    await tester.tap(find.text('İndir'));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.text('Aç'), findsNothing);
+    await tester.pumpAndSettle();
+    expect(find.text('Aç'), findsOneWidget);
+    expect(InstalledGames.ids.value, ['sudoku']);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getStringList('installedGames'), ['sudoku']);
+
+    // "Aç" opens the game.
+    await tester.tap(find.text('Aç'));
+    await tester.pumpAndSettle();
+    expect(find.text('Zorluk seç'), findsOneWidget);
+    final navigator = tester.state<NavigatorState>(
+      find.byType(Navigator).first,
+    );
+    navigator.popUntil((route) => route.isFirst);
+    await tester.pumpAndSettle();
+
+    // It's on the home screen too.
+    await tester.tap(_homeIcon('Sudoku'));
+    await tester.pumpAndSettle();
+    expect(find.text('Zorluk seç'), findsOneWidget);
+    navigator.pop();
+    await tester.pumpAndSettle();
+
+    // A long press deletes it, with its saved game.
+    await prefs.setString(SudokuApp.saveKey, '{}');
+    await tester.longPress(_homeIcon('Sudoku'));
+    await tester.pumpAndSettle();
+    expect(find.text('“Sudoku” silinsin mi?'), findsOneWidget);
+    await tester.tap(find.text('Sil'));
+    await tester.pumpAndSettle();
+    expect(_homeIcon('Sudoku'), findsNothing);
+    expect(InstalledGames.ids.value, isEmpty);
+    expect(prefs.getStringList('installedGames'), isEmpty);
+    expect(prefs.containsKey(SudokuApp.saveKey), isFalse);
+
+    // The store offers it again, and can delete it as well.
+    await tester.tap(_homeIcon('AppShop'));
+    await tester.pumpAndSettle();
+    expect(find.text('İndir'), findsOneWidget);
+    await tester.tap(find.text('İndir'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'Sil'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'Sil').last);
+    await tester.pumpAndSettle();
+    expect(find.text('İndir'), findsOneWidget);
+    expect(InstalledGames.ids.value, isEmpty);
+  });
+
+  testWidgets('installed games are still there after a restart', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'installedGames': ['sudoku'],
+    });
+    await _pumpApp(tester);
+    await _toSecondPage(tester);
+    expect(_homeIcon('Sudoku'), findsOneWidget);
+  });
+
+  testWidgets('a Sudoku is saved while played and celebrated when solved', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+    // Leave two cells with different answers open.
+    final game = SudokuGame.generate(SudokuDifficulty.easy, random: Random(1));
+    final solution = game.puzzle.solution;
+    final last = game.values.lastIndexOf(0);
+    final other = game.values.indexWhere((d) => d == 0);
+    expect(solution[other], isNot(solution[last]));
+    for (var i = other + 1; i < last; i++) {
+      if (game.values[i] == 0) game.enter(i, solution[i]);
+    }
+    Future<void> tapKey(String key) async {
+      await tester.tap(find.byKey(ValueKey(key)));
+      await tester.pump();
+    }
+
+    await tester.pumpWidget(MaterialApp(home: SudokuApp(initialGame: game)));
+
+    // A wrong digit is marked and the game is saved.
+    await tapKey('sudoku-cell-$last');
+    await tapKey('sudoku-digit-${solution[other]}');
+    expect(find.text('Hata: 1'), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    final saved = SudokuGame.fromJson(
+      json.decode(prefs.getString(SudokuApp.saveKey)!) as Map<String, dynamic>,
+    );
+    expect(saved.values[last], solution[other]);
+    expect(saved.mistakes, 1);
+
+    await tester.tap(find.text('Sil'));
+    await tapKey('sudoku-digit-${solution[last]}');
+    await tapKey('sudoku-cell-$other');
+    await tapKey('sudoku-digit-${solution[other]}');
+    await tester.pumpAndSettle();
+    expect(find.text('Tebrikler!'), findsOneWidget);
+    expect(prefs.containsKey(SudokuApp.saveKey), isFalse);
+  });
+
+  testWidgets('an unfinished Sudoku is picked up again', (tester) async {
+    final game = SudokuGame.generate(SudokuDifficulty.hard, random: Random(2))
+      ..elapsed = const Duration(minutes: 4, seconds: 5);
+    SharedPreferences.setMockInitialValues({
+      SudokuApp.saveKey: json.encode(game.toJson()),
+    });
+    await tester.pumpWidget(const MaterialApp(home: SudokuApp()));
+    await tester.pump();
+    expect(find.text('Zor'), findsOneWidget);
+    expect(find.text('04:05'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('04:06'), findsOneWidget);
   });
 }
