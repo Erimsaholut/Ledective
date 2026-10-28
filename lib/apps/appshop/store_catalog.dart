@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../home/app_icon.dart';
+import '../games/farm/farm_app.dart';
+import '../games/space_runner/space_runner_app.dart';
 import '../games/sudoku/sudoku_app.dart';
+import '../games/word_hunt/word_hunt_app.dart';
 
 /// A game that can be downloaded from AppShop. Once installed it gets its
 /// own icon on the home screen.
@@ -59,19 +62,49 @@ const List<StoreGame> storeGames = [
     dataKeys: [SudokuApp.saveKey],
   ),
   StoreGame(
+    id: 'farm',
+    title: "Bereket Çiftliği",
+    description:
+        "Tarlanı ek, ürünlerini sat, yeni tarlalar ve aletler al. Ürünler "
+        "sen yokken de büyür.",
+    icon: Icons.agriculture_rounded,
+    colors: [Color(0xFF9BE15D), Color(0xFF2E7D32)],
+    app: FarmApp(),
+    dataKeys: [FarmApp.saveKey],
+  ),
+  StoreGame(
     id: 'space-runner',
     title: "Uzay Kaçağı",
     description:
         "Asteroitlerin arasından geç, yakıtın bitmeden galaksiden kaç.",
     icon: Icons.rocket_launch_rounded,
     colors: [Color(0xFF7F5AF0), Color(0xFF16123F)],
+    app: SpaceRunnerApp(),
+    dataKeys: [SpaceRunnerApp.bestKey],
   ),
   StoreGame(
     id: 'word-hunt',
     title: "Kelime Avı",
-    description: "Harfleri birleştir, süre dolmadan en uzun kelimeyi bul.",
+    description:
+        "Karışık harflerden kelime türet, süre dolmadan en yüksek puanı topla.",
     icon: Icons.abc_rounded,
     colors: [Color(0xFFFFD166), Color(0xFFF77F00)],
+    app: WordHuntApp(),
+    dataKeys: [WordHuntApp.bestKey],
+  ),
+  StoreGame(
+    id: 'castle-guard',
+    title: "Kale Muhafızı",
+    description: "Kuleler kur, dalga dalga gelen düşmanlara karşı kaleni koru.",
+    icon: Icons.castle_rounded,
+    colors: [Color(0xFF8D99AE), Color(0xFF2B2D42)],
+  ),
+  StoreGame(
+    id: 'track-monster',
+    title: "Pist Canavarı",
+    description: "Arabanı modifiye et, virajlarda drift at, rakiplerini geç.",
+    icon: Icons.sports_motorsports_rounded,
+    colors: [Color(0xFFFF6B6B), Color(0xFFC0392B)],
   ),
 ];
 

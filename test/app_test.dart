@@ -5,9 +5,14 @@ import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/bank/transfer_page.dart';
+import 'package:ledective/apps/games/farm/farm_app.dart';
+import 'package:ledective/apps/games/farm/farm_state.dart';
+import 'package:ledective/apps/games/space_runner/space_runner_app.dart';
 import 'package:ledective/apps/games/sudoku/sudoku_app.dart';
 import 'package:ledective/apps/games/sudoku/sudoku_game.dart';
 import 'package:ledective/apps/games/sudoku/sudoku_puzzle.dart';
+import 'package:ledective/apps/games/word_hunt/word_hunt_app.dart';
+import 'package:ledective/apps/games/word_hunt/word_hunt_round.dart';
 import 'package:ledective/apps/map/map_app.dart';
 import 'package:ledective/apps/news/news_app.dart';
 import 'package:ledective/apps/settings/story_state_page.dart';
@@ -430,7 +435,9 @@ void main() {
     await tester.tap(_homeIcon('AppShop'));
     await tester.pumpAndSettle();
 
-    for (final game in ['Uzay Kaçağı', 'Kelime Avı']) {
+    for (final game in ['Kale Muhafızı', 'Pist Canavarı']) {
+      await tester.ensureVisible(_storeButton(game, 'İndir'));
+      await tester.pumpAndSettle();
       await tester.tap(_storeButton(game, 'İndir'));
       await tester.pumpAndSettle();
       expect(find.text('Ülkenizde kullanılamıyor'), findsOneWidget);
@@ -508,4 +515,124 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('04:06'), findsOneWidget);
   });
+
+  testWidgets('a space run ends and keeps the record', (tester) async {
+    _phoneSize(tester);
+    await tester.pumpWidget(
+      MaterialApp(home: SpaceRunnerApp(random: Random(1))),
+    );
+    await tester.pump();
+    await tester.tap(find.text('Başla'));
+    var frames = 0;
+    // Hold still until a rock or an empty tank ends the run.
+    while (find.text('Tekrar dene').evaluate().isEmpty && frames < 3000) {
+      await tester.pump(const Duration(milliseconds: 50));
+      frames++;
+    }
+    expect(find.text('Tekrar dene'), findsOneWidget);
+    expect(find.text('Yeni rekor!'), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getInt(SpaceRunnerApp.bestKey), greaterThan(0));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('words are made from the letters until time is up', (
+    tester,
+  ) async {
+    _phoneSize(tester);
+    final round = WordHuntRound('karton', random: Random(1));
+    await tester.pumpWidget(
+      MaterialApp(home: WordHuntApp(initialRound: round)),
+    );
+    await tester.pump();
+
+    Future<void> spell(String word) async {
+      final used = <int>{};
+      for (final letter in word.split('')) {
+        final i = [
+          for (var i = 0; i < round.letters.length; i++) i,
+        ].firstWhere((i) => round.letters[i] == letter && used.add(i));
+        await tester.tap(find.byKey(ValueKey('letter-$i')));
+        await tester.pump();
+      }
+      await tester.tap(find.text('Gönder'));
+      await tester.pump();
+    }
+
+    await spell('kart');
+    expect(find.text('+60 · KART'), findsOneWidget);
+    expect(find.widgetWithText(Chip, 'KART'), findsOneWidget);
+    await spell('kart');
+    expect(find.text('Bunu zaten buldun'), findsOneWidget);
+
+    await tester.pump(WordHuntRound.duration);
+    await tester.pump();
+    expect(find.text('Süre doldu!'), findsOneWidget);
+    expect(find.text('Yeni rekor!'), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getInt(WordHuntApp.bestKey), 60);
+  });
+
+  testWidgets('the farm grows, harvests, sells and is saved', (tester) async {
+    _phoneSize(tester);
+    var now = DateTime(2026, 10, 28, 9);
+    Widget farm() => MaterialApp(
+      home: FarmApp(clock: () => now, random: Random(1)),
+    );
+    await tester.pumpWidget(farm());
+    await tester.pump();
+    expect(find.text('Günlük hediye: +30 🪙'), findsOneWidget);
+    expect(find.text('🪙 50'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('plot-0')));
+    await tester.pumpAndSettle();
+    expect(find.text('Ne ekelim?'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('crop-wheat')));
+    await tester.pumpAndSettle();
+    expect(find.text('0:30'), findsOneWidget);
+
+    // Half a minute later the wheat is ripe.
+    now = now.add(const Duration(seconds: 30));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.tap(find.byKey(const ValueKey('plot-0')));
+    await tester.pumpAndSettle();
+    expect(find.text('+2 🌾 Buğday · +1 XP'), findsOneWidget);
+    expect(find.text('1 / 10 XP'), findsOneWidget);
+
+    await tester.tap(find.text('Ambar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Buğday × 2'), findsOneWidget);
+    await tester.tap(find.text('Hepsini sat'));
+    await tester.pumpAndSettle();
+    expect(find.text('🪙 54'), findsOneWidget);
+
+    // The other tabs lay out on a phone.
+    await tester.tap(find.text('Siparişler'));
+    await tester.pumpAndSettle();
+    expect(find.text('Teslim et'), findsNWidgets(FarmState.orderSlots));
+    await tester.tap(find.text('Dükkân'));
+    await tester.pumpAndSettle();
+    expect(find.text('Sulama Kovası'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    // Reopening the farm the same day brings it back, without a new gift.
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+    final prefs = await SharedPreferences.getInstance();
+    final saved = FarmState.fromJson(
+      json.decode(prefs.getString(FarmApp.saveKey)!) as Map<String, dynamic>,
+    );
+    expect(saved.coins, 54);
+    await tester.pumpWidget(farm());
+    await tester.pump();
+    expect(find.text('🪙 54'), findsOneWidget);
+    expect(find.textContaining('Günlük hediye'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+}
+
+void _phoneSize(WidgetTester tester) {
+  tester.view.physicalSize = const Size(1080, 2340);
+  tester.view.devicePixelRatio = 2.75;
+  addTearDown(tester.view.reset);
 }
