@@ -127,10 +127,9 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 - [x] **Mail ve haber zamanlaması.** Aşağı çekip yenileme kalktı; oyun
   süresinde rastgele aralıklarla gelir, bazıları olaylardan sonra
   (`afterMinutes`, `requires`). Havuzlar: 58 mail, 58 gündelik haber.
-- [ ] [ÖNERİ] Gizli son ipucu olarak üç mail eklendi; kalsın mı karar ver:
-  ruh sağlığı polikliniğinden "kaçırılan kontrol randevusu", havayolundan
-  "son 12 ayda uçuş kaydınız yok" (ikisi de `leak:traced` sonrası) ve
-  otelin "rezervasyon numaranız sistemde görünmüyor" maili.
+- [x] Gizli son için üç ipucu maili kalıyor (otel, havayolu, poliklinik);
+  `bible/01-ana-gizem.md` içinde kanon. Açılınca `doubt` artsın mı, sonra
+  karar ver (mailler şu an `unlocksOnView` desteklemiyor).
 - [ ] Sohbetlerde mesajlar şu an toplu düşüyor; istenirse olaylarla gelen
   mesajlar da birkaç saniye arayla tek tek gelebilir.
 

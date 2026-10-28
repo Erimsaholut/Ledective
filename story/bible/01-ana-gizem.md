@@ -224,6 +224,16 @@ Eklenebilecek ipuçları [ÖNERİ]:
 Ek ipuçları da oyunda [KANON, taslak]:
 - İnanç'ın aktardığı telefon kaydı: "yurt dışından aranmış gibi görünmüyor."
 - Özge: "Gazeteye çıkan her şeyi siz biliyordunuz."
+- Mail havuzu (`mails.json › pool`) [KANON]:
+  - Otel: "Rezervasyon numaranız sistemde görünmüyor." Oysa bankada otel
+    harcaması var. Her zaman gelebilir.
+  - Havayolu: "Son 12 ayda uçuş kaydınız bulunmadığından mil puanlarınızın
+    süresi dolmak üzere." `leak:traced` sonrası.
+  - Ruh Sağlığı Polikliniği: "Kontrol randevunuza gelmediğiniz görülmüştür.
+    İlaçlarınızın düzenli kullanımı için Dr. S. Arıkan sizi bekliyor."
+    `leak:traced` sonrası. En açık ipucu, bu yüzden geç geliyor ve aradaki
+    reklam mailleri arasında kolayca gözden kaçabilir.
+  - Bu mailler `doubt` sayısını artırmıyor; şimdilik sadece okunacak iz.
 
 [?] Gizli son diğer finallerle nasıl birleşir: Kerem'in akıbeti ve dosyanın
 sonucu yine anlatılır mı, yoksa her şey yeniden mi okunur?
