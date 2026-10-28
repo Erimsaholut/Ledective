@@ -8,7 +8,8 @@ Bitenleri işaretle (`[x]`), yeni işleri ekle. Hikâye kararları
 
 Test görselleri yenileri gelene kadar oyunda kalıyor. Telif sorunlu olanlar
 (dizi ve film kareleri, gerçek kişiler) yayından önce mutlaka gitmeli. Her
-görselin tarifi ve boyutu [`GORSELLER.md`](GORSELLER.md) dosyasında; getirdikçe
+görselin tarifi ve boyutu [`GORSELLER.md`](GORSELLER.md), üretim prompt'u
+[`GORSEL_PROMPTLARI.md`](GORSEL_PROMPTLARI.md) dosyasında; getirdikçe
 işaretle, bağlantısını ben yaparım.
 
 ### Şimdi lazım olanlar (oyunda yerleri hazır)
@@ -23,7 +24,9 @@ işaretle, bağlantısını ben yaparım.
 - [ ] `dedektif_meme.jpg`: @dedektif.memes
 - [ ] `sergi.jpg`: @sanat.galerisi yerel sergi
 - [ ] Kedi fotoğrafları (`benKedi.jpeg`, `myCat.jpeg`) ve vitrin (`gungun.jpeg`)
-  senin mi? Senin değilse yenileri.
+  senin mi? Senin değilse `ozge_kedi.jpg` ve `behram_operasyon.jpg`.
+- [ ] Şüphelilerin gönderileri: `berat_kafe.jpg`, `berat_kapi.jpg`,
+  `furkan_borc.jpg`, `yusuf_sinav.jpg`, `deniz_yas.jpg`
 - [ ] `my_foto1.jpg`, `my_foto2.jpg` (Behzat Ç.) ve @dizi.replikleri gönderisini
   kaldır; yerine bir şey gerekmez.
 
@@ -56,8 +59,11 @@ işaretle, bağlantısını ben yaparım.
 
 ### Komiserin galerisi
 
-- [ ] Birkaç iş fotoğrafı ve sıradan kare (kahve, kedi, ekran görüntüsü).
-  Tatil fotoğrafı **olmasın** (gizli son için bilerek bırakılan boşluk).
+- [ ] `galeri_dosyalar.jpg`, `galeri_kahve.jpg`, `galeri_ekran.jpg`,
+  `galeri_olay_yeri.jpg`. Tatil fotoğrafı **olmasın** (gizli son için
+  bilerek bırakılan boşluk).
+- [ ] [?] `galeri_karanlik_oda.jpg`: gizli son ipucu, kullanıp kullanmamaya
+  sonra karar ver.
 
 ## Ana gizem: oyuna geçirilecekler
 

@@ -5,6 +5,8 @@ ya da gerçek kişilerin fotoğrafları; bunlar kullanılamaz. Bu liste neyin
 değişmesi, neyin eklenmesi gerektiğini ve her görselin nasıl olması
 gerektiğini anlatıyor.
 
+Her görselin yapay zekâ ile üretim prompt'u: [`GORSEL_PROMPTLARI.md`](GORSEL_PROMPTLARI.md).
+
 Getirdiğin görselleri `assets/story/images/` altına, aşağıdaki **dosya adı**
 sütunundaki adlarla koyman yeterli. Bağlantılarını ben yaparım.
 
