@@ -6,11 +6,58 @@ Bitenleri işaretle (`[x]`), yeni işleri ekle. Hikâye kararları
 
 ## Görseller
 
-- [ ] Test görsellerini değiştir: listesi ve tarifleri [`GORSELLER.md`](GORSELLER.md).
-- [ ] Telif sorunlu görselleri kaldır (dizi ve film kareleri, gerçek kişiler).
-  Oyun herkese açık yayımlanmadan önce bitmeli.
-- [ ] Kişi profil fotoğrafları için kodu hazırla: şu an sohbetlerde ve
-  Sinstagram'da baş harfli renkli daireler var (`widgets/avatar.dart`).
+Test görselleri yenileri gelene kadar oyunda kalıyor. Telif sorunlu olanlar
+(dizi ve film kareleri, gerçek kişiler) yayından önce mutlaka gitmeli. Her
+görselin tarifi ve boyutu [`GORSELLER.md`](GORSELLER.md) dosyasında; getirdikçe
+işaretle, bağlantısını ben yaparım.
+
+### Şimdi lazım olanlar (oyunda yerleri hazır)
+
+- [ ] `kerem_gizli.jpg`: yırtık fotoğraf yapbozu (Kerem, habersiz çekilmiş)
+- [ ] `kamera_karesi.jpg`: kafe güvenlik kamerası, 23.41 (Berat ve Kerem)
+- [ ] `berat_babasi.jpg`: Berat ile milletvekili babası bir davette
+- [ ] `tatil.jpg`: komiserin "Tatildeyim, aramayın" gönderisi (ülke belli olmasın)
+- [ ] `bos_koltuk.jpg`: Atakan'ın "Amirimiz işbaşında 😂" gönderisi
+- [ ] `iki_bira.jpg`: Orhun'un "Akşam iki bira kimde?" gönderisi
+- [ ] `komplo.jpg`: @gizli.tarih komplo sayfası (insan yok)
+- [ ] `dedektif_meme.jpg`: @dedektif.memes
+- [ ] `sergi.jpg`: @sanat.galerisi yerel sergi
+- [ ] Kedi fotoğrafları (`benKedi.jpeg`, `myCat.jpeg`) ve vitrin (`gungun.jpeg`)
+  senin mi? Senin değilse yenileri.
+- [ ] `my_foto1.jpg`, `my_foto2.jpg` (Behzat Ç.) ve @dizi.replikleri gönderisini
+  kaldır; yerine bir şey gerekmez.
+
+### Delil ve olay yeri (sonraki bölümler)
+
+- [ ] `olay_yeri.jpg`: Berat'ın dağınık salonu
+- [ ] `mezbaha_ic.jpg`: vidalı sandalye, karo duvarlar
+- [ ] `mezbaha_duvar.jpg`: duvarda tarihli üç fotoğraf
+- [ ] `mezbaha_dis.jpg`: gece, polis şeridi
+- [ ] `cay_ocagi.jpg`
+- [ ] `makam_araci.jpg`: plakası okunmayan siyah sedan
+- [ ] `burs_sozlesmesi.jpg` (ben de üretebilirim)
+- [ ] `kayip_ilani_1.jpg`, `kayip_ilani_2.jpg`
+
+### Kişiler (profil fotoğrafı desteği gelince)
+
+- [ ] Kodu hazırla: şu an sohbetlerde ve Sinstagram'da baş harfli renkli
+  daireler var (`widgets/avatar.dart`).
+- [ ] Berat (3 Sinstagram gönderisi de lazım), Milletvekili, Kerem
+- [ ] Özge, Atakan, Orhun, Doğa, İnanç, Behram, Erdi
+- [ ] Kaymakam, Selin Aras, Deniz, Yusuf, Furkan, Adil (gizli hesap, yüzsüz)
+- [ ] Ece (üç yıl önceki sıradan kareler), Danışman (yüzü hep yarım)
+- [ ] Komiser: yüz yok; eller, sırt, gölge
+
+### Haberler (isteğe bağlı, 16:9)
+
+- [ ] `haber_berat_bulundu.jpg`, `haber_cenaze.jpg`, `haber_milletvekili.jpg`
+- [ ] `haber_yuruyus.jpg`, `haber_mezbaha.jpg`, `haber_plaka.jpg`, `haber_vakif.jpg`
+- [ ] Gündelik haberler: kebapçı, kıraathane, AVM, kampüs kedisi, fırın
+
+### Komiserin galerisi
+
+- [ ] Birkaç iş fotoğrafı ve sıradan kare (kahve, kedi, ekran görüntüsü).
+  Tatil fotoğrafı **olmasın** (gizli son için bilerek bırakılan boşluk).
 
 ## Ana gizem: oyuna geçirilecekler
 
