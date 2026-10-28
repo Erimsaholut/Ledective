@@ -101,7 +101,29 @@
     "envoy:atakan": "Buluşmaya gönderilen: atakan",
     "envoy:inanc": "Buluşmaya gönderilen: inanc",
     "envoy:behram": "Buluşmaya gönderilen: behram",
-    "envoy:ambush": "Buluşmaya gönderilen: ambush"
+    "envoy:ambush": "Buluşmaya gönderilen: ambush",
+    "phone:decided": "Berat’ın kayıtları için karar verildi",
+    "phone:prosecutor": "Kayıtlar savcılığa teslim edildi",
+    "phone:press": "Kayıtlar Selin Aras’a verildi",
+    "phone:kept": "Kayıtlar kasada tutuluyor",
+    "heard:farm": "Emre’nin götürüldüğü çiftlik öğrenildi",
+    "heard:pension": "Adil’in saklandığı pansiyon öğrenildi",
+    "heard:danisman": "Danışmanın adı: Halit Yener",
+    "heard:mp-tape": "Babanın \"susturun ama zarar vermeyin\" kaydı",
+    "warrant:requested": "Çiftlik için arama kararı istendi",
+    "warrant:farm": "Arama kararı çıktı (süreli olay)",
+    "emre:rescued": "Emre kurtarıldı",
+    "emre:testimony": "Emre’nin ifadesi hukuka uygun alındı",
+    "emre:moved": "Emre çiftlikten götürüldü (süreli olay)",
+    "ev:farm-tainted": "Çiftlik araması kararsız yapıldı; deliller hukuka aykırı",
+    "farm:entered": "Çiftliğe girildi",
+    "adil:caught": "Adil yakalandı",
+    "adil:dead": "Kerem Adil’i buldu (süreli olay)",
+    "leak:traced": "Sızıntı komiserin numarasına çıktı",
+    "lawyer:offer": "Avukat Nesrin Kaya yazdı",
+    "lawyer:hired": "Avukata ücret gönderildi",
+    "status:warned": "Komiser kınama cezası aldı, görevde kaldı",
+    "danisman:fled": "Halit Yener haberden sonra kaçtı"
   },
   "locks": [
     {
@@ -164,6 +186,78 @@
       "minutes": 15,
       "unless": "girl:rescued",
       "unlocks": ["kerem:relents"]
+    },
+    {
+      "id": "warrant",
+      "when": "warrant:requested",
+      "minutes": 12,
+      "unlocks": ["warrant:farm"],
+      "alert": {
+        "app": "Poltel",
+        "title": "Arama kararı",
+        "body": "Savcılık çiftlik için arama kararını onayladı."
+      }
+    },
+    {
+      "id": "emre-moved",
+      "when": "heard:farm",
+      "minutes": 30,
+      "unless": "emre:rescued",
+      "unlocks": ["emre:moved"]
+    },
+    {
+      "id": "emre-moved-press",
+      "when": ["heard:farm", "phone:press"],
+      "minutes": 8,
+      "unless": "emre:rescued",
+      "unlocks": ["emre:moved"]
+    },
+    {
+      "id": "kerem-finds-adil",
+      "when": ["kerem:hunting", "heard:pension"],
+      "minutes": 20,
+      "unless": "adil:caught",
+      "unlocks": ["adil:dead"]
+    },
+    {
+      "id": "suspension",
+      "when": ["case:internal-investigation", "leak:traced"],
+      "whenAny": ["integrity < 60", "player:dirty-hands", "pressure >= 70"],
+      "minutes": 12,
+      "unless": "lawyer:hired",
+      "unlocks": ["status:suspended"]
+    },
+    {
+      "id": "reprimand",
+      "when": ["case:internal-investigation", "leak:traced"],
+      "minutes": 14,
+      "unless": "status:suspended",
+      "unlocks": ["status:warned"]
+    },
+    {
+      "id": "dismissal",
+      "when": ["status:suspended", "ev:farm-tainted"],
+      "minutes": 10,
+      "unlocks": ["status:dismissed"]
+    },
+    {
+      "id": "warrant-for-detective",
+      "when": ["status:dismissed", "kerem:escaped"],
+      "minutes": 10,
+      "unlocks": ["legal:warrant-issued"]
+    },
+    {
+      "id": "exposure",
+      "when": "phone:prosecutor",
+      "whenAny": ["adil:caught", "emre:testimony"],
+      "minutes": 10,
+      "unlocks": ["coverup:exposed"]
+    },
+    {
+      "id": "exposure-press",
+      "when": "phone:press",
+      "minutes": 5,
+      "unlocks": ["coverup:exposed", "danisman:fled"]
     }
   ],
   "milestones": [
@@ -185,6 +279,9 @@
     {"flag": "kerem:met", "title": "Buluşma: Kerem’in itirafı ve şartı"},
     {"flag": "case:solved", "title": "Kerem hakkında karar verilir (İkilem 2)"},
     {"flag": "storage:entered", "title": "Soğuk hava deposuna girilir: Melis"},
+    {"flag": "phone:decided", "title": "Berat’ın kayıtları: kime verilecek?"},
+    {"flag": "leak:traced", "title": "Sızıntı komiserin numarasına çıkar"},
+    {"flag": "farm:entered", "title": "Çiftliğe girilir: Emre"},
     {"flag": "final:ready", "title": "Final soruşturması (henüz yazılmadı)"}
   ]
 }

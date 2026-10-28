@@ -237,6 +237,72 @@
           "unlocks": ["girl:found-dead", "storage:entered"]
         }
       ]
+    },
+    {
+      "id": "farm",
+      "name": "Halit Yener’in Çiftlik Evi",
+      "description": "Şehrin doğusunda, duvarla çevrili bir çiftlik evi. Kapıda kamera var.",
+      "x": 0.92,
+      "y": 0.56,
+      "requires": "heard:farm",
+      "tasks": [
+        {
+          "id": "farm-warrant",
+          "label": "Arama kararıyla gir",
+          "minutes": 4,
+          "requires": ["warrant:farm", "!emre:moved", "!emre:rescued"],
+          "report": "Kararı kapıda okuduk, bekçi geri çekildi. Bodrumda Emre’yi bulduk. Zayıflamış, ama yaşıyor. Halit Yener’in adını ilk soruda verdi. Her şey tutanakta.",
+          "unlocks": ["emre:rescued", "emre:testimony", "farm:entered"]
+        },
+        {
+          "id": "farm-raid",
+          "label": "Kararsız gir",
+          "minutes": 2,
+          "requires": ["!emre:moved", "!emre:rescued"],
+          "report": "Duvardan atladık, kapıyı kırdık. Bodrumda Emre’yi bulduk, yaşıyor. Ama avukatlar sabah kapıdaydı: arama kararı yokmuş, bulduğumuz her şey hukuka aykırı sayılacak.",
+          "unlocks": [
+            "emre:rescued",
+            "ev:farm-tainted",
+            "player:dirty-hands",
+            "integrity -= 15",
+            "farm:entered"
+          ]
+        },
+        {
+          "id": "farm-late",
+          "label": "Çiftliğe gir",
+          "minutes": 3,
+          "requires": "emre:moved",
+          "report": "Boş. Bodrumda bir yatak, yerde su şişeleri. Duvara bir isim kazınmış: Emre. Birileri onu bizden birkaç saat önce götürmüş.",
+          "unlocks": ["farm:empty", "farm:entered"]
+        }
+      ]
+    },
+    {
+      "id": "pension",
+      "name": "Otogar Arkası Pansiyon",
+      "description": "Eski otogarın arkasında, tabelasının yarısı sönük bir pansiyon.",
+      "x": 0.36,
+      "y": 0.58,
+      "requires": "heard:pension",
+      "tasks": [
+        {
+          "id": "catch-adil",
+          "label": "Adil’i al",
+          "minutes": 3,
+          "requires": ["!adil:dead", "!adil:caught"],
+          "report": "Arka odada, çantasını hazırlarken yakaladık. Direnmedi. İlk sorduğu şey \"Kerem nerede?\" oldu. Korkuyor amirim. Halit Yener’i vermeye hazır.",
+          "unlocks": ["adil:caught"]
+        },
+        {
+          "id": "pension-late",
+          "label": "Pansiyona gir",
+          "minutes": 2,
+          "requires": "adil:dead",
+          "report": "Geç kaldık. Oda dağınık, yerde kan var. Pansiyoncu gece yarısı sakallı birinin geldiğini söylüyor. Adil’i sabaha karşı sanayide bulmuşlar.",
+          "unlocks": ["pension:late"]
+        }
+      ]
     }
   ]
 }

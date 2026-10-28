@@ -38,6 +38,26 @@
       "sender": "icdenetim.emniyet.gov.tr",
       "body": "İç Denetim Şube Müdürlüğü: Banka hesabınıza 'Y. Eğitim Vakfı Danışmanlık' unvanlı hesaptan yapılan ve iade edilmeyen 50.000,00 TL tutarındaki EFT hakkında idari inceleme başlatılmıştır. Savunmanızı yedi gün içinde yazılı olarak bildiriniz.",
       "requires": "case:internal-investigation"
+    },
+    {
+      "sender": "icdenetim.emniyet.gov.tr",
+      "requires": "status:suspended",
+      "body": "İç Denetim Şube Müdürlüğü: Hakkınızda yürütülen idari soruşturma kapsamında görevden uzaklaştırılmanıza karar verilmiştir. Kurum sistemlerine erişiminiz askıya alınmıştır."
+    },
+    {
+      "sender": "icdenetim.emniyet.gov.tr",
+      "requires": "status:warned",
+      "body": "İç Denetim Şube Müdürlüğü: Hakkınızdaki idari soruşturma kınama cezası ile sonuçlanmıştır."
+    },
+    {
+      "sender": "personel.emniyet.gov.tr",
+      "requires": "status:dismissed",
+      "body": "Personel Daire Başkanlığı: Hukuka aykırı arama ve delil toplama fiilleri nedeniyle meslekten çıkarılmanıza karar verilmiştir."
+    },
+    {
+      "sender": "uyap.adalet.gov.tr",
+      "requires": "legal:warrant-issued",
+      "body": "Adınıza düzenlenmiş bir yakalama kararı bulunmaktadır. \"Suçluyu kayırma\" suçundan hakkınızda soruşturma başlatılmıştır."
     }
   ]
 }

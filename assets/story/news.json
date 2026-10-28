@@ -247,6 +247,74 @@
       "author": "Selin Aras",
       "tags": ["kayıp", "öğrenci", "melis", "depo", "sanayi"],
       "body": ["Ailesi, polisin yerini günler önce bildiğini iddia etti. Emniyet açıklama yapmadı."]
+    },
+    {
+      "id": "tapes",
+      "outlet": "sehir-postasi",
+      "requires": "phone:press",
+      "title": "Milletvekilinin sesi: \"Bu çocuğu susturun\"",
+      "summary": "Şehir Postası, Berat Yılmaz’ın ölmeden önce yaptığı kayıtları yayımladı.",
+      "author": "Selin Aras",
+      "tags": ["kayıt", "milletvekili", "yılmaz", "vakıf", "halit yener", "danışman"],
+      "body": [
+        "Kayıtlarda Yılmaz Vakfı genel müdürü Halit Yener’in burslu öğrencilerin \"borçlarını\" tahsil ettirdiği duyuluyor.",
+        "Bir kayıtta Milletvekili Yılmaz’ın oğlu için \"susturun ama zarar vermeyin\" dediği duyuluyor. Yılmaz’ın ofisi kayıtların \"montaj\" olduğunu açıkladı."
+      ]
+    },
+    {
+      "id": "foundation-raid",
+      "outlet": "gundem24",
+      "requires": ["coverup:exposed", "phone:prosecutor"],
+      "title": "Yılmaz Vakfı’na savcılık operasyonu",
+      "summary": "Vakfın genel müdürü Halit Yener gözaltına alındı.",
+      "author": "Gündem24 Haber Merkezi",
+      "tags": ["vakıf", "operasyon", "halit yener", "gözaltı"],
+      "body": [
+        "Savcılık, burslu öğrencilere yönelik \"sistematik borçlandırma ve alıkoyma\" iddiasıyla soruşturma başlattı.",
+        "Milletvekili Yılmaz’ın dokunulmazlığının kaldırılması için fezleke hazırlandığı konuşuluyor."
+      ]
+    },
+    {
+      "id": "danisman-fled",
+      "outlet": "gundem24",
+      "requires": "danisman:fled",
+      "title": "Vakıf müdürü yurt dışına çıktı",
+      "summary": "Halit Yener’in kayıtlar yayımlandıktan saatler sonra ülkeden ayrıldığı öğrenildi.",
+      "author": "Gündem24 Haber Merkezi",
+      "tags": ["halit yener", "kaçtı", "vakıf"],
+      "body": ["Yener hakkında yakalama kararı çıkarıldı. Nereye gittiği bilinmiyor."]
+    },
+    {
+      "id": "emre-rescued",
+      "outlet": "sehir-postasi",
+      "requires": "emre:rescued",
+      "title": "İkinci kayıp öğrenci bir çiftlik evinin bodrumunda bulundu",
+      "summary": "Emre Y. sağ olarak kurtarıldı.",
+      "author": "Selin Aras",
+      "tags": ["emre", "kayıp", "çiftlik", "kurtarıldı"],
+      "body": ["Çiftlik evinin Yılmaz Vakfı genel müdürüne ait olduğu öğrenildi."]
+    },
+    {
+      "id": "adil-dead",
+      "outlet": "sehir-postasi",
+      "requires": "adil:dead",
+      "title": "Sanayide bir adam ölü bulundu",
+      "summary": "Uyuşturucu ve gasp suçlarından sabıkalı Adil K. sabaha karşı ölü bulundu.",
+      "author": "Selin Aras",
+      "tags": ["adil", "ölü", "sanayi"],
+      "body": ["Polis, olayın Berat Yılmaz soruşturmasıyla bağlantısını araştırıyor."]
+    },
+    {
+      "id": "detective-suspended",
+      "outlet": "gundem24",
+      "requires": "status:suspended",
+      "title": "Berat Yılmaz soruşturmasını yürüten amir görevden uzaklaştırıldı",
+      "summary": "Emniyet, amirin basına bilgi sızdırdığı iddiasıyla idari soruşturma başlattı.",
+      "author": "Gündem24 Haber Merkezi",
+      "tags": ["amir", "komiser", "görevden", "sızıntı"],
+      "body": [
+        "Amirin hâlâ yurt dışında olduğu belirtiliyor. Ancak hangi ülkede bulunduğu konusunda emniyet açıklama yapmadı."
+      ]
     }
   ],
   "filler": {

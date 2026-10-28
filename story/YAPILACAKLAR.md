@@ -80,24 +80,25 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
   - [x] Ece'nin eski hattı (Özge'nin sorgusu: "üç yıl önce ölmüş bir kadın")
   - [x] Sinstagram'da Ece'nin eski hesabı ve Kerem'in yorumları
 - [x] **Berat'ın kanıtları.** Buluşmada telefon ele geçiyor (`ev:berat-phone`).
-- [ ] Berat'ın telefonundaki kayıtlarla ne yapılacak: örtbasın ifşası,
-  danışman, milletvekili (Bölüm V–VI).
+- [x] Berat'ın telefonundaki kayıtlar: savcılık, basın ya da kasa (Bölüm V).
 - [x] **Kerem'le buluşma ve İkilem 2** (Bölüm IV).
 - [ ] Sızıntı için yanlış kişiyi suçlamanın bedeli (Atakan, Orhun, kaymakam, Erdi).
 - [x] **Kerem'le yüzleşme ve İkilem 2.** Gözaltı, savcıyla iş birliği ya da kaçmasına
   göz yumup kayıpların yerini öğrenmek.
 - [x] **Kayıp öğrenci (hayatta olan):** Melis, cuma süresi (Bölüm IV).
-- [ ] **Emre nerede?** İki hafta önce götürülmüş (Bölüm V).
+- [x] **Emre:** Halit Yener'in çiftliği; arama kararı ya da kararsız baskın (Bölüm V).
 - [ ] **İkilem 5** (tanığı koruma/zorlama) Emre için kullanılabilir.
 - [ ] **Furkan "sıradaki" mi?** Mezbahadaki ileri tarihin Furkan'a bağlanması.
 - [ ] **Vakıf ve danışman.** Burs sözleşmesi, burs listesi; danışmanın adı ve
   rolü.
 
-## Bölüm V için
+## Bölüm VI için
 
-- [ ] Kerem Adil'in peşinde (`kerem:hunting`): Kerem Adil'i bulursa?
-- [ ] Danışmanın kimliği ve yüzleşme
+- [x] Kerem Adil'in peşinde: pansiyona yetişilmezse Adil'i öldürür (Bölüm V).
+- [x] Danışmanın kimliği: Halit Yener, "H.Y." (Bölüm V). Yüzleşme Bölüm VI.
 - [ ] Hakan Demir'in hikâyesi (İkilem 4) ve ekibin kişisel hikâyeleri (İkilem 3, 9)
+- [ ] Milletvekiliyle son yüzleşme
+- [ ] Final soruşturması ve `final:ready`; gizli sonun son seçeneği
 
 ## Açık sorular (önce karar)
 
@@ -105,7 +106,7 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 - [x] Kaymakamın vakıfla bağı ne? Bağı yok, milletvekilinin rakibi.
 - [x] Behram'ın sırrı: narkotik, Adil muhbir olduğu için cuma gecelerine göz yumdu.
 - [x] Basına kim sızdırıyor? Komiserin kendisi (hatırlamadığı gece aramaları).
-- [ ] Adil'in deposundaki listede geçen "H.Y." kim?
+- [x] Adil'in deposundaki listede geçen "H.Y." kim? Danışman Halit Yener.
 - [ ] Hakan Demir'in hedefi kim? (Berat'ın katili artık o değil.)
 - [ ] Gizli son ("hiç yurt dışında değildi") diğer finallerle nasıl birleşir?
 

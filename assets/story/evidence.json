@@ -129,5 +129,12 @@
     "requires": "ev:berat-phone",
     "description": "Kerem’in çantasından çıktı. Berat babasıyla, danışmanla ve Adil’le konuşmalarını kaydetmiş. Son kayıt kendi sesi: \"Kerem’e yarın her şeyi vereceğim.\"",
     "links": ["scene", "contract"]
+  },
+  {
+    "id": "tapes",
+    "name": "Halit Yener’in Sesi",
+    "requires": "heard:danisman",
+    "description": "Berat’ın kayıtlarından: \"Cumaya kadar borcunu kapatmayanı çiftliğe götür.\" Adil’in listesindeki \"H.Y.\" bu adam.",
+    "links": ["berat-phone", "car"]
   }
 ]

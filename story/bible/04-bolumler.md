@@ -119,16 +119,44 @@ hikâyeleri, İkilem 3, 4, 9) Bölüm V'e kaydı.
   Hakan.
 
 ## Bölüm V — Komiser Sanık Sandalyesinde
-**Durum:** [ÖNERİ]
+**Durum:** [KANON, taslak] (28.10.2026)
+**Açılış:** `ev:berat-phone` (Berat'ın telefonu ele geçer)
+**Kapanış:** `farm:entered` (çiftliğe girilir) ve komiserin durumu belli olur
 
-- Oyuncunun seçimlerine göre idari inceleme (`case:internal-investigation`),
-  görevden uzaklaştırma (`status:suspended`), meslekten çıkarılma
-  (`status:dismissed`) ya da adli süreç (`legal:warrant-issued`).
-- Poltel kilitlenir; Harita'da sadece komisere güvenen subaylar yardım eder;
-  News, Sinstagram, gazeteciler ve eski meslektaşlar temel araç olur.
-- Hiçbiri zorunlu değil. Yasal yoldan ilerleyen oyuncu bu bölümü görevde
-  geçirir; o zaman baskı (`pressure`) ve Erdi üzerinden yaşanır.
-- İkilemler: 6, 10.
+- **Kayıtlar (Özge):** Danışmanın adı Halit Yener [ÖNERİ isim]; Adil'in
+  listesindeki "H.Y." o. Emre'nin götürüldüğü çiftlik, Adil'in saklandığı
+  pansiyon ve babanın "Bu çocuğu susturun ama ona zarar vermeyin" sesi.
+- **Kayıtlar kime? (İkilem 7'nin oyundaki hali):**
+
+  | Seçim | Sonuç |
+  | --- | --- |
+  | Savcılık | pressure +15. Emre'nin ifadesi ya da Adil yakalanınca 10 dk sonra vakfa operasyon (`coverup:exposed`) |
+  | Selin Aras | Herkes duyar (`press:story-published`), integrity −10, pressure +20, witnessDanger +15. Danışman 8 dk içinde Emre'yi kaçırır ve yurt dışına çıkar |
+  | Kasada tut | Hiçbir şey dışarı çıkmaz; örtbas açığa çıkmaz |
+
+- **Emre (çiftlik):** Arama kararı (Özge'den, uzaklaştırıldıysa İnanç'tan; 12 dk)
+  ile girmek hukuka uygun ifade sağlar. Kararsız girmek hemen kurtarır ama
+  delil hukuka aykırı (`ev:farm-tainted`), kirli eller, integrity −15.
+  30 dk (basına verildiyse 8 dk) içinde girilmezse Emre götürülür.
+- **Adil (pansiyon):** Yakalanırsa itirafçı olur. Kerem serbestse ve pansiyonu
+  biliyorsa 20 dk sonra Adil'i bulur ve öldürür; Kerem "Bitti. Ece için"
+  yazar.
+- **Komiser:** Erdi: Şehir Postası'nı gece üçte arayan numara komiserin numarası
+  (`leak:traced`, `doubt` +1). İç denetim dosyası açılır. Avukat Nesrin Kaya
+  15.000 TL'ye savunmayı üstlenir; "yurt dışında olduğunuzu gösteren tek bir
+  belge" ister, ama tatil fotoğrafı ve banka kayıtları hiçbir yer söylemez
+  (`doubt` +1).
+
+  | Durum | Koşul |
+  | --- | --- |
+  | Görevden uzaklaştırma (12 dk) | integrity < 60 ya da kirli eller ya da pressure ≥ 70; avukat tutulmadıysa |
+  | Kınama, görevde kalır (14 dk) | Uzaklaştırılmadıysa |
+  | Meslekten çıkarılma (10 dk) | Uzaklaştırıldıysa ve çiftliğe kararsız girildiyse |
+  | Yakalama kararı (10 dk) | Çıkarıldıysa ve Kerem'in kaçmasına göz yumulduysa |
+
+- **Bölüm VI'ya bırakılanlar:** Hakan Demir, ekibin kişisel hikâyeleri
+  (Atakan'ın ilişkisi, Orhun'un borcu, Doğa), milletvekiliyle son yüzleşme,
+  gizli son, final soruşturması (`final:ready`).
 
 ## Bölüm VI — Gerçeğin Bedeli
 **Durum:** [ÖNERİ]

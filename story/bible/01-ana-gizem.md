@@ -141,8 +141,9 @@ hazırlanıyordu ve kanıtlarını Kerem'e vermeyi planlıyordu.
 - **[ÖNERİ]** "Berat benden para istedi, vermedim" doğru. Deniz'e "babamdan
   isteyemem" demesi de doğru: Berat istedi, reddedildi ve bunu kimseye
   söyleyemedi.
-- [?] Adil'in deposundaki listede geçen "H.Y." o mu, başka biri mi? Bilerek
-  bırakılmış bir yanlış iz de olabilir.
+- [ÖNERİ, oyunda] Adil'in listesindeki "H.Y." milletvekili değil, danışman
+  **Halit Yener**; vakfın genel müdürü. Baş harfler önce milletvekilini
+  düşündürür.
 
 ### Erdi, kaymakam ve narkotik [KARAR 28.10.2026]
 

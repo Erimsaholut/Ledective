@@ -49,6 +49,40 @@
       ]
     },
     {
+      "id": "danisman",
+      "title": "Halit Yener",
+      "variants": [
+        {
+          "requires": "danisman:fled",
+          "text": "[Taslak] Halit Yener kayıtlar yayımlandığı gece ülkeden çıktı. Yakalama kararı hâlâ duruyor."
+        },
+        {
+          "requires": ["coverup:exposed", "!ev:farm-tainted"],
+          "text": "[Taslak] Halit Yener tutuklandı. Emre’nin ifadesi ve Berat’ın kayıtları onu mahkûm ettirdi."
+        },
+        {
+          "requires": "ev:farm-tainted",
+          "text": "[Taslak] Halit Yener serbest bırakıldı: çiftlikteki deliller hukuka aykırı sayıldı."
+        },
+        {"text": "[Taslak] Halit Yener hiç yargılanmadı."}
+      ]
+    },
+    {
+      "id": "adil",
+      "title": "Adil Karaca",
+      "variants": [
+        {
+          "requires": "adil:dead",
+          "text": "[Taslak] Adil Karaca sanayide ölü bulundu. Katili hiç aranmadı."
+        },
+        {
+          "requires": "adil:caught",
+          "text": "[Taslak] Adil Karaca itirafçı oldu. Cuma gecelerini tek tek anlattı."
+        },
+        {"text": "[Taslak] Adil Karaca kayıplara karıştı."}
+      ]
+    },
+    {
       "id": "career",
       "title": "Komiser",
       "variants": [
@@ -70,6 +104,14 @@
       "id": "witnesses",
       "title": "Tanıklar",
       "variants": [
+        {
+          "requires": ["girl:rescued", "emre:rescued"],
+          "text": "[Taslak] Melis de Emre de kurtarıldı. İkisi aynı duruşmada tanık kürsüsüne çıktı."
+        },
+        {
+          "requires": "emre:moved",
+          "text": "[Taslak] Emre bir daha bulunamadı. Çiftliğin bodrumundaki yazı hâlâ duvarda."
+        },
         {
           "requires": "girl:rescued",
           "text": "[Taslak] Melis kurtarıldı ve ifade verdi. Emre’den hâlâ haber yok."

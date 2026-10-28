@@ -732,6 +732,104 @@ void main() {
       });
     });
 
+    group('chapter V', () {
+      StoryProgress progress() => StoryProgress.instance;
+      Future<void> mission(String taskId) async {
+        final start = DateTime(2026, 1, 1);
+        expect(
+          await progress().startMission(
+            StoryData.current.map.task(taskId)!,
+            'Doğa',
+            now: start,
+          ),
+          isTrue,
+          reason: taskId,
+        );
+        await progress().completeDueMissions(
+          now: start.add(const Duration(hours: 1)),
+        );
+      }
+
+      bool visible(String taskId) =>
+          progress().meets(StoryData.current.map.task(taskId)!.requires);
+
+      Future<void> ozgeAtDesk() async {
+        await progress().discover([StoryFlags.part1Done]);
+        await say('Özge', 'Neymiş bu kadar önemli olan durum');
+        await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
+        await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
+      }
+
+      Future<void> erdiAtDesk() async {
+        await progress().discover([StoryFlags.part1Done, 'toxicology']);
+        await say('Erdi', 'Biliyorsun nerede olduğumu');
+        await say('Erdi', 'Sen içini ferah tut');
+        await say('Erdi', 'Anlaşıldı müdürüm. Katile odaklanıyoruz.');
+        await say(
+          'Erdi',
+          'Benim ekibimden kimse gazeteciyle konuşmaz müdürüm.',
+        );
+      }
+
+      test(
+        'the prosecutor\'s way frees Emre and brings the ring down',
+        () async {
+          await ozgeAtDesk();
+          await progress().discover(['ev:berat-phone']);
+          await say('Özge', 'Savcılığa teslim et. Tutanakla.');
+          expect(progress().has('heard:farm'), isTrue);
+          await say('Özge', 'Savcılıktan çiftlik için arama kararı iste.');
+          expect(visible('farm-warrant'), isFalse);
+          await progress().advanceTimers(const Duration(minutes: 12));
+          expect(visible('farm-warrant'), isTrue);
+          await mission('farm-warrant');
+          expect(progress().has('emre:testimony'), isTrue);
+          expect(progress().has('ev:farm-tainted'), isFalse);
+          await progress().advanceTimers(const Duration(minutes: 10));
+          expect(progress().has('coverup:exposed'), isTrue);
+        },
+      );
+
+      test('the press warns the adviser, who moves Emre and runs', () async {
+        await ozgeAtDesk();
+        await progress().discover(['ev:berat-phone']);
+        await say('Özge', 'Selin Aras\u2019a ver. Herkes duysun.');
+        await progress().advanceTimers(const Duration(minutes: 8));
+        expect(progress().has('emre:moved'), isTrue);
+        expect(progress().has('danisman:fled'), isTrue);
+        expect(visible('farm-raid'), isFalse);
+        expect(visible('farm-late'), isTrue);
+      });
+
+      test('the leak traced to the detective can cost the job', () async {
+        await erdiAtDesk();
+        await progress().discover(['ev:berat-phone', 'player:dirty-hands']);
+        await say('Erdi', 'Ben kimseyi aramadım.');
+        expect(progress().has('leak:traced'), isTrue);
+        await progress().advanceTimers(const Duration(minutes: 12));
+        expect(progress().has('status:suspended'), isTrue);
+        expect(progress().lockOf('Poltel'), isNotNull);
+        // An illegal raid on top of that ends the career.
+        await progress().discover(['ev:farm-tainted']);
+        await progress().advanceTimers(const Duration(minutes: 10));
+        expect(progress().has('status:dismissed'), isTrue);
+      });
+
+      test('a lawyer turns suspension into a reprimand', () async {
+        await erdiAtDesk();
+        await progress().discover(['ev:berat-phone', 'player:dirty-hands']);
+        await say('Erdi', 'Numaramı biri kullanıyor olmalı.');
+        await say('Av. Nesrin Kaya', 'Tamam. Gönderiyorum.');
+        final lawyer = StoryData.current.bank.payees.firstWhere(
+          (p) => p.id == 'lawyer',
+        );
+        await progress().recordTransfer(lawyer, 1500000);
+        await progress().advanceTimers(const Duration(minutes: 14));
+        expect(progress().has('status:suspended'), isFalse);
+        expect(progress().has('status:warned'), isTrue);
+      });
+    });
+
     test('choices change numbers within their limits', () async {
       final progress = StoryProgress.instance;
       expect(progress.value('trust:Özge'), 50);

@@ -61,6 +61,15 @@
       "requires": "heard:orhun-debt",
       "minAmount": 2000000,
       "unlocks": ["orhun:helped", "trust:Orhun += 20", "integrity -= 5"]
+    },
+    {
+      "id": "lawyer",
+      "name": "Av. Nesrin Kaya",
+      "iban": "TR22 0006 4000 0011 2223 3344 55",
+      "note": "Avukatlık ücreti (15.000 TL)",
+      "requires": "lawyer:offer",
+      "minAmount": 1500000,
+      "unlocks": ["lawyer:hired"]
     }
   ]
 }

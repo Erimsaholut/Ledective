@@ -263,6 +263,21 @@
               "Berat ölmüş bir kızın numarasından gelen aramaları açıyormuş."
             ],
             "unlocks": ["heard:kerem-berat"]
+          },
+          {
+            "label": "Savcılıktan çiftlik için arama kararı iste.",
+            "requires": ["heard:farm", "!status:suspended"],
+            "replies": ["İstiyorum amirim. Savcı Bey on beş dakika içinde dönermiş."],
+            "unlocks": ["warrant:requested"]
+          },
+          {
+            "label": "Halit Yener kim?",
+            "requires": "heard:danisman",
+            "replies": [
+              "Y. Eğitim Vakfı’nın genel müdürü. Milletvekilinin yirmi yıllık adamı.",
+              "Adil’in listesindeki \"H.Y.\" o amirim."
+            ],
+            "unlocks": ["heard:hy"]
           }
         ],
         "events": [
@@ -277,6 +292,10 @@
           {
             "requires": ["kerem:met", "envoy:ozge", "!envoy:reported"],
             "next": "meetOzge"
+          },
+          {
+            "requires": ["ev:berat-phone", "!phone:decided"],
+            "next": "ozgeTapes"
           }
         ]
       },
@@ -380,6 +399,21 @@
               "Berat ölmüş bir kızın numarasından gelen aramaları açıyormuş."
             ],
             "unlocks": ["heard:kerem-berat"]
+          },
+          {
+            "label": "Savcılıktan çiftlik için arama kararı iste.",
+            "requires": ["heard:farm", "!status:suspended"],
+            "replies": ["İstiyorum amirim. Savcı Bey on beş dakika içinde dönermiş."],
+            "unlocks": ["warrant:requested"]
+          },
+          {
+            "label": "Halit Yener kim?",
+            "requires": "heard:danisman",
+            "replies": [
+              "Y. Eğitim Vakfı’nın genel müdürü. Milletvekilinin yirmi yıllık adamı.",
+              "Adil’in listesindeki \"H.Y.\" o amirim."
+            ],
+            "unlocks": ["heard:hy"]
           }
         ],
         "events": [
@@ -394,6 +428,10 @@
           {
             "requires": ["kerem:met", "envoy:ozge", "!envoy:reported"],
             "next": "meetOzge2"
+          },
+          {
+            "requires": ["ev:berat-phone", "!phone:decided"],
+            "next": "ozgeTapes2"
           }
         ]
       },
@@ -620,6 +658,130 @@
               "player:dirty-hands",
               "integrity -= 20",
               "trust:Özge -= 10"
+            ],
+            "next": "later"
+          }
+        ]
+      },
+      "ozgeTapes": {
+        "incoming": [
+          "Amirim telefondaki kayıtları dinledim. Üç saat var.",
+          "Danışmanın adı Halit Yener. Adil’e \"Cumaya kadar borcunu kapatmayanı çiftliğe götür\" diyor. Emre’nin adı geçiyor: \"Emre’yi Halit Bey’in çiftliğine götürün.\"",
+          "Adil’in saklandığı yer de var: otogar arkasındaki pansiyon.",
+          "Bir de babasının sesi var amirim. \"Bu çocuğu susturun ama ona zarar vermeyin\" diyor. Kendi oğlu için."
+        ],
+        "options": [
+          {
+            "label": "Savcılığa teslim et. Tutanakla.",
+            "replies": ["Ediyorum amirim. Ama bu kayıtlar savcılığa girdiği an Ankara da duyar."],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "phone:decided",
+              "phone:prosecutor",
+              "pressure += 15",
+              "integrity += 5",
+              "heard:farm",
+              "heard:pension",
+              "heard:danisman",
+              "heard:mp-tape"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Selin Aras’a ver. Herkes duysun.",
+            "replies": [
+              "...",
+              "Emin misiniz amirim? Bu delil artık mahkemede tartışılır.",
+              "Peki. Gönderiyorum."
+            ],
+            "traits": ["cesur"],
+            "unlocks": [
+              "phone:decided",
+              "phone:press",
+              "press:story-published",
+              "integrity -= 10",
+              "pressure += 20",
+              "witnessDanger += 15",
+              "heard:farm",
+              "heard:pension",
+              "heard:danisman",
+              "heard:mp-tape"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Kimseye verme. Önce Emre’yi bulalım.",
+            "replies": ["Kasaya kilitliyorum amirim. Anahtarı bende."],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "phone:decided",
+              "phone:kept",
+              "heard:farm",
+              "heard:pension",
+              "heard:danisman",
+              "heard:mp-tape"
+            ],
+            "next": "afterMezbaha"
+          }
+        ]
+      },
+      "ozgeTapes2": {
+        "incoming": [
+          "Amirim telefondaki kayıtları dinledim. Üç saat var.",
+          "Danışmanın adı Halit Yener. Adil’e \"Cumaya kadar borcunu kapatmayanı çiftliğe götür\" diyor. Emre’nin adı geçiyor: \"Emre’yi Halit Bey’in çiftliğine götürün.\"",
+          "Adil’in saklandığı yer de var: otogar arkasındaki pansiyon.",
+          "Bir de babasının sesi var amirim. \"Bu çocuğu susturun ama ona zarar vermeyin\" diyor. Kendi oğlu için."
+        ],
+        "options": [
+          {
+            "label": "Savcılığa teslim et. Tutanakla.",
+            "replies": ["Ediyorum amirim. Ama bu kayıtlar savcılığa girdiği an Ankara da duyar."],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "phone:decided",
+              "phone:prosecutor",
+              "pressure += 15",
+              "integrity += 5",
+              "heard:farm",
+              "heard:pension",
+              "heard:danisman",
+              "heard:mp-tape"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Selin Aras’a ver. Herkes duysun.",
+            "replies": [
+              "...",
+              "Emin misiniz amirim? Bu delil artık mahkemede tartışılır.",
+              "Peki. Gönderiyorum."
+            ],
+            "traits": ["cesur"],
+            "unlocks": [
+              "phone:decided",
+              "phone:press",
+              "press:story-published",
+              "integrity -= 10",
+              "pressure += 20",
+              "witnessDanger += 15",
+              "heard:farm",
+              "heard:pension",
+              "heard:danisman",
+              "heard:mp-tape"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Kimseye verme. Önce Emre’yi bulalım.",
+            "replies": ["Kasaya kilitliyorum amirim. Anahtarı bende."],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "phone:decided",
+              "phone:kept",
+              "heard:farm",
+              "heard:pension",
+              "heard:danisman",
+              "heard:mp-tape"
             ],
             "next": "later"
           }
@@ -1739,6 +1901,12 @@
               "Ben de bilmem dedim."
             ],
             "unlocks": ["heard:records-odd", "doubt += 1"]
+          },
+          {
+            "label": "Çiftlik için savcıdan arama kararı alabilir misin?",
+            "requires": ["heard:farm", "status:suspended", "trust:İnanç >= 60"],
+            "replies": ["Ben alırım amirim. Usulüyle. Siz görevde olmasanız da."],
+            "unlocks": ["warrant:requested", "trust:İnanç += 5"]
           }
         ],
         "events": [
@@ -2614,6 +2782,18 @@
             "requires": ["kerem:met", "!erdi:escape"],
             "next": "erdiEscape",
             "requiresAny": ["kerem:escaped", "kerem:escaped-ambush"]
+          },
+          {
+            "requires": ["ev:berat-phone", "!erdi:trace"],
+            "next": "erdiTrace"
+          },
+          {
+            "requires": ["status:suspended", "!erdi:suspend"],
+            "next": "erdiSuspend"
+          },
+          {
+            "requires": ["status:warned", "!erdi:warned"],
+            "next": "erdiWarned"
           }
         ]
       },
@@ -2789,6 +2969,76 @@
             "silent": true,
             "next": "desk",
             "unlocks": ["erdi:escape"]
+          }
+        ]
+      },
+      "erdiTrace": {
+        "incoming": [
+          "İç denetim dosya açtı. Senin hakkında.",
+          "Telefon kayıtlarını çıkarmışlar. Şehir Postası’nı gece üçte arayan numara senin numaran. Üç ayrı gece.",
+          "Ya numaran klonlandı ya da sen bana yalan söylüyorsun."
+        ],
+        "options": [
+          {
+            "label": "Ben kimseyi aramadım.",
+            "replies": ["Kayıtlar başka söylüyor."],
+            "traits": ["öfke"],
+            "unlocks": ["erdi:trace", "doubt += 1", "leak:traced", "case:internal-investigation"],
+            "next": "desk"
+          },
+          {
+            "label": "Numaramı biri kullanıyor olmalı.",
+            "replies": ["Kim? Sen yurt dışındayken, senin telefonunla?"],
+            "traits": ["temkinli"],
+            "unlocks": ["erdi:trace", "doubt += 1", "leak:traced", "case:internal-investigation"],
+            "next": "desk"
+          },
+          {
+            "label": "Kayıtları görmek istiyorum.",
+            "replies": ["Görürsün. Denetimde. Avukatınla."],
+            "traits": ["merak"],
+            "next": "desk",
+            "unlocks": ["erdi:trace", "leak:traced", "case:internal-investigation"]
+          }
+        ]
+      },
+      "erdiSuspend": {
+        "incoming": [
+          "Kararı imzaladım. Görevden uzaklaştırıldın.",
+          "Poltel şifren iptal. Kimseye görev veremezsin.",
+          "Ve bana bir daha bu dosyayla ilgili tek mesaj atma."
+        ],
+        "options": [
+          {
+            "label": "Bunu sana kim yaptırdı Erdi?",
+            "replies": ["Kimse. Sen yaptın."],
+            "traits": ["öfke"],
+            "next": "desk",
+            "unlocks": ["erdi:suspend"]
+          },
+          {
+            "label": "(Cevap verme)",
+            "silent": true,
+            "next": "desk",
+            "unlocks": ["erdi:suspend"]
+          }
+        ]
+      },
+      "erdiWarned": {
+        "incoming": ["Denetim kurulu kınama cezası verdi. Görevdesin.", "Şanslısın. Ben olsam alırdım seni."],
+        "options": [
+          {
+            "label": "Teşekkürler müdürüm.",
+            "replies": ["Bana değil, avukatına teşekkür et."],
+            "next": "desk",
+            "unlocks": ["erdi:warned"]
+          },
+          {
+            "label": "Dosyaya devam ediyorum.",
+            "replies": ["Biliyorum. O yüzden korkuyorum."],
+            "traits": ["cesur"],
+            "next": "desk",
+            "unlocks": ["erdi:warned"]
           }
         ]
       }
@@ -3107,6 +3357,10 @@
           {
             "requires": ["selin:talked", "mezbaha-found", "!selin:families"],
             "next": "selinFamilies"
+          },
+          {
+            "requires": ["phone:press", "!selin:tapes"],
+            "next": "selinTapes"
           }
         ]
       },
@@ -3135,6 +3389,27 @@
             "label": "Hiç yayımlama. Soruşturmayı tehlikeye atarsın.",
             "replies": ["Bunu bir polisten ilk kez duymuyorum.", "Düşüneceğim."],
             "unlocks": ["selin:families", "press:held"],
+            "next": "desk"
+          }
+        ]
+      },
+      "selinTapes": {
+        "incoming": [
+          "Kayıtlar elimde Komiser Bey.",
+          "Bu gece yayımlıyorum. Bir milletvekilinin \"oğlumu susturun\" dediğini herkes duyacak.",
+          "Tanıkların adlarını çıkaracağım. Söz."
+        ],
+        "options": [
+          {
+            "label": "Teşekkür ederim.",
+            "replies": ["Bana teşekkür etmeyin. Yarın sabah kimse size teşekkür etmeyecek."],
+            "next": "desk",
+            "unlocks": ["selin:tapes"]
+          },
+          {
+            "label": "Emre’nin yerini yazma. Henüz kurtaramadık.",
+            "replies": ["Çiftliği çıkarıyorum. Ama danışmanın kulağına gitmiştir bile."],
+            "unlocks": ["selin:tapes", "witnessDanger -= 5"],
             "next": "desk"
           }
         ]
@@ -3339,7 +3614,8 @@
         "events": [
           {"requires": "kerem:relents", "next": "relent"},
           {"requires": "girl:rescued", "next": "thanks"},
-          {"requires": "girl:lost", "next": "blame"}
+          {"requires": "girl:lost", "next": "blame"},
+          {"requires": "adil:dead", "next": "done"}
         ]
       },
       "relent": {
@@ -3353,10 +3629,98 @@
         ]
       },
       "thanks": {
-        "incoming": ["Melis’i çıkarmışsınız.", "Ece için teşekkür ederim."]
+        "incoming": ["Melis’i çıkarmışsınız.", "Ece için teşekkür ederim."],
+        "events": [
+          {"requires": "adil:dead", "next": "done"}
+        ]
       },
       "blame": {
-        "incoming": ["Geç kaldınız.", "Ben de."]
+        "incoming": ["Geç kaldınız.", "Ben de."],
+        "events": [
+          {"requires": "adil:dead", "next": "done"}
+        ]
+      },
+      "done": {
+        "incoming": ["Bitti.", "Adil bir daha kimsenin kapısını çalmayacak. Ece için."]
+      }
+    }
+  },
+  "Av. Nesrin Kaya": {
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "leak:traced",
+        "incoming": [
+          "Komiser Bey merhaba, Nesrin Kaya. Avukatım. Numaranızı Selin Aras verdi.",
+          "Hakkınızda bir iç denetim dosyası var ve haftaya görevden uzaklaştırma kararı çıkabilir.",
+          "Size yardım edebilirim. Ücretim 15.000 TL, hesabımı gönderiyorum. Ödeme gelince başlarım."
+        ],
+        "options": [
+          {
+            "label": "Tamam. Gönderiyorum.",
+            "replies": ["Bekliyorum."],
+            "next": "desk",
+            "unlocks": ["lawyer:offer"]
+          },
+          {
+            "label": "Kendim hallederim.",
+            "replies": ["Siz bilirsiniz. Numaram bu."],
+            "next": "desk",
+            "traits": ["umursamaz"],
+            "unlocks": ["lawyer:offer", "lawyer:declined"]
+          }
+        ]
+      },
+      "desk": {
+        "ask": [
+          {
+            "label": "Görevden alınırsam ne olur?",
+            "requires": "lawyer:offer",
+            "replies": [
+              "Poltel’e giremezsiniz, kimseye görev veremezsiniz. Sadece size güvenenler yardım eder.",
+              "Ve her yaptığınız aleyhinize kullanılır."
+            ]
+          }
+        ],
+        "events": [
+          {
+            "requires": ["lawyer:hired", "!lawyer:alibi"],
+            "next": "alibi"
+          }
+        ]
+      },
+      "alibi": {
+        "incoming": [
+          "Ödemeniz geldi, başlıyorum.",
+          "İlk iş: o gecelerde nerede olduğunuzu kanıtlamamız lazım.",
+          "Yurt dışında olduğunuzu gösteren tek bir belge gönderin: otel faturası, bilet, bir fotoğraf."
+        ],
+        "options": [
+          {
+            "label": "Tatil fotoğrafını gönderiyorum.",
+            "replies": [
+              "Bir havuz.",
+              "Bu fotoğrafın nerede çekildiği belli değil Komiser Bey. Başka bir şey yok mu?"
+            ],
+            "unlocks": ["lawyer:alibi", "doubt += 1"],
+            "next": "desk"
+          },
+          {
+            "label": "Banka kayıtlarım var.",
+            "replies": [
+              "\"Yurt dışı harcama\" yazıyor. Ülke yok, şehir yok.",
+              "Garip. Bankanız böyle yazmaz normalde."
+            ],
+            "unlocks": ["lawyer:alibi", "doubt += 1"],
+            "next": "desk"
+          },
+          {
+            "label": "Bana inanmanız yeterli.",
+            "replies": ["Benim inanmam yetmez. Denetim kurulunun inanması lazım."],
+            "next": "desk",
+            "unlocks": ["lawyer:alibi"]
+          }
+        ]
       }
     }
   }
