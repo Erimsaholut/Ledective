@@ -81,12 +81,42 @@ Yollar birleşebilir, ama önceki seçimlerin sonuçlarını taşımalıdır
   cevabı, İnanç'ın telefon kaydı, Erdi'nin "nerede olduğunu bilmiyoruz"u,
   Selin'in "gece üçte arayan".
 
-## Bölüm IV — Kimse Masum Değil
-**Durum:** [ÖNERİ]
+## Bölüm IV — Cuma Gecesi
+**Durum:** [KANON, taslak] (28.10.2026)
+**Açılış:** `kerem:contact`
+**Kapanış:** `storage:entered` (Melis kurtarılır ya da ölü bulunur)
 
-- Hakan'ın hikâyesi, kayıp öğrenciler, ekibin kişisel ilişkileri ve politik
-  baskı derinleşir. Oyuncu meslektaşlarının gerçeklerini öğrenmeye başlar.
-- İkilemler: 2, 3, 4, 5, 9.
+Eski taslaktaki "Kimse Masum Değil" konuları (Hakan, ekibin kişisel
+hikâyeleri, İkilem 3, 4, 9) Bölüm V'e kaydı.
+
+- **Buluşma:** Kerem yüz yüze, tek kişiyle görüşmek ister. Komiser "yurt
+  dışında" olduğu için ya ekipten birini gönderir (güveni 40 ve üstü olanlar:
+  Özge, Doğa, Atakan, İnanç; Behram yardım ettiyse o) ya da ekibi toplayıp
+  buluşma yerini sardırır (pusu). "Yurt dışındayım" demek Kerem'in "Öyle
+  mi?" cevabıyla `doubt` artırır. Buluşma 10 dk oyun süresi sonra olur.
+- **Gidenin raporu:** Kerem itiraf eder, kızın adını (Melis) ve şartını
+  söyler: cuma gecesi serbest kalıp Adil'i ve danışmanı bekleyecek. Berat'ın
+  telefonunu verir; son kayıt Berat'ın sesi: "Kerem'e yarın her şeyi
+  vereceğim." Oyuncu Berat'ın pişman olduğunu burada öğrenir.
+- **İkilem 2 (gidenin sohbetinde):**
+
+  | Seçim | Kızın yeri | Bedel |
+  | --- | --- | --- |
+  | Gözaltına al | Kerem söylemez. Orhun'un bulduğu "SH-4" anahtarı ya da Behram'ın listesi + Furkan'ın cuma geceleri | Süre kaçabilir |
+  | Savcıyla anlaş | Hemen | pressure +10 |
+  | Gitsin | Hemen | Kirli eller, integrity −20, gidenin güveni −10, Kerem Adil'in peşine düşer |
+  | (Pusu) | Kerem kaçar, yeri söylemez; 15 dk sonra "kız için" yine söyler | integrity −5, witnessDanger +10 |
+
+- **Cuma:** Kerem ilk yazdığında 60 dk oyun süresi başlar. Melis kurtarılmadan
+  biterse `girl:lost`: depoda geç kalınır, Melis ölü bulunur.
+- **Sonrası:** Doğa Melis'in ifadesini alır (takım elbiseli sorgucu: "Vakıf
+  seni bu kadar okuttu"; Emre iki hafta önce götürülmüş) ve tanık koruma
+  kararı. Erdi kurtarma başarısını sahiplenir; gözaltıda "dosyayı kapat"
+  der; kaçışta öfkelenir. Baba katilin adını sorar. News üç ayrı haberle
+  sonucu yazar.
+- **Bölüm V'e bırakılanlar:** Emre nerede, danışman kim, Kerem Adil'in peşinde
+  (`kerem:hunting`), Berat'ın telefonundaki kayıtlarla örtbasın ifşası,
+  Hakan.
 
 ## Bölüm V — Komiser Sanık Sandalyesinde
 **Durum:** [ÖNERİ]

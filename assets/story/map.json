@@ -211,6 +211,32 @@
           "unlocks": ["heard:kerem-board", "player:dirty-hands", "integrity -= 5"]
         }
       ]
+    },
+    {
+      "id": "cold-storage",
+      "name": "Eski Soğuk Hava Deposu",
+      "description": "Sanayinin en ucunda, kapısı zincirli eski bir soğuk hava deposu.",
+      "x": 0.12,
+      "y": 0.66,
+      "requiresAny": ["kerem:told-location", "heard:cold-storage"],
+      "tasks": [
+        {
+          "id": "storage-raid",
+          "label": "Depoya gir",
+          "minutes": 3,
+          "requires": "!girl:lost",
+          "report": "Amirim... buldum onu. Melis. Arka odada, bir şiltenin üstünde. Susuz, korkmuş ama yaşıyor. Yanında bir yatak daha vardı. Boş.",
+          "unlocks": ["girl:rescued", "storage:entered"]
+        },
+        {
+          "id": "storage-late",
+          "label": "Depoya gir",
+          "minutes": 3,
+          "requires": "girl:lost",
+          "report": "Geç kaldık amirim. Arka odada, bir şiltenin üstünde. Yanında bir yatak daha vardı. Boş.",
+          "unlocks": ["girl:found-dead", "storage:entered"]
+        }
+      ]
     }
   ]
 }

@@ -79,16 +79,25 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
   - [x] Yırtık fotoğraf ile kamera karesindeki adamın aynı kişi olduğu
   - [x] Ece'nin eski hattı (Özge'nin sorgusu: "üç yıl önce ölmüş bir kadın")
   - [x] Sinstagram'da Ece'nin eski hesabı ve Kerem'in yorumları
-- [ ] **Berat'ın kanıtları.** Telefonu Kerem'de; oyuncu bunu nasıl öğrenir,
-  kanıtlara nasıl ulaşır?
-- [ ] **Kerem'le buluşma (`kerem:meeting`) ve İkilem 2.** Bölüm IV'ün başı.
+- [x] **Berat'ın kanıtları.** Buluşmada telefon ele geçiyor (`ev:berat-phone`).
+- [ ] Berat'ın telefonundaki kayıtlarla ne yapılacak: örtbasın ifşası,
+  danışman, milletvekili (Bölüm V–VI).
+- [x] **Kerem'le buluşma ve İkilem 2** (Bölüm IV).
 - [ ] Sızıntı için yanlış kişiyi suçlamanın bedeli (Atakan, Orhun, kaymakam, Erdi).
-- [ ] **Kerem'le yüzleşme ve İkilem 2.** Gözaltı, savcıyla iş birliği ya da kaçmasına
+- [x] **Kerem'le yüzleşme ve İkilem 2.** Gözaltı, savcıyla iş birliği ya da kaçmasına
   göz yumup kayıpların yerini öğrenmek.
-- [ ] **Kayıp öğrenci (hayatta olan) ve İkilem 5.**
+- [x] **Kayıp öğrenci (hayatta olan):** Melis, cuma süresi (Bölüm IV).
+- [ ] **Emre nerede?** İki hafta önce götürülmüş (Bölüm V).
+- [ ] **İkilem 5** (tanığı koruma/zorlama) Emre için kullanılabilir.
 - [ ] **Furkan "sıradaki" mi?** Mezbahadaki ileri tarihin Furkan'a bağlanması.
 - [ ] **Vakıf ve danışman.** Burs sözleşmesi, burs listesi; danışmanın adı ve
   rolü.
+
+## Bölüm V için
+
+- [ ] Kerem Adil'in peşinde (`kerem:hunting`): Kerem Adil'i bulursa?
+- [ ] Danışmanın kimliği ve yüzleşme
+- [ ] Hakan Demir'in hikâyesi (İkilem 4) ve ekibin kişisel hikâyeleri (İkilem 3, 9)
 
 ## Açık sorular (önce karar)
 

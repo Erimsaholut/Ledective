@@ -211,6 +211,42 @@
         "Eski mezbahada fotoğrafları bulunan iki öğrencinin aileleri ilk kez konuştu. Aileler, çocuklarının kaybolmadan önce aynı burs programına başvurduğunu söyledi.",
         "Haberin ardından ailelerden birinin kapısına bir not bırakıldığı öğrenildi. Notta ne yazdığı açıklanmadı."
       ]
+    },
+    {
+      "id": "kerem-arrested",
+      "outlet": "gundem24",
+      "requires": "kerem:arrested",
+      "title": "Berat Yılmaz cinayetinde gözaltı",
+      "summary": "Emniyet, milletvekilinin oğlunun ölümüyle ilgili 24 yaşındaki bir şüpheliyi gözaltına aldı.",
+      "author": "Gündem24 Haber Merkezi",
+      "tags": ["berat", "gözaltı", "şüpheli", "kerem"],
+      "body": [
+        "Şüphelinin üç yıl önce şüpheli bir şekilde ölen bir üniversite öğrencisinin ağabeyi olduğu öğrenildi.",
+        "Emniyetten yapılan açıklamada soruşturmanın \"büyük ölçüde tamamlandığı\" belirtildi."
+      ]
+    },
+    {
+      "id": "melis-rescued",
+      "outlet": "sehir-postasi",
+      "requires": "girl:rescued",
+      "title": "Kayıp öğrenci sanayideki depoda sağ bulundu",
+      "summary": "Bir aydır kayıp olan üniversite öğrencisi Melis D., eski bir soğuk hava deposunda bulundu.",
+      "author": "Selin Aras",
+      "tags": ["kayıp", "öğrenci", "melis", "depo", "sanayi", "kurtarıldı"],
+      "body": [
+        "Melis D. hastaneye kaldırıldı; sağlık durumunun iyi olduğu bildirildi.",
+        "Şube Müdürü Erdi, operasyonun \"kendi koordinasyonunda\" yürütüldüğünü açıkladı. Depoda ikinci bir kayıp öğrenciye ait eşyalar da bulunduğu öğrenildi."
+      ]
+    },
+    {
+      "id": "storage-dead",
+      "outlet": "sehir-postasi",
+      "requires": "girl:found-dead",
+      "title": "Sanayideki depoda kayıp öğrencinin cansız bedeni bulundu",
+      "summary": "Bir aydır aranan üniversite öğrencisinin ölümüyle ilgili soruşturma başlatıldı.",
+      "author": "Selin Aras",
+      "tags": ["kayıp", "öğrenci", "melis", "depo", "sanayi"],
+      "body": ["Ailesi, polisin yerini günler önce bildiğini iddia etti. Emniyet açıklama yapmadı."]
     }
   ],
   "filler": {

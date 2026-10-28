@@ -273,6 +273,10 @@
           {
             "requires": ["case:internal-investigation", "!ozge:audit"],
             "next": "ozgeAudit"
+          },
+          {
+            "requires": ["kerem:met", "envoy:ozge", "!envoy:reported"],
+            "next": "meetOzge"
           }
         ]
       },
@@ -386,6 +390,10 @@
           {
             "requires": ["case:internal-investigation", "!ozge:audit"],
             "next": "ozgeAudit2"
+          },
+          {
+            "requires": ["kerem:met", "envoy:ozge", "!envoy:reported"],
+            "next": "meetOzge2"
           }
         ]
       },
@@ -484,6 +492,136 @@
             "replies": ["Peki amirim. Ama dikkatli olun."],
             "next": "later",
             "unlocks": ["ozge:audit"]
+          }
+        ]
+      },
+      "meetOzge": {
+        "incoming": [
+          "Amirim buluştum. Elim hâlâ titriyor.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:Özge -= 10"
+            ],
+            "next": "afterMezbaha"
+          }
+        ]
+      },
+      "meetOzge2": {
+        "incoming": [
+          "Amirim buluştum. Elim hâlâ titriyor.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:Özge -= 10"
+            ],
+            "next": "later"
           }
         ]
       }
@@ -629,6 +767,15 @@
               "Adını duymadım amirim. Ama Ece Aydın dosyasını hatırlıyorum.",
               "O zaman ben yeni gelmiştim. Dosya bir haftada kapandı, herkes şaşırmıştı."
             ]
+          },
+          {
+            "label": "Kerem’in üstünden ne çıktı?",
+            "requires": "kerem:arrested",
+            "replies": [
+              "Bir cüzdan, bir de üstünde \"SH-4\" yazan paslı bir anahtar amirim.",
+              "SH... soğuk hava olabilir mi? Sanayide eski bir soğuk hava deposu var."
+            ],
+            "unlocks": ["heard:cold-storage"]
           }
         ],
         "events": [
@@ -676,6 +823,15 @@
               "Adını duymadım amirim. Ama Ece Aydın dosyasını hatırlıyorum.",
               "O zaman ben yeni gelmiştim. Dosya bir haftada kapandı, herkes şaşırmıştı."
             ]
+          },
+          {
+            "label": "Kerem’in üstünden ne çıktı?",
+            "requires": "kerem:arrested",
+            "replies": [
+              "Bir cüzdan, bir de üstünde \"SH-4\" yazan paslı bir anahtar amirim.",
+              "SH... soğuk hava olabilir mi? Sanayide eski bir soğuk hava deposu var."
+            ],
+            "unlocks": ["heard:cold-storage"]
           }
         ],
         "events": [
@@ -874,6 +1030,10 @@
             "requires": ["heard:kerem", "ev:cctv", "!atakan:match"],
             "next": "atakanMatch",
             "requiresAny": ["kerem:same-man", "kerem:volunteer"]
+          },
+          {
+            "requires": ["kerem:met", "envoy:atakan", "!envoy:reported"],
+            "next": "meetAtakan"
           }
         ]
       },
@@ -921,6 +1081,10 @@
             "requires": ["heard:kerem", "ev:cctv", "!atakan:match"],
             "next": "atakanMatch2",
             "requiresAny": ["kerem:same-man", "kerem:volunteer"]
+          },
+          {
+            "requires": ["kerem:met", "envoy:atakan", "!envoy:reported"],
+            "next": "meetAtakan2"
           }
         ]
       },
@@ -1055,6 +1219,136 @@
             "next": "afterCctv"
           }
         ]
+      },
+      "meetAtakan": {
+        "incoming": [
+          "Amirim buluştum. Beni tanıyormuş gibi baktı, garip.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "idle"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "idle"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:Atakan -= 10"
+            ],
+            "next": "idle"
+          }
+        ]
+      },
+      "meetAtakan2": {
+        "incoming": [
+          "Amirim buluştum. Beni tanıyormuş gibi baktı, garip.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "afterCctv"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "afterCctv"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:Atakan -= 10"
+            ],
+            "next": "afterCctv"
+          }
+        ]
       }
     }
   },
@@ -1132,6 +1426,12 @@
             "replies": ["Yolladım. Gasp, uyuşturucu, bir de kapanmış bir \"kayıp şahıs\" dosyası var, ilginç."],
             "unlocks": ["heard:adil-missing-case"]
           }
+        ],
+        "events": [
+          {
+            "requires": ["kerem:met", "envoy:behram", "!envoy:reported"],
+            "next": "meetBehram"
+          }
         ]
       },
       "afterRaid": {
@@ -1139,6 +1439,10 @@
           {
             "requires": ["behram:helps", "mezbaha-found", "!behram:depot"],
             "next": "behramList"
+          },
+          {
+            "requires": ["kerem:met", "envoy:behram", "!envoy:reported"],
+            "next": "meetBehram2"
           }
         ],
         "ask": [
@@ -1162,6 +1466,15 @@
               "O çocukların fotoğraflarını gördüğümden beri uyuyamıyorum komiserim."
             ],
             "unlocks": ["behram:guilt", "trust:Behram += 5"]
+          },
+          {
+            "label": "Adil’in listesiyle Furkan’ın \"cuma geceleri\" uyuşuyor mu?",
+            "requires": ["behram:list", "furkan:friday"],
+            "replies": [
+              "Uyuşuyor. Listedeki tarihler hep cuma.",
+              "Ve araçlar o gecelerde hep aynı yere gidiyormuş: sanayideki eski soğuk hava deposu."
+            ],
+            "unlocks": ["heard:cold-storage"]
           }
         ]
       },
@@ -1183,6 +1496,136 @@
             "replies": ["Üç öğrenci, bir de baş harfleri: \"H.Y.\"", "Kim olduğunu bilmiyorum."],
             "traits": ["merak"],
             "unlocks": ["behram:depot", "behram:list", "heard:initials"],
+            "next": "afterRaid"
+          }
+        ]
+      },
+      "meetBehram": {
+        "incoming": [
+          "Komiserim buluştum. Adil’in adını duyunca gözleri değişti.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "raid"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "raid"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:Behram -= 10"
+            ],
+            "next": "raid"
+          }
+        ]
+      },
+      "meetBehram2": {
+        "incoming": [
+          "Komiserim buluştum. Adil’in adını duyunca gözleri değişti.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "afterRaid"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "afterRaid"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:Behram -= 10"
+            ],
             "next": "afterRaid"
           }
         ]
@@ -1261,6 +1704,16 @@
             "traits": ["temkinli"],
             "unlocks": ["integrity += 5", "trust:İnanç += 5"]
           }
+        ],
+        "events": [
+          {
+            "requires": ["kerem:met", "envoy:inanc", "!envoy:reported"],
+            "next": "meetInanc"
+          },
+          {
+            "requires": ["kerem:met", "envoy:ambush", "!envoy:reported"],
+            "next": "ambush"
+          }
         ]
       },
       "afterOrder": {
@@ -1296,6 +1749,14 @@
           {
             "requires": ["mezbaha-found", "!inanc:camera"],
             "next": "inancCamera"
+          },
+          {
+            "requires": ["kerem:met", "envoy:inanc", "!envoy:reported"],
+            "next": "meetInanc2"
+          },
+          {
+            "requires": ["kerem:met", "envoy:ambush", "!envoy:reported"],
+            "next": "ambush2"
           }
         ]
       },
@@ -1345,6 +1806,190 @@
             "replies": ["Bakıyorum amirim."],
             "next": "afterOrder",
             "unlocks": ["inanc:camera"]
+          }
+        ]
+      },
+      "meetInanc": {
+        "incoming": [
+          "Amirim buluşma tamam. Kurala uydum, silahsız gittim.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "order"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "order"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:İnanç -= 10"
+            ],
+            "next": "order"
+          }
+        ]
+      },
+      "meetInanc2": {
+        "incoming": [
+          "Amirim buluşma tamam. Kurala uydum, silahsız gittim.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "afterOrder"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "afterOrder"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:İnanç -= 10"
+            ],
+            "next": "afterOrder"
+          }
+        ]
+      },
+      "ambush": {
+        "incoming": [
+          "Amirim buluşma yerini sardık. Fark etti.",
+          "Arka sokaktan kaçtı. Çantasını düşürdü.",
+          "İçinden Berat’ın telefonu çıktı. Ama kızın nerede olduğunu artık bilen yok."
+        ],
+        "options": [
+          {
+            "label": "Bütün çıkışları kapatın.",
+            "replies": ["Kapattık amirim. Yok. Yer yarıldı içine girdi."],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped-ambush",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "witnessDanger += 10"
+            ],
+            "next": "order"
+          },
+          {
+            "label": "Peşini bırakın. Telefon yeter.",
+            "replies": ["Anlaşıldı amirim."],
+            "unlocks": ["envoy:reported", "kerem:escaped-ambush", "ev:berat-phone", "heard:berat-repentant"],
+            "next": "order"
+          }
+        ]
+      },
+      "ambush2": {
+        "incoming": [
+          "Amirim buluşma yerini sardık. Fark etti.",
+          "Arka sokaktan kaçtı. Çantasını düşürdü.",
+          "İçinden Berat’ın telefonu çıktı. Ama kızın nerede olduğunu artık bilen yok."
+        ],
+        "options": [
+          {
+            "label": "Bütün çıkışları kapatın.",
+            "replies": ["Kapattık amirim. Yok. Yer yarıldı içine girdi."],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped-ambush",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "witnessDanger += 10"
+            ],
+            "next": "afterOrder"
+          },
+          {
+            "label": "Peşini bırakın. Telefon yeter.",
+            "replies": ["Anlaşıldı amirim."],
+            "unlocks": ["envoy:reported", "kerem:escaped-ambush", "ev:berat-phone", "heard:berat-repentant"],
+            "next": "afterOrder"
           }
         ]
       }
@@ -1527,6 +2172,12 @@
             "traits": ["cesur"],
             "unlocks": ["furkan:protected", "pressure += 5", "witnessDanger -= 10"]
           }
+        ],
+        "events": [
+          {
+            "requires": ["kerem:met", "envoy:doga", "!envoy:reported"],
+            "next": "meetDoga"
+          }
         ]
       },
       "afterFurkan": {
@@ -1577,6 +2228,11 @@
             "replies": [
               "Sordum amirim. \"Berat’la gezen sakallı abi\" dedi. \"Berat ona güveniyordu, ona her şeyi anlatırdı.\""
             ]
+          },
+          {
+            "label": "Kerem sorguda konuşuyor mu?",
+            "requires": "kerem:arrested",
+            "replies": ["Konuşmuyor amirim. Sadece duvara bakıp \"Cuma\" diyor."]
           }
         ],
         "events": [
@@ -1588,6 +2244,14 @@
             "requires": ["mezbaha-found", "!doga:furkan-news"],
             "next": "furkanTalks",
             "requiresAny": ["furkan:held", "furkan:protected"]
+          },
+          {
+            "requires": ["kerem:met", "envoy:doga", "!envoy:reported"],
+            "next": "meetDoga2"
+          },
+          {
+            "requires": ["girl:rescued", "!doga:melis"],
+            "next": "melis"
           }
         ]
       },
@@ -1628,6 +2292,158 @@
             "label": "Bunu kimse bilmesin. Önce onu korumamız lazım.",
             "replies": ["Anladım amirim."],
             "unlocks": ["doga:furkan-news", "furkan:friday", "witnessDanger -= 5"],
+            "next": "afterFurkan"
+          }
+        ]
+      },
+      "meetDoga": {
+        "incoming": [
+          "Amirim buluştum. Çok yorgun görünüyordu, bir çocuk gibi.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "furkanFate"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "furkanFate"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:Doğa -= 10"
+            ],
+            "next": "furkanFate"
+          }
+        ]
+      },
+      "meetDoga2": {
+        "incoming": [
+          "Amirim buluştum. Çok yorgun görünüyordu, bir çocuk gibi.",
+          "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
+          "Kızın adı Melis. Nerede olduğunu biliyor. Bir şartı var: cuma gecesi onu serbest bırakmamız. Adil’i ve danışmanı orada bekleyecekmiş.",
+          "Bir de Berat’ın telefonunu verdi. Amirim... Berat her şeyi kaydetmiş. Babasını, danışmanı, Adil’i.",
+          "Son kayıt Berat’ın kendi sesi: \"Kerem’e yarın her şeyi vereceğim. Ece’nin ailesi bilmeyi hak ediyor.\""
+        ],
+        "options": [
+          {
+            "label": "Gözaltına al.",
+            "replies": [
+              "Kelepçeyi taktım. Hiç direnmedi.",
+              "Kızın yerini sorduğumda sadece güldü: \"Siz seçtiniz.\""
+            ],
+            "traits": ["temkinli"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:arrested",
+              "case:solved",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "integrity += 5"
+            ],
+            "next": "afterFurkan"
+          },
+          {
+            "label": "Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.",
+            "replies": [
+              "Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu.",
+              "Savcı onay vermezse kızı kendisi çıkaracakmış."
+            ],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:deal",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "pressure += 10"
+            ],
+            "next": "afterFurkan"
+          },
+          {
+            "label": "Gitsin. Kızın yerini al.",
+            "replies": [
+              "...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu.",
+              "Gitti. Arkasına bile bakmadı."
+            ],
+            "traits": ["merhamet"],
+            "unlocks": [
+              "envoy:reported",
+              "kerem:escaped",
+              "case:solved",
+              "kerem:told-location",
+              "ev:berat-phone",
+              "heard:berat-repentant",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "trust:Doğa -= 10"
+            ],
+            "next": "afterFurkan"
+          }
+        ]
+      },
+      "melis": {
+        "incoming": [
+          "Amirim Melis’le konuştum. Hastanede, serum takılı.",
+          "Onu takım elbiseli bir adam sorgulamış. Yüzünü hiç göstermemiş. \"Vakıf seni bu kadar okuttu, borcunu öde\" demiş.",
+          "Emre’yi sordum. Diğer kayıp çocuk. \"Onu iki hafta önce götürdüler\" dedi. Nereye, bilmiyor."
+        ],
+        "options": [
+          {
+            "label": "Ona koruma ver. Kimse yanına yaklaşmasın.",
+            "replies": ["Kapısında iki kişi bekleyecek amirim."],
+            "traits": ["merhamet"],
+            "unlocks": ["doga:melis", "witness:protected", "melis:statement", "witnessDanger -= 10"],
+            "next": "afterFurkan"
+          },
+          {
+            "label": "İfadesini tutanağa geçir, hemen.",
+            "replies": ["Geçiriyorum amirim. Ama çok yorgun."],
+            "unlocks": ["doga:melis", "melis:statement", "integrity += 5"],
             "next": "afterFurkan"
           }
         ]
@@ -1785,6 +2601,19 @@
           {
             "requires": ["case:internal-investigation", "!erdi:audit"],
             "next": "erdiAudit"
+          },
+          {
+            "requires": ["girl:rescued", "!erdi:rescue"],
+            "next": "erdiRescue"
+          },
+          {
+            "requires": ["kerem:arrested", "!erdi:arrest"],
+            "next": "erdiArrest"
+          },
+          {
+            "requires": ["kerem:met", "!erdi:escape"],
+            "next": "erdiEscape",
+            "requiresAny": ["kerem:escaped", "kerem:escaped-ambush"]
           }
         ]
       },
@@ -1902,6 +2731,64 @@
             "traits": ["cesur"],
             "unlocks": ["erdi:audit", "heard:erdi-knows-money"],
             "next": "desk"
+          }
+        ]
+      },
+      "erdiRescue": {
+        "incoming": [
+          "Duydum. Kızı çıkarmışsınız.",
+          "Basına açıklamayı ben yapacağım. Sen sesini çıkarma, yurt dışındasın zaten."
+        ],
+        "options": [
+          {
+            "label": "Siz bilirsiniz müdürüm.",
+            "replies": ["Aferin. Böyle devam."],
+            "next": "desk",
+            "unlocks": ["erdi:rescue"]
+          },
+          {
+            "label": "Bu ekibin başarısı, sizin değil.",
+            "replies": ["Ekibin başarısı benim başarım. Unutma bunu."],
+            "traits": ["cesur"],
+            "unlocks": ["erdi:rescue", "pressure += 5"],
+            "next": "desk"
+          }
+        ]
+      },
+      "erdiArrest": {
+        "incoming": [
+          "Katili almışsınız. Aferin.",
+          "Şimdi dosyayı hemen kapatıyoruz. Gerisi beni ilgilendirmez."
+        ],
+        "options": [
+          {
+            "label": "Kapatamayız. Kızlar hâlâ kayıp.",
+            "replies": ["Kızlar başka dosya. Bu dosya bitti."],
+            "unlocks": ["erdi:arrest", "pressure += 5"],
+            "next": "desk"
+          },
+          {
+            "label": "Anlaşıldı.",
+            "replies": ["Güzel."],
+            "unlocks": ["erdi:arrest", "pressure -= 5"],
+            "next": "desk"
+          }
+        ]
+      },
+      "erdiEscape": {
+        "incoming": ["Katili elinizden kaçırmışsınız!", "Biliyor musun Ankara bunu kime soracak? Bana!"],
+        "options": [
+          {
+            "label": "Bir hayat kurtarmak için gerekiyordu.",
+            "replies": ["Hayat kurtarmak benim işim değil. Benim işim dosya kapatmak."],
+            "next": "desk",
+            "unlocks": ["erdi:escape"]
+          },
+          {
+            "label": "(Cevap verme)",
+            "silent": true,
+            "next": "desk",
+            "unlocks": ["erdi:escape"]
           }
         ]
       }
@@ -2080,6 +2967,10 @@
           {
             "requires": ["mezbaha-found", "!mp:mezbaha"],
             "next": "mpMezbaha"
+          },
+          {
+            "requires": ["case:solved", "!mp:killer"],
+            "next": "mpKiller"
           }
         ]
       },
@@ -2116,6 +3007,23 @@
             "traits": ["merak"],
             "unlocks": ["mp:mezbaha", "heard:mp-knows-mezbaha"],
             "next": "after"
+          }
+        ]
+      },
+      "mpKiller": {
+        "incoming": ["Oğlumu öldüreni bulmuşsunuz. Adı ne?"],
+        "options": [
+          {
+            "label": "Kerem Aydın. Ece Aydın’ın ağabeyi.",
+            "replies": ["...", "O kız.", "Bir daha bu numaraya yazmayacağım."],
+            "unlocks": ["mp:killer", "heard:mp-ece"],
+            "next": "after"
+          },
+          {
+            "label": "Söyleyemem.",
+            "replies": ["Ben öğrenirim Komiser Bey. Her zaman öğrenirim."],
+            "next": "after",
+            "unlocks": ["mp:killer"]
           }
         ]
       }
@@ -2248,28 +3156,92 @@
           {
             "label": "Berat’ı sen mi öldürdün?",
             "replies": ["Ece’yi o gece oraya o götürdü.", "Sizce bu sorunun cevabı bu mu?"],
-            "next": "wait",
+            "next": "terms",
             "traits": ["merak"],
             "unlocks": ["kerem:contact"]
           },
           {
             "label": "Kız nerede Kerem?",
             "replies": ["Yüz yüze söylerim. Sadece size. Yanınızda kimse olmayacak."],
-            "next": "wait",
+            "next": "terms",
             "traits": ["cesur"],
             "unlocks": ["kerem:contact", "kerem:wants-meeting"]
           },
           {
             "label": "Teslim ol. Sana zarar gelmez.",
             "replies": ["Ece’ye de böyle söylemişlerdi."],
-            "next": "wait",
+            "next": "terms",
             "traits": ["temkinli"],
             "unlocks": ["kerem:contact"]
           }
         ]
       },
-      "wait": {
-        "waitFor": "kerem:meeting",
+      "terms": {
+        "incoming": ["Perşembe gece yarısı. Eski otogarın arkasındaki çay bahçesi.", "Siz gelin. Tek başınıza."],
+        "options": [
+          {
+            "label": "Yurt dışındayım. Gelemem.",
+            "replies": ["Öyle mi?", "...", "Peki. Güvendiğiniz birini gönderin. Tek kişi, silahsız."],
+            "next": "choose",
+            "unlocks": ["doubt += 1"]
+          },
+          {
+            "label": "Ekibimden birini göndereceğim.",
+            "replies": ["Tek kişi. Silahsız. Başka birini görürsem kızı kimse bulamaz."],
+            "next": "choose",
+            "traits": ["temkinli"]
+          }
+        ]
+      },
+      "choose": {
+        "incoming": ["Kimi gönderiyorsunuz?"],
+        "options": [
+          {
+            "label": "Özge gelecek.",
+            "requires": "trust:Özge >= 40",
+            "replies": ["Perşembe gece yarısı."],
+            "next": "waiting",
+            "unlocks": ["envoy:ozge", "kerem:meeting-set"]
+          },
+          {
+            "label": "Doğa gelecek.",
+            "requires": "trust:Doğa >= 40",
+            "replies": ["Perşembe gece yarısı."],
+            "next": "waiting",
+            "unlocks": ["envoy:doga", "kerem:meeting-set"]
+          },
+          {
+            "label": "Atakan gelecek.",
+            "requires": "trust:Atakan >= 40",
+            "replies": ["Perşembe gece yarısı."],
+            "next": "waiting",
+            "unlocks": ["envoy:atakan", "kerem:meeting-set"]
+          },
+          {
+            "label": "İnanç gelecek.",
+            "requires": "trust:İnanç >= 40",
+            "replies": ["Perşembe gece yarısı."],
+            "next": "waiting",
+            "unlocks": ["envoy:inanc", "kerem:meeting-set"]
+          },
+          {
+            "label": "Behram gelecek.",
+            "requires": "behram:helps",
+            "replies": ["Narkotikçi mi? ...Peki. Perşembe gece yarısı."],
+            "next": "waiting",
+            "unlocks": ["envoy:behram", "kerem:meeting-set"]
+          },
+          {
+            "label": "Biri gelecek. (Ekibi topla, buluşma yerini sarın.)",
+            "message": "Biri gelecek.",
+            "replies": ["Perşembe gece yarısı."],
+            "next": "waiting",
+            "traits": ["cesur"],
+            "unlocks": ["envoy:ambush", "kerem:meeting-set", "integrity -= 5"]
+          }
+        ]
+      },
+      "waiting": {
         "ask": [
           {
             "label": "Neden şimdi?",
@@ -2290,7 +3262,101 @@
             ],
             "traits": ["merhamet"]
           }
+        ],
+        "events": [
+          {"requires": "kerem:deal", "next": "afterDeal"},
+          {"requires": "kerem:escaped", "next": "afterEscape"},
+          {"requires": "kerem:escaped-ambush", "next": "afterAmbush"}
         ]
+      },
+      "afterDeal": {
+        "incoming": ["Savcı onay verirse cuma gecesi oradayım.", "Vermezse de oradayım."],
+        "options": [
+          {
+            "label": "Önce kızı çıkaralım, sonra konuşacağız.",
+            "replies": ["Siz bilirsiniz."],
+            "next": "end"
+          }
+        ]
+      },
+      "afterEscape": {
+        "incoming": ["Teşekkür ederim.", "Adil’i ben bulacağım. Arkamdan gelmeyin."],
+        "options": [
+          {
+            "label": "Kerem, yapma.",
+            "replies": ["Ece için."],
+            "next": "end",
+            "unlocks": ["kerem:hunting"]
+          },
+          {
+            "label": "(Cevap verme)",
+            "next": "end",
+            "unlocks": ["kerem:hunting"],
+            "silent": true
+          }
+        ]
+      },
+      "afterAmbush": {
+        "incoming": ["Size güvenmiştim.", "Kızı siz seçtiniz."],
+        "options": [
+          {
+            "label": "Kerem, kız için. Yerini söyle.",
+            "replies": ["..."],
+            "next": "end",
+            "traits": ["merhamet"],
+            "unlocks": ["kerem:pleaded"]
+          },
+          {
+            "label": "Teslim ol. Kaçamazsın.",
+            "replies": ["Ece de kaçamamıştı."],
+            "next": "end",
+            "traits": ["öfke"]
+          }
+        ]
+      },
+      "end": {
+        "ask": [
+          {
+            "label": "Neden şimdi?",
+            "replies": ["Çünkü Berat’ın telefonunu açtım.", "Keşke açmasaydım."],
+            "unlocks": ["heard:kerem-has-phone"]
+          },
+          {
+            "label": "Berat’ın telefonu sende mi?",
+            "requires": "heard:phone-signal",
+            "replies": ["Evet. Her şey içinde. Onun da, benim de."],
+            "unlocks": ["heard:kerem-has-phone"]
+          },
+          {
+            "label": "Ece’yi anlat.",
+            "replies": [
+              "Kimyaya bayılırdı. Bursu alınca bütün mahalleye lokum dağıttı.",
+              "Altı ay sonra borçlu çıktı. Bir ay sonra öldü."
+            ],
+            "traits": ["merhamet"]
+          }
+        ],
+        "events": [
+          {"requires": "kerem:relents", "next": "relent"},
+          {"requires": "girl:rescued", "next": "thanks"},
+          {"requires": "girl:lost", "next": "blame"}
+        ]
+      },
+      "relent": {
+        "incoming": ["Kız için. Sizin için değil.", "Sanayideki eski soğuk hava deposu. Arka kapı açık."],
+        "options": [
+          {
+            "label": "Teşekkür ederim.",
+            "next": "end",
+            "unlocks": ["kerem:told-location"]
+          }
+        ]
+      },
+      "thanks": {
+        "incoming": ["Melis’i çıkarmışsınız.", "Ece için teşekkür ederim."]
+      },
+      "blame": {
+        "incoming": ["Geç kaldınız.", "Ben de."]
       }
     }
   }

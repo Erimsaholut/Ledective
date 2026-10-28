@@ -30,6 +30,25 @@
       ]
     },
     {
+      "id": "kerem",
+      "title": "Kerem Aydın",
+      "variants": [
+        {
+          "requires": "kerem:arrested",
+          "text": "[Taslak] Kerem Aydın tutuklandı. Duruşmada tek kelime etmedi; sadece kız kardeşinin adını söyledi."
+        },
+        {
+          "requires": "kerem:deal",
+          "text": "[Taslak] Kerem Aydın savcılıkla iş birliği yaptı. Verdiği ifade vakfın kapısını açtı."
+        },
+        {
+          "requiresAny": ["kerem:escaped", "kerem:escaped-ambush"],
+          "text": "[Taslak] Kerem Aydın bir daha görülmedi. Bazıları onu cuma geceleri sanayide gördüklerini söylüyor."
+        },
+        {"text": "[Taslak] Kerem Aydın hâlâ aranıyor."}
+      ]
+    },
+    {
       "id": "career",
       "title": "Komiser",
       "variants": [
@@ -51,6 +70,14 @@
       "id": "witnesses",
       "title": "Tanıklar",
       "variants": [
+        {
+          "requires": "girl:rescued",
+          "text": "[Taslak] Melis kurtarıldı ve ifade verdi. Emre’den hâlâ haber yok."
+        },
+        {
+          "requires": "girl:found-dead",
+          "text": "[Taslak] Melis’e yetişemediniz. Ailesi her cuma deponun önüne çiçek bırakıyor."
+        },
         {"requires": "witness:protected", "text": "[Taslak] Kritik tanık korunarak ifade verdi."},
         {"requires": "witnessDanger >= 60", "text": "[Taslak] Tanıklardan biri ortadan kayboldu."},
         {"text": "[Taslak] Tanıklar ifadelerini değiştirmedi."}

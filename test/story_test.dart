@@ -637,6 +637,101 @@ void main() {
       expect(progress.value('doubt'), 1);
     });
 
+    group('chapter IV', () {
+      const kerem = '0543 112 07 21';
+      StoryProgress progress() => StoryProgress.instance;
+      String lastFrom(String person) =>
+          progress().restore(person).$2.whereType<IncomingMessage>().last.text;
+      bool storageVisible() => progress().meets(
+        StoryData.current.map.locations
+            .firstWhere((l) => l.id == 'cold-storage')
+            .requires,
+      );
+      Future<void> raid(String taskId) async {
+        final start = DateTime(2026, 1, 1);
+        await progress().startMission(
+          StoryData.current.map.task(taskId)!,
+          'Atakan',
+          now: start,
+        );
+        await progress().completeDueMissions(
+          now: start.add(const Duration(hours: 1)),
+        );
+      }
+
+      // Özge waits at her desk, Kerem has written.
+      Future<void> meetKerem() async {
+        await progress().discover([StoryFlags.part1Done]);
+        await say('Özge', 'Neymiş bu kadar önemli olan durum');
+        await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
+        await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
+        await progress().discover(['kerem:identified']);
+        await say(kerem, 'Kız nerede Kerem?');
+        await say(kerem, 'Ekibimden birini göndereceğim.');
+      }
+
+      test('a deal brings the girl home', () async {
+        await meetKerem();
+        await say(kerem, 'Özge gelecek.');
+        expect(progress().has('kerem:met'), isFalse);
+        await progress().advanceTimers(const Duration(minutes: 10));
+        expect(lastFrom('Özge'), contains('Kerem\u2019e yarın her şeyi'));
+        await say(
+          'Özge',
+          'Savcıyla konuşacağım. Ona koruma ve indirim sözü ver.',
+        );
+        expect(progress().has('case:solved'), isTrue);
+        expect(storageVisible(), isTrue);
+        await say(kerem, 'Önce kızı çıkaralım, sonra konuşacağız.');
+        await raid('storage-raid');
+        expect(progress().has('girl:rescued'), isTrue);
+        expect(lastFrom(kerem), contains('Ece için'));
+        // Friday passing no longer matters.
+        await progress().advanceTimers(const Duration(hours: 2));
+        expect(progress().has('girl:lost'), isFalse);
+      });
+
+      test(
+        'an arrest leaves the girl to another trail, and time runs out',
+        () async {
+          await meetKerem();
+          await say(kerem, 'Özge gelecek.');
+          await progress().advanceTimers(const Duration(minutes: 10));
+          await say('Özge', 'Gözaltına al.');
+          expect(storageVisible(), isFalse);
+          await progress().advanceTimers(const Duration(minutes: 60));
+          expect(progress().has('girl:lost'), isTrue);
+          await say('Orhun', 'İlet bakalım');
+          await say('Orhun', 'İfadesini aldınız mı uygulamada gözükmüyor.');
+          await say('Orhun', 'Kerem\u2019in üstünden ne çıktı?');
+          expect(storageVisible(), isTrue);
+          await raid('storage-late');
+          expect(progress().has('girl:found-dead'), isTrue);
+        },
+      );
+
+      test('a broken ambush still ends with Kerem giving the place', () async {
+        await meetKerem();
+        await progress().discover([StoryFlags.orhunDone, 'pressure:erdi']);
+        await say('İnanç', 'Naptınız oğlum sorgu işini');
+        await say(
+          'İnanç',
+          'Şimdi bürodaki kızlardan birini yanına al. Eleman ne söylüyorsa bana yazsın. Sen de benim sana sorduğum soruları sor ona',
+        );
+        await say('İnanç', 'İkimize de gönder, kayıt dışı bir şey yapmayalım.');
+        await say(kerem, 'Biri gelecek. (Ekibi topla, buluşma yerini sarın.)');
+        await progress().advanceTimers(const Duration(minutes: 10));
+        await say('İnanç', 'Bütün çıkışları kapatın.');
+        expect(progress().has('kerem:escaped-ambush'), isTrue);
+        expect(storageVisible(), isFalse);
+        await say(kerem, 'Kerem, kız için. Yerini söyle.');
+        await progress().advanceTimers(const Duration(minutes: 15));
+        expect(lastFrom(kerem), contains('soğuk hava deposu'));
+        await say(kerem, 'Teşekkür ederim.');
+        expect(storageVisible(), isTrue);
+      });
+    });
+
     test('choices change numbers within their limits', () async {
       final progress = StoryProgress.instance;
       expect(progress.value('trust:Özge'), 50);

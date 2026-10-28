@@ -47,8 +47,12 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 | 11 | Ece Aydın’ın adı çıkar | `heard:ece` | Özge › soru "O ölmüş kadının hattı kimin adına?"<br>Özge › soru "Arşivdeki takipsizlik haberindeki kızın…" | Özge › soru "Ece Aydın’ın ailesinden kim kaldı?"<br>Harita › Aydın Ailesinin Evi görünür<br>Sinstagram › @ece.aydin aranabilir<br>Sinstagram › @k.aydin aranabilir |
 | 12 | Kerem Aydın’ın adı çıkar | `heard:kerem` | Harita › Yılmaz Eğitim Vakfı › Gönüllü kartının fotoğrafını göster<br>Harita › Aydın Ailesinin Evi › Komşularla konuş<br>Sinstagram › @k.aydin açılınca | Orhun › soru "Kerem Aydın diye birini tanıyor musun?"<br>Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar)<br>Doğa › soru "Furkan’a Kerem Aydın’ı sor."<br>Harita › Yılmaz Eğitim Vakfı görünür<br>Harita › Yılmaz Eğitim Vakfı › Gönüllü listesini iste görünür<br>Harita › Aydın Ailesinin Evi › Ece’nin odasına bak (izinsiz) görünür |
 | 13 | Kameradaki adamın Kerem olduğu anlaşılır | `kerem:identified` | Atakan › "Aramaya başlayın. Ama sessizce."<br>Atakan › "Bütün birimlere bildir. Yakalama kararı…" | Özge › soru "Kerem’in Berat’la bir bağı var mı?"<br>0543 112 07 21 › start |
-| 14 | Kerem ilk kez yazar | `kerem:contact` | 0543 112 07 21 › "Berat’ı sen mi öldürdün?"<br>0543 112 07 21 › "Kız nerede Kerem?"<br>0543 112 07 21 › "Teslim ol. Sana zarar gelmez." | — |
-| 15 | Final soruşturması (henüz yazılmadı) | `final:ready` | — | Final başlar |
+| 14 | Kerem ilk kez yazar | `kerem:contact` | 0543 112 07 21 › "Berat’ı sen mi öldürdün?"<br>0543 112 07 21 › "Kız nerede Kerem?"<br>0543 112 07 21 › "Teslim ol. Sana zarar gelmez." | Süreli olay › friday başlar |
+| 15 | Kerem’le buluşma ayarlanır | `kerem:meeting-set` | 0543 112 07 21 › "Özge gelecek."<br>0543 112 07 21 › "Doğa gelecek."<br>0543 112 07 21 › "Atakan gelecek."<br>0543 112 07 21 › "İnanç gelecek."<br>0543 112 07 21 › "Behram gelecek."<br>0543 112 07 21 › "Biri gelecek. (Ekibi topla, buluşma yer…" | Süreli olay › meeting başlar |
+| 16 | Buluşma: Kerem’in itirafı ve şartı | `kerem:met` | Süreli olay › meeting: `kerem:meeting-set` olduktan 10 dk sonra | Özge › afterMezbaha (kendiliğinden yazar)<br>Özge › later (kendiliğinden yazar)<br>Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar)<br>Behram › raid (kendiliğinden yazar)<br>Behram › afterRaid (kendiliğinden yazar)<br>İnanç › order (kendiliğinden yazar)<br>İnanç › afterOrder (kendiliğinden yazar)<br>Doğa › furkanFate (kendiliğinden yazar)<br>Doğa › afterFurkan (kendiliğinden yazar)<br>Erdi › desk (kendiliğinden yazar) |
+| 17 | Kerem hakkında karar verilir (İkilem 2) | `case:solved` | Özge › "Gözaltına al."<br>Özge › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Özge › "Gitsin. Kızın yerini al."<br>Atakan › "Gözaltına al."<br>Atakan › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Gözaltına al."<br>Behram › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Gözaltına al."<br>İnanç › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>İnanç › "Gitsin. Kızın yerini al."<br>Doğa › "Gözaltına al."<br>Doğa › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Doğa › "Gitsin. Kızın yerini al." | 0532 190 19 07 › after (kendiliğinden yazar)<br>Final › Berat Yılmaz Dosyası › Adaletin Bedeli<br>Final › Berat Yılmaz Dosyası › Kirli Eller<br>Final › Berat Yılmaz Dosyası › Sessiz Zafer |
+| 18 | Soğuk hava deposuna girilir: Melis | `storage:entered` | Harita › Eski Soğuk Hava Deposu › Depoya gir | — |
+| 19 | Final soruşturması (henüz yazılmadı) | `final:ready` | — | Final başlar |
 
 ## Kişiler
 
@@ -72,6 +76,9 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 | ozgeAudit | kendiliğinden: `case:internal-investigation` ve `ozge:audit` yokken | Amirim iç denetimden aradılar. Sizi sordular. / Hesabınıza para yatmış, bilip bilmediğimi sordular. Yarın ifademi alacaklar. | Doğruyu söyle. Ne biliyorsan. | Söyleyeceğim amirim. Ama ne bildiğimi siz de biliyorsunuz. | `ozge:audit`, `integrity` +5 | geldiği adıma döner |
 |  |  |  | Bildiğini söyleme.<br>_sadece: `ozge:knows-money`_ | ... / Bunu benden istemeyin amirim. / Peki. Bu sefer. | `ozge:audit`, `player:dirty-hands`, `trust:Özge` -15 | geldiği adıma döner |
 |  |  |  | Sen karışma, ben hallederim. | Peki amirim. Ama dikkatli olun. | `ozge:audit` | geldiği adıma döner |
+| meetOzge | kendiliğinden: `kerem:met` ve `envoy:ozge` ve `envoy:reported` yokken | Amirim buluştum. Elim hâlâ titriyor. / Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan. / Kızın adı Melis. Nerede olduğun… | Gözaltına al. | Kelepçeyi taktım. Hiç direnmedi. / Kızın yerini sorduğumda sadece güldü: "Siz seçtiniz." | `envoy:reported`, `kerem:arrested`, `case:solved`, `ev:berat-phone`, `heard:berat-repentant`, `integrity` +5 | geldiği adıma döner |
+|  |  |  | Savcıyla konuşacağım. Ona koruma ve indirim sözü ver. | Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu. / Savcı onay vermezse kızı kendisi çıkaracakmış. | `envoy:reported`, `kerem:deal`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `pressure` +10 | geldiği adıma döner |
+|  |  |  | Gitsin. Kızın yerini al. | ...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu. / Gitti. Arkasına bile bakmadı. | `envoy:reported`, `kerem:escaped`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `player:dirty-hands`, `integrity` -20, `trust:Özge` -10 | geldiği adıma döner |
 
 **Sorulabilecekler**
 
@@ -127,6 +134,7 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 | Annen nasıl? | `heard:orhun-debt` | Daha iyi amirim. Sorduğunuz için sağ olun. | `trust:Orhun` +5 |
 | Kayıp ilanlarından ne çıktı? | `orhun:missing-list` | Son üç yılda bu şehirde altı öğrenci için kayıp ilanı verilmiş amirim. / İkisi mezbahadaki fotoğraflarda. Dördü hiç bulunmamış. | — |
 | Kerem Aydın diye birini tanıyor musun? | `heard:kerem` | Adını duymadım amirim. Ama Ece Aydın dosyasını hatırlıyorum. / O zaman ben yeni gelmiştim. Dosya bir haftada kapandı, herkes şaşırmıştı. | — |
+| Kerem’in üstünden ne çıktı? | `kerem:arrested` | Bir cüzdan, bir de üstünde "SH-4" yazan paslı bir anahtar amirim. / SH... soğuk hava olabilir mi? Sanayide eski bir soğuk hava deposu var. | `heard:cold-storage` |
 | Danışmanın adı ne? | `plate:mv` | Sistemde "Y. Eğitim Vakfı Danışmanlık" diye geçiyor amirim, şahıs adı yok. Vakfın genel müdürü olabilir. | — |
 
 ### Atakan
@@ -143,6 +151,9 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 |  |  |  | Kimseye söyleme. Vakfın kulağına gitmesin. | Anlaşıldı amirim. | `atakan:card`, `heard:volunteer-card` | geldiği adıma döner |
 | atakanMatch | kendiliğinden: `heard:kerem` ve `ev:cctv` ve `atakan:match` yokken ve (`kerem:same-man` ya da `kerem:volunteer`) | Amirim, Kerem Aydın’ın ehliyet fotoğrafını kamera karesiyle karşılaştırdım. / Aynı adam. Berat’ın peşinden çıkan oydu. | Aramaya başlayın. Ama sessizce. | Emredersiniz amirim. | `atakan:match`, `kerem:identified` | geldiği adıma döner |
 |  |  |  | Bütün birimlere bildir. Yakalama kararı isteyeceğim. | Hemen amirim. | `atakan:match`, `kerem:identified`, `kerem:wanted`, `pressure` +5 | geldiği adıma döner |
+| meetAtakan | kendiliğinden: `kerem:met` ve `envoy:atakan` ve `envoy:reported` yokken | Amirim buluştum. Beni tanıyormuş gibi baktı, garip. / Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan. / Kızın adı Melis.… | Gözaltına al. | Kelepçeyi taktım. Hiç direnmedi. / Kızın yerini sorduğumda sadece güldü: "Siz seçtiniz." | `envoy:reported`, `kerem:arrested`, `case:solved`, `ev:berat-phone`, `heard:berat-repentant`, `integrity` +5 | geldiği adıma döner |
+|  |  |  | Savcıyla konuşacağım. Ona koruma ve indirim sözü ver. | Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu. / Savcı onay vermezse kızı kendisi çıkaracakmış. | `envoy:reported`, `kerem:deal`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `pressure` +10 | geldiği adıma döner |
+|  |  |  | Gitsin. Kızın yerini al. | ...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu. / Gitti. Arkasına bile bakmadı. | `envoy:reported`, `kerem:escaped`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `player:dirty-hands`, `integrity` -20, `trust:Atakan` -10 | geldiği adıma döner |
 
 **Sorulabilecekler**
 
@@ -166,6 +177,9 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 |  |  |  | Adil’in saklanacağı yeri sen bilirsin. Yardım et. | Birkaç yeri var. Adamlarıma baktırırım, ama bu sefer benim dediğim gibi. | `behram:helps` | afterRaid |
 | behramList | kendiliğinden: `behram:helps` ve `mezbaha-found` ve `behram:depot` yokken | Komiserim, Adil’in sakladığı bir depo bulduk. Adil yok. / Ama duvarda bir liste var. İsimler ve yanlarında tarihler. / İsimlerden biri Berat. | Listeyi bana gönder. | Gönderiyorum. Kimseye gösterme. | `behram:depot`, `behram:list` | afterRaid |
 |  |  |  | Listedeki diğer isimler kim? | Üç öğrenci, bir de baş harfleri: "H.Y." / Kim olduğunu bilmiyorum. | `behram:depot`, `behram:list`, `heard:initials` | afterRaid |
+| meetBehram | kendiliğinden: `kerem:met` ve `envoy:behram` ve `envoy:reported` yokken | Komiserim buluştum. Adil’in adını duyunca gözleri değişti. / Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan. / Kızın adı… | Gözaltına al. | Kelepçeyi taktım. Hiç direnmedi. / Kızın yerini sorduğumda sadece güldü: "Siz seçtiniz." | `envoy:reported`, `kerem:arrested`, `case:solved`, `ev:berat-phone`, `heard:berat-repentant`, `integrity` +5 | geldiği adıma döner |
+|  |  |  | Savcıyla konuşacağım. Ona koruma ve indirim sözü ver. | Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu. / Savcı onay vermezse kızı kendisi çıkaracakmış. | `envoy:reported`, `kerem:deal`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `pressure` +10 | geldiği adıma döner |
+|  |  |  | Gitsin. Kızın yerini al. | ...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu. / Gitti. Arkasına bile bakmadı. | `envoy:reported`, `kerem:escaped`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `player:dirty-hands`, `integrity` -20, `trust:Behram` -10 | geldiği adıma döner |
 
 **Sorulabilecekler**
 
@@ -176,6 +190,7 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 | Narkotiğin Adil’le bir anlaşması var mıydı? | `behram:helps` | ... / Muhbirdi. Bir zamanlar. / Bunu kimseye söyleme komiserim. | `heard:adil-informant` |
 | Adil şimdi nerede olabilir? | `ev:torn-map` | Şehirden çıkmadı, bundan eminim. Birileri onu saklıyor. | — |
 | Cuma gecelerini biliyor muydunuz? | `heard:adil-informant` | ... / Biliyorduk. Borç tahsilatı sandık. Adil bize yukarıyı veriyordu, biz de aşağıya bakmıyorduk. / O çocukların fotoğraflarını gördüğümde… | `behram:guilt`, `trust:Behram` +5 |
+| Adil’in listesiyle Furkan’ın "cuma geceleri" uyuşuyor mu? | `behram:list` ve `furkan:friday` | Uyuşuyor. Listedeki tarihler hep cuma. / Ve araçlar o gecelerde hep aynı yere gidiyormuş: sanayideki eski soğuk hava deposu. | `heard:cold-storage` |
 
 ### İnanç
 
@@ -193,6 +208,11 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 |  |  |  | Benimkini verme. Diğerlerini ver. | ... / Emredersiniz amirim. | `inanc:records`, `player:dirty-hands`, `trust:İnanç` -10 | afterOrder |
 | inancCamera | kendiliğinden: `mezbaha-found` ve `inanc:camera` yokken | Amirim mezbahaya giden yolda belediyenin bir güvenlik kamerası var. / Kayıtları istedim, "arızalı" dediler. Üç aydır arızalıymış. | Arızayı kimin bildirdiğini öğren. | Öğreniyorum amirim. | `inanc:camera`, `heard:camera-broken` | afterOrder |
 |  |  |  | Tamam. Başka kamera var mı, ona bak. | Bakıyorum amirim. | `inanc:camera` | afterOrder |
+| meetInanc | kendiliğinden: `kerem:met` ve `envoy:inanc` ve `envoy:reported` yokken | Amirim buluşma tamam. Kurala uydum, silahsız gittim. / Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan. / Kızın adı Melis… | Gözaltına al. | Kelepçeyi taktım. Hiç direnmedi. / Kızın yerini sorduğumda sadece güldü: "Siz seçtiniz." | `envoy:reported`, `kerem:arrested`, `case:solved`, `ev:berat-phone`, `heard:berat-repentant`, `integrity` +5 | geldiği adıma döner |
+|  |  |  | Savcıyla konuşacağım. Ona koruma ve indirim sözü ver. | Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu. / Savcı onay vermezse kızı kendisi çıkaracakmış. | `envoy:reported`, `kerem:deal`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `pressure` +10 | geldiği adıma döner |
+|  |  |  | Gitsin. Kızın yerini al. | ...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu. / Gitti. Arkasına bile bakmadı. | `envoy:reported`, `kerem:escaped`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `player:dirty-hands`, `integrity` -20, `trust:İnanç` -10 | geldiği adıma döner |
+| ambush | kendiliğinden: `kerem:met` ve `envoy:ambush` ve `envoy:reported` yokken | Amirim buluşma yerini sardık. Fark etti. / Arka sokaktan kaçtı. Çantasını düşürdü. / İçinden Berat’ın telefonu çıktı. Ama kızın nerede olduğunu artık bilen yok. | Bütün çıkışları kapatın. | Kapattık amirim. Yok. Yer yarıldı içine girdi. | `envoy:reported`, `kerem:escaped-ambush`, `ev:berat-phone`, `heard:berat-repentant`, `witnessDanger` +10 | geldiği adıma döner |
+|  |  |  | Peşini bırakın. Telefon yeter. | Anlaşıldı amirim. | `envoy:reported`, `kerem:escaped-ambush`, `ev:berat-phone`, `heard:berat-repentant` | geldiği adıma döner |
 
 **Sorulabilecekler**
 
@@ -227,6 +247,11 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 |  |  |  | Adil’in adamlarının elinde olabilir. Behram’a haber ver. | Arıyorum amirim. | `doga:furkan-news`, `furkan:missing`, `witnessDanger` +10 | afterFurkan |
 | furkanTalks | kendiliğinden: `mezbaha-found` ve `doga:furkan-news` yokken ve (`furkan:held` ya da `furkan:protected`) | Amirim Furkan’a mezbahayı sordum. Rengi attı. / "Cuma geceleri Adil abi bazı çocukları arabasına bindirirdi. Bir daha görmezdik" dedi. | İfadesine ekle. | Ekliyorum amirim. | `doga:furkan-news`, `furkan:friday`, `integrity` +5 | afterFurkan |
 |  |  |  | Bunu kimse bilmesin. Önce onu korumamız lazım. | Anladım amirim. | `doga:furkan-news`, `furkan:friday`, `witnessDanger` -5 | afterFurkan |
+| meetDoga | kendiliğinden: `kerem:met` ve `envoy:doga` ve `envoy:reported` yokken | Amirim buluştum. Çok yorgun görünüyordu, bir çocuk gibi. / Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan. / Kızın adı M… | Gözaltına al. | Kelepçeyi taktım. Hiç direnmedi. / Kızın yerini sorduğumda sadece güldü: "Siz seçtiniz." | `envoy:reported`, `kerem:arrested`, `case:solved`, `ev:berat-phone`, `heard:berat-repentant`, `integrity` +5 | geldiği adıma döner |
+|  |  |  | Savcıyla konuşacağım. Ona koruma ve indirim sözü ver. | Söyledim. Bana bir adres verdi: sanayideki eski soğuk hava deposu. / Savcı onay vermezse kızı kendisi çıkaracakmış. | `envoy:reported`, `kerem:deal`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `pressure` +10 | geldiği adıma döner |
+|  |  |  | Gitsin. Kızın yerini al. | ...Peki amirim. Adresi verdi: sanayideki eski soğuk hava deposu. / Gitti. Arkasına bile bakmadı. | `envoy:reported`, `kerem:escaped`, `case:solved`, `kerem:told-location`, `ev:berat-phone`, `heard:berat-repentant`, `player:dirty-hands`, `integrity` -20, `trust:Doğa` -10 | geldiği adıma döner |
+| melis | kendiliğinden: `girl:rescued` ve `doga:melis` yokken | Amirim Melis’le konuştum. Hastanede, serum takılı. / Onu takım elbiseli bir adam sorgulamış. Yüzünü hiç göstermemiş. "Vakıf seni bu kadar okuttu, borcunu öde" … | Ona koruma ver. Kimse yanına yaklaşmasın. | Kapısında iki kişi bekleyecek amirim. | `doga:melis`, `witness:protected`, `melis:statement`, `witnessDanger` -10 | afterFurkan |
+|  |  |  | İfadesini tutanağa geçir, hemen. | Geçiriyorum amirim. Ama çok yorgun. | `doga:melis`, `melis:statement`, `integrity` +5 | afterFurkan |
 
 **Sorulabilecekler**
 
@@ -239,6 +264,7 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 | Sen nasılsın? Sorgu ağır geçti. | `furkanStatement` | İyiyim amirim. / Ama çocuğun yüzü aklımdan çıkmıyor. | `trust:Doğa` +5 |
 | Furkan’ın ailesiyle sen mi konuşuyorsun? | `furkanStatement` | Evet amirim. Annesi her gün arıyor. Ona yalan söylemekten yoruldum. | — |
 | Furkan’a Kerem Aydın’ı sor. | `heard:kerem` ve (`furkan:held` ya da `furkan:protected`) | Sordum amirim. "Berat’la gezen sakallı abi" dedi. "Berat ona güveniyordu, ona her şeyi anlatırdı." | — |
+| Kerem sorguda konuşuyor mu? | `kerem:arrested` | Konuşmuyor amirim. Sadece duvara bakıp "Cuma" diyor. | — |
 
 ### Erdi
 
@@ -266,6 +292,12 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 | erdiAudit | kendiliğinden: `case:internal-investigation` ve `erdi:audit` yokken | İç denetim dosyanı istedi. / Hesabına yatan o para neydi? | Hediye gibi gönderilmiş. İade edecektim. | "Edecektim." Güzel kelime. Denetimde de böyle söyle, belki inanırlar. | `erdi:audit` | desk |
 |  |  |  | Size söyleyecek bir şeyim yok. | Bana yok, denetime var. Avukat bul kendine. | `erdi:audit`, `pressure` +5 | desk |
 |  |  |  | Parayı kimin gönderdiğini siz de biliyorsunuz. | ... / Ben hiçbir şey bilmiyorum. Bu konuşma hiç olmadı. | `erdi:audit`, `heard:erdi-knows-money` | desk |
+| erdiRescue | kendiliğinden: `girl:rescued` ve `erdi:rescue` yokken | Duydum. Kızı çıkarmışsınız. / Basına açıklamayı ben yapacağım. Sen sesini çıkarma, yurt dışındasın zaten. | Siz bilirsiniz müdürüm. | Aferin. Böyle devam. | `erdi:rescue` | desk |
+|  |  |  | Bu ekibin başarısı, sizin değil. | Ekibin başarısı benim başarım. Unutma bunu. | `erdi:rescue`, `pressure` +5 | desk |
+| erdiArrest | kendiliğinden: `kerem:arrested` ve `erdi:arrest` yokken | Katili almışsınız. Aferin. / Şimdi dosyayı hemen kapatıyoruz. Gerisi beni ilgilendirmez. | Kapatamayız. Kızlar hâlâ kayıp. | Kızlar başka dosya. Bu dosya bitti. | `erdi:arrest`, `pressure` +5 | desk |
+|  |  |  | Anlaşıldı. | Güzel. | `erdi:arrest`, `pressure` -5 | desk |
+| erdiEscape | kendiliğinden: `kerem:met` ve `erdi:escape` yokken ve (`kerem:escaped` ya da `kerem:escaped-ambush`) | Katili elinizden kaçırmışsınız! / Biliyor musun Ankara bunu kime soracak? Bana! | Bir hayat kurtarmak için gerekiyordu. | Hayat kurtarmak benim işim değil. Benim işim dosya kapatmak. | `erdi:escape` | desk |
+|  |  |  | (Cevap verme) |  | `erdi:escape` | desk |
 
 **Sorulabilecekler**
 
@@ -308,6 +340,8 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 | returned | kendiliğinden: `bribe:returned` ve `mp:returned-seen` yokken | Paramı geri göndermişsiniz. / Peki. Ben bir baba olarak elimden geleni yaptım. Bundan sonrası benim elimde değil. | Evet. Gönderdim. | ... | `mp:returned-seen` | after |
 | mpMezbaha | kendiliğinden: `mezbaha-found` ve `mp:mezbaha` yokken | Mezbahayı duydum. / Berat oraya... Hayır. Oğlum oraya hiç gitmedi. / Duyuyor musunuz? Hiç gitmedi. | Oğlunuzun fotoğrafı duvardaydı Yılmaz Bey. | ... / Bir daha bu numaraya yazmayın. | `mp:mezbaha`, `mp:silent` | after |
 |  |  |  | Neden bu kadar eminsiniz? | Çünkü... / Çünkü ben biliyorum. | `mp:mezbaha`, `heard:mp-knows-mezbaha` | after |
+| mpKiller | kendiliğinden: `case:solved` ve `mp:killer` yokken | Oğlumu öldüreni bulmuşsunuz. Adı ne? | Kerem Aydın. Ece Aydın’ın ağabeyi. | ... / O kız. / Bir daha bu numaraya yazmayacağım. | `mp:killer`, `heard:mp-ece` | after |
+|  |  |  | Söyleyemem. | Ben öğrenirim Komiser Bey. Her zaman öğrenirim. | `mp:killer` | after |
 
 **Sorulabilecekler**
 
@@ -339,10 +373,25 @@ Hikâyenin kilometre taşları sırayla (`state.json › milestones`). Her aşam
 
 | Adım | Ne zaman | Karşı taraf yazar | Seçenek | Cevap | Sonuç | Sonra |
 | --- | --- | --- | --- | --- | --- | --- |
-| start | `kerem:identified` | Adımı öğrenmişsiniz. / Beni aramayın. Bu hat da birkaç gün sonra olmayacak. / Size yazıyorum çünkü dinleyecek başka kimse kalmadı: kızlardan biri hâlâ hayatta.… | Berat’ı sen mi öldürdün? | Ece’yi o gece oraya o götürdü. / Sizce bu sorunun cevabı bu mu? | `kerem:contact` | wait |
-|  |  |  | Kız nerede Kerem? | Yüz yüze söylerim. Sadece size. Yanınızda kimse olmayacak. | `kerem:contact`, `kerem:wants-meeting` | wait |
-|  |  |  | Teslim ol. Sana zarar gelmez. | Ece’ye de böyle söylemişlerdi. | `kerem:contact` | wait |
-| wait | `kerem:meeting` |  | — | | | |
+| start | `kerem:identified` | Adımı öğrenmişsiniz. / Beni aramayın. Bu hat da birkaç gün sonra olmayacak. / Size yazıyorum çünkü dinleyecek başka kimse kalmadı: kızlardan biri hâlâ hayatta.… | Berat’ı sen mi öldürdün? | Ece’yi o gece oraya o götürdü. / Sizce bu sorunun cevabı bu mu? | `kerem:contact` | terms |
+|  |  |  | Kız nerede Kerem? | Yüz yüze söylerim. Sadece size. Yanınızda kimse olmayacak. | `kerem:contact`, `kerem:wants-meeting` | terms |
+|  |  |  | Teslim ol. Sana zarar gelmez. | Ece’ye de böyle söylemişlerdi. | `kerem:contact` | terms |
+| terms |  | Perşembe gece yarısı. Eski otogarın arkasındaki çay bahçesi. / Siz gelin. Tek başınıza. | Yurt dışındayım. Gelemem. | Öyle mi? / ... / Peki. Güvendiğiniz birini gönderin. Tek kişi, silahsız. | `doubt` +1 | choose |
+|  |  |  | Ekibimden birini göndereceğim. | Tek kişi. Silahsız. Başka birini görürsem kızı kimse bulamaz. | — | choose |
+| choose |  | Kimi gönderiyorsunuz? | Özge gelecek.<br>_sadece: `trust:Özge >= 40`_ | Perşembe gece yarısı. | `envoy:ozge`, `kerem:meeting-set` | waiting |
+|  |  |  | Doğa gelecek.<br>_sadece: `trust:Doğa >= 40`_ | Perşembe gece yarısı. | `envoy:doga`, `kerem:meeting-set` | waiting |
+|  |  |  | Atakan gelecek.<br>_sadece: `trust:Atakan >= 40`_ | Perşembe gece yarısı. | `envoy:atakan`, `kerem:meeting-set` | waiting |
+|  |  |  | İnanç gelecek.<br>_sadece: `trust:İnanç >= 40`_ | Perşembe gece yarısı. | `envoy:inanc`, `kerem:meeting-set` | waiting |
+|  |  |  | Behram gelecek.<br>_sadece: `behram:helps`_ | Narkotikçi mi? ...Peki. Perşembe gece yarısı. | `envoy:behram`, `kerem:meeting-set` | waiting |
+|  |  |  | Biri gelecek. (Ekibi topla, buluşma yerini sarın.) | Perşembe gece yarısı. | `envoy:ambush`, `kerem:meeting-set`, `integrity` -5 | waiting |
+| afterDeal | kendiliğinden: `kerem:deal` | Savcı onay verirse cuma gecesi oradayım. / Vermezse de oradayım. | Önce kızı çıkaralım, sonra konuşacağız. | Siz bilirsiniz. | — | end |
+| afterEscape | kendiliğinden: `kerem:escaped` | Teşekkür ederim. / Adil’i ben bulacağım. Arkamdan gelmeyin. | Kerem, yapma. | Ece için. | `kerem:hunting` | end |
+|  |  |  | (Cevap verme) |  | `kerem:hunting` | end |
+| afterAmbush | kendiliğinden: `kerem:escaped-ambush` | Size güvenmiştim. / Kızı siz seçtiniz. | Kerem, kız için. Yerini söyle. | ... | `kerem:pleaded` | end |
+|  |  |  | Teslim ol. Kaçamazsın. | Ece de kaçamamıştı. | — | end |
+| relent | kendiliğinden: `kerem:relents` | Kız için. Sizin için değil. / Sanayideki eski soğuk hava deposu. Arka kapı açık. | Teşekkür ederim. |  | `kerem:told-location` | end |
+| thanks | kendiliğinden: `girl:rescued` | Melis’i çıkarmışsınız. / Ece için teşekkür ederim. | — | | | |
+| blame | kendiliğinden: `girl:lost` | Geç kaldınız. / Ben de. | — | | | |
 
 **Sorulabilecekler**
 
@@ -373,6 +422,8 @@ Subaylar: Atakan ((`status:suspended` yokken ya da `trust:Atakan >= 60`)), Doğa
 |  |  | Binayı gözetle | `plate:mv` | 4 dk | Akşam altıda çay ocağındaki makam aracı geldi. Danışman arka kapıdan girdi, bir saat sonra iki karton koliyle çıktı. | `heard:boxes` |
 | Aydın Ailesinin Evi | `heard:ece` | Komşularla konuş | her zaman | 2 dk | Annesi geçen yıl ölmüş. Oğlu Kerem aylardır eve uğramıyormuş. "Sakallı, deri ceketli, kızın ölümünden sonra bir daha gülmedi" diyorlar. Pos… | `heard:kerem`, `kerem:volunteer` |
 |  |  | Ece’nin odasına bak (izinsiz) | `heard:kerem` | 3 dk | Kapı açıktı amirim. Ece’nin odası olduğu gibi duruyor. Duvarda burslu öğrencilerin fotoğrafları ve aralarına çekilmiş kırmızı ipler var. Bi… | `heard:kerem-board`, `player:dirty-hands`, `integrity` -5 |
+| Eski Soğuk Hava Deposu | (`kerem:told-location` ya da `heard:cold-storage`) | Depoya gir | `girl:lost` yokken | 3 dk | Amirim... buldum onu. Melis. Arka odada, bir şiltenin üstünde. Susuz, korkmuş ama yaşıyor. Yanında bir yatak daha vardı. Boş. | `girl:rescued`, `storage:entered` |
+|  |  | Depoya gir | `girl:lost` | 3 dk | Geç kaldık amirim. Arka odada, bir şiltenin üstünde. Yanında bir yatak daha vardı. Boş. | `girl:found-dead`, `storage:entered` |
 
 ## Laboratuvar
 
@@ -390,6 +441,7 @@ Subaylar: Atakan ((`status:suspended` yokken ya da `trust:Atakan >= 60`)), Doğa
 | Kayıp İlanı | `mezbaha-found` | — | — |
 | Kayıp İlanı | `mezbaha-found` | — | — |
 | Ece’nin Burs Sözleşmesi | `heard:kerem-board` | — | — |
+| Berat’ın Telefonu | `ev:berat-phone` | — | — |
 
 ## Para
 
@@ -415,6 +467,9 @@ Süre sadece oyun açıkken işler; Settings › Hızlı görevler 30 kat hızla
 | bribe-kept | `mp:wrote` | 45 dk | `sent:bribe-return` | `integrity` -15, `pressure` +10, `case:internal-investigation` |
 | adil-warns | `furkanStatement` | 6 dk | — | `adil:warns` |
 | card-enhance | `kerem:same-man` | 8 dk | — | `card:enhanced` |
+| meeting | `kerem:meeting-set` | 10 dk | — | `kerem:met` |
+| friday | `kerem:contact` | 60 dk | `girl:rescued` | `girl:lost` |
+| kerem-relents | `kerem:escaped-ambush` | 15 dk | `girl:rescued` | `kerem:relents` |
 
 ## Kilitler
 
@@ -433,13 +488,19 @@ Oyun `final:ready` olunca biter. Her bölümde koşulu tutan **ilk** satır anla
 |  | **Kirli Eller** [Taslak] Masumlar hayatta, ama komiser artık kendisi de soruşturulabilir. | `case:solved` ve `player:dirty-hands` |
 |  | **Sessiz Zafer** [Taslak] Katil yakalandı, dosya kapandı. Emri verenler dokunulmaz kaldı. | `case:solved` |
 |  | **Çözülemeyen Dosya** [Taslak] Dosya faili meçhul olarak kapandı. | her zaman |
+| Kerem Aydın | [Taslak] Kerem Aydın tutuklandı. Duruşmada tek kelime etmedi; sadece kız kardeşinin adını söyledi. | `kerem:arrested` |
+|  | [Taslak] Kerem Aydın savcılıkla iş birliği yaptı. Verdiği ifade vakfın kapısını açtı. | `kerem:deal` |
+|  | [Taslak] Kerem Aydın bir daha görülmedi. Bazıları onu cuma geceleri sanayide gördüklerini söylüyor. | (`kerem:escaped` ya da `kerem:escaped-ambush`) |
+|  | [Taslak] Kerem Aydın hâlâ aranıyor. | her zaman |
 | Komiser | [Taslak] Hakkında yakalama kararı çıkarıldı. | `legal:warrant-issued` |
 |  | [Taslak] Meslekten çıkarıldı. | `status:dismissed` |
 |  | [Taslak] Görevden uzaklaştırıldı. | `status:suspended` |
 |  | [Taslak] Görevde kaldı ama artık kimse ona eskisi gibi bakmıyor. | `integrity < 40` |
 |  | [Taslak] Dosya kapandığında bile bir şey yerine oturmadı: kimse tatilde olduğunuzu doğrulayamadı. | `doubt >= 3` |
 |  | [Taslak] Görevine devam ediyor. | her zaman |
-| Tanıklar | [Taslak] Kritik tanık korunarak ifade verdi. | `witness:protected` |
+| Tanıklar | [Taslak] Melis kurtarıldı ve ifade verdi. Emre’den hâlâ haber yok. | `girl:rescued` |
+|  | [Taslak] Melis’e yetişemediniz. Ailesi her cuma deponun önüne çiçek bırakıyor. | `girl:found-dead` |
+|  | [Taslak] Kritik tanık korunarak ifade verdi. | `witness:protected` |
 |  | [Taslak] Tanıklardan biri ortadan kayboldu. | `witnessDanger >= 60` |
 |  | [Taslak] Tanıklar ifadelerini değiştirmedi. | her zaman |
 | Özge | [Taslak] Özge komisere hâlâ güveniyor. | `trust:Özge >= 70` |
@@ -475,31 +536,46 @@ Bir yolu açmak için: o bayrağın "Nasıl açılır" sütunundaki yollardan **
 | `atakan:mezbaha` |  | Atakan › "Nerede gördün?"<br>Atakan › "Hatırlayınca söyle." | Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar) |
 | `behram:depot` |  | Behram › "Listeyi bana gönder."<br>Behram › "Listedeki diğer isimler kim?" | Behram › afterRaid (kendiliğinden yazar) |
 | `behram:guilt` | Behram narkotiğin cuma gecelerine göz yumduğunu itiraf etti | Behram › soru "Cuma gecelerini biliyor muydunuz?" | _henüz hiçbir şey (ileride bağlanacak)_ |
-| `behram:helps` | Behram Adil’i aramaya yardım ediyor | Behram › "Adil’in saklanacağı yeri sen bilirsin. …" | Behram › afterRaid (kendiliğinden yazar)<br>Behram › soru "Narkotiğin Adil’le bir anlaşması var mı…" |
-| `behram:list` |  | Behram › "Listeyi bana gönder."<br>Behram › "Listedeki diğer isimler kim?" | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `behram:helps` | Behram Adil’i aramaya yardım ediyor | Behram › "Adil’in saklanacağı yeri sen bilirsin. …" | Behram › afterRaid (kendiliğinden yazar)<br>Behram › soru "Narkotiğin Adil’le bir anlaşması var mı…"<br>0543 112 07 21 › "Behram gelecek." |
+| `behram:list` |  | Behram › "Listeyi bana gönder."<br>Behram › "Listedeki diğer isimler kim?" | Behram › soru "Adil’in listesiyle Furkan’ın "cuma gece…" |
 | `bribe:returned` | Para gönderene iade edildi | ZaferBank › Gönderene iade hesabına para gönder | Erdi › desk (kendiliğinden yazar)<br>Kaymakam › refused (kendiliğinden yazar)<br>0532 190 19 07 › after (kendiliğinden yazar)<br>Messages › Gizli Numara<br>Kayıtlar › Bilinmeyen Numara (unknown-1) gelir |
 | `cafe:witness` | Kafeci olay gecesini anlattı | Harita › Kampüs Kafe › Kafeciyle konuş | Harita › Kampüs Kafe › Kamera kayıtlarını iste görünür<br>Süreli olay › kaymakam-calls başlar |
 | `card:enhanced` | Karttaki vakıf logosu netleşti (süreli olay) | Süreli olay › card-enhance: `kerem:same-man` olduktan 8 dk sonra | Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar) |
 | `case:internal-investigation` | Komiser hakkında idari inceleme başladı | Süreli olay › bribe-kept: `mp:wrote` olduktan 45 dk sonra, `sent:bribe-return` olmadıysa | Özge › afterMezbaha (kendiliğinden yazar)<br>Özge › later (kendiliğinden yazar)<br>Erdi › desk (kendiliğinden yazar)<br>Erdi › soru "Müdürüm, iç denetim neden benim hesabım…"<br>Mail › icdenetim.emniyet.gov.tr |
-| `case:solved` | Berat cinayetinin faili doğru tespit edildi | _henüz hiçbir şey_ | Final › Berat Yılmaz Dosyası › Adaletin Bedeli<br>Final › Berat Yılmaz Dosyası › Kirli Eller<br>Final › Berat Yılmaz Dosyası › Sessiz Zafer |
+| `case:solved` | Berat cinayetinin faili doğru tespit edildi | Özge › "Gözaltına al."<br>Özge › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Özge › "Gitsin. Kızın yerini al."<br>Atakan › "Gözaltına al."<br>Atakan › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Gözaltına al."<br>Behram › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Gözaltına al."<br>İnanç › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>İnanç › "Gitsin. Kızın yerini al."<br>Doğa › "Gözaltına al."<br>Doğa › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Doğa › "Gitsin. Kızın yerini al." | 0532 190 19 07 › after (kendiliğinden yazar)<br>Final › Berat Yılmaz Dosyası › Adaletin Bedeli<br>Final › Berat Yılmaz Dosyası › Kirli Eller<br>Final › Berat Yılmaz Dosyası › Sessiz Zafer |
 | `case:wrong-person` | Yanlış kişi suçlandı | _henüz hiçbir şey_ | Final › Berat Yılmaz Dosyası › Yanlış İnsan |
 | `coverup:exposed` | Örtbas edilen suçlar ortaya çıktı | _henüz hiçbir şey_ | Final › Berat Yılmaz Dosyası › Adaletin Bedeli |
 | `deniz:told` |  | Özge › "Söyleyin. Bilmeye hakkı var." | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `doga:furkan-news` |  | Doğa › "Bütün ekipleri seferber et. Bulun onu."<br>Doğa › "Adil’in adamlarının elinde olabilir. Be…"<br>Doğa › "İfadesine ekle."<br>Doğa › "Bunu kimse bilmesin. Önce onu korumamız…" | Doğa › afterFurkan (kendiliğinden yazar) |
+| `doga:melis` |  | Doğa › "Ona koruma ver. Kimse yanına yaklaşması…"<br>Doğa › "İfadesini tutanağa geçir, hemen." | Doğa › afterFurkan (kendiliğinden yazar) |
+| `envoy:ambush` | Buluşmaya gönderilen: ambush | 0543 112 07 21 › "Biri gelecek. (Ekibi topla, buluşma yer…" | İnanç › order (kendiliğinden yazar)<br>İnanç › afterOrder (kendiliğinden yazar) |
+| `envoy:atakan` | Buluşmaya gönderilen: atakan | 0543 112 07 21 › "Atakan gelecek." | Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar) |
+| `envoy:behram` | Buluşmaya gönderilen: behram | 0543 112 07 21 › "Behram gelecek." | Behram › raid (kendiliğinden yazar)<br>Behram › afterRaid (kendiliğinden yazar) |
+| `envoy:doga` | Buluşmaya gönderilen: doga | 0543 112 07 21 › "Doğa gelecek." | Doğa › furkanFate (kendiliğinden yazar)<br>Doğa › afterFurkan (kendiliğinden yazar) |
+| `envoy:inanc` | Buluşmaya gönderilen: inanc | 0543 112 07 21 › "İnanç gelecek." | İnanç › order (kendiliğinden yazar)<br>İnanç › afterOrder (kendiliğinden yazar) |
+| `envoy:ozge` | Buluşmaya gönderilen: ozge | 0543 112 07 21 › "Özge gelecek." | Özge › afterMezbaha (kendiliğinden yazar)<br>Özge › later (kendiliğinden yazar) |
+| `envoy:reported` |  | Özge › "Gözaltına al."<br>Özge › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Özge › "Gitsin. Kızın yerini al."<br>Atakan › "Gözaltına al."<br>Atakan › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Gözaltına al."<br>Behram › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Gözaltına al."<br>İnanç › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>İnanç › "Gitsin. Kızın yerini al."<br>İnanç › "Bütün çıkışları kapatın."<br>İnanç › "Peşini bırakın. Telefon yeter."<br>Doğa › "Gözaltına al."<br>Doğa › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Doğa › "Gitsin. Kızın yerini al." | Özge › afterMezbaha (kendiliğinden yazar)<br>Özge › later (kendiliğinden yazar)<br>Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar)<br>Behram › raid (kendiliğinden yazar)<br>Behram › afterRaid (kendiliğinden yazar)<br>İnanç › order (kendiliğinden yazar)<br>İnanç › afterOrder (kendiliğinden yazar)<br>Doğa › furkanFate (kendiliğinden yazar)<br>Doğa › afterFurkan (kendiliğinden yazar) |
 | `erdi-kept-out` |  | Özge › "Bundan Erdi'ye tek kelime etmeyeceksin." | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `erdi:arrest` |  | Erdi › "Kapatamayız. Kızlar hâlâ kayıp."<br>Erdi › "Anlaşıldı." | Erdi › desk (kendiliğinden yazar) |
 | `erdi:audit` |  | Erdi › "Hediye gibi gönderilmiş. İade edecektim."<br>Erdi › "Size söyleyecek bir şeyim yok."<br>Erdi › "Parayı kimin gönderdiğini siz de biliyo…" | Erdi › desk (kendiliğinden yazar) |
+| `erdi:escape` |  | Erdi › "Bir hayat kurtarmak için gerekiyordu."<br>Erdi › "(Cevap verme)" | Erdi › desk (kendiliğinden yazar) |
+| `erdi:rescue` |  | Erdi › "Siz bilirsiniz müdürüm."<br>Erdi › "Bu ekibin başarısı, sizin değil." | Erdi › desk (kendiliğinden yazar) |
+| `ev:berat-phone` | Berat’ın telefonu ele geçti | Özge › "Gözaltına al."<br>Özge › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Özge › "Gitsin. Kızın yerini al."<br>Atakan › "Gözaltına al."<br>Atakan › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Gözaltına al."<br>Behram › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Gözaltına al."<br>İnanç › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>İnanç › "Gitsin. Kızın yerini al."<br>İnanç › "Bütün çıkışları kapatın."<br>İnanç › "Peşini bırakın. Telefon yeter."<br>Doğa › "Gözaltına al."<br>Doğa › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Doğa › "Gitsin. Kızın yerini al." | Pano › Berat’ın Telefonu bulunur |
 | `ev:cctv` | Kafe kamerasından kare alındı | Harita › Kampüs Kafe › Kamera kayıtlarını iste | Atakan › idle<br>Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar)<br>Atakan › soru "Yırtık fotoğraftaki adamla kameradaki a…"<br>Pano › Kamera Görüntüsü bulunur<br>Süreli olay › kaymakam-calls başlar |
 | `ev:glass` | Evde parmak izli bardak bulundu | Harita › Berat'ın Evi › Olay yerini yeniden ara | Pano › Bardaktaki Parmak İzi bulunur |
 | `ev:notebook` | Berat’ın defteri bulundu | Harita › Üniversite › Berat'ın dolabını aç | Pano › Berat'ın Defteri bulunur |
 | `ev:torn-map` | Çay ocağında yanık harita bulundu | Harita › Sanayi Çay Ocağı › Çay ocağını ara | Behram › raid<br>Behram › soru "Adil şimdi nerede olabilir?"<br>Pano › Yanık Harita bulunur |
 | `ev:torn-photo` | Evde yırtık fotoğraf bulundu | Harita › Berat'ın Evi › Olay yerini yeniden ara | Pano › Yırtık Fotoğraf bulunur |
 | `final:ready` | Final soruşturması bitti, oyun sona erer | _henüz hiçbir şey_ | Final başlar |
-| `furkan:friday` | Furkan "cuma geceleri" anlattı | Doğa › "İfadesine ekle."<br>Doğa › "Bunu kimse bilmesin. Önce onu korumamız…" | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `furkan:friday` | Furkan "cuma geceleri" anlattı | Doğa › "İfadesine ekle."<br>Doğa › "Bunu kimse bilmesin. Önce onu korumamız…" | Behram › soru "Adil’in listesiyle Furkan’ın "cuma gece…" |
 | `furkan:held` | Furkan gözaltında tutuldu | Doğa › "Savcıdan süre uzatması isteyin. İçeride…" | Doğa › afterFurkan (kendiliğinden yazar)<br>Doğa › soru "Furkan nasıl?"<br>Doğa › soru "Furkan’a Kerem Aydın’ı sor." |
 | `furkan:missing` | Serbest bırakılan Furkan kayboldu | Doğa › "Bütün ekipleri seferber et. Bulun onu."<br>Doğa › "Adil’in adamlarının elinde olabilir. Be…" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `furkan:protected` | Furkan için tanık koruma istendi | Doğa › "Tanık koruma için başvurun." | Doğa › afterFurkan (kendiliğinden yazar)<br>Doğa › soru "Furkan nasıl?"<br>Doğa › soru "Furkan’a Kerem Aydın’ı sor." |
 | `furkan:released` | Furkan serbest bırakıldı | Doğa › "Serbest bırakın ama gözünüzü ayırmayın." | Doğa › afterFurkan (kendiliğinden yazar)<br>Doğa › soru "Furkan nasıl?" |
 | `furkanStatement` | Furkan’ın ifadesi tutanağa geçti | Doğa › "Adil'i nerede bulabiliriz?"<br>Doğa › "Bu kadar yeter. Doğa, ifadeyi tutanağa …" | Özge › soru "Furkan’ın ifadesini okudun mu?"<br>Orhun › soru "Furkan’ın ailesi aradı mı?"<br>Behram › start<br>Behram › soru "Adil kimin için çalışıyor?"<br>Doğa › soru "Sence Furkan doğruyu söyledi mi?"<br>Doğa › soru "Sen nasılsın? Sorgu ağır geçti."<br>Doğa › soru "Furkan’ın ailesiyle sen mi konuşuyorsun?"<br>Erdi › pressure<br>Harita › Sanayi Çay Ocağı görünür<br>Süreli olay › adil-warns başlar<br>Poltel › Furkan Şahin - İfade Tutanağı gelir<br>Mail › narkotik.emniyet.gov.tr<br>Sinstagram › @adil.abi aranabilir |
+| `girl:found-dead` | Melis ölü bulundu | Harita › Eski Soğuk Hava Deposu › Depoya gir | News › "Sanayideki depoda kayıp öğrencinin cansız bedeni …" çıkar<br>Final › Tanıklar |
+| `girl:lost` | Cuma geçti, Melis’e yetişilemedi (süreli olay) | Süreli olay › friday: `kerem:contact` olduktan 60 dk sonra, `girl:rescued` olmadıysa | 0543 112 07 21 › end (kendiliğinden yazar)<br>Harita › Eski Soğuk Hava Deposu › Depoya gir görünür |
+| `girl:rescued` | Melis kurtarıldı | Harita › Eski Soğuk Hava Deposu › Depoya gir | Doğa › afterFurkan (kendiliğinden yazar)<br>Erdi › desk (kendiliğinden yazar)<br>0543 112 07 21 › end (kendiliğinden yazar)<br>Süreli olay › friday iptal olur<br>Süreli olay › kerem-relents iptal olur<br>News › "Kayıp öğrenci sanayideki depoda sağ bulundu" çıkar<br>Final › Tanıklar |
 | `heard:3am-caller` | Selin’e numarayı gece üçte arayan biri vermiş | Selin Aras › soru "Numaramı kimden aldın?" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `heard:adil` | Komşu "Adil abi" yalvarışını duymuş | Harita › Berat'ın Evi › Komşularla konuş | Erdi › pressure<br>Harita › Sanayi Çay Ocağı görünür<br>Sinstagram › @adil.abi aranabilir |
 | `heard:adil-informant` |  | Behram › soru "Narkotiğin Adil’le bir anlaşması var mı…" | Behram › soru "Cuma gecelerini biliyor muydunuz?" |
@@ -508,8 +584,10 @@ Bir yolu açmak için: o bayrağın "Nasıl açılır" sütunundaki yollardan **
 | `heard:atakan-photo` |  | Atakan › "Nerede gördün?" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `heard:atakan-secret` |  | Atakan › soru "İzin günün nasıl geçti?" | Atakan › soru "Sen iyi misin? Sesin farklı geliyor." |
 | `heard:berat-past` |  | 0532 190 19 07 › "Oğlunuzun hangi hataları?" | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `heard:berat-repentant` | Berat’ın pişman olduğu ve kanıtları Kerem’e vereceği öğrenildi | Özge › "Gözaltına al."<br>Özge › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Özge › "Gitsin. Kızın yerini al."<br>Atakan › "Gözaltına al."<br>Atakan › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Gözaltına al."<br>Behram › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Gözaltına al."<br>İnanç › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>İnanç › "Gitsin. Kızın yerini al."<br>İnanç › "Bütün çıkışları kapatın."<br>İnanç › "Peşini bırakın. Telefon yeter."<br>Doğa › "Gözaltına al."<br>Doğa › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Doğa › "Gitsin. Kızın yerini al." | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `heard:boxes` |  | Harita › Yılmaz Eğitim Vakfı › Binayı gözetle | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `heard:camera-broken` |  | İnanç › "Arızayı kimin bildirdiğini öğren." | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `heard:cold-storage` | Soğuk hava deposu başka yoldan bulundu | Orhun › soru "Kerem’in üstünden ne çıktı?"<br>Behram › soru "Adil’in listesiyle Furkan’ın "cuma gece…" | Harita › Eski Soğuk Hava Deposu görünür |
 | `heard:dead-line` |  | Özge › soru "Bana gelen sesli mesajın numarasını sor…" | Özge › soru "O ölmüş kadının hattı kimin adına?" |
 | `heard:ece` | Ece Aydın’ın adı öğrenildi | Özge › soru "O ölmüş kadının hattı kimin adına?"<br>Özge › soru "Arşivdeki takipsizlik haberindeki kızın…" | Özge › soru "Ece Aydın’ın ailesinden kim kaldı?"<br>Harita › Aydın Ailesinin Evi görünür<br>Sinstagram › @ece.aydin aranabilir<br>Sinstagram › @k.aydin aranabilir |
 | `heard:erdi-knows-money` |  | Erdi › "Parayı kimin gönderdiğini siz de biliyo…" | _henüz hiçbir şey (ileride bağlanacak)_ |
@@ -522,6 +600,7 @@ Bir yolu açmak için: o bayrağın "Nasıl açılır" sütunundaki yollardan **
 | `heard:kerem-berat` |  | Özge › soru "Kerem’in Berat’la bir bağı var mı?" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `heard:kerem-board` |  | Harita › Aydın Ailesinin Evi › Ece’nin odasına bak (izinsiz) | Pano › Ece’nin Burs Sözleşmesi bulunur |
 | `heard:kerem-has-phone` |  | 0543 112 07 21 › soru "Neden şimdi?"<br>0543 112 07 21 › soru "Berat’ın telefonu sende mi?" | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `heard:mp-ece` |  | 0532 190 19 07 › "Kerem Aydın. Ece Aydın’ın ağabeyi." | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `heard:mp-knows-mezbaha` |  | 0532 190 19 07 › "Neden bu kadar eminsiniz?" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `heard:mp-refused-money` |  | 0532 190 19 07 › soru "Berat’la en son ne zaman konuştunuz?" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `heard:notebook` |  | Özge › soru "Deniz nasıl?" | _henüz hiçbir şey (ileride bağlanacak)_ |
@@ -542,10 +621,19 @@ Bir yolu açmak için: o bayrağın "Nasıl açılır" sütunundaki yollardan **
 | `kaymakam:informed` | Komiser kaymakama bilgi vermeyi kabul etti | Kaymakam › "Tabii Kaymakam Bey, gelişmeleri size bi…" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `kaymakam:plate` |  | Kaymakam › "Kimden duydunuz?"<br>Kaymakam › "Açıklanacak bir şey yok. Soruşturma sür…" | Kaymakam › informed (kendiliğinden yazar) |
 | `kaymakam:returned` |  | Kaymakam › "Dostluğun banka hesabından gelmesine al…"<br>Kaymakam › "(Cevap verme)" | Kaymakam › refused (kendiliğinden yazar) |
-| `kerem:contact` | Kerem komisere yazdı | 0543 112 07 21 › "Berat’ı sen mi öldürdün?"<br>0543 112 07 21 › "Kız nerede Kerem?"<br>0543 112 07 21 › "Teslim ol. Sana zarar gelmez." | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `kerem:arrested` | Kerem gözaltına alındı | Özge › "Gözaltına al."<br>Atakan › "Gözaltına al."<br>Behram › "Gözaltına al."<br>İnanç › "Gözaltına al."<br>Doğa › "Gözaltına al." | Orhun › soru "Kerem’in üstünden ne çıktı?"<br>Doğa › soru "Kerem sorguda konuşuyor mu?"<br>Erdi › desk (kendiliğinden yazar)<br>News › "Berat Yılmaz cinayetinde gözaltı" çıkar<br>Final › Kerem Aydın |
+| `kerem:contact` | Kerem komisere yazdı | 0543 112 07 21 › "Berat’ı sen mi öldürdün?"<br>0543 112 07 21 › "Kız nerede Kerem?"<br>0543 112 07 21 › "Teslim ol. Sana zarar gelmez." | Süreli olay › friday başlar |
+| `kerem:deal` | Kerem’e savcılık koruması ve indirim sözü verildi | Özge › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Atakan › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Behram › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>İnanç › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Doğa › "Savcıyla konuşacağım. Ona koruma ve ind…" | 0543 112 07 21 › waiting (kendiliğinden yazar)<br>Final › Kerem Aydın |
+| `kerem:escaped` | Kerem’in gitmesine göz yumuldu | Özge › "Gitsin. Kızın yerini al."<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Gitsin. Kızın yerini al."<br>Doğa › "Gitsin. Kızın yerini al." | Erdi › desk (kendiliğinden yazar)<br>0543 112 07 21 › waiting (kendiliğinden yazar)<br>Final › Kerem Aydın |
+| `kerem:escaped-ambush` | Pusu bozuldu, Kerem kaçtı | İnanç › "Bütün çıkışları kapatın."<br>İnanç › "Peşini bırakın. Telefon yeter." | Erdi › desk (kendiliğinden yazar)<br>0543 112 07 21 › waiting (kendiliğinden yazar)<br>Süreli olay › kerem-relents başlar<br>Final › Kerem Aydın |
+| `kerem:hunting` | Kerem Adil’in peşine düştü (Bölüm V) | 0543 112 07 21 › "Kerem, yapma."<br>0543 112 07 21 › "(Cevap verme)" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `kerem:identified` | Berat’ın peşinden çıkan adamın Kerem olduğu anlaşıldı | Atakan › "Aramaya başlayın. Ama sessizce."<br>Atakan › "Bütün birimlere bildir. Yakalama kararı…" | Özge › soru "Kerem’in Berat’la bir bağı var mı?"<br>0543 112 07 21 › start |
-| `kerem:meeting` | Kerem’le buluşma (Bölüm IV, henüz yazılmadı) | _henüz hiçbir şey_ | 0543 112 07 21 › wait |
+| `kerem:meeting-set` | Kerem’le buluşma ayarlandı | 0543 112 07 21 › "Özge gelecek."<br>0543 112 07 21 › "Doğa gelecek."<br>0543 112 07 21 › "Atakan gelecek."<br>0543 112 07 21 › "İnanç gelecek."<br>0543 112 07 21 › "Behram gelecek."<br>0543 112 07 21 › "Biri gelecek. (Ekibi topla, buluşma yer…" | Süreli olay › meeting başlar |
+| `kerem:met` | Buluşma gerçekleşti (süreli olay) | Süreli olay › meeting: `kerem:meeting-set` olduktan 10 dk sonra | Özge › afterMezbaha (kendiliğinden yazar)<br>Özge › later (kendiliğinden yazar)<br>Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar)<br>Behram › raid (kendiliğinden yazar)<br>Behram › afterRaid (kendiliğinden yazar)<br>İnanç › order (kendiliğinden yazar)<br>İnanç › afterOrder (kendiliğinden yazar)<br>Doğa › furkanFate (kendiliğinden yazar)<br>Doğa › afterFurkan (kendiliğinden yazar)<br>Erdi › desk (kendiliğinden yazar) |
+| `kerem:pleaded` |  | 0543 112 07 21 › "Kerem, kız için. Yerini söyle." | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `kerem:relents` | Kerem pusudan sonra yine de yeri söylemeye karar verdi (süreli olay) | Süreli olay › kerem-relents: `kerem:escaped-ambush` olduktan 15 dk sonra, `girl:rescued` olmadıysa | 0543 112 07 21 › end (kendiliğinden yazar) |
 | `kerem:same-man` | Yırtık fotoğraftaki ve kameradaki adam aynı kişi | Atakan › soru "Yırtık fotoğraftaki adamla kameradaki a…" | Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar)<br>Süreli olay › card-enhance başlar |
+| `kerem:told-location` | Kerem Melis’in yerini söyledi | Özge › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Özge › "Gitsin. Kızın yerini al."<br>Atakan › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>İnanç › "Gitsin. Kızın yerini al."<br>Doğa › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Doğa › "Gitsin. Kızın yerini al."<br>0543 112 07 21 › "Teşekkür ederim." | Harita › Eski Soğuk Hava Deposu görünür |
 | `kerem:volunteer` | Kerem’in vakıfta gönüllü olduğu öğrenildi | Harita › Yılmaz Eğitim Vakfı › Gönüllü kartının fotoğrafını göster<br>Harita › Yılmaz Eğitim Vakfı › Gönüllü listesini iste<br>Harita › Aydın Ailesinin Evi › Komşularla konuş | Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar) |
 | `kerem:wanted` |  | Atakan › "Bütün birimlere bildir. Yakalama kararı…" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `kerem:wants-meeting` |  | 0543 112 07 21 › "Kız nerede Kerem?" | _henüz hiçbir şey (ileride bağlanacak)_ |
@@ -555,7 +643,9 @@ Bir yolu açmak için: o bayrağın "Nasıl açılır" sütunundaki yollardan **
 | `leak:who-benefits` |  | Erdi › "Plakanın gazetede olması kimin işine ya…" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `legal:warrant-issued` | Komiser hakkında yakalama kararı var | _henüz hiçbir şey_ | Final › Komiser |
 | `map-restored` | Yanık harita birleştirildi; mezbaha haritada | Laboratuvar › Yanık Harita | Harita › Eski Mezbaha görünür |
+| `melis:statement` | Melis’in ifadesi alındı | Doğa › "Ona koruma ver. Kimse yanına yaklaşması…"<br>Doğa › "İfadesini tutanağa geçir, hemen." | Poltel › Melis Doğan - İfade Tutanağı gelir |
 | `mezbaha-found` | Eski mezbaha arandı | Harita › Eski Mezbaha › Ekip gönder | Özge › afterMezbaha<br>Özge › soru "Mezbahadaki tarihler ne anlama geliyor?"<br>Özge › soru "Kayıp öğrencilerin aileleriyle konuştun…"<br>Özge › soru "Ekip nasıl, dayanıyor mu?"<br>Orhun › afterPlate (kendiliğinden yazar)<br>Atakan › idle (kendiliğinden yazar)<br>Atakan › afterCctv (kendiliğinden yazar)<br>Atakan › soru "Yusuf’tan haber var mı?"<br>Behram › afterRaid (kendiliğinden yazar)<br>İnanç › afterOrder (kendiliğinden yazar)<br>Doğa › afterFurkan (kendiliğinden yazar)<br>Erdi › desk (kendiliğinden yazar)<br>0532 190 19 07 › after (kendiliğinden yazar)<br>Selin Aras › desk (kendiliğinden yazar)<br>Pano › Mezbahadaki Sandalye bulunur<br>Pano › Duvardaki Fotoğraflar bulunur<br>Pano › Kayıp İlanı bulunur<br>Kayıtlar › Bilinmeyen Numara (unknown-2) gelir<br>News › "Sanayideki eski mezbahada gece boyu süren çalışma" çıkar<br>News › "Sanayi sakinleri tedirgin: "Geceleri o binada ışı…" çıkar |
+| `mp:killer` |  | 0532 190 19 07 › "Kerem Aydın. Ece Aydın’ın ağabeyi."<br>0532 190 19 07 › "Söyleyemem." | 0532 190 19 07 › after (kendiliğinden yazar) |
 | `mp:mezbaha` |  | 0532 190 19 07 › "Oğlunuzun fotoğrafı duvardaydı Yılmaz B…"<br>0532 190 19 07 › "Neden bu kadar eminsiniz?" | 0532 190 19 07 › after (kendiliğinden yazar) |
 | `mp:returned-seen` |  | 0532 190 19 07 › "Evet. Gönderdim." | 0532 190 19 07 › after (kendiliğinden yazar) |
 | `mp:silent` |  | 0532 190 19 07 › "Oğlunuzun fotoğrafı duvardaydı Yılmaz B…" | _henüz hiçbir şey (ileride bağlanacak)_ |
@@ -574,7 +664,7 @@ Bir yolu açmak için: o bayrağın "Nasıl açılır" sütunundaki yollardan **
 | `part1Done` | Özge ile ilk konuşma bitti; ifadeler ve otopsi Poltel’de | Özge › "Kapalı değildi Erdiyi engelledim ben"<br>Özge › "İfadeleri bana poltel üzerinden gönder" | Özge › soru "Basın ne diyor?"<br>Özge › soru "Sen nasılsın, uyuyabiliyor musun?"<br>Özge › soru "Berat’ın telefonu bulundu mu?"<br>Özge › soru "Deniz nasıl?"<br>Orhun › start<br>Orhun › soru "Otopsiyi kim yaptı?"<br>Orhun › soru "Akşama iki bira dedin, ne oldu o iş?"<br>Atakan › start<br>Atakan › soru "İzin günün nasıl geçti?"<br>Atakan › soru "Yusuf’u bir daha konuşturabilir misin?"<br>Erdi › start<br>Harita › Berat'ın Evi görünür<br>Harita › Kampüs Kafe görünür<br>Harita › Üniversite görünür<br>Harita › Adli Tıp Kurumu görünür<br>Pano › Olay Yeri bulunur<br>Poltel › Yusuf Kasap - İfade Tutanağı gelir<br>Poltel › Deniz Yılmaz - İfade Tutanağı gelir<br>Poltel › Berat Yılmaz - Otopsi Raporu gelir<br>Mail › emniyet.gov.tr<br>Kayıtlar › Not 1 (memo-phone) gelir<br>Sinstagram › @berat.ylmz aranabilir<br>Sinstagram › @furkan.shn aranabilir<br>Sinstagram › @yusuf.kasap aranabilir<br>Sinstagram › @deniz.yilmaz aranabilir<br>News › "Berat Yılmaz dosyasında cinayet şüphesi" çıkar |
 | `photo-restored` | Yırtık fotoğraf birleştirildi | Laboratuvar › Yırtık Fotoğraf | Atakan › soru "Yırtık fotoğraftaki adamla kameradaki a…" |
 | `plate:mv` | Adil’le görüşen makam aracının plakası alındı | Harita › Sanayi Çay Ocağı › Uzaktan gözetle | Orhun › afterStatement<br>Orhun › soru "Plaka haberi gazeteye nasıl çıktı?"<br>Orhun › soru "Danışmanın adı ne?"<br>İnanç › soru "Çay ocağına baskın için hazır mısınız?"<br>Erdi › desk (kendiliğinden yazar)<br>Erdi › soru "Müdürüm, Yılmaz’ın danışmanını tanıyor …"<br>Kaymakam › informed (kendiliğinden yazar)<br>Kaymakam › soru "Yılmaz Bey’in danışmanıyla görüşmem ger…"<br>Harita › Sanayi Çay Ocağı › Çay ocağını ara görünür<br>Harita › Yılmaz Eğitim Vakfı görünür<br>Harita › Yılmaz Eğitim Vakfı › Binayı gözetle görünür<br>Pano › Makam Aracı bulunur<br>Süreli olay › kaymakam-calls başlar<br>Süreli olay › mp-writes başlar<br>News › "Cinayet soruşturmasında Meclis aracı iddiası" çıkar |
-| `player:dirty-hands` | Komiser usulsüzlüğe başvurdu | Özge › "Bildiğini söyleme."<br>Orhun › "Bunu şimdilik kimseye söyleme."<br>Orhun › "Bu bilgiyi şimdilik raporlara yazma."<br>İnanç › "Benimkini verme. Diğerlerini ver."<br>Harita › Aydın Ailesinin Evi › Ece’nin odasına bak (izinsiz) | Final › Berat Yılmaz Dosyası › Kirli Eller |
+| `player:dirty-hands` | Komiser usulsüzlüğe başvurdu | Özge › "Bildiğini söyleme."<br>Özge › "Gitsin. Kızın yerini al."<br>Orhun › "Bunu şimdilik kimseye söyleme."<br>Orhun › "Bu bilgiyi şimdilik raporlara yazma."<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Benimkini verme. Diğerlerini ver."<br>İnanç › "Gitsin. Kızın yerini al."<br>Doğa › "Gitsin. Kızın yerini al."<br>Harita › Aydın Ailesinin Evi › Ece’nin odasına bak (izinsiz) | Final › Berat Yılmaz Dosyası › Kirli Eller |
 | `poltel:ozge-file-read` |  | Poltel › Özge - Personel Sicil Dosyası açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `press:anonymous` | Kayıp öğrenci haberi isimsiz yayımlandı | Selin Aras › "Adını çıkar. Ailesi korunmalı." | News › ""Kızım cuma görüşürüz dedi, bir daha aramadı"" çıkar |
 | `press:held` | Selin Aras haberi bekletti | Selin Aras › "Hiç yayımlama. Soruşturmayı tehlikeye a…" | _henüz hiçbir şey (ileride bağlanacak)_ |
@@ -593,8 +683,9 @@ Bir yolu açmak için: o bayrağın "Nasıl açılır" sütunundaki yollardan **
 | `sent:orhun-debt` |  | ZaferBank › Orhun K. hesabına para gönder | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `status:dismissed` | Komiser meslekten çıkarıldı | _henüz hiçbir şey_ | Poltel kilitlenir<br>Final › Komiser |
 | `status:suspended` | Komiser görevden uzaklaştırıldı | _henüz hiçbir şey_ | Harita › Atakan görev alabilir<br>Harita › Doğa görev alabilir<br>Harita › Orhun görev alabilir<br>Harita › İnanç görev alabilir<br>Poltel kilitlenir<br>Final › Komiser |
+| `storage:entered` | Soğuk hava deposuna girildi | Harita › Eski Soğuk Hava Deposu › Depoya gir | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `toxicology` | Toksikoloji raporu geldi: maktul önce bayıltılmış | Harita › Adli Tıp Kurumu › Ek toksikoloji tahlili iste | Özge › afterMezbaha (kendiliğinden yazar)<br>Özge › later (kendiliğinden yazar)<br>Özge › soru "Toksikoloji sonucunu gördün mü?"<br>Erdi › pressure<br>Erdi › desk (kendiliğinden yazar)<br>Poltel › Berat Yılmaz - Toksikoloji Raporu gelir<br>News › "Berat Yılmaz’a ölmeden önce ilaç verilmiş" çıkar |
-| `witness:protected` | Kritik tanık koruma altına alındı | _henüz hiçbir şey_ | Final › Tanıklar |
+| `witness:protected` | Kritik tanık koruma altına alındı | Doğa › "Ona koruma ver. Kimse yanına yaklaşması…" | Final › Tanıklar |
 
 ## Sayılar
 
@@ -602,14 +693,14 @@ Oyuncu bu sayıları görmez. Başlangıç değerleri `state.json` içinde.
 
 | Sayı | Anlamı | Başlangıç | Artıranlar | Azaltanlar | İşe yaradığı yerler |
 | --- | --- | --- | --- | --- | --- |
-| `doubt` | Komiserin gerçekte nerede olduğuna dair şüphe (gizli son) | 0 | Özge › soru "Basına kim sızdırıyor sence?"<br>İnanç › soru "Telefon kayıtlarına baktılar mı?"<br>Erdi › soru "Ne zaman döneceğimi soran oldu mu?"<br>Selin Aras › soru "Numaramı kimden aldın?"<br>Kayıtlar › Annem (mom) dinlenince | — | Final › Komiser |
-| `integrity` | Mesleki dürüstlük | 70 | Özge › "Doğruyu söyle. Ne biliyorsan."<br>Orhun › "İyi yaptın. Tutanağa geçir."<br>Orhun › "Bunu iç denetime bildirmem gerekiyor."<br>İnanç › "İkimize de gönder, kayıt dışı bir şey y…"<br>Doğa › "İfadesine ekle."<br>Kaymakam › "Soruşturma gizli Kaymakam Bey. Bilgiyi …"<br>0532 190 19 07 › "Bu parayı kabul edemem Yılmaz Bey."<br>ZaferBank › Gönderene iade hesabına para gönder | İnanç › "Ne istiyorsa ver, sorun çıkmasın."<br>Erdi › "Anlaşıldı müdürüm. Katile odaklanıyoruz."<br>Kaymakam › "Tabii Kaymakam Bey, gelişmeleri size bi…"<br>0532 190 19 07 › "Anlıyorum. Elimden geleni yapacağım."<br>Harita › Aydın Ailesinin Evi › Ece’nin odasına bak (izinsiz)<br>ZaferBank › Orhun K. hesabına para gönder<br>Süreli olay › bribe-kept: `mp:wrote` olduktan 45 dk sonra, `sent:bribe-return` olmadıysa | Final › Komiser |
-| `pressure` | Üstlerden gelen baskı | 20 | Özge › "Bundan Erdi'ye tek kelime etmeyeceksin."<br>Orhun › "İyi yaptın. Tutanağa geçir."<br>Atakan › "Bütün birimlere bildir. Yakalama kararı…"<br>İnanç › "Bana gönder. Erdi’yle ben konuşurum."<br>İnanç › "Verme. Savcı onayı olmadan kimse kimsen…"<br>Doğa › "Tanık koruma için başvurun."<br>Doğa › "Bütün ekipleri seferber et. Bulun onu."<br>Erdi › "Geçmişine bakmadan katili nasıl bulacağ…"<br>Erdi › "Kimsenin üstünden iş çevirmiyorum müdür…"<br>Erdi › "Benim ekibimden kimse gazeteciyle konuş…"<br>Erdi › "Rapor sadece bizde değil müdürüm. Adli …"<br>Erdi › "Sorguyu ben istedim. Sorumlusu benim."<br>Erdi › "Orhun sorguladı ama sızdıran o değil."<br>Erdi › "Mezbahayı gece bulduk müdürüm, raporu s…"<br>Erdi › "Sızıntıyı ben de araştırıyorum. Bizden …"<br>Erdi › "(Cevap verme)"<br>Erdi › "Size söyleyecek bir şeyim yok."<br>Kaymakam › "Soruşturma gizli Kaymakam Bey. Bilgiyi …"<br>Kaymakam › "(Cevap verme)"<br>Kaymakam › "Açıklanacak bir şey yok. Soruşturma sür…"<br>Kaymakam › "Dostluğun banka hesabından gelmesine al…"<br>Selin Aras › "Yayımla. Herkes duysun."<br>Harita › Yılmaz Eğitim Vakfı › Gönüllü kartının fotoğrafını göster<br>Harita › Yılmaz Eğitim Vakfı › Gönüllü listesini iste<br>ZaferBank › Gönderene iade hesabına para gönder<br>Süreli olay › bribe-kept: `mp:wrote` olduktan 45 dk sonra, `sent:bribe-return` olmadıysa | Erdi › "Haklısınız müdürüm, dikkat ederim."<br>Erdi › "Ekibi tek tek konuşturacağım." | Final › Ankara |
-| `trust:Atakan` | Atakan'ın komisere güveni | 50 | Atakan › "Neden öyle düşündün?"<br>Atakan › "Görüntüyü netleştirmeye çalış." | Atakan › soru "Gazeteyle konuştun mu?" | Harita › Atakan görev alabilir<br>Final › Atakan |
-| `trust:Behram` | Behram'ın komisere güveni | 50 | Behram › "Tamam. Ben dönene kadar Adil'e kimse do…"<br>Behram › "Haklısın, sana haber vermeliydim."<br>Behram › soru "Cuma gecelerini biliyor muydunuz?" | Behram › "Bekleyemezdim. Bir çocuk öldü." | Final › Behram |
-| `trust:Doğa` | Doğa'nın komisere güveni | 50 | Doğa › "Önce bir su ver çocuğa, korkmuş gibi."<br>Doğa › "Doğruyu söylersen sana yardım ederiz. P…"<br>Doğa › "Savcıdan süre uzatması isteyin. İçeride…"<br>Doğa › soru "Sen nasılsın? Sorgu ağır geçti." | — | Harita › Doğa görev alabilir<br>Final › Doğa |
+| `doubt` | Komiserin gerçekte nerede olduğuna dair şüphe (gizli son) | 0 | Özge › soru "Basına kim sızdırıyor sence?"<br>İnanç › soru "Telefon kayıtlarına baktılar mı?"<br>Erdi › soru "Ne zaman döneceğimi soran oldu mu?"<br>Selin Aras › soru "Numaramı kimden aldın?"<br>0543 112 07 21 › "Yurt dışındayım. Gelemem."<br>Kayıtlar › Annem (mom) dinlenince | — | Final › Komiser |
+| `integrity` | Mesleki dürüstlük | 70 | Özge › "Doğruyu söyle. Ne biliyorsan."<br>Özge › "Gözaltına al."<br>Orhun › "İyi yaptın. Tutanağa geçir."<br>Orhun › "Bunu iç denetime bildirmem gerekiyor."<br>Atakan › "Gözaltına al."<br>Behram › "Gözaltına al."<br>İnanç › "İkimize de gönder, kayıt dışı bir şey y…"<br>İnanç › "Gözaltına al."<br>Doğa › "İfadesine ekle."<br>Doğa › "Gözaltına al."<br>Doğa › "İfadesini tutanağa geçir, hemen."<br>Kaymakam › "Soruşturma gizli Kaymakam Bey. Bilgiyi …"<br>0532 190 19 07 › "Bu parayı kabul edemem Yılmaz Bey."<br>ZaferBank › Gönderene iade hesabına para gönder | Özge › "Gitsin. Kızın yerini al."<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Ne istiyorsa ver, sorun çıkmasın."<br>İnanç › "Gitsin. Kızın yerini al."<br>Doğa › "Gitsin. Kızın yerini al."<br>Erdi › "Anlaşıldı müdürüm. Katile odaklanıyoruz."<br>Kaymakam › "Tabii Kaymakam Bey, gelişmeleri size bi…"<br>0532 190 19 07 › "Anlıyorum. Elimden geleni yapacağım."<br>0543 112 07 21 › "Biri gelecek. (Ekibi topla, buluşma yer…"<br>Harita › Aydın Ailesinin Evi › Ece’nin odasına bak (izinsiz)<br>ZaferBank › Orhun K. hesabına para gönder<br>Süreli olay › bribe-kept: `mp:wrote` olduktan 45 dk sonra, `sent:bribe-return` olmadıysa | Final › Komiser |
+| `pressure` | Üstlerden gelen baskı | 20 | Özge › "Bundan Erdi'ye tek kelime etmeyeceksin."<br>Özge › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Orhun › "İyi yaptın. Tutanağa geçir."<br>Atakan › "Bütün birimlere bildir. Yakalama kararı…"<br>Atakan › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Behram › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>İnanç › "Bana gönder. Erdi’yle ben konuşurum."<br>İnanç › "Verme. Savcı onayı olmadan kimse kimsen…"<br>İnanç › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Doğa › "Tanık koruma için başvurun."<br>Doğa › "Bütün ekipleri seferber et. Bulun onu."<br>Doğa › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Erdi › "Geçmişine bakmadan katili nasıl bulacağ…"<br>Erdi › "Kimsenin üstünden iş çevirmiyorum müdür…"<br>Erdi › "Benim ekibimden kimse gazeteciyle konuş…"<br>Erdi › "Rapor sadece bizde değil müdürüm. Adli …"<br>Erdi › "Sorguyu ben istedim. Sorumlusu benim."<br>Erdi › "Orhun sorguladı ama sızdıran o değil."<br>Erdi › "Mezbahayı gece bulduk müdürüm, raporu s…"<br>Erdi › "Sızıntıyı ben de araştırıyorum. Bizden …"<br>Erdi › "(Cevap verme)"<br>Erdi › "Size söyleyecek bir şeyim yok."<br>Erdi › "Bu ekibin başarısı, sizin değil."<br>Erdi › "Kapatamayız. Kızlar hâlâ kayıp."<br>Kaymakam › "Soruşturma gizli Kaymakam Bey. Bilgiyi …"<br>Kaymakam › "(Cevap verme)"<br>Kaymakam › "Açıklanacak bir şey yok. Soruşturma sür…"<br>Kaymakam › "Dostluğun banka hesabından gelmesine al…"<br>Selin Aras › "Yayımla. Herkes duysun."<br>Harita › Yılmaz Eğitim Vakfı › Gönüllü kartının fotoğrafını göster<br>Harita › Yılmaz Eğitim Vakfı › Gönüllü listesini iste<br>ZaferBank › Gönderene iade hesabına para gönder<br>Süreli olay › bribe-kept: `mp:wrote` olduktan 45 dk sonra, `sent:bribe-return` olmadıysa | Erdi › "Haklısınız müdürüm, dikkat ederim."<br>Erdi › "Ekibi tek tek konuşturacağım."<br>Erdi › "Anlaşıldı." | Final › Ankara |
+| `trust:Atakan` | Atakan'ın komisere güveni | 50 | Atakan › "Neden öyle düşündün?"<br>Atakan › "Görüntüyü netleştirmeye çalış." | Atakan › "Gitsin. Kızın yerini al."<br>Atakan › soru "Gazeteyle konuştun mu?" | 0543 112 07 21 › "Atakan gelecek."<br>Harita › Atakan görev alabilir<br>Final › Atakan |
+| `trust:Behram` | Behram'ın komisere güveni | 50 | Behram › "Tamam. Ben dönene kadar Adil'e kimse do…"<br>Behram › "Haklısın, sana haber vermeliydim."<br>Behram › soru "Cuma gecelerini biliyor muydunuz?" | Behram › "Bekleyemezdim. Bir çocuk öldü."<br>Behram › "Gitsin. Kızın yerini al." | Final › Behram |
+| `trust:Doğa` | Doğa'nın komisere güveni | 50 | Doğa › "Önce bir su ver çocuğa, korkmuş gibi."<br>Doğa › "Doğruyu söylersen sana yardım ederiz. P…"<br>Doğa › "Savcıdan süre uzatması isteyin. İçeride…"<br>Doğa › soru "Sen nasılsın? Sorgu ağır geçti." | Doğa › "Gitsin. Kızın yerini al." | 0543 112 07 21 › "Doğa gelecek."<br>Harita › Doğa görev alabilir<br>Final › Doğa |
 | `trust:Orhun` | Orhun'un komisere güveni | 50 | Orhun › "Otopsi raporu ne zaman çıktı"<br>Orhun › "İyi yaptın. Tutanağa geçir."<br>Orhun › "Bunu şimdilik kimseye söyleme."<br>Orhun › "Doğru yapmışsın. Adamı tarif et."<br>Orhun › soru "Annen nasıl?"<br>Erdi › "Sorguyu ben istedim. Sorumlusu benim."<br>ZaferBank › Orhun K. hesabına para gönder | Orhun › "Neden bana sormadan sorgulattın?"<br>Orhun › "Bunu iç denetime bildirmem gerekiyor."<br>Erdi › "Orhun sorguladı ama sızdıran o değil." | Harita › Orhun görev alabilir<br>Final › Orhun |
-| `trust:Özge` | Özge'nin komisere güveni | 50 | Özge › "Söyleyin. Bilmeye hakkı var."<br>Özge › soru "Sen nasılsın, uyuyabiliyor musun?"<br>Özge › soru "Erdi seni de sıkıştırıyor mu?"<br>Özge › soru "Hesabıma para yattı, kimseye söyleme." | Özge › "Kızım ben size izindeyken bana yazmayın…"<br>Özge › "Bildiğini söyleme." | Final › Özge |
-| `trust:İnanç` | İnanç'ın komisere güveni | 50 | İnanç › "Bana gönder. Erdi’yle ben konuşurum."<br>İnanç › "İkimize de gönder, kayıt dışı bir şey y…"<br>İnanç › "Verme. Savcı onayı olmadan kimse kimsen…" | İnanç › "Hayır gelmeme daha var. Buradan soracağ…"<br>İnanç › "Ne istiyorsa ver, sorun çıkmasın."<br>İnanç › "Benimkini verme. Diğerlerini ver." | Harita › İnanç görev alabilir<br>Final › İnanç |
-| `witnessDanger` | Tanıkların tehlike düzeyi | 10 | Behram › "Bekleyemem, adamlarını hazır tut. Gerek…"<br>Doğa › "Serbest bırakın ama gözünüzü ayırmayın."<br>Doğa › "Bütün ekipleri seferber et. Bulun onu."<br>Doğa › "Adil’in adamlarının elinde olabilir. Be…"<br>Selin Aras › "Yayımla. Herkes duysun." | Doğa › "Savcıdan süre uzatması isteyin. İçeride…"<br>Doğa › "Tanık koruma için başvurun."<br>Doğa › "Bunu kimse bilmesin. Önce onu korumamız…"<br>Selin Aras › "Adını çıkar. Ailesi korunmalı." | Final › Tanıklar |
+| `trust:Özge` | Özge'nin komisere güveni | 50 | Özge › "Söyleyin. Bilmeye hakkı var."<br>Özge › soru "Sen nasılsın, uyuyabiliyor musun?"<br>Özge › soru "Erdi seni de sıkıştırıyor mu?"<br>Özge › soru "Hesabıma para yattı, kimseye söyleme." | Özge › "Kızım ben size izindeyken bana yazmayın…"<br>Özge › "Bildiğini söyleme."<br>Özge › "Gitsin. Kızın yerini al." | 0543 112 07 21 › "Özge gelecek."<br>Final › Özge |
+| `trust:İnanç` | İnanç'ın komisere güveni | 50 | İnanç › "Bana gönder. Erdi’yle ben konuşurum."<br>İnanç › "İkimize de gönder, kayıt dışı bir şey y…"<br>İnanç › "Verme. Savcı onayı olmadan kimse kimsen…" | İnanç › "Hayır gelmeme daha var. Buradan soracağ…"<br>İnanç › "Ne istiyorsa ver, sorun çıkmasın."<br>İnanç › "Benimkini verme. Diğerlerini ver."<br>İnanç › "Gitsin. Kızın yerini al." | 0543 112 07 21 › "İnanç gelecek."<br>Harita › İnanç görev alabilir<br>Final › İnanç |
+| `witnessDanger` | Tanıkların tehlike düzeyi | 10 | Behram › "Bekleyemem, adamlarını hazır tut. Gerek…"<br>İnanç › "Bütün çıkışları kapatın."<br>Doğa › "Serbest bırakın ama gözünüzü ayırmayın."<br>Doğa › "Bütün ekipleri seferber et. Bulun onu."<br>Doğa › "Adil’in adamlarının elinde olabilir. Be…"<br>Selin Aras › "Yayımla. Herkes duysun." | Doğa › "Savcıdan süre uzatması isteyin. İçeride…"<br>Doğa › "Tanık koruma için başvurun."<br>Doğa › "Bunu kimse bilmesin. Önce onu korumamız…"<br>Doğa › "Ona koruma ver. Kimse yanına yaklaşması…"<br>Selin Aras › "Adını çıkar. Ailesi korunmalı." | Final › Tanıklar |
 

@@ -98,6 +98,11 @@ Katil Kerem Aydın, mezbahadaki diğer kurbanların yerini bilen tek kişi.
 Güvenlik ve ceza garantisi istiyor. Oyuncu bu noktada Berat'ın pişman
 olduğunu ve kanıtlarını Kerem'e vermeye hazırlandığını da biliyor olabilir.
 Kerem bunu ondan duyarsa ne yapar? [?]
+
+**Oyundaki karşılığı [KANON, taslak]:** Buluşmaya giden ekip üyesinin
+sohbetinde üç seçenek: gözaltı (kızın yeri başka yoldan), savcıyla anlaşma
+(yer hemen, baskı artar), kaçmasına göz yummak (yer hemen, kirli eller).
+Ayrıntı: 04-bolumler.md › Bölüm IV.
 Seçenekler: derhâl gözaltı / savcıyla iş birliği ve koruma / kaçmasına göz yum.
 
 ### İkilem 3 — Bir meslektaşını ele vermek

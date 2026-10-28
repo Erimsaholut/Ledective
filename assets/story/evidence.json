@@ -122,5 +122,12 @@
     "requires": "heard:kerem-board",
     "description": "Ece’nin odasındaki panoda asılıydı. \"Geri ödeme\" maddesinin altı iki kez çizilmiş: bursu bırakan öğrenci aldığının üç katını öder.",
     "links": ["missing-1", "missing-2"]
+  },
+  {
+    "id": "berat-phone",
+    "name": "Berat’ın Telefonu",
+    "requires": "ev:berat-phone",
+    "description": "Kerem’in çantasından çıktı. Berat babasıyla, danışmanla ve Adil’le konuşmalarını kaydetmiş. Son kayıt kendi sesi: \"Kerem’e yarın her şeyi vereceğim.\"",
+    "links": ["scene", "contract"]
   }
 ]

@@ -78,7 +78,30 @@
     "kerem:meeting": "Kerem’le buluşma (Bölüm IV, henüz yazılmadı)",
     "heard:3am-caller": "Selin’e numarayı gece üçte arayan biri vermiş",
     "heard:kaymakam-rival": "Kaymakamın Yılmaz’ın koltuğuna aday olacağı öğrenildi",
-    "behram:guilt": "Behram narkotiğin cuma gecelerine göz yumduğunu itiraf etti"
+    "behram:guilt": "Behram narkotiğin cuma gecelerine göz yumduğunu itiraf etti",
+    "kerem:meeting-set": "Kerem’le buluşma ayarlandı",
+    "kerem:met": "Buluşma gerçekleşti (süreli olay)",
+    "kerem:arrested": "Kerem gözaltına alındı",
+    "kerem:deal": "Kerem’e savcılık koruması ve indirim sözü verildi",
+    "kerem:escaped": "Kerem’in gitmesine göz yumuldu",
+    "kerem:escaped-ambush": "Pusu bozuldu, Kerem kaçtı",
+    "kerem:told-location": "Kerem Melis’in yerini söyledi",
+    "kerem:relents": "Kerem pusudan sonra yine de yeri söylemeye karar verdi (süreli olay)",
+    "kerem:hunting": "Kerem Adil’in peşine düştü (Bölüm V)",
+    "heard:cold-storage": "Soğuk hava deposu başka yoldan bulundu",
+    "girl:rescued": "Melis kurtarıldı",
+    "girl:lost": "Cuma geçti, Melis’e yetişilemedi (süreli olay)",
+    "girl:found-dead": "Melis ölü bulundu",
+    "storage:entered": "Soğuk hava deposuna girildi",
+    "ev:berat-phone": "Berat’ın telefonu ele geçti",
+    "heard:berat-repentant": "Berat’ın pişman olduğu ve kanıtları Kerem’e vereceği öğrenildi",
+    "melis:statement": "Melis’in ifadesi alındı",
+    "envoy:ozge": "Buluşmaya gönderilen: ozge",
+    "envoy:doga": "Buluşmaya gönderilen: doga",
+    "envoy:atakan": "Buluşmaya gönderilen: atakan",
+    "envoy:inanc": "Buluşmaya gönderilen: inanc",
+    "envoy:behram": "Buluşmaya gönderilen: behram",
+    "envoy:ambush": "Buluşmaya gönderilen: ambush"
   },
   "locks": [
     {
@@ -121,6 +144,26 @@
       "when": "kerem:same-man",
       "minutes": 8,
       "unlocks": ["card:enhanced"]
+    },
+    {
+      "id": "meeting",
+      "when": "kerem:meeting-set",
+      "minutes": 10,
+      "unlocks": ["kerem:met"]
+    },
+    {
+      "id": "friday",
+      "when": "kerem:contact",
+      "minutes": 60,
+      "unless": "girl:rescued",
+      "unlocks": ["girl:lost"]
+    },
+    {
+      "id": "kerem-relents",
+      "when": "kerem:escaped-ambush",
+      "minutes": 15,
+      "unless": "girl:rescued",
+      "unlocks": ["kerem:relents"]
     }
   ],
   "milestones": [
@@ -138,6 +181,10 @@
     {"flag": "heard:kerem", "title": "Kerem Aydın’ın adı çıkar"},
     {"flag": "kerem:identified", "title": "Kameradaki adamın Kerem olduğu anlaşılır"},
     {"flag": "kerem:contact", "title": "Kerem ilk kez yazar"},
+    {"flag": "kerem:meeting-set", "title": "Kerem’le buluşma ayarlanır"},
+    {"flag": "kerem:met", "title": "Buluşma: Kerem’in itirafı ve şartı"},
+    {"flag": "case:solved", "title": "Kerem hakkında karar verilir (İkilem 2)"},
+    {"flag": "storage:entered", "title": "Soğuk hava deposuna girilir: Melis"},
     {"flag": "final:ready", "title": "Final soruşturması (henüz yazılmadı)"}
   ]
 }

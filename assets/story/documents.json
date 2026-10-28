@@ -167,5 +167,33 @@
       },
       {"conclusion": "Bu değerlendirme tek başına bir kusur veya suç tespiti değildir."}
     ]
+  },
+  {
+    "id": "melis",
+    "type": "statement",
+    "title": "Melis Doğan - İfade Tutanağı",
+    "requires": "melis:statement",
+    "name": "Melis Doğan",
+    "idNumber": "412907735",
+    "daysBeforeFirstOpen": 0,
+    "education": "Lisans (eğitimi devam ediyor)",
+    "maritalStatus": "Bekar",
+    "gender": "Kadın",
+    "takenBy": "Doğa Aksu",
+    "qa": [
+      {
+        "q": "Seni kim kaçırdı?",
+        "a": "Adil abi dedikleri adam. Beni yurdun önünden arabaya bindirdiler. Burs borcumu konuşacağız dediler."
+      },
+      {
+        "q": "Seni sorgulayan kimdi?",
+        "a": "Takım elbiseli biri. Yüzünü hiç göstermedi, hep ışığın arkasında durdu. \"Vakıf seni bu kadar okuttu, borcunu öde\" dedi."
+      },
+      {"q": "Emre nerede?", "a": "Bilmiyorum. İki hafta önce onu götürdüler. Bir daha gelmedi."},
+      {
+        "q": "Seni kim kurtardı?",
+        "a": "Polis. Ama kapıyı biri önceden açık bırakmıştı. Bir gece bana su getiren sakallı biri vardı. Konuşmadı."
+      }
+    ]
   }
 ]
