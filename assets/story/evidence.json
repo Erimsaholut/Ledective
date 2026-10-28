@@ -3,7 +3,7 @@
     "id": "torn-photo",
     "name": "Yırtık Fotoğraf",
     "description": "Berat'ın yatak odasında, halının altından çıktı. Dokuz parçaya yırtılmış.",
-    "image": "assets/apps/photosApp/images/kadr2.jpeg",
+    "image": "assets/story/images/kerem_gizli.jpg",
     "requires": "ev:torn-photo",
     "links": ["cctv"],
     "inspection": {
@@ -34,7 +34,7 @@
     "id": "cctv",
     "name": "Kamera Görüntüsü",
     "description": "Kafenin dış kamerası, 23.41. Berat'ın arkasından çıkan deri ceketli adam.",
-    "image": "assets/apps/photosApp/images/kadr.jpeg",
+    "image": "assets/story/images/kamera_karesi.jpg",
     "requires": "ev:cctv",
     "links": ["glass"]
   },

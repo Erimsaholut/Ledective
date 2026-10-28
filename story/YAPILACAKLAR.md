@@ -6,6 +6,8 @@ Bitenleri işaretle (`[x]`), yeni işleri ekle. Hikâye kararları
 
 ## Görseller
 
+Getirdiğin görseller `assets/pics/` klasörüne koyulabilir; ben kare kırpıp
+küçültüp `assets/story/images/` altına taşırım (`assets/pics/` git'e girmez).
 Test görselleri yenileri gelene kadar oyunda kalıyor. Telif sorunlu olanlar
 (dizi ve film kareleri, gerçek kişiler) yayından önce mutlaka gitmeli. Her
 görselin tarifi ve boyutu [`GORSELLER.md`](GORSELLER.md), üretim prompt'u
@@ -14,17 +16,19 @@ işaretle, bağlantısını ben yaparım.
 
 ### Şimdi lazım olanlar (oyunda yerleri hazır)
 
-- [ ] `kerem_gizli.jpg`: yırtık fotoğraf yapbozu (Kerem, habersiz çekilmiş)
-- [ ] `kamera_karesi.jpg`: kafe güvenlik kamerası, 23.41 (Berat ve Kerem)
-- [ ] `berat_babasi.jpg`: Berat ile milletvekili babası bir davette
-- [ ] `tatil.jpg`: komiserin "Tatildeyim, aramayın" gönderisi (ülke belli olmasın)
-- [ ] `bos_koltuk.jpg`: Atakan'ın "Amirimiz işbaşında 😂" gönderisi
-- [ ] `iki_bira.jpg`: Orhun'un "Akşam iki bira kimde?" gönderisi
-- [ ] `komplo.jpg`: @gizli.tarih komplo sayfası (insan yok)
-- [ ] `dedektif_meme.jpg`: @dedektif.memes
-- [ ] `sergi.jpg`: @sanat.galerisi yerel sergi
-- [ ] Kedi fotoğrafları (`benKedi.jpeg`, `myCat.jpeg`) ve vitrin (`gungun.jpeg`)
-  senin mi? Senin değilse `ozge_kedi.jpg` ve `behram_operasyon.jpg`.
+- [x] `kerem_gizli.jpg`: yırtık fotoğraf yapbozu (Kerem, habersiz çekilmiş)
+- [x] `kamera_karesi.jpg`: kafe güvenlik kamerası, 23.41 (Berat ve Kerem)
+- [x] `berat_babasi.jpg`: Berat ile milletvekili babası bir davette
+- [x] `tatil.jpg`: komiserin "Tatildeyim, aramayın" gönderisi (ülke belli olmasın)
+- [x] `bos_koltuk.jpg`: Atakan'ın "Amirimiz işbaşında 😂" gönderisi
+- [x] `iki_bira.jpg`: Orhun'un "Akşam iki bira kimde?" gönderisi
+- [x] `komplo.jpg`: @gizli.tarih komplo sayfası (insan yok)
+- [x] `dedektif_meme.jpg`: @dedektif.memes
+- [x] `sergi.jpg`: @sanat.galerisi yerel sergi
+- [x] `ozge_kedi.jpg` ve `behram_operasyon.jpg` (eski kedi ve vitrin görsellerinin yerine)
+- [ ] @kedi.dunyasi hâlâ `myCat.jpeg` kullanıyor: senin kedinse kalsın.
+- [ ] Fotoğraflar uygulamasındaki (komiserin galerisi) eski test görselleri:
+  aşağıdaki "Komiserin galerisi" maddeleri gelince değişecek.
 - [ ] Şüphelilerin gönderileri: `berat_kafe.jpg`, `berat_kapi.jpg`,
   `furkan_borc.jpg`, `yusuf_sinav.jpg`, `deniz_yas.jpg`
 - [ ] `my_foto1.jpg`, `my_foto2.jpg` (Behzat Ç.) ve @dizi.replikleri gönderisini

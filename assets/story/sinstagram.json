@@ -3,7 +3,7 @@
     {
       "id": "orhun-beer",
       "author": "orhun.k",
-      "image": "assets/apps/photosApp/images/kadr.jpeg",
+      "image": "assets/story/images/iki_bira.jpg",
       "caption": "Akşam iki bira kimde? 🍺",
       "likes": 41,
       "daysAgo": 1,
@@ -15,25 +15,29 @@
     {
       "id": "ozge-cat",
       "author": "ozge.buro",
-      "image": "assets/apps/photosApp/images/benKedi.jpeg",
+      "image": "assets/story/images/ozge_kedi.jpg",
       "caption": "Pamuk bugün de mesaide 🐱",
       "likes": 128,
       "daysAgo": 2,
-      "comments": [{"author": "doga.aksu", "text": "Büronun maskotu olsun!"}]
+      "comments": [
+        {"author": "doga.aksu", "text": "Büronun maskotu olsun!"}
+      ]
     },
     {
       "id": "atakan-gadget",
       "author": "atakan.kutay",
-      "image": "assets/apps/photosApp/images/aaa.jpg",
+      "image": "assets/story/images/bos_koltuk.jpg",
       "caption": "Amirimiz işbaşında 😂",
       "likes": 67,
       "daysAgo": 3,
-      "comments": [{"author": "inanc.k", "text": "Görmesin sakın"}]
+      "comments": [
+        {"author": "inanc.k", "text": "Görmesin sakın"}
+      ]
     },
     {
       "id": "behram-op",
       "author": "behram_narkotik",
-      "image": "assets/apps/photosApp/images/gungun.jpeg",
+      "image": "assets/story/images/behram_operasyon.jpg",
       "caption": "Bu haftaki operasyondan. Şehrimiz daha güvenli.",
       "likes": 312,
       "daysAgo": 5
@@ -41,11 +45,13 @@
     {
       "id": "me-holiday",
       "author": "komiser",
-      "image": "assets/apps/photosApp/images/my_foto4.jpg",
+      "image": "assets/story/images/tatil.jpg",
       "caption": "Tatildeyim, aramayın 🌴",
       "likes": 89,
       "daysAgo": 7,
-      "comments": [{"author": "erdi.mudur", "text": "İzin dilekçen hâlâ masamda değil."}]
+      "comments": [
+        {"author": "erdi.mudur", "text": "İzin dilekçen hâlâ masamda değil."}
+      ]
     },
     {
       "id": "cat-world",
@@ -54,7 +60,9 @@
       "caption": "Pazartesi sendromu bu sabah böyle görünüyor 😾",
       "likes": 2310,
       "daysAgo": 2,
-      "comments": [{"author": "ozge.buro", "text": "Pamuk'un kuzeni gibi 😍"}]
+      "comments": [
+        {"author": "ozge.buro", "text": "Pamuk'un kuzeni gibi 😍"}
+      ]
     },
     {
       "id": "series-quotes",
@@ -71,7 +79,7 @@
     {
       "id": "art-gallery",
       "author": "sanat.galerisi",
-      "image": "assets/apps/photosApp/images/1500x500.jpeg",
+      "image": "assets/story/images/sergi.jpg",
       "caption": "Bu hafta sonu sergimiz ziyaretçilerini bekliyor. Giriş ücretsiz.",
       "likes": 418,
       "daysAgo": 8
@@ -79,16 +87,18 @@
     {
       "id": "detective-memes",
       "author": "dedektif.memes",
-      "image": "assets/apps/photosApp/images/my_foto5.jpg",
+      "image": "assets/story/images/dedektif_meme.jpg",
       "caption": "Tatildeyken bile ipucu arayan polis olmak 🔍",
       "likes": 9120,
       "daysAgo": 10,
-      "comments": [{"author": "atakan.kutay", "text": "Amirim bu siz 😂"}]
+      "comments": [
+        {"author": "atakan.kutay", "text": "Amirim bu siz 😂"}
+      ]
     },
     {
       "id": "secret-history",
       "author": "gizli.tarih",
-      "image": "assets/apps/photosApp/images/freeMason.jpg",
+      "image": "assets/story/images/komplo.jpg",
       "caption": "Bilinmeyenler... 🔺 #komplo",
       "likes": 1024,
       "daysAgo": 12
@@ -117,18 +127,22 @@
         },
         {
           "id": "berat-dad",
-          "image": "assets/apps/photosApp/images/babba.jpeg",
+          "image": "assets/story/images/berat_babasi.jpg",
           "caption": "Babam bir milletvekili ama ben kendi yolumu çizerim.",
           "likes": 54,
           "daysAgo": 9,
-          "comments": [{"author": "yusuf.kasap", "text": "Kral 👑"}]
+          "comments": [
+            {"author": "yusuf.kasap", "text": "Kral 👑"}
+          ]
         },
         {
           "id": "berat-last",
           "caption": "Bazı kapılar bir kere açılınca kapanmıyor.",
           "likes": 31,
           "daysAgo": 3,
-          "comments": [{"author": "deniz.yilmaz", "text": "Ne demek bu? Beni ara."}]
+          "comments": [
+            {"author": "deniz.yilmaz", "text": "Ne demek bu? Beni ara."}
+          ]
         }
       ]
     },
@@ -145,7 +159,9 @@
           "caption": "Bazı borçlar parayla ödenmez.",
           "likes": 12,
           "daysAgo": 6,
-          "comments": [{"author": "adil.abi", "text": "👀"}]
+          "comments": [
+            {"author": "adil.abi", "text": "👀"}
+          ]
         }
       ]
     },
