@@ -27,6 +27,14 @@ class _MailAppState extends State<MailApp> {
   void initState() {
     super.initState();
     _load();
+    StoryProgress.instance.lookedAt();
+  }
+
+  @override
+  void dispose() {
+    // What came while the inbox was open has been seen too.
+    StoryProgress.instance.lookedAt();
+    super.dispose();
   }
 
   Future<void> _load() async {

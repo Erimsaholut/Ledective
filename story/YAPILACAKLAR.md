@@ -147,6 +147,13 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
   Settings › İpucu bildirimleri ile kapatılabilir.
 - [ ] [?] Laboratuvar, Poltel sorguları ya da harita görevlerinde gözden
   kaçan seçenek var mı? Oyun testinde bakılacak, varsa ipucu eklenir.
+- [x] **Bakılmayan akış durur.** Oyuncu Mail'i ya da News'u açmadan 4
+  gündelik öğe gelince o havuz bekler, uygulama açılınca devam eder.
+- [x] **Manşet.** Hikâye haberleri Gündem'in üstünde, gündelikler altta.
+- [x] Gizli son için sağlık izleri: ilaç kutusu, eczane faturası ve SMS'i,
+  seyahat sigortası, e-reçete (yeşil reçete), annenin ilaç maili,
+  Dr. Arıkan'ın SMS'i (`bible/01-ana-gizem.md`).
+- [ ] [?] Takvim'e kaçırılmış bir "Kontrol" randevusu eklensin mi?
 - [ ] Sohbetlerde mesajlar şu an toplu düşüyor; istenirse olaylarla gelen
   mesajlar da birkaç saniye arayla tek tek gelebilir.
 

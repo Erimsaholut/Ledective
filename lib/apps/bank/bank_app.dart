@@ -5,6 +5,7 @@ import '../../data/bank_account.dart';
 import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/turkish_text.dart';
 import '../shopper/shopper_app.dart' show formatLira;
 import 'transfer_page.dart';
 
@@ -165,7 +166,7 @@ class _BankAppState extends State<BankApp> {
                       children: [
                         Flexible(
                           child: Text(
-                            bank.bank.toUpperCase(),
+                            turkishUpper(bank.bank),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -211,7 +212,7 @@ class _BankAppState extends State<BankApp> {
                           ),
                         ),
                         Text(
-                          bank.owner.toUpperCase(),
+                          turkishUpper(bank.owner),
                           style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 12,

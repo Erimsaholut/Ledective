@@ -32,5 +32,20 @@
     "sender": "Gizli Numara",
     "requires": "bribe:returned",
     "messages": ["Paranı geri göndermişsin komiser.", "Demek bu işi zor yoldan çözeceğiz."]
+  },
+  {
+    "sender": "SIFA ECZ",
+    "requires": "part1Done",
+    "messages": [
+      "Sayın hastamız, reçeteli ilacınız eczanemizde hazırdır. 5 gün içinde teslim alınmayan ilaçlar iade edilir. Şifa Eczanesi"
+    ]
+  },
+  {
+    "sender": "Dr. S. Arıkan",
+    "requiresAny": ["status:warned", "status:suspended"],
+    "messages": [
+      "Merhaba, ben Dr. Arıkan. Son iki randevunuza gelmediniz, telefonla da ulaşamadım.",
+      "Nasıl olduğunuzu merak ediyorum. Uykularınız nasıl? Bir mesaj atmanız bile yeter."
+    ]
   }
 ]

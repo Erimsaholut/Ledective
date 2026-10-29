@@ -235,6 +235,24 @@ Ek ipuçları da oyunda [KANON, taslak]:
     `leak:traced` sonrası. En açık ipucu, bu yüzden geç geliyor ve aradaki
     reklam mailleri arasında kolayca gözden kaçabilir.
   - Bu mailler `doubt` sayısını artırmıyor; şimdilik sadece okunacak iz.
+- Sağlık izleri [Taslak]. Hepsi tek başına sıradan; yan yana gelince
+  "komiser bir tedavi görüyor ve onu bırakmış" diye okunabilir:
+  - Kargo maili: haftalık ilaç kutusu (7 gözlü) siparişi. Galerideki
+    karanlık odanın komodininde de aynı kutu var. Her zaman gelebilir.
+  - Annem maili: "İlaçlarını yanına aldın mı? Tatilde de içmeyi unutma."
+    Vitamin de olabilir. Her zaman gelebilir.
+  - Eczane e-faturası: reçeteli 1 kalem ilaç. `part1Done` sonrası.
+  - Seyahat sigortası maili: "Adınıza tanımlı yurt dışı seyahat poliçesi
+    bulunmamaktadır." Reklam gibi okunur. `part1Done` sonrası.
+  - Eczane SMS'i: "Reçeteli ilacınız eczanemizde hazırdır." Teslim
+    alınmamış: tatildeyse normal, değilse tuhaf. `part1Done` sonrası.
+  - e-Reçete maili: Dr. S. Arıkan **yeşil reçete** yazmış (Türkiye'de
+    psikiyatrik ilaçlar için). Bilen fark eder. `leak:traced` sonrası,
+    poliklinik mailiyle aynı dönemde.
+  - Dr. S. Arıkan'ın SMS'i: randevuya gelmediğini, ulaşamadığını söyler,
+    nedenini söylemez. Uyarı ya da uzaklaştırma sonrası (`status:warned`
+    ya da `status:suspended`).
+  - Bunlar da `doubt` saymıyor (mail ve SMS'te `unlocksOnView` yok).
 
 [?] Gizli son diğer finallerle nasıl birleşir: Kerem'in akıbeti ve dosyanın
 sonucu yine anlatılır mı, yoksa her şey yeniden mi okunur?

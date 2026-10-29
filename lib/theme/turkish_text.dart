@@ -4,3 +4,7 @@ String searchKey(String text) {
   final lower = text.replaceAll('İ', 'i').replaceAll('I', 'ı').toLowerCase();
   return lower.split('').map((c) => map[c] ?? c).join();
 }
+
+/// [text] in capitals the Turkish way: `i` becomes `İ`, `ı` becomes `I`.
+String turkishUpper(String text) =>
+    text.replaceAll('i', 'İ').replaceAll('ı', 'I').toUpperCase();

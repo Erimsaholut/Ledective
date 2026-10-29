@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../story/story_data.dart';
 import '../story/story_progress.dart';
+import '../theme/turkish_text.dart';
 
 /// The end of the game: how the case, the detective and everyone around
 /// them turned out, one part at a time.
@@ -58,7 +59,7 @@ class _EpiloguePageState extends State<EpiloguePage>
               _fadeIn(
                 0,
                 Text(
-                  (title.isEmpty ? "Son" : title).toUpperCase(),
+                  turkishUpper(title.isEmpty ? "Son" : title),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.white,
@@ -79,7 +80,7 @@ class _EpiloguePageState extends State<EpiloguePage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          section.title.toUpperCase(),
+                          turkishUpper(section.title),
                           style: const TextStyle(
                             color: Colors.white38,
                             fontSize: 12,

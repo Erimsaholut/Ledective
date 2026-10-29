@@ -414,7 +414,10 @@ Kimlikler `timers` ile ortaktır, aynısı iki kez kullanılamaz.
 ```
 
 - `archive: false` (varsayılan) haberler koşulu açılınca **Gündem**'e düşer ve
-  bildirim çıkarır: medyanın olayı nasıl anlattığını gösterir.
+  bildirim çıkarır: medyanın olayı nasıl anlattığını gösterir. Hikâye
+  haberleri Gündem'in en üstündeki **Manşet** bölümünde durur, zamansız
+  haberler altındaki "Diğer haberler"de; böylece komik haberler davayı
+  gömmez.
 - `archive: true` haberler sadece **Arşiv** aramasında bulunur. Arama başlık,
   özet, metin, yazar, gazete adı ve `tags` içinde yapılır. Oyuncunun
   aklına gelebilecek kelimeleri `tags`'e ekle.
@@ -434,7 +437,7 @@ komik haberler bir havuzda durur:
 
 ```json
 "filler": {
-  "minMinutes": 5, "maxMinutes": 14, "start": 5, "keep": 8,
+  "minMinutes": 5, "maxMinutes": 14, "start": 5, "keep": 8, "pauseAfter": 4,
   "articles": [
     {"id": "cakir-kebap", "outlet": "ekspres", "title": "...", "summary": "...", "body": ["..."]}
   ]
@@ -447,6 +450,9 @@ komik haberler bir havuzda durur:
 - Oyun başladığında ilk `start` haber zaten akıştadır (son bir iki güne
   yayılmış, bildirimsiz).
 - Akışta en son `keep` zamansız haber durur, eskileri düşer.
+- Oyuncu News'u açmadan `pauseAfter` (varsayılan 4) zamansız haber gelince
+  havuz bekler; News açılınca birkaç dakika içinde kaldığı yerden devam
+  eder. `0` hiç beklemez. Hikâye haberleri beklemez.
 - Havuz bitince karıştırılıp baştan yayımlanır. Aynı haber üst üste iki kez
   gelmez ve her yeniden yayın okunmamış sayılır.
 - Zamansız haberlerde `archive` ve `dayOffset` kullanılmaz; `requires`
@@ -483,7 +489,7 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
 
   ```json
   {
-    "pool": {"minMinutes": 6, "maxMinutes": 16, "start": 3, "mails": [
+    "pool": {"minMinutes": 6, "maxMinutes": 16, "start": 3, "pauseAfter": 4, "mails": [
       {"id": "pizza", "sender": "pizzaci.com.tr", "subject": "Seni özledik!", "body": "..."},
       {"id": "journalist-1", "sender": "haber@gundem24.com.tr", "subject": "Görüşme talebi",
        "body": "...", "requires": "part1Done"}
@@ -500,6 +506,8 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
     biri gelir; her mail bir kez gelir. İlk `start` tanesi oyun başında
     gelen kutusundadır. `requires` taşıyan mail koşulu açılana kadar
     sırasını bekler: olaylardan sonra gelen gazeteci, okur, avukat mailleri.
+    Oyuncu Mail'i açmadan `pauseAfter` (varsayılan 4) gündelik mail gelince
+    havuz bekler, Mail açılınca devam eder. Hikâye mailleri beklemez.
   - `story`: hikâyenin mailleri, `requires` açılınca gelir. `afterMinutes`
     ile koşuldan o kadar dakika oyun süresi sonra gelir.
   - `subject` listede ve bildirimde görünür; `id` verilmezse gönderen ve
@@ -507,7 +515,8 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
     kaybolmasın diye `id` ver).
   - Yazarın hata ayıklama sayfasında (Ayarlar › Hikâye durumu) sıradaki
     maili ya da haberi beklemeden getiren düğmeler var.
-- **sms.json**: `sender`, `messages`, `daysAgo`, isteğe bağlı `requires`.
+- **sms.json**: `sender`, `messages`, `daysAgo`, isteğe bağlı `requires` ya da
+  `requiresAny`.
 - **bank.json**: tutarlar **kuruş** cinsindendir (`5000000` = 50.000,00 TL),
   eksi değer ödemedir. `requires` taşıyan işlemler hikâyede gelir ve bakiyeyi
   değiştirir; taşımayanlar başlangıç bakiyesine dahildir.

@@ -1145,6 +1145,32 @@ void main() {
       await play(const Duration(minutes: 7));
       expect(ids(), contains('leave-cancelled'));
     });
+
+    test('wait while the player doesn\'t open Mail or News', () async {
+      final progress = StoryProgress.instance;
+      progress.fastMissions = true;
+      addTearDown(() => progress.fastMissions = false);
+      await progress.tick(now: clock);
+      final pool = {for (final m in StoryData.current.mailPool.mails) m.id};
+      int everydayMail() =>
+          progress.inbox.where((e) => pool.contains(e.$1.id)).length;
+      int newsAlerts() =>
+          progress.alerts.items.where((a) => a.app == 'News').length;
+      final mailAtStart = everydayMail();
+      final mailPause = StoryData.current.mailPool.pauseAfter;
+      final newsPause = StoryData.current.news.filler.pauseAfter;
+
+      await play(const Duration(minutes: 15));
+      expect(everydayMail(), mailAtStart + mailPause);
+      expect(newsAlerts(), newsPause);
+
+      // Opening the apps lets them come again.
+      await progress.lookedAt();
+      await progress.lookedAt(mail: false);
+      await play(const Duration(minutes: 5));
+      expect(everydayMail(), greaterThan(mailAtStart + mailPause));
+      expect(newsAlerts(), greaterThan(newsPause));
+    });
   });
 }
 

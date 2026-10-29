@@ -32,11 +32,19 @@ class DripFeed {
   /// the feed has started.
   int? dueAt;
 
+  /// How many of [drops] had come when the player last opened the app that
+  /// shows them.
+  int seen = 0;
+
+  /// Items that came since the player last looked.
+  int get unseen => drops.length - seen;
+
   bool get started => dueAt != null;
 
   void clear() {
     drops.clear();
     dueAt = null;
+    seen = 0;
   }
 
   /// The item of [ids] to deliver next, or null if none fits: one that
@@ -82,6 +90,7 @@ class DripFeed {
 
   Map<String, Object?> toJson() => {
     'due': dueAt,
+    'seen': seen,
     'drops': [for (final d in drops) d.toJson()],
   };
 
@@ -93,5 +102,7 @@ class DripFeed {
       for (final d in json['drops'] as List? ?? const [])
         Drop.fromJson(d as List),
     ]);
+    // Saves from before this was kept count as all looked at.
+    seen = json['seen'] as int? ?? drops.length;
   }
 }

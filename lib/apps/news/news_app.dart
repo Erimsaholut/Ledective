@@ -83,7 +83,15 @@ class _NewsAppState extends State<NewsApp> {
   final TextEditingController _query = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _progress.lookedAt(mail: false);
+  }
+
+  @override
   void dispose() {
+    // What came while the feed was open has been seen too.
+    _progress.lookedAt(mail: false);
     _query.dispose();
     super.dispose();
   }
@@ -136,15 +144,35 @@ class _NewsAppState extends State<NewsApp> {
         ),
       );
     }
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      itemCount: articles.length,
-      separatorBuilder: (_, _) => const Divider(indent: 16, endIndent: 16),
-      itemBuilder: (context, i) => _ArticleTile(
-        item: articles[i],
-        headline: i == 0,
-        isNew: !_progress.hasSeen('news:${articles[i].key}'),
-      ),
+    // The case on top, so the everyday news doesn't bury it.
+    final everyday = {
+      for (final a in StoryData.current.news.filler.articles) a.id,
+    };
+    final story = [
+      for (final item in articles)
+        if (!everyday.contains(item.article.id)) item,
+    ];
+    final other = [
+      for (final item in articles)
+        if (everyday.contains(item.article.id)) item,
+    ];
+    List<Widget> section(String title, List<NewsItem> items) => [
+      _SectionHeader(title),
+      for (final (i, item) in items.indexed) ...[
+        if (i > 0) const Divider(indent: 16, endIndent: 16),
+        _ArticleTile(
+          item: item,
+          headline: i == 0 && identical(items, story),
+          isNew: !_progress.hasSeen('news:${item.key}'),
+        ),
+      ],
+    ];
+    return ListView(
+      padding: const EdgeInsets.only(bottom: 16),
+      children: [
+        if (story.isNotEmpty) ...section("Manşet", story),
+        if (other.isNotEmpty) ...section("Diğer haberler", other),
+      ],
     );
   }
 
@@ -204,6 +232,35 @@ class _NewsAppState extends State<NewsApp> {
   }
 }
 
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader(this.title);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 18, 16, 4),
+      child: Row(
+        children: [
+          Text(
+            turkishUpper(title),
+            style: const TextStyle(
+              color: _ink,
+              fontFamily: 'serif',
+              fontSize: 13,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.5,
+            ),
+          ),
+          const SizedBox(width: 10),
+          const Expanded(child: Divider(color: _ink, thickness: 2)),
+        ],
+      ),
+    );
+  }
+}
+
 class _OutletLabel extends StatelessWidget {
   const _OutletLabel(this.outlet, {this.size = 11});
 
@@ -213,7 +270,7 @@ class _OutletLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      outlet.name.toUpperCase(),
+      turkishUpper(outlet.name),
       style: TextStyle(
         color: _colorOf(outlet),
         fontSize: size,
@@ -238,7 +295,6 @@ class _ArticleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final outlet = StoryData.current.news.outlet(article.outlet);
     final image = article.image;
     return InkWell(
       onTap: () => Navigator.push(
@@ -260,63 +316,88 @@ class _ArticleTile extends StatelessWidget {
               ),
               const SizedBox(height: 10),
             ],
-            Row(
-              children: [
-                _OutletLabel(outlet),
-                if (article.archive) ...[
-                  const SizedBox(width: 6),
-                  const Text(
-                    "· ARŞİV",
-                    style: TextStyle(
-                      color: AppColors.secondaryLabel,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
+            if (!headline && image != null)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: _text()),
+                  const SizedBox(width: 12),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.asset(
+                      image,
+                      width: 96,
+                      height: 72,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ],
-                const Spacer(),
-                if (isNew)
-                  Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: AppColors.red,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              article.title,
-              style: TextStyle(
-                color: _ink,
-                fontFamily: 'serif',
-                fontSize: headline ? 22 : 17,
-                fontWeight: FontWeight.w700,
-                height: 1.2,
-              ),
-            ),
-            if (article.summary.isNotEmpty) ...[
-              const SizedBox(height: 4),
-              Text(
-                article.summary,
-                maxLines: headline ? 4 : 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Color(0xFF555555), height: 1.3),
-              ),
-            ],
-            const SizedBox(height: 6),
-            Text(
-              _dateOf(item),
-              style: const TextStyle(
-                color: AppColors.secondaryLabel,
-                fontSize: 12,
-              ),
-            ),
+              )
+            else
+              _text(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _text() {
+    final outlet = StoryData.current.news.outlet(article.outlet);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _OutletLabel(outlet),
+            if (article.archive) ...[
+              const SizedBox(width: 6),
+              const Text(
+                "· ARŞİV",
+                style: TextStyle(
+                  color: AppColors.secondaryLabel,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+            const Spacer(),
+            if (isNew)
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: AppColors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          article.title,
+          style: TextStyle(
+            color: _ink,
+            fontFamily: 'serif',
+            fontSize: headline ? 22 : 17,
+            fontWeight: FontWeight.w700,
+            height: 1.2,
+          ),
+        ),
+        if (article.summary.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            article.summary,
+            maxLines: headline ? 4 : 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Color(0xFF555555), height: 1.3),
+          ),
+        ],
+        const SizedBox(height: 6),
+        Text(
+          _dateOf(item),
+          style: const TextStyle(color: AppColors.secondaryLabel, fontSize: 12),
+        ),
+      ],
     );
   }
 }

@@ -601,6 +601,39 @@
         "subject": "Yeni çıkanlar: 'Yeşilkent Cinayeti' kitabı ön satışta",
         "body": "Daha dosya kapanmadan yazılan ilk kitap! 'Yeşilkent Cinayeti: Bir Milletvekilinin Oğlu' ön siparişte %30 indirimli. Yazar: Anonim. Kapakta sizin siluetiniz var.",
         "requires": "coverup:exposed"
+      },
+      {
+        "id": "pill-box",
+        "sender": "siparis@hepsibir.com",
+        "subject": "Siparişiniz kargoya verildi 📦",
+        "body": "Haftalık İlaç Düzenleyici (7 gün, sabah-akşam, kilitli kapak) siparişiniz kargoya verildi. Ürünü değerlendirmeyi unutmayın: Hayatınızı ne kadar düzene soktu?"
+      },
+      {
+        "id": "mother-meds",
+        "sender": "annem@eposta.com",
+        "subject": "İlaçların",
+        "body": "Oğlum ilaçlarını yanına aldın mı? Tatilde de içmeyi unutma, sonra yine uyuyamazsın. Bir de oralar soğuk mu, montunu aldın mı?"
+      },
+      {
+        "id": "pharmacy-invoice",
+        "sender": "efatura@sifaeczanesi.com.tr",
+        "subject": "e-Arşiv faturanız oluşturuldu",
+        "body": "Sayın müşterimiz, Şifa Eczanesi'nden yaptığınız alışverişe ait e-Arşiv faturanız oluşturulmuştur. Tutar: 186,40 TL (Reçeteli ilaç, 1 kalem, katılım payı dahil). Geçmiş olsun.",
+        "requires": "part1Done"
+      },
+      {
+        "id": "travel-insurance",
+        "sender": "bilgi@sigortam.com",
+        "subject": "Seyahatinize çıkmadan önce",
+        "body": "Sistemimizde adınıza tanımlı yurt dışı seyahat sağlık poliçesi bulunmamaktadır. Yurt dışında hastalanmak hem pahalı hem yorucu! Poliçenizi 2 dakikada oluşturun.",
+        "requires": "part1Done"
+      },
+      {
+        "id": "e-prescription",
+        "sender": "bildirim@e-recete.saglik.gov.tr",
+        "subject": "Adınıza e-Reçete düzenlendi",
+        "body": "Sayın vatandaşımız, Dr. S. Arıkan tarafından adınıza 1 adet e-Reçete düzenlenmiştir. Reçete türü: Yeşil reçete. İlacınızı reçete tarihinden itibaren en geç 5 gün içinde eczaneden teslim alınız.",
+        "requires": "leak:traced"
       }
     ]
   },

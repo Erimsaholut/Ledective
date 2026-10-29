@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../../data/game_clock.dart';
 import '../../story/story_progress.dart';
 import '../../story/story_data.dart';
+import '../../theme/turkish_text.dart';
 
 const _ink = Color(0xFF1A1A1A);
 const _bold = TextStyle(fontWeight: FontWeight.w700, color: _ink);
@@ -193,7 +194,7 @@ class _Field extends StatelessWidget {
 
 Widget _sectionTitle(String text) => Padding(
   padding: const EdgeInsets.only(top: 20, bottom: 8),
-  child: Text(text.toUpperCase(), style: _bold.copyWith(letterSpacing: 1)),
+  child: Text(turkishUpper(text), style: _bold.copyWith(letterSpacing: 1)),
 );
 
 class StatementPage extends StatelessWidget {

@@ -289,12 +289,17 @@ class MailPool {
     this.minMinutes = 5,
     this.maxMinutes = 15,
     this.start = 3,
+    this.pauseAfter = 4,
   });
 
   final List<Mail> mails;
   final int minMinutes;
   final int maxMinutes;
   final int start;
+
+  /// The pool waits once this many have come without the player opening
+  /// Mail, and goes on when they do. 0 never waits.
+  final int pauseAfter;
 }
 
 class SmsThread {
@@ -816,6 +821,7 @@ class FillerNews {
     this.maxMinutes = 12,
     this.start = 4,
     this.keep = 6,
+    this.pauseAfter = 4,
   });
 
   final List<Article> articles;
@@ -825,6 +831,10 @@ class FillerNews {
 
   /// How many of the latest ones stay in the feed.
   final int keep;
+
+  /// Everyday news waits once this many have come without the player
+  /// opening News, and goes on when they do. 0 never waits.
+  final int pauseAfter;
 }
 
 class NewsData {
@@ -1081,6 +1091,7 @@ MailPool _mailPool(_Reader r) => MailPool(
   minMinutes: r.intOr('minMinutes', 5),
   maxMinutes: r.intOr('maxMinutes', 15),
   start: r.intOr('start', 3),
+  pauseAfter: r.intOr('pauseAfter', 4),
 );
 
 /// The optional `afterMinutes` wait of mails and articles.
@@ -1359,6 +1370,7 @@ NewsData _news(_Reader r) => NewsData(
       maxMinutes: f.intOr('maxMinutes', 12),
       start: f.intOr('start', 4),
       keep: f.intOr('keep', 6),
+      pauseAfter: f.intOr('pauseAfter', 4),
     ),
   },
 );

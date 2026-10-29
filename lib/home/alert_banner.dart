@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../story/story_progress.dart';
 import '../theme/app_theme.dart';
 import '../theme/turkish_dates.dart';
+import '../theme/turkish_text.dart';
 import 'start_screen.dart';
 
 /// The phone's notifications: a banner that slides in from the top when
@@ -299,7 +300,7 @@ class _AlertCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          latest.source.toUpperCase(),
+                          turkishUpper(latest.source),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: small,

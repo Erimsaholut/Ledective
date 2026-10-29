@@ -1005,6 +1005,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
         if (drop == null) break;
         feed.drops.add(drop);
       }
+      // What was there before the game began doesn't count as unseen.
+      feed.seen = feed.drops.length;
       feed.dueAt = _playMs + _gap(2, 6, salt);
     }
 
@@ -1021,20 +1023,26 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     return true;
   }
 
-  /// Delivers the everyday mail and news that are due. Returns whether any
-  /// came.
-  bool _drip(DateTime now) {
+  /// Delivers the everyday mail and news that are due. A feed waits while
+  /// the player hasn't opened its app for a while (see `pauseAfter`) and
+  /// goes on a few minutes after they do. Returns whether any came.
+  bool _drip(DateTime now, {bool wait = true}) {
     bool step(
       DripFeed feed,
       List<String> ids,
       bool Function(String id) fits,
       int minMinutes,
       int maxMinutes,
+      int pauseAfter,
       int salt, {
       required bool recycle,
     }) {
       final due = feed.dueAt;
       if (due == null || _playMs < due) return false;
+      if (wait && pauseAfter > 0 && feed.unseen >= pauseAfter) {
+        feed.dueAt = _playMs + _gap(1, 3, salt + feed.drops.length * 7);
+        return false;
+      }
       final drop = feed.next(
         ids,
         at: now,
@@ -1056,6 +1064,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
       _mailFits,
       pool.minMinutes,
       pool.maxMinutes,
+      pool.pauseAfter,
       1,
       recycle: false,
     );
@@ -1065,6 +1074,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
       _articleFits,
       filler.minMinutes,
       filler.maxMinutes,
+      filler.pauseAfter,
       2,
       recycle: true,
     );
@@ -1077,7 +1087,18 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     final feed = mail ? _mailDrip : _newsDrip;
     if (!feed.started) _startDrips(DateTime.now());
     feed.dueAt = _playMs;
-    if (_announce(() => _drip(DateTime.now()))) notifyListeners();
+    if (_announce(() => _drip(DateTime.now(), wait: false))) {
+      notifyListeners();
+    }
+    await _save();
+  }
+
+  /// The player opened Mail (or News, if [mail] is false): everyday items
+  /// that waited for them start coming again.
+  Future<void> lookedAt({bool mail = true}) async {
+    final feed = mail ? _mailDrip : _newsDrip;
+    if (feed.unseen == 0) return;
+    feed.seen = feed.drops.length;
     await _save();
   }
 }
