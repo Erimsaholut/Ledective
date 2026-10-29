@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/camera_roll.dart';
 import '../../data/game_data.dart';
@@ -13,40 +12,10 @@ ImageProvider photoImage(Photo photo) => photo.bytes != null
     ? MemoryImage(photo.bytes!)
     : AssetImage(photo.asset!) as ImageProvider;
 
-class PhotosApp extends StatefulWidget {
+class PhotosApp extends StatelessWidget {
   const PhotosApp({super.key});
 
-  @override
-  State<PhotosApp> createState() => _PhotosAppState();
-}
-
-class _PhotosAppState extends State<PhotosApp> {
-  static const _prefsKey = 'photoCount';
-  static const _initialPhotoCount = 3;
-
-  int _photoCount = _initialPhotoCount;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPhotoCount();
-  }
-
-  Future<void> _loadPhotoCount() async {
-    final prefs = await SharedPreferences.getInstance();
-    final count = prefs.getInt(_prefsKey);
-    if (count != null && mounted) {
-      setState(() => _photoCount = count.clamp(0, galleryImages.length));
-    }
-  }
-
-  Future<void> _loadMorePhotos() async {
-    setState(() => _photoCount++);
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_prefsKey, _photoCount);
-  }
-
-  void _openPhoto(List<Photo> photos, int index) {
+  void _openPhoto(BuildContext context, List<Photo> photos, int index) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -65,8 +34,7 @@ class _PhotosAppState extends State<PhotosApp> {
           final photos = <Photo>[
             for (final bytes in CameraRoll.instance.photos)
               (asset: null, bytes: bytes),
-            for (final asset in galleryImages.take(_photoCount))
-              (asset: asset, bytes: null),
+            for (final asset in galleryImages) (asset: asset, bytes: null),
           ];
           return CustomScrollView(
             slivers: [
@@ -82,7 +50,7 @@ class _PhotosAppState extends State<PhotosApp> {
                 ),
                 itemCount: photos.length,
                 itemBuilder: (context, index) => GestureDetector(
-                  onTap: () => _openPhoto(photos, index),
+                  onTap: () => _openPhoto(context, photos, index),
                   child: Hero(
                     tag: photos[index],
                     child: Image(
@@ -95,18 +63,10 @@ class _PhotosAppState extends State<PhotosApp> {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      Text(
-                        "${photos.length} Fotoğraf",
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      if (_photoCount < galleryImages.length)
-                        TextButton(
-                          onPressed: _loadMorePhotos,
-                          child: const Text('Load More Photos'),
-                        ),
-                    ],
+                  child: Text(
+                    "${photos.length} Fotoğraf",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

@@ -27,12 +27,13 @@ işaretle, bağlantısını ben yaparım.
 - [x] `sergi.jpg`: @sanat.galerisi yerel sergi
 - [x] `ozge_kedi.jpg` ve `behram_operasyon.jpg` (eski kedi ve vitrin görsellerinin yerine)
 - [ ] @kedi.dunyasi hâlâ `myCat.jpeg` kullanıyor: senin kedinse kalsın.
-- [ ] Fotoğraflar uygulamasındaki (komiserin galerisi) eski test görselleri:
-  aşağıdaki "Komiserin galerisi" maddeleri gelince değişecek.
+- [x] Fotoğraflar uygulamasındaki eski test görselleri kalktı; galeride artık
+  sadece `galeri_*` kareleri var, hepsi baştan görünür ("Load More" kalktı).
 - [x] Şüphelilerin gönderileri: `berat_kafe.jpg`, `berat_kapi.jpg`,
   `furkan_borc.jpg`, `yusuf_sinav.jpg`, `deniz_yas.jpg`
-- [ ] `my_foto1.jpg`, `my_foto2.jpg` (Behzat Ç.) ve @dizi.replikleri gönderisini
-  kaldır; yerine bir şey gerekmez.
+- [x] `my_foto1.jpg`, `my_foto2.jpg` (Behzat Ç.) ve @dizi.replikleri gönderisi
+  kaldırıldı; kullanılmayan diğer test kareleri de (film/dizi, tablo) silindi.
+  `benKedi.jpeg` ve `gungun.jpeg` duruyor ama oyunda kullanılmıyor.
 
 ### Delil ve olay yeri (sonraki bölümler)
 
@@ -57,17 +58,22 @@ işaretle, bağlantısını ben yaparım.
 
 ### Haberler (isteğe bağlı, 16:9)
 
-- [ ] `haber_berat_bulundu.jpg`, `haber_cenaze.jpg`, `haber_milletvekili.jpg`
-- [ ] `haber_yuruyus.jpg`, `haber_mezbaha.jpg`, `haber_plaka.jpg`, `haber_vakif.jpg`
-- [ ] Gündelik haberler: kebapçı, kıraathane, AVM, kampüs kedisi, fırın
+- [x] `haber_berat_bulundu.jpg`, `haber_cenaze.jpg`, `haber_milletvekili.jpg`
+- [x] `haber_yuruyus.jpg`, `haber_mezbaha.jpg`, `haber_plaka.jpg`, `haber_vakif.jpg`
+  (vakıf görseli hem burs haberinde hem savcılık operasyonunda, arşiv fotoğrafı
+  gibi). `mezbaha_dis.jpg` artık "Sanayi sakinleri tedirgin" haberinde.
+- [x] Gündelik haberler: kebapçı, kıraathane, AVM, kampüs kedisi, fırın
+- [ ] [?] `haber_cenaze.jpg` arka planında İstanbul Boğazı görünüyor; Yeşilkent
+  bir taşra şehri. Değiştirmek istersen: deniz ya da siluet görünmeyen bir
+  mezarlık.
 
 ### Komiserin galerisi
 
-- [ ] `galeri_dosyalar.jpg`, `galeri_kahve.jpg`, `galeri_ekran.jpg`,
-  `galeri_olay_yeri.jpg`. Tatil fotoğrafı **olmasın** (gizli son için
-  bilerek bırakılan boşluk).
-- [ ] [?] `galeri_karanlik_oda.jpg`: gizli son ipucu, kullanıp kullanmamaya
-  sonra karar ver.
+- [x] `galeri_dosyalar.jpg`, `galeri_kahve.jpg`, `galeri_ekran.jpg`,
+  `galeri_olay_yeri.jpg`. Tatil fotoğrafı yok (gizli son için bilerek
+  bırakılan boşluk).
+- [x] `galeri_karanlik_oda.jpg`: galerinin en yeni karesi; gizli son ipucu
+  (`bible/01-ana-gizem.md`).
 
 ## Ana gizem: oyuna geçirilecekler
 

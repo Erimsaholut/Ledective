@@ -65,18 +65,6 @@
       ]
     },
     {
-      "id": "series-quotes",
-      "author": "dizi.replikleri",
-      "image": "assets/apps/photosApp/images/my_foto1.jpg",
-      "caption": "Ankara'nın en karizmatik komiseri. Katılmayan? #behzatç",
-      "likes": 5874,
-      "daysAgo": 6,
-      "comments": [
-        {"author": "orhun.k", "text": "Amirime benziyor bence"},
-        {"author": "komiser", "text": "@orhun.k mesaiye dön"}
-      ]
-    },
-    {
       "id": "art-gallery",
       "author": "sanat.galerisi",
       "image": "assets/story/images/sergi.jpg",

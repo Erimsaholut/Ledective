@@ -209,14 +209,15 @@ Bu son seçilirse adil bir sürpriz olması için:
   görünmez.
 - Banka hareketleri "yurt dışı harcama" der ama hiçbir yer adı geçmez.
 - Sızıntılar: gazeteye çıkan her şeyi komiser biliyordu.
-- Fotoğraflar uygulamasında tek bir tatil fotoğrafı yok.
+- Fotoğraflar uygulamasında tek bir tatil fotoğrafı yok. En yeni kare
+  (`galeri_karanlik_oda.jpg`) gündüz perdeleri sıkıca kapalı, dağınık tek
+  kişilik yataklı bir oda; komodinde haftalık ilaç kutusu. Otel odası da
+  olabilir, komiserin kendi evi de.
 
 Eklenebilecek ipuçları [ÖNERİ]:
 - Ses notlarında arka planda tanıdık bir şehir sesi (ezan, simitçi, dolmuş).
 - Bir tanığın "komiseri dün kafenin önünde gördüm" demesi, herkesin bunu
   yanlış tanıma sanması.
-- Fotoğraflar uygulamasına bir tane "tatil" fotoğrafı eklemek: hep aynı otel
-  odası, penceresi perdeyle kapalı.
 - Telefonun dolaşım (roaming) mesajı ile hiçbir yabancı şebeke SMS'inin
   gelmemesi.
 - Doktor randevusu ya da ilaç hatırlatması (Takvim, Kayıtlar).

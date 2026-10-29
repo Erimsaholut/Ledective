@@ -12,6 +12,7 @@
       "outlet": "gundem24",
       "daysAgo": 0,
       "title": "Milletvekili Yılmaz’ın oğlu evinde ölü bulundu",
+      "image": "assets/story/images/haber_berat_bulundu.jpg",
       "summary": "Üniversite öğrencisi Berat Yılmaz’ın ölümünün ilk belirlemelere göre intihar olduğu değerlendiriliyor.",
       "author": "Gündem24 Haber Merkezi",
       "tags": ["berat", "yılmaz", "intihar", "yeşilkent"],
@@ -46,7 +47,7 @@
       "body": [
         "Bölge sakinleri gece boyunca çok sayıda ekip aracının mezbahaya girip çıktığını anlattı. Çalışmanın Berat Yılmaz soruşturmasıyla bağlantılı olup olmadığı bilinmiyor."
       ],
-      "image": "assets/story/images/mezbaha_dis.jpg"
+      "image": "assets/story/images/haber_mezbaha.jpg"
     },
     {
       "id": "old-case",
@@ -69,6 +70,7 @@
       "archive": true,
       "daysAgo": 700,
       "title": "Yılmaz Vakfı’ndan öğrencilere burs desteği",
+      "image": "assets/story/images/haber_vakif.jpg",
       "summary": "Milletvekili Yılmaz’ın kurucusu olduğu vakıf, bu yıl 200 öğrenciye burs verecek.",
       "author": "Gündem24 Haber Merkezi",
       "tags": ["vakıf", "burs", "yılmaz", "milletvekili", "bağış"],
@@ -92,6 +94,7 @@
       "id": "funeral",
       "outlet": "gundem24",
       "title": "Berat Yılmaz son yolculuğuna uğurlandı",
+      "image": "assets/story/images/haber_cenaze.jpg",
       "summary": "Cenaze törenine siyasetçiler ve öğrenciler katıldı. Milletvekili Yılmaz basına konuşmadı.",
       "author": "Gündem24 Haber Merkezi",
       "dayOffset": 1,
@@ -106,6 +109,7 @@
       "id": "mp-speaks",
       "outlet": "gundem24",
       "title": "Milletvekili Yılmaz ilk kez konuştu: \"Oğlumun katilleri bulunacak\"",
+      "image": "assets/story/images/haber_milletvekili.jpg",
       "summary": "Yılmaz, soruşturmanın \"gereksiz ayrıntılarla\" uzatılmaması gerektiğini söyledi.",
       "author": "Gündem24 Haber Merkezi",
       "dayOffset": 3,
@@ -120,6 +124,7 @@
       "id": "campus-vigil",
       "outlet": "kampus",
       "title": "Kampüste sessiz yürüyüş: \"Bizi de dinleyin\"",
+      "image": "assets/story/images/haber_yuruyus.jpg",
       "summary": "Öğrenciler Berat Yılmaz için yürüdü. Bazı pankartlarda başka isimler de vardı.",
       "author": "Kampüs Haber",
       "dayOffset": 4,
@@ -148,6 +153,7 @@
       "id": "mezbaha-residents",
       "outlet": "sehir-postasi",
       "title": "Sanayi sakinleri tedirgin: \"Geceleri o binada ışık yanıyordu\"",
+      "image": "assets/story/images/mezbaha_dis.jpg",
       "summary": "Eski mezbahanın çevresinde yaşayanlar yıllardır şikâyet ettiklerini anlattı.",
       "author": "Selin Aras",
       "dayOffset": 2,
@@ -186,7 +192,7 @@
         "Berat Yılmaz soruşturmasını yürüten ekibin, Meclis otoparkına kayıtlı bir makam aracını sanayi bölgesinde tespit ettiği öğrenildi.",
         "Aracın, uyuşturucu suçlarından sabıkalı bir şahısla görüştüğü iddia ediliyor. Milletvekili Yılmaz’ın ofisi iddiaları \"mesnetsiz\" olarak nitelendirdi."
       ],
-      "image": "assets/story/images/makam_araci.jpg"
+      "image": "assets/story/images/haber_plaka.jpg"
     },
     {
       "id": "families-anonymous",
@@ -275,6 +281,7 @@
       "requires": ["coverup:exposed", "phone:prosecutor"],
       "afterMinutes": 5,
       "title": "Yılmaz Vakfı’na savcılık operasyonu",
+      "image": "assets/story/images/haber_vakif.jpg",
       "summary": "Vakfın genel müdürü Halit Yener gözaltına alındı.",
       "author": "Gündem24 Haber Merkezi",
       "tags": ["vakıf", "operasyon", "halit yener", "gözaltı"],
@@ -340,6 +347,7 @@
         "id": "cakir-kebap",
         "outlet": "ekspres",
         "title": "Yeşilkent’e \"Çakır Kebap\" açıldı, kuyruk köşeyi döndü",
+        "image": "assets/story/images/haber_kebap.jpg",
         "summary": "Sahibi, isim konusunda \"Bilenler bilir\" demekle yetindi.",
         "author": "Yeşilkent Ekspres",
         "tags": ["açılış", "kebap", "yeşilkent", "dükkan"],
@@ -364,6 +372,7 @@
         "id": "laz-ziya-okey",
         "outlet": "ekspres",
         "title": "Kıraathanedeki okey turnuvasının finali üç gün sürdü",
+        "image": "assets/story/images/haber_kiraathane.jpg",
         "summary": "Laz Ziya Kıraathanesi’ndeki final, taşların \"kaybolması\" nedeniyle iki kez ertelendi.",
         "author": "Yeşilkent Ekspres",
         "tags": ["kıraathane", "okey", "turnuva", "laz ziya"],
@@ -460,6 +469,7 @@
         "id": "escalator",
         "outlet": "ekspres",
         "title": "AVM açılışında yürüyen merdiven ters çalıştı",
+        "image": "assets/story/images/haber_avm.jpg",
         "summary": "Davetliler kurdele kesimine yarım saat geç yetişti.",
         "author": "Yeşilkent Ekspres",
         "tags": ["açılış", "avm", "alışveriş", "belediye başkanı"],
@@ -484,6 +494,7 @@
         "id": "cat-professor",
         "outlet": "kampus",
         "title": "Kayıp kedi \"Profesör\", senato toplantısında bulundu",
+        "image": "assets/story/images/haber_kampus_kedi.jpg",
         "summary": "Kampüsün maskotu üç gündür aranıyordu.",
         "author": "Kampüs Haber",
         "tags": ["kampüs", "kedi", "senato", "maskot"],
@@ -592,6 +603,7 @@
         "id": "bakery-opening",
         "outlet": "ekspres",
         "title": "Merkeze ekşi mayalı fırın açıldı: \"Ekmeği bekletin\"",
+        "image": "assets/story/images/haber_firin.jpg",
         "summary": "Fırın, ekmeklerin \"dinlendirilmeden yenmemesi\" konusunda müşterilerini uyarıyor.",
         "author": "Yeşilkent Ekspres",
         "tags": ["açılış", "fırın", "ekmek", "dükkan"],
