@@ -6,6 +6,204 @@ Leonardo...) yapıştırılabilecek prompt'lar. Prompt'lar İngilizce, çünkü
 üreticilerin çoğu İngilizceyle çok daha iyi sonuç veriyor. Her birinin
 üstünde Türkçe kısa bir açıklama var.
 
+## Yeni: kopyala, yapıştır
+
+Her blok tek başına eksiksiz: oran, sahne, karakter tarifi, stil ve "Avoid" kısmı içinde. ChatGPT'ye bloğun tamamını olduğu gibi yapıştırman yeterli; aşağıdaki "Nasıl kullanılır" kısmına bakmana gerek yok. Dosyayı başlıktaki adla `assets/pics/` klasörüne koy, kırpıp oyuna ben eklerim.
+
+İpucu: ChatGPT bazen yazı ekliyor. Eklerse aynı sohbette "Remove all text and letters from the image" demen yeter.
+
+### Önce bunlar (hikâyede ağırlıkları var)
+
+#### `ece_mulakat.jpg` — Ece: "Burs mülakatı! Dua edin 🙏" · 1:1
+
+Ece'nin Sinstagram'daki en eski gönderisi (üç yıl önce). Aynı kızı üç görselde de kullan: önce bunu üret, beğendiğini sonraki ikisine referans olarak yükle.
+
+```
+Square image (1:1). A selfie of Ece, a fictional 20-year-old Turkish female university student with long wavy dark hair, a warm genuine smile, simple casual clothes, standing outside the glass entrance of a modest office building on a sunny morning, holding a thin document folder against her chest, nervous excited smile, slightly crooked framing, the building sign behind her completely out of focus. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: casual smartphone photo from about three years ago, realistic, slightly warm faded colors, mild JPEG softness, natural light, ordinary social media post feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `ece_burs.jpg` — Ece: "Kabul edildim!!! Yılmaz Vakfı bursu 🎓" · 1:1
+
+Ece'nin mutlu olduğu tek kare. Ekte mülakat görselini yükleyip "same girl as in the attached image" de.
+
+```
+Square image (1:1). Ece, a fictional 20-year-old Turkish female university student with long wavy dark hair, a warm genuine smile, simple casual clothes (same girl as in the attached image if one is attached), in a small family kitchen in the evening, laughing with her eyes closed, holding up a printed letter whose text is blurred and unreadable, a tea glass and a plate of simple homemade cake on the table, taken by someone else with a phone. Style: casual smartphone photo from about three years ago, realistic, slightly warm faded colors, mild JPEG softness, natural light, ordinary social media post feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `ece_son.jpg` — Ece: "Bu ay ödeme yapamazsam ne olacak bilmiyorum." · 1:1
+
+Son gönderisi. Yüz yok; sadece masası ve eli.
+
+```
+Square image (1:1). A phone photo looking down at a cluttered student desk late at night: several opened envelopes and printed payment notices with blurred unreadable text, a calculator, a cold half-empty tea glass, a young woman's hand with chipped nail polish resting on the papers, a single desk lamp, lonely and anxious mood. No face visible. Style: casual smartphone photo from about three years ago, realistic, slightly warm faded colors, mild JPEG softness, natural light, ordinary social media post feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse.
+```
+
+#### `berat_telefon.jpg` — Delil: Berat'ın Telefonu · 1:1
+
+Kerem'in çantasından çıkan telefon (Pano › delil kartı).
+
+```
+Square image (1:1). A black smartphone with a spider-web cracked screen sealed inside a clear plastic police evidence bag with a blank white label, lying on a scratched grey metal table, the dark screen reflecting the ceiling light, a pair of blue nitrile gloves at the edge of the frame. Style: police evidence photo taken with a phone, realistic, flat harsh fluorescent light, slightly cold color, sharp focus on the object, plain background. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse.
+```
+
+#### `haber_gozalti.jpg` — Haber: "Berat Yılmaz cinayetinde gözaltı" · 16:9
+
+Kerem'in gözaltı haberi. Yüzü görünmesin.
+
+```
+Wide landscape image (16:9). Night press photo: two plainclothes police officers escorting a fictional 24-year-old Turkish man, lean and slightly gaunt, short unkempt black beard, short messy black hair, worn black leather jacket over a dark grey hoodie, handcuffed, his head bowed and covered with his own jacket so his face is hidden, from a police car to the entrance of a plain government building; camera flashes, a few photographers' backs in the foreground, wet pavement. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `haber_depo.jpg` — Haber: Soğuk hava deposu (Melis kurtarıldı / bulundu) · 16:9
+
+Melis'in iki sonunda da aynı görsel kullanılır; bu yüzden ne iyi ne kötü bir şey ima etsin.
+
+```
+Wide landscape image (16:9). Night press photo of an old abandoned cold storage warehouse at the far end of an industrial estate, its heavy metal door open with a cut chain hanging from the handle, an ambulance with open rear doors and two police cars with blue lights, police tape, paramedics' silhouettes, frost and mist in the air. No people's faces, no stretcher visible. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `haber_ciftlik.jpg` — Haber: "İkinci kayıp öğrenci bir çiftlik evinin bodrumunda bulundu" · 16:9
+
+Emre'nin kurtarıldığı çiftlik evi.
+
+```
+Wide landscape image (16:9). Dawn press photo of a large isolated farmhouse surrounded by a high stone wall on the outskirts of a town, the iron gate wide open with a small security camera above it, several police vehicles and a gendarmerie-style van parked on the dirt road, morning fog over empty fields, officers standing in small groups, shot from a distance. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+### Sonra (haberler)
+
+#### `haber_ses_kaydi.jpg` — Haber: "Milletvekilinin sesi: 'Bu çocuğu susturun'" · 16:9
+
+Berat'ın kayıtlarının yayımlandığı haber.
+
+```
+Wide landscape image (16:9). An old smartphone lying on a cluttered newsroom desk, its screen showing only an audio waveform with no text, a pair of headphones plugged in, an open notebook with scribbled lines too blurry to read, a desk lamp, late night. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse.
+```
+
+#### `haber_havalimani.jpg` — Haber: "Vakıf müdürü yurt dışına çıktı" · 16:9
+
+Halit Yener (Danışman) kaçıyor. Yüzü hiç görünmez; havalimanı hiçbir şehri ele vermemeli.
+
+```
+Wide landscape image (16:9). A blurry long-lens photo inside a generic airport departure hall at night: a fictional 45-year-old man in an expensive black overcoat, face never visible, seen from behind walking away towards passport control pulling a small black suitcase, a departure board in the background completely out of focus, few travellers, cold fluorescent light. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, recognizable airport, airline logos.
+```
+
+#### `haber_emniyet.jpg` — Haber: "Soruşturmayı yürüten amir görevden uzaklaştırıldı" · 16:9
+
+Emniyet binası; komiserin uzaklaştırılma haberi. "Bir hafta geride kaldı" haberinde de kullanırım.
+
+```
+Wide landscape image (16:9). Overcast day press photo of the plain concrete facade of a provincial police headquarters building, a barrier at the gate, a police car parked in front, a guard booth, bare trees, grey sky, the sign over the door out of focus and unreadable. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `haber_sanayi_olum.jpg` — Haber: "Sanayide bir adam ölü bulundu" (Adil) · 16:9
+
+Ceset görünmesin.
+
+```
+Wide landscape image (16:9). Early dawn press photo of a narrow street in an industrial estate: rolled-down metal shutters of small workshops, police tape stretched across the street, a single flickering streetlight, a white forensic tent far in the background, two officers smoking by a police car. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `haber_ece_arsiv.jpg` — Haber (arşiv, üç yıl önce): "Üniversiteli genç kadının ölümü... soruşturma kapatıldı" · 16:9
+
+Ece'nin eski dosyası. Biraz eski bir fotoğraf gibi dursun.
+
+```
+Wide landscape image (16:9). Press photo from a few years ago: a small memorial at the foot of a tree on a university campus, wilted flowers, a few burnt-out candles in glass jars, a small framed photo of a smiling young woman that is blurred and unrecognizable, students walking past out of focus. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `haber_aileler.jpg` — Haber: Kayıp öğrencilerin aileleri konuşuyor · 16:9
+
+"Kızım cuma görüşürüz dedi" ve "Mezbahadaki fotoğraflardaki öğrenciler kim?" haberlerinin ikisinde de kullanırım.
+
+```
+Wide landscape image (16:9). Close press photo of a middle-aged mother's hands holding a framed photo of a young university student on her lap, the photo itself blurred, sitting on a worn sofa with a crocheted cover in a modest living room, soft window light, her face not in the frame. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse.
+```
+
+#### `haber_adli_tip.jpg` — Haber ve harita: Adli Tıp Kurumu · 16:9
+
+"İlaç verilmiş" ve "cinayet şüphesi" haberlerinde; haritadaki Adli Tıp için de kırparım.
+
+```
+Wide landscape image (16:9). Dusk press photo of the exterior of a plain institutional forensic medicine building with a side entrance, an ambulance and a dark van parked near the door, a few reporters waiting by the fence, sodium lights coming on, the building sign unreadable. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `haber_mezbaha_eski.jpg` — Haber (arşiv): "Eski mezbaha kapatıldı" · 16:9
+
+Mezbahanın yıllar önceki hâli; polis yok, gündüz.
+
+```
+Wide landscape image (16:9). Daytime press photo of a closed old municipal slaughterhouse on the edge of an industrial estate: a long low building with small high windows, a rusty sliding gate chained shut, weeds along the fence, a faded banner on the fence with unreadable text, grey sky, no people. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `haber_cenaze.jpg` — İsteğe bağlı yenisi: Berat'ın cenazesi · 16:9
+
+Şu anki görselde İstanbul Boğazı görünüyor. Değiştirmek istersen bunu kullan.
+
+```
+Wide landscape image (16:9). A crowded funeral in a flat cemetery on the edge of a small inland town on a grey rainy day, mourners in black, many black umbrellas, men in suits around a coffin, cypress trees, low hills and concrete apartment blocks in the far background, photographed from a distance, no faces clear. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: press photo, photojournalism, realistic, natural available light, slight noise, muted desaturated colors, cold color grading, shot from a distance with a long lens. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees, water, coastline, bridge.
+```
+
+### Sonra (harita mekânları)
+
+#### `kampus_kafe.jpg` — Harita: Kampüs Kafe · 4:3
+
+Okulun karşısındaki kafe, Berat'ın her zamanki yeri. Gece güvenlik kamerası karesindeki kafeyle aynı yer.
+
+```
+Landscape image (4:3). Evening photo of a small café across the street from a university gate: big windows with warm light, a few plastic chairs and small tables outside on the wet pavement, students inside out of focus, a security camera above the door, the café sign blurred. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: candid smartphone photo, realistic, natural available light, slight sensor noise, muted desaturated colors, cold color grading, documentary look, shallow depth of field, ordinary everyday feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `universite.jpg` — Harita: Üniversite · 4:3
+
+Berat'ın neredeyse hiç uğramadığı okul.
+
+```
+Landscape image (4:3). A grey morning photo of the main gate and a plain 1990s concrete faculty building of a provincial state university, students walking in with backpacks, bare trees, puddles, the university name on the gate out of focus. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: candid smartphone photo, realistic, natural available light, slight sensor noise, muted desaturated colors, cold color grading, documentary look, shallow depth of field, ordinary everyday feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `vakif_bina.jpg` — Harita: Yılmaz Eğitim Vakfı · 4:3
+
+İstersen gerek yok: `haber_vakif.jpg`'yi haritada da kullanabilirim.
+
+```
+Landscape image (4:3). A modern glass and stone office building in a town centre with a small plaza in front, students with folders queuing at the entrance, a polished plaque by the door out of focus, overcast afternoon. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: candid smartphone photo, realistic, natural available light, slight sensor noise, muted desaturated colors, cold color grading, documentary look, shallow depth of field, ordinary everyday feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `aydin_evi.jpg` — Harita: Aydın Ailesinin Evi · 4:3
+
+Eski Mahalle'de iki katlı, perdeleri kapalı bir ev. Kerem ve Ece'nin evi.
+
+```
+Landscape image (4:3). A dusk photo of an old two-storey house in a poor old neighbourhood, peeling paint, all curtains closed, a dim light behind one upstairs window, a small neglected garden with a rusty gate, an empty narrow street with uneven cobblestones. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: candid smartphone photo, realistic, natural available light, slight sensor noise, muted desaturated colors, cold color grading, documentary look, shallow depth of field, ordinary everyday feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `soguk_hava_deposu.jpg` — Harita: Eski Soğuk Hava Deposu · 4:3
+
+Baskından önceki hâli: polis yok, kapı zincirli.
+
+```
+Landscape image (4:3). A night photo of an old cold storage warehouse at the far end of an industrial estate, windowless corrugated metal walls with rust streaks, a heavy insulated metal door locked with a thick new chain and padlock, a single weak light above it, an empty lot with puddles, nobody around. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: candid smartphone photo, realistic, natural available light, slight sensor noise, muted desaturated colors, cold color grading, documentary look, shallow depth of field, ordinary everyday feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `ciftlik_evi.jpg` — Harita: Halit Yener'in Çiftlik Evi · 4:3
+
+Baskından önceki hâli: kapı kapalı, kamera var.
+
+```
+Landscape image (4:3). A photo taken from a car on a dirt road of a large farmhouse behind a high stone wall on the outskirts of a town, a closed iron gate with a small security camera on the wall, a black car parked inside barely visible, empty winter fields, late afternoon. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: candid smartphone photo, realistic, natural available light, slight sensor noise, muted desaturated colors, cold color grading, documentary look, shallow depth of field, ordinary everyday feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+#### `pansiyon.jpg` — Harita: Otogar Arkası Pansiyon · 4:3
+
+Eski otogarın arkasında, tabelası yarı sönük bir pansiyon.
+
+```
+Landscape image (4:3). A night photo of a cheap narrow guesthouse in a back street behind an old bus station, a vertical neon sign with half of its letters burnt out and unreadable, a dim reception visible through a glass door, a stray cat on the steps, wet asphalt. Setting: a small provincial university city in Turkey: concrete apartment blocks, narrow streets, tea glasses, industrial estate. Not Istanbul. Style: candid smartphone photo, realistic, natural available light, slight sensor noise, muted desaturated colors, cold color grading, documentary look, shallow depth of field, ordinary everyday feel. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, signature, flags, national symbols, celebrity likeness, famous or real person, cartoon, anime, illustration, 3D render, CGI, plastic skin, oversaturated colors, HDR, glamour lighting, studio backdrop, extra fingers, deformed hands, distorted face, duplicate person, gore, blood, visible corpse, sea, Bosphorus, Istanbul skyline, famous landmarks, palm trees.
+```
+
+---
+
 ## Nasıl kullanılır
 
 1. **Stil eki:** Her prompt'un sonuna aşağıdaki stil ekini ekle. (Bazı

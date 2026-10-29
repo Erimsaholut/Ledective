@@ -136,3 +136,29 @@ Komiserin telefonunda ne olmalı ve ne olmamalı:
   olmasın.
 - [?] Bir tane tuhaf kare: perdesi kapalı, karanlık bir oda; nerede olduğu
   belli değil. (Gizli son için ipucu, sonra karar verelim.)
+
+## 6. Yeni gerekenler
+
+Prompt'ları [`GORSEL_PROMPTLARI.md`](GORSEL_PROMPTLARI.md) › "Yeni: kopyala,
+yapıştır" bölümünde, her biri tek başına yapıştırılabilir. Getirdiklerini
+`assets/pics/` klasörüne koy; kırpıp bağlarım.
+
+| Dosya adı | Nerede | Oran | Öncelik |
+| --- | --- | --- | --- |
+| `ece_mulakat.jpg`, `ece_burs.jpg`, `ece_son.jpg` | Ece'nin 3 Sinstagram gönderisi | 1:1 | Şimdi |
+| `berat_telefon.jpg` | Pano › Berat'ın Telefonu | 1:1 | Şimdi |
+| `haber_gozalti.jpg` | Haber: Kerem gözaltında | 16:9 | Şimdi |
+| `haber_depo.jpg` | Haber: Melis (iki sonda da) | 16:9 | Şimdi |
+| `haber_ciftlik.jpg` | Haber: Emre kurtarıldı | 16:9 | Şimdi |
+| `haber_ses_kaydi.jpg` | Haber: kayıtlar yayımlandı | 16:9 | Sonra |
+| `haber_havalimani.jpg` | Haber: Halit Yener kaçtı | 16:9 | Sonra |
+| `haber_emniyet.jpg` | Haber: komiser uzaklaştırıldı, "bir hafta" | 16:9 | Sonra |
+| `haber_sanayi_olum.jpg` | Haber: Adil ölü bulundu | 16:9 | Sonra |
+| `haber_ece_arsiv.jpg` | Haber (arşiv): Ece'nin dosyası kapandı | 16:9 | Sonra |
+| `haber_aileler.jpg` | Haber: kayıp öğrencilerin aileleri | 16:9 | Sonra |
+| `haber_adli_tip.jpg` | Haber: toksikoloji, cinayet şüphesi; Harita › Adli Tıp | 16:9 | Sonra |
+| `haber_mezbaha_eski.jpg` | Haber (arşiv): mezbaha kapatıldı | 16:9 | Sonra |
+| `haber_cenaze.jpg` (yenisi) | Şu ankinde İstanbul Boğazı görünüyor | 16:9 | İsteğe bağlı |
+| `kampus_kafe.jpg`, `universite.jpg` | Harita | 4:3 | Sonra |
+| `vakif_bina.jpg` | Harita (ya da `haber_vakif.jpg` kullanılır) | 4:3 | İsteğe bağlı |
+| `aydin_evi.jpg`, `soguk_hava_deposu.jpg`, `ciftlik_evi.jpg`, `pansiyon.jpg` | Harita | 4:3 | Sonra |

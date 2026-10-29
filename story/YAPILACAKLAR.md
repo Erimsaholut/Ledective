@@ -46,6 +46,11 @@ işaretle, bağlantısını ben yaparım.
 - [x] `burs_sozlesmesi.jpg` (ben de üretebilirim)
 - [x] `kayip_ilani_1.jpg`, `kayip_ilani_2.jpg`
 
+### Yeni görseller (`GORSELLER.md` › 6)
+
+- [ ] Şimdi: Ece'nin 3 gönderisi, Berat'ın telefonu, gözaltı, depo ve çiftlik haberleri
+- [ ] Sonra: kalan 8 haber, 7 harita mekânı
+
 ### Kişiler (profil fotoğrafı desteği gelince)
 
 - [ ] Kodu hazırla: şu an sohbetlerde ve Sinstagram'da baş harfli renkli
