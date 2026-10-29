@@ -906,6 +906,19 @@ void main() {
       expect(progress.has('case:internal-investigation'), isFalse);
     });
 
+    test('places that open together come in one notification', () async {
+      final progress = StoryProgress.instance;
+      await progress.discover([StoryFlags.part1Done]);
+      final places = progress.alerts.items.where((a) => a.app == 'Harita');
+      expect(places, hasLength(1));
+      final opened = StoryData.current.map.locations
+          .where((l) => progress.meets(l.requires))
+          .length;
+      expect(places.single.title, '$opened yeni konum');
+      expect(places.single.body, contains("Berat'ın Evi"));
+      expect(places.single.body, contains(' ve '));
+    });
+
     test('opening something again does not count twice', () async {
       final progress = StoryProgress.instance;
       final clinic = StoryData.current.mailPool.mails.firstWhere(

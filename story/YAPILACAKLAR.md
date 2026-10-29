@@ -166,6 +166,9 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
   kendi bildirimiyle; beklerken listede "yazıyor..." görünüyor.
 - [x] Bölüm açılınca toplu gelen bildirimler de uygulama uygulama, yaklaşık
   2 saniye arayla geliyor. Uygulama açılınca onun bekleyenleri düşüyor.
+- [x] Aynı anda açılan konum, delil, belge, kayıt ve banka hareketleri tek
+  bildirimde: "4 yeni konum · Berat'ın Evi, Kampüs Kafe, Üniversite ve Adli
+  Tıp Kurumu". Mail, SMS ve haberler göndereniyle tek tek kalıyor.
 
 ## Hikâye planı (bible) adımları
 

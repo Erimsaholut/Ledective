@@ -553,12 +553,40 @@ class StoryProgress extends ChangeNotifier implements StoryState {
         }
         continue;
       }
-      for (final item in added) {
-        final alert = _alertFor(kind, item);
-        if (alert != null) alerts.push(alert);
-      }
+      alerts.pushAll(
+        _combine(kind, [for (final item in added) ?_alertFor(kind, item)]),
+      );
     }
     return true;
+  }
+
+  /// What several unlocks of one kind are called together, e.g. "4 yeni
+  /// konum". Kinds not listed get one notification each.
+  static const _together = {
+    'poltel': 'yeni belge',
+    'evidence': 'yeni delil',
+    'map': 'yeni konum',
+    'voice': 'yeni kayıt',
+    'bank': 'yeni hesap hareketi',
+  };
+
+  /// [batch] as a single notification that names them all, for the kinds
+  /// in [_together], so a new chapter doesn't flood the screen.
+  List<StoryAlert> _combine(String kind, List<StoryAlert> batch) {
+    final noun = _together[kind];
+    if (noun == null || batch.length < 2) return batch;
+    final names = [for (final alert in batch) alert.body];
+    final list = names.length == 2
+        ? names.join(' ve ')
+        : '${names.sublist(0, names.length - 1).join(', ')} ve ${names.last}';
+    return [
+      StoryAlert(
+        app: batch.first.app,
+        source: batch.first.source,
+        title: '${batch.length} $noun',
+        body: list,
+      ),
+    ];
   }
 
   /// Holds back the messages in [added] (see [paceMessages]); [deliver]
