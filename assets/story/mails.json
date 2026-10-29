@@ -363,6 +363,244 @@
         "subject": "Mil puanlarınız",
         "body": "Son 12 ayda uçuş kaydınız bulunmadığından mil puanlarınızın süresi dolmak üzere.",
         "requires": "leak:traced"
+      },
+      {
+        "id": "dizikutu-continue",
+        "sender": "bildirim@dizikutu.tv",
+        "subject": "Kaldığınız yerden: Kurtlar Sofrası, 3. sezon 14. bölüm",
+        "body": "Polat masaya oturdu, ama siz 2 saattir kalkmadınız. İzlemeye devam etmek ister misiniz? Bu arada 'Gece Devriyesi' yeni sezonuyla platformda."
+      },
+      {
+        "id": "dizikutu-recap",
+        "sender": "bildirim@dizikutu.tv",
+        "subject": "Yılın izleme özetin hazır 🎬",
+        "body": "Bu yıl 412 saat dizi izledin. En çok izlediğin tür: Polisiye. En çok durdurduğun sahne: sorgu odası. En çok tekrar izlediğin replik: \"Bu dosya kapanmadı.\""
+      },
+      {
+        "id": "quiz-detective",
+        "sender": "sonuc@testmerkezi.net",
+        "subject": "Testin sonucu: Hangi dizi dedektifisin?",
+        "body": "Sonucun: COLUMBO 🕵️ Dağınık görünüyorsun ama aslında her şeyi fark ediyorsun. Kapıdan çıkarken \"Son bir şey...\" demeyi seviyorsun. Arkadaşlarına gönder, onlar kim çıkacak?"
+      },
+      {
+        "id": "fan-club",
+        "sender": "uyelik@polisiyeseverler.org",
+        "subject": "Polisiye Severler Kulübü: Ayın toplantısı",
+        "body": "Bu ayki toplantımızda Agatha Christie'nin 'Doğu Ekspresinde Cinayet' romanını konuşacağız. Lütfen sonu söylemeyin, geçen ay iki üyemiz küstü."
+      },
+      {
+        "id": "cinema-noir",
+        "sender": "program@sinemakulubu.org",
+        "subject": "Kara film gecesi: Sıradan Şüpheliler",
+        "body": "Cuma akşamı kara film gecemizde 1995 yapımı 'Sıradan Şüpheliler' gösterilecek. Film sonrası söyleşi: \"Keyser Söze kim değildi?\" Mısır ücretsiz, çay ücretli."
+      },
+      {
+        "id": "series-survey",
+        "sender": "anket@kanalbir.tv",
+        "subject": "Sizce Gece Devriyesi'nde katil kim?",
+        "body": "Sezon finali öncesi izleyici anketimize katılın: A) Bahçıvan B) İkiz kardeş C) Aslında hepsi rüyaymış D) Komiser. Doğru bilenler arasında çekilişle bir kupa çay hediye."
+      },
+      {
+        "id": "merak-daily-1",
+        "sender": "bulten@merakkosesi.com",
+        "subject": "Günün bilgisi: Ahtapotun üç kalbi var 🐙",
+        "body": "Merak Köşesi günlük bültenine hoş geldiniz! Bugünün bilgisi: Ahtapotların üç kalbi ve mavi kanı var. Yarın: Neden kediler tatlıyı tadamaz? Abonelikten çıkmak için hiçbir şey yapmanıza gerek yok, zaten okumuyorsunuz."
+      },
+      {
+        "id": "merak-daily-2",
+        "sender": "bulten@merakkosesi.com",
+        "subject": "Günün bilgisi: Satrançtaki oyun sayısı evrendeki atomlardan fazla ♟️",
+        "body": "Shannon sayısına göre satrançta yaklaşık 10^120 farklı oyun mümkün. Gözlemlenebilir evrende ise yaklaşık 10^80 atom var. Yani bir sonraki hamlenizi düşünürken acele etmeyin."
+      },
+      {
+        "id": "merak-daily-3",
+        "sender": "bulten@merakkosesi.com",
+        "subject": "Günün bilgisi: Agatha Christie'nin kayıp 11 günü",
+        "body": "1926'da kaybolan Agatha Christie 11 gün sonra bir otelde, başka bir isimle bulundu. Ne olduğunu hiçbir zaman anlatmadı. Bazı sırlar çözülmeden kalmayı seçer."
+      },
+      {
+        "id": "history-week",
+        "sender": "bulten@tarihtebuhafta.org",
+        "subject": "Tarihte bu hafta: Dünyanın en kısa savaşı",
+        "body": "1896'da İngiltere ile Zanzibar arasındaki savaş yaklaşık 38 dakika sürdü. Haftanın sorusu: Sizce en uzun süren toplantınız kaç dakikaydı?"
+      },
+      {
+        "id": "history-quiz",
+        "sender": "bulten@tarihtebuhafta.org",
+        "subject": "Haftanın tarih bilmecesi 🏺",
+        "body": "Piri Reis'in 1513'te çizdiği haritanın sadece bir parçası bugüne ulaştı. Geri kalanı nerede? Cevabınızı bize yazın. Bilen olursa biz de çok merak ediyoruz."
+      },
+      {
+        "id": "museum-night",
+        "sender": "etkinlik@kentmuzesi.gov.tr",
+        "subject": "Müzede bir gece: Fenerle tur",
+        "body": "Kent Müzesi'nde ayın son cuması fenerle gece turu yapıyoruz. Lütfen sergilenen eserlere dokunmayın; geçen sefer bir ziyaretçi mumya sandığı vitrin mankenine sarıldı."
+      },
+      {
+        "id": "magazin-weekly",
+        "sender": "abonelik@magazinhatti.com",
+        "subject": "Bu hafta Magazin Hattı'nda: Serap Yıldız'ın kayıp ayakkabısı",
+        "body": "Ünlülerin hayatı bu hafta da çok karışık! Mert ve Defne ayrıldı, köpekleri Fındık kimde kalacak? Ünlü şef menemene soğan koymuyor! Haberin devamı için abone olun, yani zaten abonesiniz."
+      },
+      {
+        "id": "magazin-vote",
+        "sender": "anket@magazinhatti.com",
+        "subject": "Yılın en şık ünlüsü kim? Oy verin!",
+        "body": "Adaylarımız: Serap Yıldız (çorapla konser), Kaan Demirel (üç ay çay), kedi Tarçın (sahne şovu). Geçen yıl kazanan Yeşilkentspor maskotu yine aday olmak istedi, kabul etmedik."
+      },
+      {
+        "id": "mother-chain",
+        "sender": "annem@eposta.com",
+        "subject": "Fwd: Fwd: BUNU 10 KİŞİYE GÖNDER",
+        "body": "Oğlum bunu bana teyzen gönderdi, 10 kişiye göndermezsen 7 yıl şanssızlık getiriyormuş. Ben 9 kişiye gönderdim, bir kişi sensin. Sen de 10 kişiye gönder. Bir de mont giy, hava soğuyor."
+      },
+      {
+        "id": "mother-series",
+        "sender": "annem@eposta.com",
+        "subject": "Sizin meslekten bir dizi başladı",
+        "body": "Akşam bir dizi izledim, komiser her şeyi tek başına çözüyor. Senin işin de böyle mi? Yorulma o kadar. Bir de dizideki komiser evlendi, haberin olsun."
+      },
+      {
+        "id": "mother-photo",
+        "sender": "annem@eposta.com",
+        "subject": "Komşunun kızı nişanlandı",
+        "body": "Hatice Hanım'ın kızı nişanlandı, fotoğrafını gönderiyorum ama ek yapamadım galiba. Neyse, çok güzel olmuş. Sana da sordular, ben \"işi gücü var\" dedim."
+      },
+      {
+        "id": "aunt-recipe",
+        "sender": "teyzen@eposta.com",
+        "subject": "Annene söyleme, tarif bende",
+        "body": "Annen sarma tarifini kimseye vermiyor ama ben gizlice yazdım: bol nane, az pirinç, bir tutam sabır. Bunu ondan duyduğunu sakın söyleme."
+      },
+      {
+        "id": "friend-meme",
+        "sender": "tolga.k@eposta.com",
+        "subject": "Bunu görünce aklıma sen geldin 😂",
+        "body": "Sahte polis gerçek polise denk gelmiş, okudun mu? Senin gibi biri olsa adamı çaydan önce çözerdi. Hâlâ cevap vermiyorsun ama, ayıp oluyor."
+      },
+      {
+        "id": "cousin-wedding",
+        "sender": "kuzen.burak@eposta.com",
+        "subject": "Düğün davetiyesi 💍",
+        "body": "Kuzenim, ayın 14'ünde düğünümüz var! Orkestra 2000'lerin dizi müziklerini çalacak, halay garantili. Gelemezsen de takıyı IBAN'a atabilirsin, şaka şaka (değil)."
+      },
+      {
+        "id": "cart-magnifier",
+        "sender": "sepet@hepsibir.com",
+        "subject": "Sepetinizde ürün kaldı 🛒",
+        "body": "Sepetinizde 2 adet 'Profesyonel Büyüteç (10x)' ve 1 adet 'Bej Yağmurluk' sizi bekliyor. Bu kombin 'Gerçek Dedektif Paketi' kampanyasında %20 indirimli!"
+      },
+      {
+        "id": "bookstore-christie",
+        "sender": "kampanya@kitapevi.com.tr",
+        "subject": "Agatha Christie seti şimdi indirimde",
+        "body": "66 romanın tamamı tek kutuda! Uyarı: Okumaya başlayan müşterilerimizin %80'i katilin uşak olduğunu tahmin ediyor. Değil."
+      },
+      {
+        "id": "puzzle-mag",
+        "sender": "abonelik@bulmacadunyasi.com",
+        "subject": "Bulmaca Dünyası aboneliğiniz yenilendi",
+        "body": "Bu sayıda: 300 soruluk dev bulmaca, sudoku ve 'Kim Yaptı?' polisiye bilmeceleri. Geçen sayının çözümü: Katil bahçıvandı. Tekrar ediyoruz: Bu sefer gerçekten bahçıvandı."
+      },
+      {
+        "id": "phishing-sinsta",
+        "sender": "destek@sinstagram-guvenlik.biz",
+        "subject": "Hesabınız 24 saat içinde silinecek!!!",
+        "body": "Sayın kullanıcı, hesabınız telif ihlali nedeniyle silinecektir. İtiraz etmek için şifrenizi bu maile yanıt olarak yazın. Sinstagram Güvenlik Ekibi (gerçekten biziz)."
+      },
+      {
+        "id": "phishing-inheritance",
+        "sender": "avukat.miras@uzakakraba.net",
+        "subject": "Uzak akrabanızdan 4,2 milyon dolar miras",
+        "body": "Sayın Bay/Bayan [SOYADINIZ], soyadınızı taşıyan uzak bir akrabanız vefat etmiştir. Mirasın size aktarılması için sadece 'dosya masrafı' olarak 500 TL göndermeniz yeterlidir."
+      },
+      {
+        "id": "phishing-cargo",
+        "sender": "bilgi@kargo-takip-tr.info",
+        "subject": "Kargonuz gümrükte bekliyor",
+        "body": "Gönderiniz gümrükte 'eksik adres' nedeniyle beklemektedir. 12,90 TL gümrük ücretini ödemek için bağlantıya tıklayın. Takip no: TR000000000. Kargo firması: Kargo."
+      },
+      {
+        "id": "horoscope",
+        "sender": "gunluk@burcyorumu.com",
+        "subject": "Bugün burcunuz ne diyor? ♏",
+        "body": "Bugün yıldızlar sizden yana değil. Eski bir dosya yeniden açılabilir. Yakınınızdaki biri sizden bir şey saklıyor olabilir. Şanslı renginiz: gri. Şanslı sayınız: 155."
+      },
+      {
+        "id": "weather-alert",
+        "sender": "uyari@meteo-bulten.com",
+        "subject": "Hava durumu: Yağmur bekleniyor",
+        "body": "Önümüzdeki günlerde yağmur bekleniyor. Bekleniyor. Hâlâ bekleniyor. Şemsiyenizi yanınızdan ayırmayın ya da ayırın, emin değiliz."
+      },
+      {
+        "id": "gym-challenge",
+        "sender": "kampanya@fitlife.com.tr",
+        "subject": "30 günde plank challenge'a katıl!",
+        "body": "Her gün 1 dakika plank! İlk gün 30 saniye, son gün 5 dakika. Katılımcılarımızın %3'ü bitirdi, %97'si bu maili sildi."
+      },
+      {
+        "id": "app-update",
+        "sender": "noreply@hesapmakinesi.app",
+        "subject": "Hesap Makinesi uygulamanız güncellendi",
+        "body": "Yeni sürümde: 2+2 artık daha hızlı hesaplanıyor. Karanlık mod eklendi. Ve bir hata düzeltildi: 0'a bölünce uygulama artık ağlamıyor."
+      },
+      {
+        "id": "language-app",
+        "sender": "ders@dilbaykusu.app",
+        "subject": "Bugünkü dersini kaçırdın 🦉",
+        "body": "Baykuş üzgün. Baykuş seni bekliyor. 47 günlük serin tehlikede. Bugün sadece 5 dakika ayır, yoksa baykuş... sadece çok üzülecek."
+      },
+      {
+        "id": "sports-club",
+        "sender": "spor@emniyet-sporkulubu.org",
+        "subject": "Masa tenisi turnuvası kayıtları açıldı",
+        "body": "Emniyet Spor Kulübü'nün geleneksel masa tenisi turnuvası başlıyor. Geçen yılın şampiyonu Narkotik Şube yine iddialı. Kayıt için son gün cuma."
+      },
+      {
+        "id": "id-renewal",
+        "sender": "personel.emniyet.gov.tr",
+        "subject": "Kurum kimlik kartı yenileme",
+        "body": "Kurum kimlik kartlarının yenilenmesi için fotoğraflarınızı en geç ay sonuna kadar iletmeniz gerekmektedir. Not: Güneş gözlüklü ve şapkalı fotoğraflar kabul edilmeyecektir."
+      },
+      {
+        "id": "lost-found",
+        "sender": "idari.emniyet.gov.tr",
+        "subject": "Kayıp eşya: Kimin bu kupa?",
+        "body": "Toplantı salonunda üzerinde 'Dünyanın En İyi Komiseri' yazan bir kupa bulundu. Sahibi 3 haftadır çıkmadı. Kupa idari işlerde, içindeki çay atıldı."
+      },
+      {
+        "id": "tea-fund",
+        "sender": "idari.emniyet.gov.tr",
+        "subject": "Çay parası hatırlatması",
+        "body": "Değerli personelimiz, kat çay fonunda 340 TL açık bulunmaktadır. Kimin içip ödemediğini biliyoruz. Lütfen gönüllü olarak ödeyin, soruşturma açmak istemiyoruz."
+      },
+      {
+        "id": "tv-producer",
+        "sender": "proje@yildizyapim.com.tr",
+        "subject": "Hikâyeniz dizi olsun mu?",
+        "body": "Merhaba, yapım şirketimiz yaşadıklarınızdan esinlenen bir dizi projesi üzerinde çalışıyor. Komiser rolü için sizinle görüşmek isteriz. İsim haklarınız için de bir teklifimiz var.",
+        "requires": "press:story-published"
+      },
+      {
+        "id": "magazin-interview",
+        "sender": "muhabir@magazinhatti.com",
+        "subject": "Kısa bir röportaj ricası",
+        "body": "Okurlarımız sizi çok merak ediyor: En sevdiğiniz yemek ne? Hangi diziyi izliyorsunuz? Soruşturmayla ilgili hiçbir şey sormayacağız, söz. Belki bir tane.",
+        "requires": "press:named"
+      },
+      {
+        "id": "conspiracy-fan",
+        "sender": "gercekler.burada@eposta.com",
+        "subject": "Mezbaha olayının ARKASINDA kim var biliyorum",
+        "body": "Komiserim, mezbaha olayının arkasında uzaylılar var. Kanıtım: mezbahanın çatısı üçgen. Bana dönüş yaparsanız 47 sayfalık dosyamı gönderirim.",
+        "requires": "mezbaha-found"
+      },
+      {
+        "id": "bookstore-true-crime",
+        "sender": "kampanya@kitapevi.com.tr",
+        "subject": "Yeni çıkanlar: 'Yeşilkent Cinayeti' kitabı ön satışta",
+        "body": "Daha dosya kapanmadan yazılan ilk kitap! 'Yeşilkent Cinayeti: Bir Milletvekilinin Oğlu' ön siparişte %30 indirimli. Yazar: Anonim. Kapakta sizin siluetiniz var.",
+        "requires": "coverup:exposed"
       }
     ]
   },

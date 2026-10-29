@@ -137,7 +137,7 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
   çekince bildirim merkezi açılır.
 - [x] **Mail ve haber zamanlaması.** Aşağı çekip yenileme kalktı; oyun
   süresinde rastgele aralıklarla gelir, bazıları olaylardan sonra
-  (`afterMinutes`, `requires`). Havuzlar: 58 mail, 58 gündelik haber.
+  (`afterMinutes`, `requires`). Havuzlar: 97 mail, 116 gündelik haber (magazin, tarih, ilginç bilgiler, dizi göndermeleri dahil).
 - [x] Gizli son için üç ipucu maili kalıyor (otel, havayolu, poliklinik);
   `bible/01-ana-gizem.md` içinde kanon. Açılınca `doubt` artsın mı, sonra
   karar ver (mailler şu an `unlocksOnView` desteklemiyor).

@@ -4,7 +4,9 @@
     {"id": "gundem24", "name": "Gündem24", "color": "#0D47A1"},
     {"id": "kampus", "name": "Kampüs Haber", "color": "#2E7D32"},
     {"id": "ekspres", "name": "Yeşilkent Ekspres", "color": "#E65100"},
-    {"id": "spor", "name": "Tribün Spor", "color": "#00695C"}
+    {"id": "spor", "name": "Tribün Spor", "color": "#00695C"},
+    {"id": "magazin", "name": "Magazin Hattı", "color": "#AD1457"},
+    {"id": "merak", "name": "Merak Köşesi", "color": "#4527A0"}
   ],
   "articles": [
     {
@@ -1045,6 +1047,705 @@
           "Bir öğrenci, \"Önce sözleşmeyi okuyoruz artık\" dedi."
         ],
         "requires": "coverup:exposed"
+      },
+      {
+        "id": "serap-shoe",
+        "outlet": "magazin",
+        "title": "Serap Yıldız sahnede ayakkabısını kaybetti, konsere çorapla devam etti",
+        "summary": "Ünlü şarkıcı, ön sıraya uçan topuklusunu geri istemedi: \"Kim tuttuysa onun olsun.\"",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "konser", "şarkıcı"],
+        "body": [
+          "Yeşilkent Fuar Alanı’ndaki konserde dördüncü şarkıda sahnenin kenarına fazla yaklaşan Serap Yıldız’ın sol ayakkabısı seyircilerin arasına düştü.",
+          "Ayakkabıyı yakalayan emekli öğretmen Nuriye Hanım, \"Torunuma saklayacağım\" dedi. Yıldız konserin kalanını çoraplarıyla tamamladı ve bis yaptı."
+        ]
+      },
+      {
+        "id": "kaan-tea",
+        "outlet": "magazin",
+        "title": "Dizi oyuncusu Kaan Demirel: \"Rolüm için üç ay sadece çay içtim\"",
+        "summary": "Komiser rolüne hazırlanan oyuncu, karakola gidip bir hafta \"gözlem\" yaptığını anlattı.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "dizi", "oyuncu", "polis"],
+        "body": [
+          "\"Gece Devriyesi\" dizisinin yeni sezonunda başkomiseri oynayacak Kaan Demirel, hazırlık sürecinde günde on iki bardak çay içtiğini söyledi.",
+          "Demirel, \"Gerçek polisler hiç uyumuyor, sadece çay içiyor. Ben de öyle yaptım\" dedi. Emniyetten konuyla ilgili açıklama gelmedi."
+        ]
+      },
+      {
+        "id": "influencer-olives",
+        "outlet": "magazin",
+        "title": "Duru’nun kahvaltı fotoğrafı 2 milyon beğeni aldı, zeytinler tartışma yarattı",
+        "summary": "Takipçiler tabaktaki zeytinlerin \"plastik\" olduğunu iddia etti; Duru zeytini kamera önünde yedi.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "sosyal medya", "kahvaltı"],
+        "body": [
+          "Yeşilkentli içerik üreticisi Duru’nun paylaştığı kahvaltı fotoğrafı kısa sürede rekor kırdı. Ancak yorumlarda tabaktaki zeytinlerin fazla parlak olduğu konuşuldu.",
+          "Duru ertesi gün canlı yayında zeytinlerden birini yiyerek iddiaları yanıtladı. Yayını 40 bin kişi izledi, bir kişi \"Çekirdeği nerede?\" diye sordu."
+        ]
+      },
+      {
+        "id": "couple-split",
+        "outlet": "magazin",
+        "title": "Mert ve Defne ayrıldı, köpekleri Fındık’ın velayeti konuşuluyor",
+        "summary": "Ünlü çiftin avukatları köpeğin hafta içi Mert’te, hafta sonu Defne’de kalacağını açıkladı.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "ayrılık", "köpek"],
+        "body": [
+          "Yedi yıllık evliliklerini bitiren oyuncu çift Mert Aksoy ve Defne Kural’ın ayrılığı dostane oldu. Tek anlaşmazlık Golden cinsi köpekleri Fındık konusunda yaşandı.",
+          "Çiftin ortak açıklamasında \"Fındık ikimizi de aynı derecede seviyor, mama markası konusunda anlaştık\" ifadesi yer aldı."
+        ]
+      },
+      {
+        "id": "extra-police",
+        "outlet": "magazin",
+        "title": "Dizi setindeki figüran polis, gerçek polis sanılıp yarım saat trafik yönetti",
+        "summary": "Kavşaktaki sürücüler figürana uydu; trafik her zamankinden akıcı aktı.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "dizi", "trafik", "polis"],
+        "body": [
+          "Merkezde çekilen bir polisiye dizinin figüranı Hüseyin Bey, mola sırasında kostümüyle kavşağa yürüyünce sürücüler onu gerçek trafik polisi sandı.",
+          "Hüseyin Bey, \"Düdüğü çaldım, herkes durdu. Durdurunca da bıraktım\" dedi. Yapım şirketi figürana \"özel teşekkür\" ve bir ekmek arası köfte verdi."
+        ]
+      },
+      {
+        "id": "chef-menemen",
+        "outlet": "magazin",
+        "title": "Ünlü şef \"Menemen soğansız olur\" dedi, mahalle ikiye bölündü",
+        "summary": "Televizyon şefi Levent Usta’nın sözleri kahvehanelerde saatlerce tartışıldı.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "yemek", "menemen", "şef"],
+        "body": [
+          "Yemek programında menemeni soğansız yapan Levent Usta’nın \"Soğan koyan menemeni sevmiyordur\" demesi sosyal medyada en çok konuşulan başlık oldu.",
+          "Yeşilkent’te sokak röportajına katılanların yüzde 52’si soğanlı, yüzde 46’sı soğansız dedi. Yüzde 2’si ise \"Ben sucuklu yerim\" diyerek tartışmaya katılmadı."
+        ]
+      },
+      {
+        "id": "quiz-champion",
+        "outlet": "magazin",
+        "title": "Bilgi yarışmasının şampiyonu son soruda \"Telefonla arkadaşımı arayayım\" deyip annesini aradı",
+        "summary": "Annesi soruyu bilemedi ama oğluna \"Yemek yedin mi?\" diye sordu.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "yarışma", "televizyon"],
+        "body": [
+          "Akşam kuşağının sevilen bilgi yarışmasında 250 bin liralık soruya gelen Yeşilkentli yarışmacı, joker hakkını kullanarak annesini aradı.",
+          "Annesi otuz saniyelik sürenin yirmisinde oğlunun ne yediğini sordu. Yarışmacı soruyu kendisi bildi ve büyük ödülü kazandı."
+        ]
+      },
+      {
+        "id": "old-star-mascot",
+        "outlet": "magazin",
+        "title": "Doksanların dizi yıldızı sahalara döndü: Yeşilkentspor’un yeni maskotu oldu",
+        "summary": "\"Komşu\" dizisinin sevilen bakkalı Rıza Bey, maskot kostümünün içinden çıktığında tribün ayağa kalktı.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "dizi", "spor", "maskot"],
+        "body": [
+          "Yıllar önce sevilen bir aile dizisinde bakkal Rıza’yı oynayan Celal Kaya, Yeşilkentspor’un sarı kanarya maskotunun içinden çıkınca taraftarlar onu tanıdı.",
+          "Kaya, \"Emekli oldum, evde oturamadım. Kanarya olmak bakkal olmaktan zor\" dedi. Takım o maçı da berabere bitirdi."
+        ]
+      },
+      {
+        "id": "wedding-dress",
+        "outlet": "magazin",
+        "title": "Ünlü modacı gelinliği kar yağmasın diye otobüsle taşıttı",
+        "summary": "Modacı Ayla Tan, gelinliğe ayrı bir koltuk bileti aldı.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "moda", "otobüs"],
+        "body": [
+          "Şehirlerarası otobüste yan koltukta oturan beyaz kılıflı gelinlik yolcuların ilgi odağı oldu. Muavin gelinliğe de kolonya ve kek ikram etti.",
+          "Ayla Tan, \"Kargoya veremezdim. Bu gelinlik benim çocuğum gibi\" dedi."
+        ]
+      },
+      {
+        "id": "singer-cat",
+        "outlet": "magazin",
+        "title": "Şarkıcının kedisi konserde sahneye çıktı, alkışları o topladı",
+        "summary": "Kedi Tarçın, mikrofon sehpasının yanına oturup şarkının sonuna kadar kalktı ve yürüdü.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "kedi", "konser"],
+        "body": [
+          "Akustik konserde sahneye yürüyen kedi Tarçın’ı gören seyirciler şarkının ortasında alkışa başladı. Şarkıcı Bora Sel, \"Benden daha çok seviliyor\" dedi.",
+          "Tarçın konserin ardından sosyal medyada kendi hesabını açtı. Hesap bir günde 80 bin takipçiye ulaştı."
+        ]
+      },
+      {
+        "id": "mp-gala",
+        "outlet": "magazin",
+        "title": "Yılmaz ailesi bu yıl yardım gecesine katılmadı",
+        "summary": "Her yıl salonun en ön masasında oturan aile için ayrılan masa boş kaldı.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "vakıf", "yılmaz"],
+        "body": [
+          "Yılmaz Eğitim Vakfı’nın geleneksel yardım gecesi bu yıl sessiz geçti. Davetliler arasında ailenin yasını saygıyla karşıladıklarını söyleyenler olduğu kadar, \"Vakıf yine de para topladı\" diyenler de vardı.",
+          "Gecede konuşma yapan vakıf yöneticileri, Berat Yılmaz’ın adını bir kez bile anmadı."
+        ],
+        "requires": "part1Done"
+      },
+      {
+        "id": "series-rights",
+        "outlet": "magazin",
+        "title": "Yapımcılar Berat Yılmaz dosyasının dizi haklarının peşinde",
+        "summary": "Üç yapım şirketinin aynı gün aileyle görüşmek istediği öğrenildi. Aile kimseyle görüşmedi.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "dizi", "yılmaz"],
+        "body": [
+          "Kulislere göre ünlü yapım şirketleri, dosyanın kapanmasını beklemeden \"gerçek olaylardan esinlenen\" bir dizi için hazırlığa başladı.",
+          "Bir yapımcı, \"Komiser rolü için şimdiden üç isim düşünüyoruz\" dedi. Emniyet, soruşturmanın sürdüğünü hatırlatarak tepki gösterdi."
+        ],
+        "requires": "press:story-published"
+      },
+      {
+        "id": "villa-sale",
+        "outlet": "magazin",
+        "title": "Yılmaz ailesinin yazlığı sessizce satışa çıkarıldı",
+        "summary": "İlan, fotoğrafsız ve fiyatsız olarak verildi.",
+        "author": "Magazin Hattı",
+        "tags": ["magazin", "yılmaz", "emlak"],
+        "body": [
+          "Vakıf soruşturmasının derinleşmesinin ardından Yılmaz ailesine ait yazlığın bir emlak sitesinde satışa çıkarıldığı ortaya çıktı.",
+          "Emlakçı, \"Sahibi acele ediyor\" demekle yetindi. İlan haberin yayımlanmasından bir saat sonra kaldırıldı."
+        ],
+        "requires": "coverup:exposed"
+      },
+      {
+        "id": "fact-octopus",
+        "outlet": "merak",
+        "title": "Ahtapotun üç kalbi var, kanı da mavi",
+        "summary": "İki kalp solungaçlara, biri vücudun geri kalanına kan pompalıyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "bilim", "hayvanlar"],
+        "body": [
+          "Ahtapotların kanı, oksijeni demir yerine bakırla taşıyan hemosiyanin sayesinde mavi renkte. Üç kalpten biri yüzerken duruyor; bu yüzden ahtapotlar yüzmek yerine sürünmeyi tercih ediyor.",
+          "Yeşilkent Akvaryumu’ndaki ahtapot Sekiz’in bakıcısı, \"Bir kalbi kırılsa iki tane daha var\" diyor."
+        ]
+      },
+      {
+        "id": "fact-honey",
+        "outlet": "merak",
+        "title": "Bal bozulmuyor: Mısır mezarlarında binlerce yıllık bal bulundu",
+        "summary": "Düşük nem ve yüksek asit, balı mikroplar için yaşanmaz bir yer yapıyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "bilim", "yemek", "tarih"],
+        "body": [
+          "Arkeologlar Mısır’daki mezar kazılarında binlerce yıllık bal kavanozlarına rastladı. Bal kristalleşse de bozulmamıştı.",
+          "Yeşilkentli arıcı Hasan Amca, \"Benim balım da bozulmaz ama torunlar üç günde bitiriyor\" dedi."
+        ]
+      },
+      {
+        "id": "fact-cleopatra",
+        "outlet": "merak",
+        "title": "Kleopatra, Ay’a inişe piramitlerden daha yakın bir zamanda yaşadı",
+        "summary": "Giza’daki Büyük Piramit, Kleopatra doğduğunda zaten iki bin beş yüz yaşındaydı.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "mısır", "uzay"],
+        "body": [
+          "Büyük Piramit yaklaşık MÖ 2560’ta, Kleopatra MÖ 69’da doğdu. Ay’a ilk iniş ise 1969’da gerçekleşti.",
+          "Yani Kleopatra ile piramitlerin arası, Kleopatra ile Neil Armstrong’un arasından uzun."
+        ]
+      },
+      {
+        "id": "fact-oxford",
+        "outlet": "merak",
+        "title": "Oxford Üniversitesi, Aztek İmparatorluğu’ndan daha eski",
+        "summary": "Oxford’da 1096’da ders veriliyordu; Azteklerin başkenti Tenochtitlan 1325’te kuruldu.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "üniversite"],
+        "body": [
+          "Kesin kuruluş tarihi bilinmeyen Oxford’da 11. yüzyılın sonunda eğitim verildiği biliniyor. Tenochtitlan ise ondan iki yüz yılı aşkın süre sonra kuruldu.",
+          "Kampüs Haber’e konuşan bir öğrenci, \"Bizim yemekhane de en az o kadar eski\" dedi."
+        ]
+      },
+      {
+        "id": "fact-eiffel",
+        "outlet": "merak",
+        "title": "Eyfel Kulesi yazın 15 santim uzuyor",
+        "summary": "Isınan demir genleşiyor; kış gelince kule yeniden kısalıyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "bilim", "fizik"],
+        "body": [
+          "Yaklaşık 7.300 ton demirden yapılan kule, sıcak günlerde güneşe bakan tarafı daha çok ısındığı için hafifçe de eğiliyor.",
+          "Yeşilkent Belediyesi’nin saat kulesi ise yaz kış aynı boyda; sadece saati ileri geri gidiyor."
+        ]
+      },
+      {
+        "id": "fact-banana",
+        "outlet": "merak",
+        "title": "Muz hafifçe radyoaktif, ama korkmayın",
+        "summary": "İçindeki potasyumun küçük bir kısmı radyoaktif potasyum-40.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "bilim", "meyve"],
+        "body": [
+          "Bilim insanları bu küçük etkiyi esprili bir birim olarak bile kullanıyor: \"muz eşdeğer dozu\". Bir uçak yolculuğunda alınan doz yüzlerce muza denk.",
+          "Manav Şükrü Bey, \"Yirmi yıldır muz satıyorum, gece parlamıyorum\" dedi."
+        ]
+      },
+      {
+        "id": "fact-sharks",
+        "outlet": "merak",
+        "title": "Köpekbalıkları ağaçlardan daha eski",
+        "summary": "Köpekbalıkları yaklaşık 450 milyon yıldır var; ilk ağaçlar 385 milyon yıl önce ortaya çıktı.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "bilim", "hayvanlar", "evrim"],
+        "body": [
+          "Köpekbalıkları dinozorlardan da, bazı araştırmalara göre Satürn’ün halkalarından da eski olabilir; halkaların yaşı hâlâ tartışılıyor.",
+          "Uzmanlar köpekbalıklarının bunca zaman hayatta kalmasını \"az konuşup çok yüzmelerine\" bağlıyor."
+        ]
+      },
+      {
+        "id": "fact-wombat",
+        "outlet": "merak",
+        "title": "Vombatların dışkısı küp şeklinde",
+        "summary": "Avustralya’ya özgü hayvan, bölgesini işaretlemek için küpleri taşların üstüne bırakıyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "bilim", "hayvanlar"],
+        "body": [
+          "Küplerin bağırsağın farklı esneklikteki duvarları sayesinde şekillendiği anlaşıldı. Bu araştırma 2019’da Ig Nobel ödülü aldı.",
+          "Yeşilkent Hayvanat Bahçesi’nde vombat yok. Bakıcılar \"İyi ki yok\" diyor."
+        ]
+      },
+      {
+        "id": "fact-venus",
+        "outlet": "merak",
+        "title": "Venüs’te bir gün, bir yıldan uzun",
+        "summary": "Gezegen kendi çevresinde Güneş’in çevresinden daha yavaş dönüyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "uzay", "gezegen"],
+        "body": [
+          "Venüs’ün kendi ekseni etrafındaki bir turu yaklaşık 243 Dünya günü, Güneş etrafındaki bir turu ise 225 gün sürüyor. Üstelik ters yöne dönüyor; orada Güneş batıdan doğuyor.",
+          "Okurlarımızdan biri, \"Pazartesi sendromu orada 243 gün sürüyor demek\" yorumunu yaptı."
+        ]
+      },
+      {
+        "id": "fact-flamingo",
+        "outlet": "merak",
+        "title": "Flamingolar pembe doğmuyor",
+        "summary": "Yavrular gri; pembe renk yedikleri karides ve alglerden geliyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "doğa", "kuşlar"],
+        "body": [
+          "Flamingoların tüylerine rengini besinlerindeki karotenoid pigmentler veriyor. Hayvanat bahçelerinde bu renk özel yemle korunuyor.",
+          "Gediz Deltası’nda her yıl binlerce flamingo kuluçkaya yatıyor."
+        ]
+      },
+      {
+        "id": "fact-chess",
+        "outlet": "merak",
+        "title": "Satrançta mümkün oyun sayısı, evrendeki atom sayısından fazla",
+        "summary": "Matematikçi Claude Shannon bu sayıyı yaklaşık 10 üzeri 120 olarak hesapladı.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "matematik", "satranç"],
+        "body": [
+          "Gözlemlenebilir evrendeki atom sayısı ise 10 üzeri 80 civarında tahmin ediliyor.",
+          "Çay ocağındaki satranç masasında oynanan on bir oyunun hepsinin berabere bitmesi bu açıdan bakınca daha da şaşırtıcı."
+        ]
+      },
+      {
+        "id": "fact-otters",
+        "outlet": "merak",
+        "title": "Deniz samurları uyurken el ele tutuşuyor",
+        "summary": "Akıntıya kapılıp birbirlerinden uzaklaşmamak için.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "hayvanlar", "deniz"],
+        "body": [
+          "Deniz samurları ayrıca sevdikleri taşı koltuk altlarındaki deri cebinde saklıyor ve kabukları kırmak için kullanıyor.",
+          "Okurlarımız bu haberi bu hafta en çok paylaşılan haber yaptı."
+        ]
+      },
+      {
+        "id": "fact-cloud",
+        "outlet": "merak",
+        "title": "Sıradan bir bulut yaklaşık 500 ton ağırlığında",
+        "summary": "Su damlacıkları o kadar küçük ki yükselen hava onları taşıyabiliyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "bilim", "hava"],
+        "body": [
+          "Pamuk gibi görünen bir kümülüs bulutu, içindeki suyla birlikte yaklaşık yüz filin ağırlığına denk geliyor.",
+          "Meteoroloji, Yeşilkent’e bu hafta da birkaç yüz fil ağırlığında bulut gelmesini bekliyor ama yağmur yine belirsiz."
+        ]
+      },
+      {
+        "id": "fact-koala",
+        "outlet": "merak",
+        "title": "Koalaların parmak izi insanınkine çok benziyor",
+        "summary": "Elektron mikroskobunda bile ayırmak zor olabiliyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "bilim", "parmak izi", "hayvanlar"],
+        "body": [
+          "Avustralyalı araştırmacılar, koala parmak izlerinin kıvrımlarının insanınkiyle şaşırtıcı derecede benzediğini gösterdi.",
+          "Olay yeri inceleme uzmanları, \"Neyse ki bizim bölgede koala yok\" diyor."
+        ]
+      },
+      {
+        "id": "fact-cats-sweet",
+        "outlet": "merak",
+        "title": "Kediler tatlıyı tadamıyor",
+        "summary": "Tatlı tadını algılayan gen kedilerde çalışmıyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "kedi", "bilim"],
+        "body": [
+          "Et yiyen birçok hayvan gibi kediler de şekerin tadını alamıyor. Dondurmaya ilgileri büyük olasılıkla yağından.",
+          "Kütüphanedeki kedi Tez’in kantinden poğaça çalması bu yüzden tatlıyla değil, peynirle açıklanıyor."
+        ]
+      },
+      {
+        "id": "hist-zanzibar",
+        "outlet": "merak",
+        "title": "Tarihin en kısa savaşı 38 dakika sürdü",
+        "summary": "1896’daki İngiliz-Zanzibar Savaşı bir öğle yemeğinden kısa sürdü.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "savaş"],
+        "body": [
+          "Zanzibar’da tahta geçen sultanın İngiltere’nin isteğine uymaması üzerine sarayın bombalanmasıyla başlayan savaş, 38 ile 45 dakika arasında bitti.",
+          "Tarihçiler savaşın süresi konusunda hâlâ tam anlaşamıyor; tartışma savaşın kendisinden uzun sürdü."
+        ]
+      },
+      {
+        "id": "hist-emu",
+        "outlet": "merak",
+        "title": "Avustralya ordusu 1932’de emulara karşı savaştı, kaybetti",
+        "summary": "Makineli tüfeklerle donatılan askerler tarlalara giren yaklaşık 20 bin emuyla baş edemedi.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "kuşlar", "avustralya"],
+        "body": [
+          "\"Emu Savaşı\" adıyla bilinen operasyon bir ay içinde sona erdi. Emuların dağınık hareket etmesi ve şaşırtıcı hızı askerleri çaresiz bıraktı.",
+          "Bir subayın, \"Bu kuşlar tank gibi kurşun yiyor\" dediği aktarılır."
+        ]
+      },
+      {
+        "id": "hist-gobeklitepe",
+        "outlet": "merak",
+        "title": "Göbeklitepe, Stonehenge’den yaklaşık 6.000 yıl daha eski",
+        "summary": "Şanlıurfa’daki tapınak alanı yaklaşık 11.500 yıl önce, tarım bile başlamadan yapıldı.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "arkeoloji", "göbeklitepe"],
+        "body": [
+          "Dev T biçimli dikilitaşlarında tilki, yaban domuzu ve akbaba kabartmaları bulunan alan, insanlığın yerleşik hayata geçiş hikâyesini yeniden yazdırdı.",
+          "Kampüsteki arkeoloji kulübü bu ay Göbeklitepe gezisi düzenliyor. Kontenjan bir saatte doldu."
+        ]
+      },
+      {
+        "id": "hist-piri-reis",
+        "outlet": "merak",
+        "title": "Piri Reis’in 1513 haritası, Topkapı Sarayı’nda 1929’da bulundu",
+        "summary": "Ceylan derisine çizilen harita, Amerika kıyılarını gösteren en eski haritalardan biri.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "harita", "osmanlı"],
+        "body": [
+          "Osmanlı denizcisi Piri Reis, haritayı Kolomb’un haritası da dahil yirmi kadar kaynaktan derlediğini kenarına not etmiş.",
+          "Haritanın sadece bir parçası günümüze ulaştı. Geri kalanı hâlâ kayıp."
+        ]
+      },
+      {
+        "id": "hist-coffeehouse",
+        "outlet": "merak",
+        "title": "İstanbul’un ilk kahvehaneleri 1554’te açıldı",
+        "summary": "Halepli Hakem ve Şamlı Şems, Tahtakale’de ilk kahvehaneleri açtı.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "kahve", "kahvehane"],
+        "body": [
+          "Kahvehaneler kısa sürede şairlerin, tavla ve satranç oyuncularının buluşma yeri oldu. Bazı padişahlar dönem dönem kahveyi yasaklamayı bile denedi.",
+          "Yeşilkent’in en eski kıraathanesi ise 1972’den beri aynı yerde. Ocakçı, \"Yasaklasalar da biz çay demleriz\" diyor."
+        ]
+      },
+      {
+        "id": "hist-tulip",
+        "outlet": "merak",
+        "title": "Lale çılgınlığı: Bir soğana ev parası verildi",
+        "summary": "1630’larda Hollanda’da nadir lale soğanları ev fiyatına alınıp satıldı, piyasa 1637’de çöktü.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "lale", "ekonomi"],
+        "body": [
+          "Osmanlı bahçelerinden Avrupa’ya giden lale, Hollanda’da kısa sürede servet göstergesi oldu.",
+          "Ekonomistler bu olayı hâlâ ilk büyük spekülasyon balonlarından biri olarak anlatıyor. Kripto paraya yatırım yapan okurlarımıza selam olsun."
+        ]
+      },
+      {
+        "id": "hist-bug",
+        "outlet": "merak",
+        "title": "İlk bilgisayar \"bug\"ı gerçek bir güveydi",
+        "summary": "1947’de Harvard’daki Mark II bilgisayarının rölesine sıkışan güve deftere yapıştırıldı.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "bilgisayar", "teknoloji"],
+        "body": [
+          "Grace Hopper’ın ekibi güveyi bant ile kayıt defterine yapıştırıp altına \"bulunan ilk gerçek böcek vakası\" diye not düştü. Defter bugün Smithsonian’da.",
+          "Kampüsteki bilgisayar laboratuvarında arızalı bilgisayarların hiçbirinde güve bulunmadı. Bir tanesinde poğaça çıktı."
+        ]
+      },
+      {
+        "id": "hist-agatha",
+        "outlet": "merak",
+        "title": "Agatha Christie 1926’da 11 gün boyunca kayboldu",
+        "summary": "Binlerce kişinin aradığı yazar, takma adla bir otelde bulundu. Ne olduğunu hiç anlatmadı.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "polisiye", "kitap"],
+        "body": [
+          "Arabası terk edilmiş halde bulunan Christie için dönemin en büyük arama çalışmalarından biri yapıldı. Sir Arthur Conan Doyle bile bir medyumdan yardım istedi.",
+          "Christie otobiyografisinde bu on bir günden hiç söz etmedi. Polisiye dünyasının en büyük çözülmemiş sırlarından biri hâlâ yazarın kendisi."
+        ]
+      },
+      {
+        "id": "hist-marathon",
+        "outlet": "merak",
+        "title": "1904 Olimpiyat maratonunun ilk gelen koşucusu yolun bir kısmını arabayla gitmişti",
+        "summary": "St. Louis’deki yarışta kazananın yolda yediği \"enerji karışımı\" ise bugün olsa diskalifiye sebebiydi.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "spor", "olimpiyat"],
+        "body": [
+          "Fred Lorz kramp girince bir süre arabaya bindi, sonra yeniden koşup bitiş çizgisini ilk geçti. Hile ortaya çıkınca madalyası geri alındı.",
+          "Yarışı Thomas Hicks kazandı; antrenörleri ona yolda yumurta akı ve brendi ile karıştırılmış striknin vermişti. Yeşilkent maratonunu kazanan çaycı amca ise sadece çay içti."
+        ]
+      },
+      {
+        "id": "hist-molasses",
+        "outlet": "merak",
+        "title": "Boston’u 1919’da şeker pekmezi seli bastı",
+        "summary": "Patlayan dev tanktan çıkan melas sokaklarda saatte yaklaşık 55 kilometre hızla aktı.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "felaket", "amerika"],
+        "body": [
+          "\"Büyük Melas Seli\"nde 21 kişi hayatını kaybetti. Liman bölgesi aylarca temizlenemedi.",
+          "Bölge sakinleri, sıcak yaz günlerinde yıllarca havada tatlı bir koku olduğunu anlattı."
+        ]
+      },
+      {
+        "id": "hist-moon-steps",
+        "outlet": "merak",
+        "title": "Ay’daki ayak izleri milyonlarca yıl silinmeyebilir",
+        "summary": "Ay’da rüzgâr ve yağmur olmadığı için 1969’da bırakılan izler hâlâ yerinde.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "uzay", "ay", "tarih"],
+        "body": [
+          "İzleri tehdit eden tek şey küçük göktaşları ve güneş rüzgârı. Bilim insanları izlerin çok uzun süre kalacağını düşünüyor.",
+          "Yeşilkent’teki yeni yaya geçidinin çizgileri ise bir hafta dayanmadı."
+        ]
+      },
+      {
+        "id": "hist-napoleon",
+        "outlet": "merak",
+        "title": "Napolyon aslında kısa değildi",
+        "summary": "Yaklaşık 1,69 boyundaki imparator, döneminin ortalamasının üstündeydi.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "napolyon", "efsane"],
+        "body": [
+          "Efsane, Fransız ve İngiliz inç ölçüleri arasındaki farktan ve İngiliz karikatüristlerin onu bilerek küçük çizmesinden doğdu.",
+          "Muhafızlarının uzun boylu askerlerden seçilmesi de imparatorun yanında daha kısa görünmesine yol açtı."
+        ]
+      },
+      {
+        "id": "hist-hezarfen",
+        "outlet": "merak",
+        "title": "Hezarfen Ahmed Çelebi’nin Galata’dan Üsküdar’a uçtuğu anlatılıyor",
+        "summary": "Hikâye Evliya Çelebi’nin Seyahatname’sinden geliyor; doğru olup olmadığı hâlâ tartışılıyor.",
+        "author": "Merak Köşesi",
+        "tags": ["merak", "tarih", "osmanlı", "uçuş"],
+        "body": [
+          "Evliya Çelebi’ye göre Hezarfen, kartal kanatlarından esinlendiği kanatlarla Galata Kulesi’nden atlayıp Boğaz’ı geçti ve ödül olarak bir kese altın aldı.",
+          "Tarihçilerin çoğu anlatıyı abartılı buluyor. Yine de dünyanın her yerinde ilk uçuş hayalleri anlatılırken adı geçiyor."
+        ]
+      },
+      {
+        "id": "world-dog-mayor",
+        "outlet": "gundem24",
+        "title": "ABD’de bir kasaba 1998’den beri belediye başkanı olarak köpek seçiyor",
+        "summary": "Kentucky’deki Rabbit Hash kasabasında seçimler bağış toplama kampanyası olarak yapılıyor.",
+        "author": "Gündem24 Dünya",
+        "tags": ["dünya", "köpek", "seçim"],
+        "body": [
+          "Kasabada her oy bir dolar bağış anlamına geliyor. Bugüne kadar başkanlık koltuğuna oturanların hepsi köpek oldu.",
+          "Yerel halk, \"Hiçbiri vaat edip yapmamazlık etmedi\" diyor."
+        ]
+      },
+      {
+        "id": "world-train-sorry",
+        "outlet": "gundem24",
+        "title": "Japonya’da tren 20 saniye erken kalktığı için yolculardan özür dilendi",
+        "summary": "Demiryolu şirketi \"büyük rahatsızlık\" için resmî açıklama yaptı.",
+        "author": "Gündem24 Dünya",
+        "tags": ["dünya", "tren", "japonya"],
+        "body": [
+          "Tokyo ile Tsukuba arasındaki hatta tren, tarifeden 20 saniye önce istasyondan ayrıldı. Şikâyet gelmese de şirket özür yayımladı.",
+          "Yeşilkent’in 14 numaralı otobüs hattının yolcuları haberi kendi aralarında uzun süre tartıştı."
+        ]
+      },
+      {
+        "id": "world-oldest-cat",
+        "outlet": "gundem24",
+        "title": "Dünyanın en uzun yaşayan kedisi rekoru 38 yıldır kırılamıyor",
+        "summary": "Teksaslı kedi Creme Puff, 38 yıl 3 gün yaşadı.",
+        "author": "Gündem24 Dünya",
+        "tags": ["dünya", "kedi", "rekor"],
+        "body": [
+          "Guinness Rekorlar Kitabı’na giren kedinin sahibi, uzun ömrün sırrını kahvaltıda verdiği yumurta ve brokoliye bağlamıştı. Uzmanlar bunu denemeyin diyor.",
+          "Yeşilkent’in en yaşlı kedisi olduğu düşünülen kıraathane kedisi Paşa ise 19 yaşında ve hâlâ okey taşlarının üstünde uyuyor."
+        ]
+      },
+      {
+        "id": "world-iss-sunrise",
+        "outlet": "gundem24",
+        "title": "Uzay istasyonundaki astronotlar günde 16 kez güneşin doğuşunu görüyor",
+        "summary": "İstasyon Dünya’nın çevresini yaklaşık 90 dakikada bir dolaşıyor.",
+        "author": "Gündem24 Dünya",
+        "tags": ["dünya", "uzay", "bilim"],
+        "body": [
+          "Astronotlar uyku düzenlerini korumak için pencereleri kapatıp saatlerini Dünya’daki bir saat dilimine göre ayarlıyor.",
+          "Gece vardiyasında çalışan bir okurumuz, \"Biz de günde bir kez görüyoruz, o da yorgunluktan\" yazdı."
+        ]
+      },
+      {
+        "id": "world-mars-sunset",
+        "outlet": "gundem24",
+        "title": "Mars’ta gün batımı mavi",
+        "summary": "Kırmızı gezegenin tozu, gün batımında mavi ışığı güneşin çevresine yayıyor.",
+        "author": "Gündem24 Dünya",
+        "tags": ["dünya", "uzay", "mars"],
+        "body": [
+          "NASA’nın gezgin robotlarının çektiği fotoğraflar, Mars’ta gündüz göğün turuncumsu, akşamları ise güneşin çevresinin mavi olduğunu gösteriyor.",
+          "Yeşilkent’te gün batımı ise bu mevsimde çoğunlukla gri."
+        ]
+      },
+      {
+        "id": "world-tomato-fight",
+        "outlet": "gundem24",
+        "title": "İspanya’da kasaba her yıl domates savaşı yapıyor",
+        "summary": "Buñol’daki La Tomatina’da bir saat içinde onlarca ton domates atılıyor.",
+        "author": "Gündem24 Dünya",
+        "tags": ["dünya", "festival", "domates"],
+        "body": [
+          "1945’te başladığı anlatılan şenliğe her yıl binlerce kişi katılıyor. Kurallara göre domatesler atılmadan önce ezilmeli.",
+          "Yeşilkent pazarında domatesin kilosunu soranlar, \"Biz atamayız, yiyoruz\" dedi."
+        ]
+      },
+      {
+        "id": "chemistry-rv",
+        "outlet": "ekspres",
+        "title": "Emekli kimya öğretmeni karavan alınca mahalle tedirgin oldu",
+        "summary": "Öğretmen Vedat Bey: \"Balık tutmaya gideceğim, o diziyi ben de izledim.\"",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["dizi", "karavan", "mahalle"],
+        "body": [
+          "Kırk yıl lisede kimya dersi veren Vedat Bey’in kapının önüne park ettiği eski karavan mahallede günlerdir konuşuluyor.",
+          "Vedat Bey karavanın içini gazetecilere gösterdi: bir oltalık, bir semaver ve bir tavla. Komşular yine de kokuyu takip ediyor."
+        ]
+      },
+      {
+        "id": "dali-masks",
+        "outlet": "ekspres",
+        "title": "Bankada kırmızı tulumlu, maskeli grup paniği: Kostüm partisine giden öğrenciler çıktı",
+        "summary": "Öğrenciler kıyafetlerini değiştirmeye vakit bulamadan fatura ödemeye girmişti.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["dizi", "banka", "kampüs", "kostüm"],
+        "body": [
+          "Kırmızı tulumlu ve ünlü ressam maskeli beş kişinin bankaya girmesi üzerine güvenlik görevlisi alarm butonuna bastı.",
+          "Gelen ekipler grubun kampüsteki dizi temalı partiye gittiğini ve elektrik faturasını ödemek için yolda durduğunu belirledi. Fatura ödendi."
+        ]
+      },
+      {
+        "id": "winter-coming",
+        "outlet": "kampus",
+        "title": "Kampüste \"Kış geliyor\" afişleri: Meteoroloji değil, dizi kulübü",
+        "summary": "Öğrenci işleri, afişlerin kalorifer arızasıyla ilgili sanılması üzerine açıklama yaptı.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "dizi", "kulüp", "yurt"],
+        "body": [
+          "Dizi kulübünün maraton gecesi için astığı afişler, kaloriferlerin çalışmadığı yurt binasında yanlış anlaşıldı.",
+          "Yurt müdürlüğü, \"Kış zaten geldi, kalorifer yarın geliyor\" dedi."
+        ]
+      },
+      {
+        "id": "sultan-costume",
+        "outlet": "ekspres",
+        "title": "Emekli öğretmen tarihî dizi kostümüyle pazara çıktı",
+        "summary": "Kaftanlı ve sarıklı Nevzat Bey: \"Torunum doğum günümde hediye etti, giymeden olmaz.\"",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["dizi", "pazar", "kostüm", "tarih"],
+        "body": [
+          "Salı pazarında kaftanıyla dolaşan Nevzat Bey’e esnaf \"Sultanım\" diye seslendi, bazı tezgâhlar indirim yaptı.",
+          "Nevzat Bey, domates fiyatlarını görünce \"Bunu ferman çıkarıp düzeltmek lazım\" dedi."
+        ]
+      },
+      {
+        "id": "ismail-abi-cafe",
+        "outlet": "ekspres",
+        "title": "Kafede bütün menü bir dizinin replikleriyle yazıldı",
+        "summary": "\"Hayırdır İsmail Abi\" tostu en çok satan ürün oldu.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["dizi", "kafe", "menü", "kampüs"],
+        "body": [
+          "Kampüs yakınında açılan kafe, menüsündeki her ürüne bir komedi dizisinden replik verdi. Çay \"Erdal Bakkal’ın çayı\", kahve ise \"Mecnun’un dalgınlığı\" adıyla satılıyor.",
+          "İşletme sahibi, \"Öğrenciler menüyü okumak için geliyor, tost için kalıyor\" dedi."
+        ]
+      },
+      {
+        "id": "detective-coat",
+        "outlet": "ekspres",
+        "title": "Yağmurluk satışları polisiye dizisinin ardından üç katına çıktı",
+        "summary": "Satıcılar, müşterilerin \"bir de şu son bir soru\" diyerek kasaya döndüğünü anlattı.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["dizi", "polisiye", "moda", "yağmurluk"],
+        "body": [
+          "Kanalda yeniden yayınlanan eski bir dedektif dizisinin ardından bej yağmurluklar Yeşilkent’te kapış kapış satıldı.",
+          "Bir mağaza çalışanı, \"Bir müşteri tam çıkarken durdu, arkasını döndü ve indirim var mı diye sordu. Sonra puro sordu\" dedi."
+        ]
+      },
+      {
+        "id": "tea-sherlock",
+        "outlet": "ekspres",
+        "title": "Çay ocağına \"Sherlock\" lakaplı garson: Kimin ne içeceğini kapıdan biliyor",
+        "summary": "Garson Ufuk, otuz yıllık müşterilerin çayını soğumadan getiriyor.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["çay ocağı", "sanayi", "dizi"],
+        "body": [
+          "Sanayideki çay ocağında çalışan Ufuk, müşterinin yürüyüşünden şekerli mi şekersiz mi içeceğini tahmin ettiğini söylüyor.",
+          "Ufuk’un tek hatası, geçen hafta diyet yapan bir müşteriye şekerli çay götürmesi oldu. Müşteri çayı yine de içti."
+        ]
+      },
+      {
+        "id": "dalgona-shop",
+        "outlet": "ekspres",
+        "title": "Şekerci, dizideki şekerli kurabiyeyi satınca çocuklar şekil kırma yarışına girdi",
+        "summary": "Kurabiyedeki şemsiyeyi kırmadan çıkaran ikinci bir kurabiye kazanıyor.",
+        "author": "Yeşilkent Ekspres",
+        "tags": ["dizi", "şekerci", "çocuklar"],
+        "body": [
+          "Merkezdeki şekerci, bir yabancı dizide görülen ince şeker kurabiyesini \"yaşasın tatlı rekabet\" diyerek satışa sundu.",
+          "Şekerci, \"Kaybeden de kurabiyeyi yiyor, kimse elenmiyor\" diye ekledi."
+        ]
+      },
+      {
+        "id": "campus-ghost",
+        "outlet": "kampus",
+        "title": "Kütüphanenin dördüncü katında \"hayalet\" sanılan ses, uyuyan bir doktora öğrencisi çıktı",
+        "summary": "Öğrenci dört gündür tezini bitirmek için kütüphaneden çıkmamıştı.",
+        "author": "Kampüs Haber",
+        "tags": ["kampüs", "kütüphane", "tez"],
+        "body": [
+          "Gece güvenlik görevlisinin duyduğu inleme sesleri üzerine yapılan aramada doktora öğrencisi rafların arasında uyurken bulundu.",
+          "Öğrenci, \"İnlemiyordum, kaynakçayı okuyordum\" dedi."
+        ]
+      },
+      {
+        "id": "spor-penalty-cat",
+        "outlet": "spor",
+        "title": "Penaltı anında sahaya kedi girdi, kaleci kediyi kucaklayınca gol oldu",
+        "summary": "Hakem golü verdi; kedi tribünden ayakta alkışlandı.",
+        "author": "Tribün Spor",
+        "tags": ["spor", "kedi", "futbol"],
+        "body": [
+          "Amatör lig maçında penaltı atılacağı sırada sahaya giren sarman kedi kalecinin dikkatini dağıttı.",
+          "Kaleci, \"Kediyi bırakamazdım, golü bıraktım\" dedi. Kulüp kediyi sahiplendi ve adını \"Ofsayt\" koydu."
+        ]
+      },
+      {
+        "id": "spor-chess-boxing",
+        "outlet": "spor",
+        "title": "Satranç-boks turnuvası Yeşilkent’e geldi",
+        "summary": "Bir raunt satranç, bir raunt boks: Şah mat ya da nakavt kazandırıyor.",
+        "author": "Tribün Spor",
+        "tags": ["spor", "satranç", "boks"],
+        "body": [
+          "Dünyada belli başlı şehirlerde yapılan satranç-boks, ilk kez Yeşilkent Spor Salonu’nda düzenlendi.",
+          "Turnuvayı satranç tarafında rakibini mat eden bir matematik öğretmeni kazandı. Öğretmen, \"Boks rauntlarında sadece kaçtım\" dedi."
+        ]
       }
     ]
   }
