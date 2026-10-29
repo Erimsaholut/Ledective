@@ -23,10 +23,12 @@ Future<void> main() async {
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await loadGameState();
   StoryProgress.instance.paceMessages = true;
+  StoryProgress.instance.alerts.spacing = const Duration(milliseconds: 1800);
   // Officers come back, timers run and the farm calls whichever app is
   // open.
   Timer.periodic(const Duration(seconds: 2), (_) {
     StoryProgress.instance.tick();
+    StoryProgress.instance.alerts.release();
     FarmReminder.tick(StoryProgress.instance.alerts);
   });
   runApp(const LedectiveApp());

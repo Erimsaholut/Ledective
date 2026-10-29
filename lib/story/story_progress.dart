@@ -49,18 +49,48 @@ class AlertQueue extends ChangeNotifier {
   final List<StoryAlert> _items = [];
   final List<StoryAlert> _fresh = [];
 
+  /// Time between notifications that come together, so a burst arrives
+  /// one app after another, as on a phone. Null shows them all at once;
+  /// the app sets it.
+  Duration? spacing;
+
+  /// Notifications waiting for their turn, see [spacing].
+  final List<StoryAlert> _waiting = [];
+  DateTime? _nextAt;
+
   List<StoryAlert> get items => List.unmodifiable(_items);
 
   StoryAlert? get latest => _items.lastOrNull;
 
-  void push(StoryAlert alert) {
-    _items.add(alert);
-    if (_items.length > _limit) _items.removeAt(0);
-    _fresh.add(alert);
-    notifyListeners();
-  }
+  void push(StoryAlert alert) => pushAll([alert]);
 
   void pushAll(Iterable<StoryAlert> alerts) {
+    if (spacing == null) {
+      _show(alerts.toList());
+      return;
+    }
+    _waiting.addAll(alerts);
+    release();
+  }
+
+  /// Shows the next waiting notifications, all of the same app, if their
+  /// turn has come. Called regularly while the game runs.
+  void release([DateTime? now]) {
+    final gap = spacing;
+    if (_waiting.isEmpty || gap == null) return;
+    final time = now ?? DateTime.now();
+    if (_nextAt case final next? when time.isBefore(next)) return;
+    final app = _waiting.first.app;
+    final batch = [
+      for (final alert in _waiting)
+        if (alert.app == app) alert,
+    ];
+    _waiting.removeWhere((alert) => alert.app == app);
+    _nextAt = time.add(gap);
+    _show(batch);
+  }
+
+  void _show(List<StoryAlert> alerts) {
     for (final alert in alerts) {
       _items.add(alert);
       _fresh.add(alert);
@@ -91,6 +121,8 @@ class AlertQueue extends ChangeNotifier {
     final before = _items.length + _fresh.length;
     _items.removeWhere(test);
     _fresh.removeWhere(test);
+    // Waiting ones go too: opening an app answers them.
+    _waiting.removeWhere(test);
     if (_items.length + _fresh.length != before) notifyListeners();
   }
 }

@@ -1110,6 +1110,30 @@ void main() {
     });
   });
 
+  group('AlertQueue', () {
+    test('spaces out a burst, one app at a time', () {
+      final queue = AlertQueue()..spacing = const Duration(seconds: 2);
+      // The first batch shows right away, timed by the real clock.
+      final t = DateTime.now();
+      StoryAlert alert(String app, String body) =>
+          StoryAlert(app: app, title: app, body: body);
+      queue.pushAll([
+        alert('Harita', 'Kafe'),
+        alert('Mail', 'Yeni mail'),
+        alert('Harita', 'Üniversite'),
+        alert('News', 'Son dakika'),
+      ]);
+      expect(queue.items.map((a) => a.body), ['Kafe', 'Üniversite']);
+      queue.release(t.add(const Duration(milliseconds: 500)));
+      expect(queue.items, hasLength(2), reason: 'not its turn yet');
+      queue.release(t.add(const Duration(seconds: 3)));
+      expect(queue.items, hasLength(3), reason: 'Mail, after its turn');
+      queue.clearApp('News');
+      queue.release(t.add(const Duration(seconds: 6)));
+      expect(queue.items.map((a) => a.app), ['Harita', 'Harita', 'Mail']);
+    });
+  });
+
   group('DripFeed', () {
     final at = DateTime(2026, 3, 2);
     final ids = [for (var i = 0; i < 6; i++) 'item$i'];

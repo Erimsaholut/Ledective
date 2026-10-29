@@ -164,6 +164,8 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 - [x] Takvim'de dört haftada bir "Dr. Arıkan · kontrol" (7 ve 3 hafta önce).
 - [x] Sohbetlerde mesajlar tek tek, birkaç saniye arayla geliyor; her biri
   kendi bildirimiyle; beklerken listede "yazıyor..." görünüyor.
+- [x] Bölüm açılınca toplu gelen bildirimler de uygulama uygulama, yaklaşık
+  2 saniye arayla geliyor. Uygulama açılınca onun bekleyenleri düşüyor.
 
 ## Hikâye planı (bible) adımları
 
