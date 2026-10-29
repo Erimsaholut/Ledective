@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../home/app_icon.dart';
+import '../games/castle_guard/castle_guard_app.dart';
 import '../games/farm/farm_app.dart';
 import '../games/space_runner/space_runner_app.dart';
 import '../games/sudoku/sudoku_app.dart';
@@ -15,6 +16,7 @@ class StoreGame {
     required this.icon,
     required this.colors,
     this.app,
+    this.inDevelopment = false,
     this.glyphColor = Colors.white,
     this.dataKeys = const [],
   });
@@ -29,9 +31,12 @@ class StoreGame {
   final List<Color> colors;
   final Color glyphColor;
 
-  /// The game itself, or null for one not offered in the player's country:
-  /// the store lists it but won't download it.
+  /// The game itself, or null for one the store lists but won't download:
+  /// not offered in the player's country, or [inDevelopment].
   final Widget? app;
+
+  /// Announced but not finished yet.
+  final bool inDevelopment;
 
   /// SharedPreferences keys the game saves to, removed when it's deleted.
   final List<String> dataKeys;
@@ -84,9 +89,22 @@ const List<StoreGame> storeGames = [
   StoreGame(
     id: 'castle-guard',
     title: "Kale Muhafızı",
-    description: "Kuleler kur, dalga dalga gelen düşmanlara karşı kaleni koru.",
+    description:
+        "Yolun kenarına kuleler kur, 20 dalga boyunca goblinlere, devlere ve "
+        "ejderhalara karşı kaleni koru.",
     icon: Icons.castle_rounded,
     colors: [Color(0xFF8D99AE), Color(0xFF2B2D42)],
+    app: CastleGuardApp(),
+    dataKeys: [CastleGuardApp.bestKey],
+  ),
+  StoreGame(
+    id: 'word-hunt',
+    title: "Kelime Avı",
+    description:
+        "Karışık harflerden kelime türet, süre dolmadan en yüksek puanı topla.",
+    icon: Icons.abc_rounded,
+    colors: [Color(0xFFFFD166), Color(0xFFF77F00)],
+    inDevelopment: true,
   ),
   StoreGame(
     id: 'track-monster',

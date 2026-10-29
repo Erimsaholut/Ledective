@@ -115,6 +115,7 @@ class _GameRowState extends State<_GameRow>
   }
 
   Future<void> _startDownload() async {
+    if (widget.game.inDevelopment) return _showInDevelopment();
     if (!widget.game.isAvailable) return _showUnavailable();
     try {
       await _download.forward(from: 0).orCancel;
@@ -133,6 +134,23 @@ class _GameRowState extends State<_GameRow>
       content: Text(
         "“${widget.game.title}” şu anda ülkenizde veya bölgenizde "
         "indirilemiyor.",
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Tamam"),
+        ),
+      ],
+    ),
+  );
+
+  Future<void> _showInDevelopment() => showDialog<void>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Geliştirme aşamasında"),
+      content: Text(
+        "“${widget.game.title}” henüz geliştiriliyor. Hazır olduğunda "
+        "buradan indirebileceksin.",
       ),
       actions: [
         TextButton(
@@ -181,6 +199,18 @@ class _GameRowState extends State<_GameRow>
                       fontSize: 13,
                     ),
                   ),
+                  if (game.inDevelopment)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        "Geliştirme aşamasında",
+                        style: TextStyle(
+                          color: AppColors.orange,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -223,6 +253,9 @@ class _GameRowState extends State<_GameRow>
           ),
         ),
       );
+    }
+    if (widget.game.inDevelopment) {
+      return _PillButton(label: "Yakında", onPressed: _startDownload);
     }
     if (!installed) {
       return _PillButton(label: "İndir", onPressed: _startDownload);

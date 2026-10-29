@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ledective/apps/games/castle_guard/castle_defense.dart';
 import 'package:ledective/apps/games/farm/farm_catalog.dart';
+import 'package:ledective/apps/games/farm/farm_cosmetics.dart';
 import 'package:ledective/apps/games/farm/farm_league.dart';
 import 'package:ledective/apps/games/farm/farm_state.dart';
 import 'package:ledective/apps/games/space_runner/space_run.dart';
@@ -18,7 +20,138 @@ class _Lucky implements Random {
   bool nextBool() => true;
 }
 
+/// Plays [game] like a sensible player: before every wave it builds
+/// [mix] towers on the tiles that see the most road, then upgrades.
+void _defend(CastleDefense game, List<TowerKind> mix) {
+  int roadInReach(Tile t) => CastleDefense.road
+      .where((r) => pow(r.col - t.col, 2) + pow(r.row - t.row, 2) <= 6)
+      .length;
+  final spots =
+      [
+          for (var c = 0; c < CastleDefense.cols; c++)
+            for (var r = 0; r < CastleDefense.rows; r++) (col: c, row: r),
+        ].where(game.canBuildOn).toList()
+        ..sort((a, b) => roadInReach(b).compareTo(roadInReach(a)));
+  while (!game.isOver) {
+    var spent = true;
+    while (spent) {
+      spent = false;
+      final kind = mix[game.towers.length % mix.length];
+      final upgrades = game.towers.where((t) => t.upgradeCost != null).toList()
+        ..sort((a, b) => a.upgradeCost!.compareTo(b.upgradeCost!));
+      if (game.towers.length >= 6 + game.wave &&
+          upgrades.isNotEmpty &&
+          game.gold >= upgrades.first.upgradeCost!) {
+        spent = game.upgrade(upgrades.first);
+      } else if (game.gold >= kind.cost) {
+        final spot = spots.where(game.canBuildOn).firstOrNull;
+        if (spot != null) spent = game.build(kind, spot) != null;
+      }
+    }
+    game.startWave();
+    while (game.waveRunning && !game.isOver) {
+      game.update(0.05);
+    }
+  }
+}
+
 void main() {
+  group('CastleDefense', () {
+    test('the road runs unbroken from the edge to the castle', () {
+      final start = CastleDefense.positionAt(0);
+      expect(start.y, lessThan(0), reason: 'enemies come in from outside');
+      expect(CastleDefense.positionAt(CastleDefense.roadLength), (
+        x: CastleDefense.castle.col + 0.5,
+        y: CastleDefense.castle.row + 0.5,
+      ));
+      for (var d = 1.0; d < CastleDefense.roadLength; d += 0.5) {
+        final p = CastleDefense.positionAt(d);
+        expect(
+          CastleDefense.road,
+          contains((col: p.x.floor(), row: p.y.floor())),
+        );
+      }
+    });
+
+    test('towers go on the grass, cost gold and refund part of it', () {
+      final game = CastleDefense();
+      expect(
+        game.build(TowerKind.archer, (col: 1, row: 1)),
+        isNull,
+        reason: 'on the road',
+      );
+      final tower = game.build(TowerKind.archer, (col: 2, row: 1))!;
+      expect(game.gold, CastleDefense.startGold - TowerKind.archer.cost);
+      expect(
+        game.build(TowerKind.frost, (col: 2, row: 1)),
+        isNull,
+        reason: 'taken',
+      );
+      expect(game.upgrade(tower), isTrue);
+      expect(tower.damage, TowerKind.archer.damage[1]);
+      final gold = game.gold;
+      game.sell(tower);
+      expect(game.towers, isEmpty);
+      expect(game.gold, gold + tower.refund);
+      expect(tower.refund, lessThan(tower.spent));
+    });
+
+    test('waves grow and bring dragons from the tenth', () {
+      expect(CastleDefense.waveEnemies(1), everyElement(EnemyKind.goblin));
+      expect(
+        CastleDefense.waveEnemies(2).length,
+        greaterThan(CastleDefense.waveEnemies(1).length),
+      );
+      expect(CastleDefense.waveEnemies(5), isNot(contains(EnemyKind.dragon)));
+      expect(CastleDefense.waveEnemies(10), contains(EnemyKind.dragon));
+      expect(CastleDefense.toughness(20), greaterThan(4));
+    });
+
+    test('only one wave at a time, paid for when it is beaten', () {
+      final game = CastleDefense(random: Random(1))
+        ..build(TowerKind.archer, (col: 2, row: 1))
+        ..build(TowerKind.archer, (col: 0, row: 4));
+      expect(game.startWave(), isTrue);
+      expect(game.startWave(), isFalse);
+      final gold = game.gold;
+      while (game.waveRunning) {
+        game.update(0.05);
+      }
+      final leaked = CastleDefense.waveEnemies(1).length - game.kills;
+      expect(game.kills, greaterThan(0));
+      expect(game.lives, CastleDefense.startLives - leaked);
+      expect(
+        game.gold,
+        gold +
+            game.kills * EnemyKind.goblin.reward +
+            CastleDefense.waveBonus(1),
+      );
+    });
+
+    test('an undefended castle falls within a few waves', () {
+      final game = CastleDefense(random: Random(1));
+      while (!game.isOver) {
+        game
+          ..startWave()
+          ..update(0.05);
+      }
+      expect(game.isLost, isTrue);
+      expect(game.wave, lessThanOrEqualTo(4));
+      expect(game.startWave(), isFalse);
+    });
+
+    test('a sensible defence holds all twenty waves', () {
+      for (final mix in [
+        [TowerKind.archer],
+        [TowerKind.archer, TowerKind.cannon, TowerKind.frost, TowerKind.archer],
+      ]) {
+        final game = CastleDefense(random: Random(2));
+        _defend(game, mix);
+        expect(game.isWon, isTrue, reason: '$mix');
+      }
+    });
+  });
+
   group('SpaceRun', () {
     test('flying uses fuel until the tank is empty', () {
       final run = SpaceRun(random: Random(1));
@@ -275,7 +408,7 @@ void main() {
     });
 
     test('survives a JSON round trip', () {
-      final farm = FarmState(level: 4, coins: 500)
+      final farm = FarmState(level: 4, coins: 5000)
         ..rollWeek(now)
         ..buyAnimal(animalById('chicken'))
         ..barn['wheat'] = 1
@@ -286,7 +419,12 @@ void main() {
         ..barn['corn'] = 3
         ..buyTool(_tool('watering-can'))
         ..fillOrders(random: Random(4))
-        ..claimDailyBonus(now);
+        ..claimDailyBonus(now)
+        ..offerUntil = now.add(const Duration(hours: 1))
+        ..offerCheckedAt = now
+        ..tier = LeagueTier.silver
+        ..buyCosmetic(cosmeticById('tree'))
+        ..buyCosmetic(cosmeticById('straw-hat'));
       final copy = FarmState.fromJson(farm.toJson());
       expect(copy.toJson(), farm.toJson());
       expect(copy.plots[1].readyAt, farm.plots[1].readyAt);
@@ -295,6 +433,58 @@ void main() {
       expect(farm.barn['corn'], 3, reason: 'the copy has its own barn');
       expect(copy.animals.single.readyAt, farm.animals.single.readyAt);
       expect(copy.rivalScores, farm.rivalScores);
+      expect(copy.tier, LeagueTier.silver);
+      expect(copy.hat, cosmeticById('straw-hat'));
+      expect(copy.decorations, farm.decorations);
+    });
+
+    test('the ZaferBank chest turns up rarely and holds five of all', () {
+      final farm = FarmState(level: 2);
+      expect(farm.rollOffer(now, random: _Lucky()), isFalse, reason: 'level');
+      farm.level = 3;
+      expect(farm.rollOffer(now, random: Random(1)), isFalse);
+      expect(
+        farm.rollOffer(now.add(const Duration(hours: 1)), random: _Lucky()),
+        isFalse,
+        reason: 'checked an hour ago',
+      );
+      final later = now.add(FarmState.offerCheckEvery);
+      expect(farm.rollOffer(later, random: _Lucky()), isTrue);
+      expect(farm.hasOffer(later), isTrue);
+      expect(farm.hasOffer(later.add(FarmState.offerLength)), isFalse);
+
+      expect(farm.offerValue, greaterThan(10 * farm.offerCoins));
+      final coins = farm.coins;
+      expect(farm.claimOffer(later), isTrue);
+      for (final good in farmGoods) {
+        expect(farm.barn[good.id], FarmState.offerItems, reason: good.id);
+      }
+      expect(farm.coins, coins + farm.offerCoins);
+      expect(farm.claimOffer(later), isFalse, reason: 'already taken');
+      expect(farm.rollOffer(later, random: _Lucky()), isFalse);
+    });
+
+    test('cosmetics are bought with coins and put to use', () {
+      final tree = cosmeticById('tree');
+      final winter = cosmeticById('winter');
+      final crown = cosmeticById('crown');
+      final farm = FarmState(coins: 5000);
+      expect(farm.theme, springTheme);
+      expect(farm.owns(springTheme), isTrue);
+      expect(farm.buyCosmetic(crown), isFalse, reason: 'too dear');
+      expect(farm.buyCosmetic(tree), isTrue);
+      expect(farm.buyCosmetic(tree), isFalse, reason: 'owned');
+      expect(farm.decorations, [tree]);
+      expect(farm.buyCosmetic(winter), isTrue);
+      expect(farm.theme, winter);
+      farm.useCosmetic(springTheme);
+      expect(farm.theme, springTheme);
+      farm.coins = 1 << 20;
+      farm.buyCosmetic(crown);
+      expect(farm.hat, crown);
+      farm.useCosmetic(crown);
+      expect(farm.hat, isNull, reason: 'taken off');
+      expect(farm.coins, (1 << 20) - crown.price);
     });
 
     test('a save from before animals and the league still loads', () {
@@ -321,6 +511,25 @@ void main() {
 
   group('Village league', () {
     final monday = DateTime(2026, 10, 26);
+
+    test('every week has nine different neighbours', () {
+      final names = FarmLeague.namesFor(monday);
+      expect(names.toSet(), hasLength(FarmLeague.paces.length));
+      expect(names, FarmLeague.namesFor(monday), reason: 'same all week');
+      expect(FarmLeague.namesFor(monday.add(FarmLeague.week)), isNot(names));
+    });
+
+    test('the top three go up a tier and the bottom three down', () {
+      expect(FarmLeague.tierAfter(LeagueTier.wood, 1), LeagueTier.copper);
+      expect(FarmLeague.tierAfter(LeagueTier.wood, 10), LeagueTier.wood);
+      expect(FarmLeague.tierAfter(LeagueTier.iron, 5), LeagueTier.iron);
+      expect(FarmLeague.tierAfter(LeagueTier.iron, 8), LeagueTier.copper);
+      expect(FarmLeague.tierAfter(LeagueTier.diamond, 1), LeagueTier.diamond);
+      expect(
+        FarmLeague.reward(1, 5, LeagueTier.gold),
+        4 * FarmLeague.reward(1, 5),
+      );
+    });
 
     test('neighbours keep playing while the player is away', () {
       final farm = FarmState(level: 5)
@@ -356,6 +565,9 @@ void main() {
       final result = farm.rollWeek(monday.add(const Duration(days: 8)));
       expect(result!.rank, 1);
       expect(result.reward, FarmLeague.reward(1, 5));
+      expect(result.from, LeagueTier.wood);
+      expect(result.to, LeagueTier.copper);
+      expect(farm.tier, LeagueTier.copper);
       expect(farm.coins, coins + result.reward);
       expect(farm.trophies, 1);
       expect(farm.weekStart, monday.add(const Duration(days: 7)));

@@ -5,15 +5,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/bank_account.dart';
 import '../../../theme/app_theme.dart';
+import '../../shopper/shopper_app.dart' show formatLira;
 import 'farm_catalog.dart';
+import 'farm_cosmetics.dart';
 import 'farm_league.dart';
 import 'farm_state.dart';
 
 /// Bereket Çiftliği from AppShop: grow crops in real time, sell them or
 /// fill orders, and spend the coins on more fields and better tools.
 class FarmApp extends StatefulWidget {
-  const FarmApp({super.key, this.clock, this.random});
+  const FarmApp({super.key, this.clock, this.random, this.pay});
 
   /// Where the farm is saved.
   static const saveKey = 'farm.state';
@@ -21,6 +24,10 @@ class FarmApp extends StatefulWidget {
   /// The current time; tests pass a fake one to make crops grow.
   final DateTime Function()? clock;
   final Random? random;
+
+  /// Takes [kurus] from the player's ZaferBank account for [detail];
+  /// false if the balance is too low. Tests pass a fake bank.
+  final Future<bool> Function(int kurus, String detail)? pay;
 
   @override
   State<FarmApp> createState() => _FarmAppState();
@@ -32,6 +39,9 @@ class _FarmAppState extends State<FarmApp> {
 
   FarmState? _farm;
   int _tab = 0;
+
+  /// Whether the shop shows cosmetics rather than tools.
+  bool _cosmeticShop = false;
   Timer? _timer;
 
   /// League rank the last action climbed to, told with its toast.
@@ -50,6 +60,7 @@ class _FarmAppState extends State<FarmApp> {
       if (!mounted) return;
       setState(() {});
       _watchLeague();
+      _watchOffer();
     });
   }
 
@@ -86,11 +97,12 @@ class _FarmAppState extends State<FarmApp> {
     if (!mounted) return;
     setState(() => _farm = farm);
     await _save();
-    if (week != null) await _showWeekResult(week.rank, week.reward);
+    if (week != null) await _showWeekResult(week);
     if (bonus != null && mounted) await _showDailyGift(farm, bonus);
     if (passedBy != null) {
       _toast("👀 $passedBy seni geçti! Ligde $rank. sıradasın.");
     }
+    _watchOffer();
   }
 
   /// Tells the player when a neighbour passes them in the league.
@@ -104,6 +116,46 @@ class _FarmAppState extends State<FarmApp> {
     if (last != null && rank > last) {
       _toast("👀 ${table[rank - 2].name} seni geçti! Ligde $rank. sıradasın.");
     }
+  }
+
+  /// Now and then puts the ZaferBank chest on offer.
+  void _watchOffer() {
+    final farm = _farm;
+    if (farm == null || !mounted) return;
+    if (ModalRoute.of(context)?.isCurrent == false) return;
+    if (farm.rollOffer(_now, random: _random)) {
+      _save();
+      _showOffer();
+    }
+  }
+
+  Future<void> _showOffer() async {
+    final farm = _farm!;
+    final buy = await showDialog<bool>(
+      context: context,
+      builder: (context) => _OfferDialog(farm: farm, now: _now),
+    );
+    if (buy != true || !mounted) return;
+    final pay =
+        widget.pay ??
+        (kurus, detail) =>
+            BankAccount.instance.pay("Bereket Çiftliği", detail, kurus);
+    final paid = await pay(
+      FarmState.offerPrice,
+      "Oyun içi satın alma · Bereket Sandığı",
+    );
+    if (!mounted) return;
+    if (!paid) {
+      _toast("ZaferBank: Yetersiz bakiye. Ödeme reddedildi.");
+      return;
+    }
+    final coins = farm.offerCoins;
+    _act(
+      (f) => f.claimOffer(_now),
+      toast: () =>
+          "🎁 Bereket Sandığı açıldı! Her üründen ${FarmState.offerItems} "
+          "tane ve +$coins 🪙 ambarında.",
+    );
   }
 
   Future<void> _save() async {
@@ -128,7 +180,7 @@ class _FarmAppState extends State<FarmApp> {
     _save();
     final message = toast?.call();
     if (message != null || _climbedTo != null) _toast(message);
-    if (week != null) _showWeekResult(week.rank, week.reward);
+    if (week != null) _showWeekResult(week);
     if (farm.level > before) _showLevelUp(before + 1, farm.level);
   }
 
@@ -237,18 +289,30 @@ class _FarmAppState extends State<FarmApp> {
     );
   }
 
-  Future<void> _showWeekResult(int rank, int reward) {
+  Future<void> _showWeekResult(WeekResult week) {
+    final up = week.to.index > week.from.index;
+    final down = week.to.index < week.from.index;
     return showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         icon: Text(
-          rank <= 3 ? '🏆' : '🌾',
+          up
+              ? '🚀'
+              : week.rank <= 3
+              ? '🏆'
+              : '🌾',
           style: const TextStyle(fontSize: 48),
         ),
         title: const Text("Hafta bitti"),
         content: Text(
-          "Köy Liginde $rank. oldun.\nÖdül: +$reward 🪙"
-          "${rank <= 3 ? "\nKupa dolabına bir kupa eklendi!" : ""}",
+          "${week.from.title} Liginde ${week.rank}. oldun.\n"
+          "Ödül: +${week.reward} 🪙"
+          "${week.rank <= 3 ? "\nKupa dolabına bir kupa eklendi!" : ""}"
+          "\n\n${up
+              ? "${week.to.title} Ligine yükseldin!"
+              : down
+              ? "${week.to.title} Ligine düştün. Bu hafta geri al!"
+              : "${week.to.title} Liginde kaldın."}",
           textAlign: TextAlign.center,
         ),
         actions: [
@@ -279,6 +343,8 @@ class _FarmAppState extends State<FarmApp> {
         timeLeft: FarmLeague.weekEndOf(farm.weekStart!).difference(now),
         trophies: farm.trophies,
         level: farm.weekLevel,
+        tier: farm.tier,
+        hat: farm.hat?.emoji,
       ),
     );
   }
@@ -432,14 +498,19 @@ class _FarmAppState extends State<FarmApp> {
         farm?.orders.where((o) => farm.canDeliver(o)).length ?? 0;
     final readyPlots = farm?.readyCount(now) ?? 0;
     final readyAnimals = farm?.animalsReady(now) ?? 0;
+    final background = Color(farm?.theme.background ?? springTheme.background!);
     return Scaffold(
-      backgroundColor: const Color(0xFFE8F5D6),
+      backgroundColor: background,
       appBar: AppBar(
         title: const Text("Bereket Çiftliği"),
-        backgroundColor: const Color(0xFFE8F5D6),
+        backgroundColor: background,
         actions: [
           if (farm != null)
-            _LeagueButton(rank: farm.leagueRank(now), onTap: _showLeague),
+            _LeagueButton(
+              rank: farm.leagueRank(now),
+              tier: farm.tier,
+              onTap: _showLeague,
+            ),
           const SizedBox(width: 10),
         ],
       ),
@@ -504,9 +575,17 @@ class _FarmAppState extends State<FarmApp> {
     final empty = farm.plots.where((p) => p.isEmpty).length;
     final ready = farm.readyCount(now);
     final plotPrice = farm.nextPlotPrice;
+    final offerLeft = farm.hasOffer(now)
+        ? farm.offerUntil!.difference(now)
+        : null;
     return ListView(
       padding: const EdgeInsets.fromLTRB(14, 4, 14, 20),
       children: [
+        if (offerLeft != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: _OfferBanner(timeLeft: offerLeft, onTap: _showOffer),
+          ),
         if (farm.has(ToolEffect.plantAll) || farm.has(ToolEffect.harvestAll))
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
@@ -526,7 +605,7 @@ class _FarmAppState extends State<FarmApp> {
                   Expanded(
                     child: FilledButton.tonal(
                       onPressed: ready == 0 ? null : _harvestAll,
-                      child: Text("⚙️ Hepsini topla ($ready)"),
+                      child: Text("⚙️ Topla ($ready)"),
                     ),
                   ),
               ],
@@ -543,6 +622,7 @@ class _FarmAppState extends State<FarmApp> {
               _PlotTile(
                 key: ValueKey('plot-$i'),
                 plot: farm.plots[i],
+                soil: Color(farm.theme.soil!),
                 now: now,
                 onTap: () => _tapPlot(i),
               ),
@@ -554,6 +634,30 @@ class _FarmAppState extends State<FarmApp> {
               ),
           ],
         ),
+        if (farm.decorations.isNotEmpty)
+          Container(
+            margin: const EdgeInsets.only(top: 14),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0x66FFFFFF),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 10,
+              runSpacing: 6,
+              children: [
+                for (final decoration in farm.decorations)
+                  Tooltip(
+                    message: decoration.name,
+                    child: Text(
+                      decoration.emoji,
+                      style: const TextStyle(fontSize: 34),
+                    ),
+                  ),
+              ],
+            ),
+          ),
         const SizedBox(height: 16),
         const Text(
           "Boş tarlaya dokunup tohum ek, olgunlaşan ürüne dokunup topla. "
@@ -718,51 +822,114 @@ class _FarmAppState extends State<FarmApp> {
   }
 
   Widget _buildShop(FarmState farm) {
-    final plotPrice = farm.nextPlotPrice;
     return ListView(
       padding: const EdgeInsets.all(14),
       children: [
-        Card(
-          child: ListTile(
-            leading: const Icon(Icons.add_box_rounded, size: 34, color: _soil),
-            title: const Text("Yeni tarla"),
-            subtitle: Text(
-              plotPrice == null
-                  ? "Çiftliğin tamamen dolu"
-                  : "${farm.plots.length} / ${FarmState.maxPlots} tarla",
+        SegmentedButton<bool>(
+          segments: const [
+            ButtonSegment(
+              value: false,
+              icon: Icon(Icons.handyman_rounded),
+              label: Text("Aletler"),
             ),
-            trailing: plotPrice == null
-                ? null
-                : FilledButton(
-                    onPressed: farm.coins >= plotPrice
-                        ? () => _act((f) => f.buyPlot())
-                        : null,
-                    style: FilledButton.styleFrom(backgroundColor: _green),
-                    child: Text("$plotPrice 🪙"),
-                  ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(4, 18, 4, 8),
-          child: Text(
-            "Tarım aletleri",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-        ),
-        for (final tool in farmTools)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: _ToolCard(
-              tool: tool,
-              farm: farm,
-              onBuy: () => _act(
-                (f) => f.buyTool(tool),
-                toast: () => "${tool.emoji} ${tool.name} artık senin!",
-              ),
+            ButtonSegment(
+              value: true,
+              icon: Icon(Icons.palette_rounded),
+              label: Text("Süsleme"),
             ),
-          ),
+          ],
+          selected: {_cosmeticShop},
+          onSelectionChanged: (choice) =>
+              setState(() => _cosmeticShop = choice.single),
+        ),
+        const SizedBox(height: 12),
+        ...(_cosmeticShop ? _cosmeticsShop(farm) : _toolShop(farm)),
       ],
     );
+  }
+
+  List<Widget> _toolShop(FarmState farm) {
+    final plotPrice = farm.nextPlotPrice;
+    return [
+      Card(
+        child: ListTile(
+          leading: const Icon(Icons.add_box_rounded, size: 34, color: _soil),
+          title: const Text("Yeni tarla"),
+          subtitle: Text(
+            plotPrice == null
+                ? "Çiftliğin tamamen dolu"
+                : "${farm.plots.length} / ${FarmState.maxPlots} tarla",
+          ),
+          trailing: plotPrice == null
+              ? null
+              : FilledButton(
+                  onPressed: farm.coins >= plotPrice
+                      ? () => _act((f) => f.buyPlot())
+                      : null,
+                  style: FilledButton.styleFrom(backgroundColor: _green),
+                  child: Text("$plotPrice 🪙"),
+                ),
+        ),
+      ),
+      const Padding(
+        padding: EdgeInsets.fromLTRB(4, 18, 4, 8),
+        child: Text(
+          "Tarım aletleri",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+      ),
+      for (final tool in farmTools)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: _ToolCard(
+            tool: tool,
+            farm: farm,
+            onBuy: () => _act(
+              (f) => f.buyTool(tool),
+              toast: () => "${tool.emoji} ${tool.name} artık senin!",
+            ),
+          ),
+        ),
+    ];
+  }
+
+  List<Widget> _cosmeticsShop(FarmState farm) {
+    const sections = {
+      CosmeticSlot.theme: "Temalar",
+      CosmeticSlot.decoration: "Bahçe süsleri",
+      CosmeticSlot.hat: "Şapkalar",
+    };
+    return [
+      const Text(
+        "Paranı çiftliğini güzelleştirmeye harca. Şapkan ligde adının "
+        "yanında görünür.",
+        style: TextStyle(color: AppColors.secondaryLabel),
+      ),
+      for (final section in sections.entries) ...[
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
+          child: Text(
+            section.value,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          ),
+        ),
+        for (final cosmetic in cosmetics)
+          if (cosmetic.slot == section.key)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _CosmeticCard(
+                cosmetic: cosmetic,
+                farm: farm,
+                onBuy: () => _act(
+                  (f) => f.buyCosmetic(cosmetic),
+                  toast: () =>
+                      "${cosmetic.emoji} ${cosmetic.name} artık senin!",
+                ),
+                onUse: () => _act((f) => f.useCosmetic(cosmetic)),
+              ),
+            ),
+      ],
+    ];
   }
 }
 
@@ -887,9 +1054,14 @@ class _Header extends StatelessWidget {
 
 /// The player's league rank; opens the league table.
 class _LeagueButton extends StatelessWidget {
-  const _LeagueButton({required this.rank, required this.onTap});
+  const _LeagueButton({
+    required this.rank,
+    required this.tier,
+    required this.onTap,
+  });
 
   final int rank;
+  final LeagueTier tier;
   final VoidCallback onTap;
 
   @override
@@ -903,11 +1075,223 @@ class _LeagueButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          child: Text(
-            "🏆 $rank.",
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.shield_rounded, size: 20, color: Color(tier.color)),
+              const SizedBox(width: 4),
+              Text(
+                "$rank.",
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The ZaferBank chest while it is on offer.
+class _OfferBanner extends StatelessWidget {
+  const _OfferBanner({required this.timeLeft, required this.onTap});
+
+  final Duration timeLeft;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFFFFE08A),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        key: const ValueKey('offer-banner'),
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              const Text('🎁', style: TextStyle(fontSize: 32)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Bereket Sandığı",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      "Nadir teklif · ${formatGrowTime(timeLeft)} kaldı",
+                      style: const TextStyle(color: Color(0xFF7A5200)),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                formatLira(FarmState.offerPrice),
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+              const Icon(Icons.chevron_right_rounded),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The ZaferBank chest: what is in it, what it is worth, and the price.
+/// Pops true when the player chooses to pay.
+class _OfferDialog extends StatelessWidget {
+  const _OfferDialog({required this.farm, required this.now});
+
+  final FarmState farm;
+  final DateTime now;
+
+  @override
+  Widget build(BuildContext context) {
+    final left = farm.offerUntil!.difference(now);
+    return AlertDialog(
+      icon: const Text('🎁', style: TextStyle(fontSize: 52)),
+      title: const Text("Bereket Sandığı"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Nadir teklif! ${formatGrowTime(left)} sonra kaybolur.",
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: AppColors.secondaryLabel),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 10,
+            runSpacing: 6,
+            children: [
+              for (final good in farmGoods)
+                Text(
+                  "${good.emoji}×${FarmState.offerItems}",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "+ ${farm.offerCoins} 🪙",
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "Pazar değeri: ${farm.offerValue} 🪙",
+            style: const TextStyle(
+              color: _FarmAppState._green,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "ZaferBank hesabından ${formatLira(FarmState.offerPrice)} "
+            "çekilecek.",
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 13),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text("Şimdi değil"),
+        ),
+        FilledButton(
+          key: const ValueKey('buy-offer'),
+          onPressed: () => Navigator.pop(context, true),
+          style: FilledButton.styleFrom(backgroundColor: _FarmAppState._green),
+          child: Text("${formatLira(FarmState.offerPrice)} öde"),
+        ),
+      ],
+    );
+  }
+}
+
+/// A cosmetic in the shop: for sale, in use, or owned and ready to use.
+class _CosmeticCard extends StatelessWidget {
+  const _CosmeticCard({
+    required this.cosmetic,
+    required this.farm,
+    required this.onBuy,
+    required this.onUse,
+  });
+
+  final Cosmetic cosmetic;
+  final FarmState farm;
+  final VoidCallback onBuy;
+  final VoidCallback onUse;
+
+  @override
+  Widget build(BuildContext context) {
+    final owned = farm.owns(cosmetic);
+    final inUse = switch (cosmetic.slot) {
+      CosmeticSlot.theme => farm.themeId == cosmetic.id,
+      CosmeticSlot.hat => farm.hatId == cosmetic.id,
+      CosmeticSlot.decoration => owned,
+    };
+    final Widget trailing;
+    if (!owned) {
+      trailing = FilledButton(
+        key: ValueKey('cosmetic-${cosmetic.id}'),
+        onPressed: farm.coins >= cosmetic.price ? onBuy : null,
+        style: FilledButton.styleFrom(backgroundColor: _FarmAppState._green),
+        child: Text("${cosmetic.price} 🪙"),
+      );
+    } else if (cosmetic.slot == CosmeticSlot.hat) {
+      trailing = TextButton(
+        onPressed: onUse,
+        child: Text(inUse ? "Çıkar" : "Tak"),
+      );
+    } else if (inUse) {
+      trailing = const Text(
+        "Sende ✓",
+        style: TextStyle(
+          color: _FarmAppState._green,
+          fontWeight: FontWeight.w700,
+        ),
+      );
+    } else {
+      trailing = TextButton(onPressed: onUse, child: const Text("Kullan"));
+    }
+    final theme = cosmetic.slot == CosmeticSlot.theme;
+    return Card(
+      child: ListTile(
+        leading: theme
+            ? CircleAvatar(
+                backgroundColor: Color(cosmetic.background!),
+                child: CircleAvatar(
+                  radius: 11,
+                  backgroundColor: Color(cosmetic.soil!),
+                ),
+              )
+            : Text(cosmetic.emoji, style: const TextStyle(fontSize: 30)),
+        title: Text(
+          cosmetic.name,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        subtitle: Text(switch (cosmetic.slot) {
+          CosmeticSlot.theme => "Çiftliğin renkleri değişir",
+          CosmeticSlot.decoration => "Tarlanın yanında durur",
+          CosmeticSlot.hat => "Ligde adının yanında görünür",
+        }),
+        trailing: trailing,
       ),
     );
   }
@@ -965,6 +1349,8 @@ class _LeagueSheet extends StatelessWidget {
     required this.timeLeft,
     required this.trophies,
     required this.level,
+    required this.tier,
+    this.hat,
   });
 
   final List<LeagueEntry> table;
@@ -972,6 +1358,10 @@ class _LeagueSheet extends StatelessWidget {
   final Duration timeLeft;
   final int trophies;
   final int level;
+  final LeagueTier tier;
+
+  /// The emoji of the hat the farmer wears, shown by their name.
+  final String? hat;
 
   String get _left {
     final days = timeLeft.inDays;
@@ -993,6 +1383,20 @@ class _LeagueSheet extends StatelessWidget {
         "geçiyor.";
   }
 
+  /// Whether finishing in [place] moves the farm up or down a tier.
+  Widget? _zoneArrow(int place) {
+    if (tier.above != null && place <= FarmLeague.movers) {
+      return const Icon(
+        Icons.arrow_drop_up_rounded,
+        color: _FarmAppState._green,
+      );
+    }
+    if (tier.below != null && place > table.length - FarmLeague.movers) {
+      return const Icon(Icons.arrow_drop_down_rounded, color: AppColors.red);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     const medals = ['🥇', '🥈', '🥉'];
@@ -1000,9 +1404,19 @@ class _LeagueSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Köy Ligi",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.shield_rounded, color: Color(tier.color), size: 26),
+              const SizedBox(width: 6),
+              Text(
+                "${tier.title} Ligi",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 4),
           Text(
@@ -1041,18 +1455,26 @@ class _LeagueSheet extends StatelessWidget {
                       ),
                     ),
                     title: Text(
-                      table[i].name,
+                      table[i].isPlayer && hat != null
+                          ? "$hat ${table[i].name}"
+                          : table[i].name,
                       style: TextStyle(
                         fontWeight: table[i].isPlayer
                             ? FontWeight.w800
                             : FontWeight.w500,
                       ),
                     ),
-                    trailing: Text(
-                      "${table[i].score} puan",
-                      style: const TextStyle(
-                        fontFeatures: [FontFeature.tabularFigures()],
-                      ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "${table[i].score} puan",
+                          style: const TextStyle(
+                            fontFeatures: [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                        SizedBox(width: 22, child: _zoneArrow(i + 1)),
+                      ],
                     ),
                   ),
               ],
@@ -1063,7 +1485,8 @@ class _LeagueSheet extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
             child: Text(
               "Kazandığın her XP lig puanıdır. Hafta sonunda birinciye "
-              "+${FarmLeague.reward(1, level)} 🪙 ve kupa, ilk üçe kupa.",
+              "+${FarmLeague.reward(1, level, tier)} 🪙, ilk üçe kupa. "
+              "${[if (tier.above case final above?) "İlk ${FarmLeague.movers} ${above.title} Ligine yükselir", if (tier.below case final below?) "son ${FarmLeague.movers} ${below.title} Ligine düşer"].join(", ")}.",
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: AppColors.secondaryLabel,
@@ -1291,11 +1714,13 @@ class _PlotTile extends StatelessWidget {
   const _PlotTile({
     super.key,
     required this.plot,
+    required this.soil,
     required this.now,
     required this.onTap,
   });
 
   final Plot plot;
+  final Color soil;
   final DateTime now;
   final VoidCallback onTap;
 
@@ -1308,7 +1733,7 @@ class _PlotTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: _FarmAppState._soil,
+          color: soil,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: ready ? const Color(0xFFFFD54F) : const Color(0xFF6D4429),

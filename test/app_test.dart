@@ -5,6 +5,8 @@ import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/bank/transfer_page.dart';
+import 'package:ledective/apps/games/castle_guard/castle_defense.dart';
+import 'package:ledective/apps/games/castle_guard/castle_guard_app.dart';
 import 'package:ledective/apps/games/farm/farm_app.dart';
 import 'package:ledective/apps/games/farm/farm_state.dart';
 import 'package:ledective/apps/games/space_runner/space_runner_app.dart';
@@ -425,27 +427,44 @@ void main() {
     expect(InstalledGames.ids.value, isEmpty);
   });
 
-  testWidgets('games not sold in the country cannot be downloaded', (
-    tester,
-  ) async {
-    await _pumpApp(tester);
-    await _toSecondPage(tester);
-    await tester.tap(_homeIcon('AppShop'));
-    await tester.pumpAndSettle();
-
-    for (final game in ['Kale Muhafızı', 'Pist Canavarı']) {
-      await tester.ensureVisible(_storeButton(game, 'İndir'));
+  testWidgets(
+    'games not sold here or still in development cannot be downloaded',
+    (tester) async {
+      await _pumpApp(tester);
+      await _toSecondPage(tester);
+      await tester.tap(_homeIcon('AppShop'));
       await tester.pumpAndSettle();
-      await tester.tap(_storeButton(game, 'İndir'));
+
+      await tester.scrollUntilVisible(
+        _storeButton('Pist Canavarı', 'İndir'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(_storeButton('Pist Canavarı', 'İndir'));
       await tester.pumpAndSettle();
       expect(find.text('Ülkenizde kullanılamıyor'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsNothing);
       await tester.tap(find.text('Tamam'));
       await tester.pumpAndSettle();
-      expect(_storeButton(game, 'İndir'), findsOneWidget);
-    }
-    expect(InstalledGames.ids.value, isEmpty);
-  });
+      expect(_storeButton('Pist Canavarı', 'İndir'), findsOneWidget);
+
+      // A game still being made says so instead of downloading.
+      expect(find.text('Geliştirme aşamasında'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        _storeButton('Kelime Avı', 'Yakında'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(_storeButton('Kelime Avı', 'Yakında'));
+      await tester.pumpAndSettle();
+      expect(find.text('Geliştirme aşamasında'), findsNWidgets(2));
+      await tester.tap(find.text('Tamam'));
+      await tester.pumpAndSettle();
+      expect(InstalledGames.ids.value, isEmpty);
+    },
+  );
 
   testWidgets('installed games are still there after a restart', (
     tester,
@@ -582,9 +601,8 @@ void main() {
     expect(find.textContaining('Seviye 2\'te açılır'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('league')));
     await tester.pumpAndSettle();
-    expect(find.text('Köy Ligi'), findsOneWidget);
+    expect(find.text('Tahta Ligi'), findsOneWidget);
     expect(find.text('Sen'), findsOneWidget);
-    expect(find.text('Ayşe Teyze'), findsOneWidget);
     await tester.tapAt(const Offset(20, 20));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
@@ -601,6 +619,138 @@ void main() {
     await tester.pump();
     expect(find.text('🪙 54'), findsOneWidget);
     expect(find.textContaining('Günlük hediye'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the ZaferBank chest is paid from the bank and filled', (
+    tester,
+  ) async {
+    _phoneSize(tester);
+    final now = DateTime(2026, 10, 28, 9);
+    FarmState saved() => FarmState(level: 3, coins: 400)
+      ..claimDailyBonus(now)
+      ..rollWeek(now)
+      ..offerUntil = now.add(const Duration(hours: 1));
+    final payments = <(int, String)>[];
+
+    // An empty account turns the payment down.
+    await _pumpFarm(
+      tester,
+      saved(),
+      clock: () => now,
+      pay: (_, _) async => false,
+    );
+    await tester.tap(find.byKey(const ValueKey('offer-banner')));
+    await tester.pumpAndSettle();
+    expect(find.text('Bereket Sandığı'), findsNWidgets(2));
+    await tester.tap(find.byKey(const ValueKey('buy-offer')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Yetersiz bakiye'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+
+    await _pumpFarm(
+      tester,
+      saved(),
+      clock: () => now,
+      pay: (kurus, detail) async {
+        payments.add((kurus, detail));
+        return true;
+      },
+    );
+    await tester.tap(find.byKey(const ValueKey('offer-banner')));
+    await tester.pumpAndSettle();
+    expect(find.text('250,00 TL öde'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('buy-offer')));
+    await tester.pumpAndSettle();
+    expect(payments, [
+      (FarmState.offerPrice, 'Oyun içi satın alma · Bereket Sandığı'),
+    ]);
+    expect(find.textContaining('Bereket Sandığı açıldı'), findsOneWidget);
+    expect(find.byKey(const ValueKey('offer-banner')), findsNothing);
+    // Let the toast go before using the tabs under it.
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Ambar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Buğday × 5'), findsOneWidget);
+
+    // The coins buy a decoration that then stands on the field.
+    await tester.tap(find.text('Dükkân'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Süsleme'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('cosmetic-tree')),
+      200,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.tap(find.byKey(const ValueKey('cosmetic-tree')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Ulu Çınar artık senin'), findsOneWidget);
+    await tester.tap(find.text('Tarla'));
+    await tester.pumpAndSettle();
+    expect(find.text('🌳'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('towers are built and the castle can fall', (tester) async {
+    _phoneSize(tester);
+    await tester.pumpWidget(const MaterialApp(home: CastleGuardApp()));
+    await tester.pump();
+    expect(find.text('🪙 ${CastleDefense.startGold}'), findsOneWidget);
+
+    // Tap the grass beside the first bend of the road and build an archer.
+    final board = tester.getRect(find.byKey(const ValueKey('castle-board')));
+    final tile = board.width / CastleDefense.cols;
+    await tester.tapAt(board.topLeft + Offset(2.5 * tile, 1.5 * tile));
+    await tester.pump();
+    expect(find.text('Kule kur'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('build-archer')));
+    await tester.pump();
+    expect(
+      find.text('🪙 ${CastleDefense.startGold - TowerKind.archer.cost}'),
+      findsOneWidget,
+    );
+    expect(find.text('🏹 Okçu Kulesi · Seviye 1'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('upgrade')));
+    await tester.pump();
+    expect(find.text('🏹 Okçu Kulesi · Seviye 2'), findsOneWidget);
+
+    // Deselect, then send the first wave and let the archer work.
+    await tester.tapAt(board.topLeft + Offset(2.5 * tile, 1.5 * tile));
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('start-wave')));
+    for (var i = 0; i < 300; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.text('Dalga 1/${CastleDefense.waves}'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+
+    // A castle with one life left and no towers falls to the first goblin.
+    final doomed = CastleDefense(random: Random(1))..lives = 1;
+    await tester.pumpWidget(
+      MaterialApp(home: CastleGuardApp(initialGame: doomed)),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('start-wave')));
+    var frames = 0;
+    while (find.text('Kale düştü!').evaluate().isEmpty && frames++ < 600) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.text('Kale düştü!'), findsOneWidget);
+    expect(find.text('Tekrar oyna'), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      prefs.getInt(CastleGuardApp.bestKey),
+      isNull,
+      reason: 'no wave held',
+    );
+    await tester.tap(find.text('Tekrar oyna'));
+    await tester.pump();
+    expect(find.text('❤️ ${CastleDefense.startLives}'), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
 
@@ -646,6 +796,23 @@ void main() {
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
   });
+}
+
+Future<void> _pumpFarm(
+  WidgetTester tester,
+  FarmState saved, {
+  required DateTime Function() clock,
+  Future<bool> Function(int kurus, String detail)? pay,
+}) async {
+  SharedPreferences.setMockInitialValues({
+    'flutter.${FarmApp.saveKey}': json.encode(saved.toJson()),
+  });
+  await tester.pumpWidget(
+    MaterialApp(
+      home: FarmApp(clock: clock, random: Random(3), pay: pay),
+    ),
+  );
+  await tester.pumpAndSettle();
 }
 
 void _phoneSize(WidgetTester tester) {

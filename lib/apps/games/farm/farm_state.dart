@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'farm_catalog.dart';
+import 'farm_cosmetics.dart';
 import 'farm_league.dart';
 
 /// One field of the farm, empty or growing a crop until [readyAt].
@@ -85,6 +86,10 @@ class FarmAnimal {
   };
 }
 
+/// How a league week ended: the rank, its reward and the tiers before and
+/// after.
+typedef WeekResult = ({int rank, int reward, LeagueTier from, LeagueTier to});
+
 /// A neighbour asking for crops, paying more than the market does.
 class FarmOrder {
   const FarmOrder({required this.items, required this.coins, required this.xp});
@@ -121,10 +126,18 @@ class FarmState {
     this.weekScore = 0,
     int? weekLevel,
     this.trophies = 0,
+    this.tier = LeagueTier.wood,
     this.lastRank,
     List<double>? rivalScores,
     this.leagueUpdatedAt,
-  }) : rivalScores = rivalScores ?? List.filled(FarmLeague.rivals.length, 0.0),
+    this.offerUntil,
+    this.offerCheckedAt,
+    this.offersBought = 0,
+    Set<String>? owned,
+    this.themeId = 'spring',
+    this.hatId,
+  }) : owned = owned ?? {},
+       rivalScores = rivalScores ?? List.filled(FarmLeague.paces.length, 0.0),
        plots = plots ?? [for (var i = 0; i < startPlots; i++) Plot()],
        barn = barn ?? {},
        tools = tools ?? {},
@@ -158,6 +171,7 @@ class FarmState {
     weekScore: json['weekScore'] as int? ?? 0,
     weekLevel: json['weekLevel'] as int?,
     trophies: json['trophies'] as int? ?? 0,
+    tier: LeagueTier.values[json['tier'] as int? ?? 0],
     lastRank: json['lastRank'] as int?,
     rivalScores: json['rivals'] == null
         ? null
@@ -168,6 +182,16 @@ class FarmState {
     leagueUpdatedAt: json['leagueUpdated'] == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(json['leagueUpdated'] as int),
+    offerUntil: json['offerUntil'] == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(json['offerUntil'] as int),
+    offerCheckedAt: json['offerChecked'] == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(json['offerChecked'] as int),
+    offersBought: json['offersBought'] as int? ?? 0,
+    owned: {...(json['owned'] as List? ?? const []).cast<String>()},
+    themeId: json['theme'] as String? ?? 'spring',
+    hatId: json['hat'] as String?,
   );
 
   static const startCoins = 20;
@@ -178,6 +202,18 @@ class FarmState {
 
   /// Chance that a harvest or an animal gives double.
   static const luckyChance = 0.1;
+
+  /// The rare chest sold for ZaferBank money: its price in kuruş, how
+  /// many of every good it holds, and how long it stays on offer.
+  static const offerPrice = 25000;
+  static const offerItems = 5;
+  static const offerLength = Duration(hours: 2);
+
+  /// How often the chest may turn up, the chance it does, and the level
+  /// it first can.
+  static const offerCheckEvery = Duration(hours: 6);
+  static const offerChance = 0.1;
+  static const offerLevel = 3;
 
   /// Daily gift coins on each day of a seven-day streak, before the level
   /// bonus. The last day is worth coming back for.
@@ -212,13 +248,27 @@ class FarmState {
   /// Weeks finished in the top three.
   int trophies;
 
+  /// The league division the farm plays in.
+  LeagueTier tier;
+
   /// League rank when the player last looked, to tell who passed them.
   int? lastRank;
 
-  /// The neighbours' league scores this week, in [FarmLeague.rivals] order,
+  /// The neighbours' league scores this week, in [FarmLeague.paces] order,
   /// and when they were last brought up to date.
   final List<double> rivalScores;
   DateTime? leagueUpdatedAt;
+
+  /// Until when the chest is on offer, and when the farm last rolled for
+  /// one.
+  DateTime? offerUntil;
+  DateTime? offerCheckedAt;
+  int offersBought;
+
+  /// Ids of the cosmetics bought, and the theme and hat in use.
+  final Set<String> owned;
+  String themeId;
+  String? hatId;
 
   Iterable<FarmTool> _owned(ToolEffect effect) =>
       farmTools.where((t) => t.effect == effect && tools.contains(t.id));
@@ -527,6 +577,79 @@ class FarmState {
     return bonus;
   }
 
+  bool hasOffer(DateTime now) =>
+      offerUntil != null && now.isBefore(offerUntil!);
+
+  /// Coins in the chest on top of the goods.
+  int get offerCoins => 300 + 100 * level;
+
+  /// What the chest's contents would fetch at the market.
+  int get offerValue =>
+      farmGoods.fold(0, (sum, good) => sum + priceOf(good) * offerItems) +
+      offerCoins;
+
+  /// Rolls, at most every [offerCheckEvery], for the rare chest to come up.
+  /// Returns true if it just did.
+  bool rollOffer(DateTime now, {Random? random}) {
+    if (level < offerLevel || hasOffer(now)) return false;
+    final checked = offerCheckedAt;
+    if (checked != null && now.difference(checked) < offerCheckEvery) {
+      return false;
+    }
+    offerCheckedAt = now;
+    if ((random ?? Random()).nextDouble() >= offerChance) return false;
+    offerUntil = now.add(offerLength);
+    return true;
+  }
+
+  /// Hands over the chest, once it has been paid for.
+  bool claimOffer(DateTime now) {
+    if (!hasOffer(now)) return false;
+    for (final good in farmGoods) {
+      _put(good.id, offerItems);
+    }
+    coins += offerCoins;
+    offerUntil = null;
+    // The next chest is a while off, however it came up.
+    offerCheckedAt = now;
+    offersBought++;
+    return true;
+  }
+
+  bool owns(Cosmetic cosmetic) =>
+      cosmetic.price == 0 || owned.contains(cosmetic.id);
+
+  Cosmetic get theme => cosmeticById(themeId);
+  Cosmetic? get hat => hatId == null ? null : cosmeticById(hatId!);
+
+  /// Garden decorations bought, in catalogue order.
+  List<Cosmetic> get decorations => [
+    for (final c in cosmetics)
+      if (c.slot == CosmeticSlot.decoration && owned.contains(c.id)) c,
+  ];
+
+  /// Buys [cosmetic] and puts it to use.
+  bool buyCosmetic(Cosmetic cosmetic) {
+    if (owns(cosmetic) || coins < cosmetic.price) return false;
+    coins -= cosmetic.price;
+    owned.add(cosmetic.id);
+    useCosmetic(cosmetic);
+    return true;
+  }
+
+  /// Switches to an owned theme or hat. Using the hat in use takes it off.
+  void useCosmetic(Cosmetic cosmetic) {
+    if (!owns(cosmetic)) return;
+    switch (cosmetic.slot) {
+      case CosmeticSlot.theme:
+        themeId = cosmetic.id;
+      case CosmeticSlot.hat:
+        hatId = hatId == cosmetic.id ? null : cosmetic.id;
+      case CosmeticSlot.decoration:
+        break;
+    }
+  }
+
   /// Lets the neighbours play until [now] at a pace set by the player's
   /// own, then returns the league table, best first.
   List<LeagueEntry> standings(DateTime now) {
@@ -537,40 +660,47 @@ class FarmState {
       final from = leagueUpdatedAt ?? start;
       if (to.isAfter(from)) {
         final hours = to.difference(start).inMinutes / 60;
+        final names = FarmLeague.namesFor(start);
         for (var i = 0; i < rivalScores.length; i++) {
-          final rival = FarmLeague.rivals[i];
           final rate = FarmLeague.rate(
-            rival,
+            FarmLeague.paces[i],
             score: weekScore,
             hours: hours,
             level: weekLevel,
+            tier: tier,
           );
           rivalScores[i] +=
-              rate * FarmLeague.playTime(rival.name, start, from, to);
+              rate * FarmLeague.playTime(names[i], start, from, to);
         }
         leagueUpdatedAt = to;
       }
     }
-    return FarmLeague.table(rivalScores, weekScore);
+    return FarmLeague.table(
+      FarmLeague.namesFor(start ?? FarmLeague.weekStartOf(now)),
+      rivalScores,
+      weekScore,
+    );
   }
 
   int leagueRank(DateTime now) => FarmLeague.rankOf(standings(now));
 
-  /// Starts the league week, or ends the last one when it is over and pays
-  /// for the rank reached. Returns that rank and reward, or null if no week
-  /// ended.
-  ({int rank, int reward})? rollWeek(DateTime now) {
+  /// Starts the league week, or ends the last one when it is over: pays
+  /// for the rank reached and moves the farm up or down a tier. Returns
+  /// what happened, or null if no week ended.
+  WeekResult? rollWeek(DateTime now) {
     final start = weekStart;
     if (start != null && now.isBefore(FarmLeague.weekEndOf(start))) {
       return null;
     }
-    ({int rank, int reward})? result;
+    WeekResult? result;
     if (start != null) {
       final rank = leagueRank(FarmLeague.weekEndOf(start));
-      final reward = FarmLeague.reward(rank, weekLevel);
+      final reward = FarmLeague.reward(rank, weekLevel, tier);
+      final from = tier;
       coins += reward;
       if (rank <= 3) trophies++;
-      result = (rank: rank, reward: reward);
+      tier = FarmLeague.tierAfter(tier, rank);
+      result = (rank: rank, reward: reward, from: from, to: tier);
     }
     weekStart = FarmLeague.weekStartOf(now);
     weekScore = 0;
@@ -596,8 +726,15 @@ class FarmState {
     'weekScore': weekScore,
     'weekLevel': weekLevel,
     'trophies': trophies,
+    'tier': tier.index,
     'lastRank': lastRank,
     'rivals': rivalScores,
     'leagueUpdated': leagueUpdatedAt?.millisecondsSinceEpoch,
+    'offerUntil': offerUntil?.millisecondsSinceEpoch,
+    'offerChecked': offerCheckedAt?.millisecondsSinceEpoch,
+    'offersBought': offersBought,
+    'owned': owned.toList(),
+    'theme': themeId,
+    'hat': hatId,
   };
 }
