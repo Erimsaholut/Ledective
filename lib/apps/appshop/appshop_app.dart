@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/installed_games.dart';
+import '../../home/app_icon.dart';
 import '../../theme/app_theme.dart';
 import 'store_catalog.dart';
 
@@ -89,6 +90,89 @@ class InstalledGameIcon extends StatelessWidget {
   }
 }
 
+/// A game still downloading, on the home screen: its icon greyed out
+/// under the progress, as a phone shows it.
+class DownloadingGameIcon extends StatefulWidget {
+  const DownloadingGameIcon({super.key, required this.game});
+
+  final StoreGame game;
+
+  @override
+  State<DownloadingGameIcon> createState() => _DownloadingGameIconState();
+}
+
+class _DownloadingGameIconState extends State<DownloadingGameIcon>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _progress = AnimationController(
+    vsync: this,
+    duration: InstalledGames.downloadTime,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    final started = InstalledGames.downloads.value[widget.game.id];
+    final done = started == null
+        ? 0.0
+        : DateTime.now().difference(started).inMicroseconds /
+              InstalledGames.downloadTime.inMicroseconds;
+    _progress.forward(from: done.clamp(0.0, 1.0));
+  }
+
+  @override
+  void dispose() {
+    _progress.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const size = AppIcon.size;
+    return SizedBox(
+      width: size + 20,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Opacity(
+                opacity: 0.45,
+                child: _GameArtwork(game: widget.game, size: size),
+              ),
+              SizedBox(
+                width: size * 0.5,
+                height: size * 0.5,
+                child: AnimatedBuilder(
+                  animation: _progress,
+                  builder: (context, _) => CircularProgressIndicator(
+                    value: _progress.value,
+                    strokeWidth: 4,
+                    color: Colors.white,
+                    backgroundColor: Colors.white24,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            "Yükleniyor…",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              shadows: [Shadow(color: Color(0x80000000), blurRadius: 4)],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// One game in the store, with its "İndir" or "Aç" button.
 class _GameRow extends StatefulWidget {
   const _GameRow({required this.game});
@@ -101,29 +185,50 @@ class _GameRow extends StatefulWidget {
 
 class _GameRowState extends State<_GameRow>
     with SingleTickerProviderStateMixin {
-  static const downloadTime = Duration(milliseconds: 1600);
-
+  /// Draws the progress of the download, which runs in [InstalledGames]
+  /// and so goes on when the store is closed.
   late final AnimationController _download = AnimationController(
     vsync: this,
-    duration: downloadTime,
+    duration: InstalledGames.downloadTime,
   );
 
   @override
+  void initState() {
+    super.initState();
+    InstalledGames.downloads.addListener(_showProgress);
+    _showProgress();
+  }
+
+  @override
   void dispose() {
+    InstalledGames.downloads.removeListener(_showProgress);
     _download.dispose();
     super.dispose();
   }
 
-  Future<void> _startDownload() async {
-    if (widget.game.inDevelopment) return _showInDevelopment();
-    if (!widget.game.isAvailable) return _showUnavailable();
-    try {
-      await _download.forward(from: 0).orCancel;
-    } on TickerCanceled {
-      return; // Cancelled, or the store was closed.
+  /// Picks the progress up where the download is, e.g. when the store is
+  /// opened again half way through.
+  void _showProgress() {
+    final started = InstalledGames.downloads.value[widget.game.id];
+    if (started == null) {
+      _download.reset();
+      return;
     }
-    await InstalledGames.install(widget.game.id);
-    if (mounted) _download.reset();
+    if (_download.isAnimating) return;
+    final done =
+        DateTime.now().difference(started).inMicroseconds /
+        InstalledGames.downloadTime.inMicroseconds;
+    _download.forward(from: done.clamp(0.0, 1.0));
+  }
+
+  void _startDownload() {
+    if (widget.game.inDevelopment) {
+      _showInDevelopment();
+    } else if (!widget.game.isAvailable) {
+      _showUnavailable();
+    } else {
+      InstalledGames.download(widget.game.id);
+    }
   }
 
   /// What a store says about an app it can't sell in your country.
@@ -161,10 +266,7 @@ class _GameRowState extends State<_GameRow>
     ),
   );
 
-  void _cancelDownload() {
-    _download.stop();
-    _download.reset();
-  }
+  void _cancelDownload() => InstalledGames.cancelDownload(widget.game.id);
 
   void _open() => Navigator.of(context).push(widget.game.homeIcon.route());
 
@@ -215,12 +317,14 @@ class _GameRowState extends State<_GameRow>
               ),
             ),
             const SizedBox(width: 12),
-            ValueListenableBuilder<List<String>>(
-              valueListenable: InstalledGames.ids,
-              builder: (context, ids, _) => AnimatedBuilder(
-                animation: _download,
-                builder: (context, _) => _buildAction(ids.contains(game.id)),
-              ),
+            ListenableBuilder(
+              listenable: Listenable.merge([
+                InstalledGames.ids,
+                InstalledGames.downloads,
+                _download,
+              ]),
+              builder: (context, _) =>
+                  _buildAction(InstalledGames.isInstalled(game.id)),
             ),
           ],
         ),
@@ -229,7 +333,7 @@ class _GameRowState extends State<_GameRow>
   }
 
   Widget _buildAction(bool installed) {
-    if (_download.isAnimating) {
+    if (InstalledGames.isDownloading(widget.game.id)) {
       return Semantics(
         label: "İndiriliyor",
         button: true,

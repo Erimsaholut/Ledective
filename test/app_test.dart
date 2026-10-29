@@ -380,6 +380,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(find.text('Aç'), findsNothing);
+    await tester.pump(InstalledGames.downloadTime);
     await tester.pumpAndSettle();
     expect(find.text('Aç'), findsOneWidget);
     expect(InstalledGames.ids.value, ['sudoku']);
@@ -420,6 +421,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(_storeButton('Sudoku', 'İndir'), findsOneWidget);
     await tester.tap(_storeButton('Sudoku', 'İndir'));
+    await tester.pump(InstalledGames.downloadTime);
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, 'Sil'));
     await tester.pumpAndSettle();
@@ -427,6 +429,42 @@ void main() {
     await tester.pumpAndSettle();
     expect(_storeButton('Sudoku', 'İndir'), findsOneWidget);
     expect(InstalledGames.ids.value, isEmpty);
+  });
+
+  testWidgets('a download goes on after the store is closed', (tester) async {
+    await _pumpApp(tester);
+    await _toSecondPage(tester);
+    await tester.tap(_homeIcon('AppShop'));
+    await tester.pumpAndSettle();
+
+    // A download can be stopped by tapping its progress.
+    await tester.tap(_storeButton('Sudoku', 'İndir'));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.tap(find.byType(CircularProgressIndicator));
+    await tester.pump();
+    expect(InstalledGames.downloads.value, isEmpty);
+    expect(_storeButton('Sudoku', 'İndir'), findsOneWidget);
+
+    // Leaving the store half way doesn't stop it.
+    await tester.tap(_storeButton('Sudoku', 'İndir'));
+    await tester.pump(const Duration(milliseconds: 500));
+    final navigator = tester.state<NavigatorState>(
+      find.byType(Navigator).first,
+    );
+    navigator.popUntil((route) => route.isFirst);
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('Yükleniyor…'), findsOneWidget);
+    expect(_homeIcon('Sudoku'), findsNothing);
+    await tester.pump(InstalledGames.downloadTime);
+    await tester.pumpAndSettle();
+    expect(find.text('Yükleniyor…'), findsNothing);
+    expect(_homeIcon('Sudoku'), findsOneWidget);
+    expect(InstalledGames.ids.value, ['sudoku']);
+
+    // Opened again, the store knows it is there.
+    await tester.tap(_homeIcon('AppShop'));
+    await tester.pumpAndSettle();
+    expect(_storeButton('Sudoku', 'Aç'), findsOneWidget);
   });
 
   testWidgets(

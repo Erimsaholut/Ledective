@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,11 +12,50 @@ class InstalledGames {
 
   static final ids = ValueNotifier<List<String>>(const []);
 
+  /// How long a download takes.
+  static const downloadTime = Duration(milliseconds: 1600);
+
+  /// Games being downloaded, with when each began. A download carries on
+  /// when the store is closed, as on a real phone.
+  static final downloads = ValueNotifier<Map<String, DateTime>>(const {});
+  static final Map<String, Timer> _timers = {};
+
   static void load(SharedPreferences prefs) {
+    for (final timer in _timers.values) {
+      timer.cancel();
+    }
+    _timers.clear();
+    downloads.value = const {};
     ids.value = List.unmodifiable(prefs.getStringList(_prefsKey) ?? const []);
   }
 
   static bool isInstalled(String id) => ids.value.contains(id);
+
+  static bool isDownloading(String id) => downloads.value.containsKey(id);
+
+  /// Starts downloading [id]; it is installed when the download is done.
+  static void download(String id) {
+    if (isInstalled(id) || isDownloading(id)) return;
+    _timers[id] = Timer(downloadTime, () async {
+      await install(id);
+      _endDownload(id);
+    });
+    downloads.value = Map.unmodifiable({
+      ...downloads.value,
+      id: DateTime.now(),
+    });
+  }
+
+  static void cancelDownload(String id) {
+    _timers[id]?.cancel();
+    _endDownload(id);
+  }
+
+  static void _endDownload(String id) {
+    _timers.remove(id);
+    if (!isDownloading(id)) return;
+    downloads.value = Map.unmodifiable({...downloads.value}..remove(id));
+  }
 
   static Future<void> install(String id) async {
     if (isInstalled(id)) return;

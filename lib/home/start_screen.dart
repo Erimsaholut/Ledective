@@ -259,13 +259,27 @@ class _StartScreenState extends State<StartScreen> {
                           header: const _ClockWidget(),
                         ),
                         // Games from AppShop follow the built-in apps.
-                        ValueListenableBuilder<List<String>>(
-                          valueListenable: InstalledGames.ids,
-                          builder: (context, ids, _) => _HomePage(
+                        ListenableBuilder(
+                          listenable: Listenable.merge([
+                            InstalledGames.ids,
+                            InstalledGames.downloads,
+                          ]),
+                          builder: (context, _) => _HomePage(
                             apps: [
                               ..._pages[1],
-                              for (final game in storeGamesWithIds(ids))
+                              for (final game in storeGamesWithIds(
+                                InstalledGames.ids.value,
+                              ))
                                 InstalledGameIcon(game: game),
+                              // Downloads show up already, still loading.
+                              for (final game in storeGamesWithIds(
+                                InstalledGames.downloads.value.keys,
+                              ))
+                                if (!InstalledGames.isInstalled(game.id))
+                                  DownloadingGameIcon(
+                                    key: ValueKey('downloading-${game.id}'),
+                                    game: game,
+                                  ),
                             ],
                           ),
                         ),
