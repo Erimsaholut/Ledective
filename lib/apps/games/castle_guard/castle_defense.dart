@@ -30,6 +30,18 @@ enum TowerKind {
     rate: 1.0,
     range: [2.1, 2.3, 2.5],
     slow: [0.4, 0.5, 0.6],
+  ),
+
+  /// Shoots nothing, but digs gold after every wave. It costs more than it
+  /// brings at first and pays off the longer the game goes.
+  mine(
+    title: "Altın Madeni",
+    emoji: '⛏️',
+    cost: 120,
+    damage: [0, 0, 0],
+    rate: 0,
+    range: [0, 0, 0],
+    income: [6, 14, 30],
   );
 
   const TowerKind({
@@ -41,6 +53,7 @@ enum TowerKind {
     required this.range,
     this.splash = 0,
     this.slow = const [0, 0, 0],
+    this.income = const [0, 0, 0],
   });
 
   final String title;
@@ -63,6 +76,11 @@ enum TowerKind {
 
   /// How much a hit slows its target at each level, e.g. 0.4 for 40%.
   final List<double> slow;
+
+  /// Gold dug at each level after a wave, before it grows with the waves.
+  final List<int> income;
+
+  bool get shoots => rate > 0;
 }
 
 /// A built tower.
@@ -84,6 +102,11 @@ class Tower {
   int get damage => kind.damage[level - 1];
   double get range => kind.range[level - 1];
   double get slow => kind.slow[level - 1];
+
+  /// Gold this tower digs after beating wave [wave]: a little at first,
+  /// more and more as the waves go on.
+  int incomeAfter(int wave) =>
+      (kind.income[level - 1] * (1 + wave / 4)).round();
 
   /// Gold for the next level, or null at the top.
   int? get upgradeCost =>
@@ -315,7 +338,7 @@ CastleMap castleMapById(String id) =>
 /// towers built beside it shoot them for gold. The castle falls when its
 /// lives run out, and is saved after the last wave.
 class CastleDefense {
-  CastleDefense({CastleMap? map, Random? random})
+  CastleDefense({CastleMap? map, this.endless = false, Random? random})
     : map = map ?? castleMaps.first,
       _random = random ?? Random() {
     gold = this.map.startGold;
@@ -326,6 +349,7 @@ class CastleDefense {
   factory CastleDefense.fromJson(Map<String, dynamic> json, {Random? random}) {
     final game = CastleDefense(
       map: castleMapById(json['map'] as String),
+      endless: json['endless'] as bool? ?? false,
       random: random,
     );
     game
@@ -335,6 +359,7 @@ class CastleDefense {
       ..kills = json['kills'] as int
       ..towersBuilt = json['built'] as int? ?? 0
       ..goldSpent = json['spent'] as int? ?? 0
+      ..mined = json['mined'] as int? ?? 0
       ..richest = json['richest'] as int? ?? game.gold
       .._untilSpawn = (json['untilSpawn'] as num? ?? 0).toDouble();
     (json['killsBy'] as Map? ?? const {}).forEach(
@@ -387,6 +412,10 @@ class CastleDefense {
 
   final CastleMap map;
 
+  /// The sandbox: waves never stop coming, so the game only ends when the
+  /// castle falls.
+  final bool endless;
+
   Set<Tile> get road => map.road;
   Tile get castle => map.castle;
 
@@ -408,6 +437,9 @@ class CastleDefense {
   int towersBuilt = 0;
   int goldSpent = 0;
 
+  /// Gold the mines have dug.
+  int mined = 0;
+
   /// The most gold held at once.
   late int richest;
 
@@ -419,7 +451,7 @@ class CastleDefense {
   double _untilSpawn = 0;
 
   bool get isLost => lives <= 0;
-  bool get isWon => wave >= waves && !waveRunning && !isLost;
+  bool get isWon => !endless && wave >= waves && !waveRunning && !isLost;
   bool get isOver => isLost || isWon;
 
   bool get waveRunning => _toSpawn.isNotEmpty || enemies.isNotEmpty;
@@ -475,7 +507,8 @@ class CastleDefense {
   }
 
   /// The enemies of wave [n]: goblins at first, then faster, tougher and
-  /// bigger ones, and a dragon every fifth wave from the tenth.
+  /// bigger ones, and a dragon every fifth wave from the tenth. Past the
+  /// twentieth, in the sandbox, dragons come in growing flights.
   static List<EnemyKind> waveEnemies(int n) => [
     for (var i = 0; i < 5 + 2 * n; i++)
       if (n >= 8 && i % 6 == 5)
@@ -488,6 +521,8 @@ class CastleDefense {
         EnemyKind.goblin,
     if (n >= 4 && n % 4 == 0) EnemyKind.giant,
     if (n >= 10 && n % 5 == 0) EnemyKind.dragon,
+    if (n > waves)
+      for (var i = 0; i < (n - waves) ~/ 4; i++) EnemyKind.dragon,
   ];
 
   /// Enemies grow stronger with every wave.
@@ -499,7 +534,7 @@ class CastleDefense {
 
   /// Sends the next wave. Only one wave at a time.
   bool startWave() {
-    if (isOver || waveRunning || wave >= waves) return false;
+    if (isOver || waveRunning || (!endless && wave >= waves)) return false;
     wave++;
     _toSpawn.addAll(waveEnemies(wave));
     _untilSpawn = 0;
@@ -532,6 +567,7 @@ class CastleDefense {
     });
 
     for (final tower in towers) {
+      if (!tower.kind.shoots) continue;
       tower.cooldown -= dt;
       if (tower.cooldown > 0) continue;
       final target = _targetFor(tower);
@@ -552,7 +588,11 @@ class CastleDefense {
     }
     shots.removeWhere((shot) => shot.age > Shot.life);
 
-    if (wasRunning && !waveRunning && !isLost) _earn(waveBonus(wave));
+    if (wasRunning && !waveRunning && !isLost) {
+      final dug = towers.fold(0, (sum, t) => sum + t.incomeAfter(wave));
+      mined += dug;
+      _earn(waveBonus(wave) + dug);
+    }
   }
 
   /// The enemy in reach that is furthest down the road.
@@ -592,6 +632,8 @@ class CastleDefense {
 
   Map<String, Object> toJson() => {
     'map': map.id,
+    'endless': endless,
+    'mined': mined,
     'gold': gold,
     'lives': lives,
     'wave': wave,

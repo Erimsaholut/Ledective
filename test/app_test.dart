@@ -860,6 +860,47 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('the sandbox opens once every map is won', (tester) async {
+    _phoneSize(tester);
+    await tester.pumpWidget(const MaterialApp(home: CastleGuardApp()));
+    await tester.pumpAndSettle();
+    await _centre(tester, find.byKey(const ValueKey('castle-sandbox')));
+    await tester.tap(find.byKey(const ValueKey('castle-sandbox')));
+    await tester.pump();
+    expect(find.text('🔒 Önce üç haritayı da kurtar.'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+
+    final profile = CastleProfile(won: {for (final m in castleMaps) m.id});
+    SharedPreferences.setMockInitialValues({
+      'flutter.${CastleGuardApp.profileKey}': json.encode(profile.toJson()),
+    });
+    await tester.pumpWidget(const MaterialApp(home: CastleGuardApp()));
+    await tester.pumpAndSettle();
+    await _centre(tester, find.byKey(const ValueKey('castle-sandbox')));
+    expect(find.text('Açıldı! Haritanı seç.'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('castle-sandbox')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('sandbox-swamp')));
+    await tester.pump();
+    expect(find.text('Dalga 0 · ∞'), findsOneWidget);
+    expect(find.text('♾️ Sisli Bataklık'), findsOneWidget);
+
+    // A mine is built like any tower, but says what it digs.
+    final board = tester.getRect(find.byKey(const ValueKey('castle-board')));
+    final tile = board.width / CastleDefense.cols;
+    final grass = board.topLeft + Offset(0.5 * tile, 0.5 * tile);
+    await tester.tapAt(grass);
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('build-mine')));
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('build-mine')));
+    await tester.pump();
+    expect(find.textContaining('⛏️ Altın Madeni · Seviye 1'), findsOneWidget);
+    expect(find.textContaining('dalga sonu +'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('a fallen castle is recorded and can be played again', (
     tester,
   ) async {
@@ -950,6 +991,13 @@ Future<void> _pumpFarm(
       home: FarmApp(clock: clock, random: Random(3), pay: pay),
     ),
   );
+  await tester.pumpAndSettle();
+}
+
+/// Scrolls [finder] to the middle of the screen, clear of any bars.
+Future<void> _centre(WidgetTester tester, Finder finder) async {
+  await tester.scrollUntilVisible(finder, 200);
+  unawaited(Scrollable.ensureVisible(tester.element(finder), alignment: 0.5));
   await tester.pumpAndSettle();
 }
 

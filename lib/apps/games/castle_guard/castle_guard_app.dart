@@ -198,7 +198,7 @@ class _CastleGuardAppState extends State<CastleGuardApp>
 
   /// Starts a new game on [map], after asking if it would end one left
   /// half way.
-  Future<void> _start(CastleMap map) async {
+  Future<void> _start(CastleMap map, {bool endless = false}) async {
     final saved = _saved;
     if (saved != null) {
       final replace = await showDialog<bool>(
@@ -224,7 +224,7 @@ class _CastleGuardAppState extends State<CastleGuardApp>
       );
       if (replace != true || !mounted) return;
     }
-    _play(CastleDefense(map: map));
+    _play(CastleDefense(map: map, endless: endless));
   }
 
   void _play(CastleDefense game) {
@@ -341,7 +341,9 @@ class _CastleGuardAppState extends State<CastleGuardApp>
     return Scaffold(
       backgroundColor: _background,
       appBar: AppBar(
-        title: Text("${game.map.emoji} ${game.map.title}"),
+        title: Text(
+          "${game.endless ? '♾️' : game.map.emoji} ${game.map.title}",
+        ),
         backgroundColor: _background,
         foregroundColor: Colors.white,
         actions: [
@@ -362,7 +364,14 @@ class _CastleGuardAppState extends State<CastleGuardApp>
       body: SafeArea(
         child: Column(
           children: [
-            _Hud(game: game, best: _profile.best[game.map.id] ?? 0),
+            _Hud(
+              game: game,
+              best:
+                  (game.endless
+                      ? _profile.endlessBest
+                      : _profile.best)[game.map.id] ??
+                  0,
+            ),
             Expanded(
               child: Center(
                 child: AspectRatio(
@@ -389,8 +398,12 @@ class _CastleGuardAppState extends State<CastleGuardApp>
                               next: game.isWon && next < castleMaps.length
                                   ? castleMaps[next]
                                   : null,
-                              onRestart: () =>
-                                  _play(CastleDefense(map: game.map)),
+                              onRestart: () => _play(
+                                CastleDefense(
+                                  map: game.map,
+                                  endless: game.endless,
+                                ),
+                              ),
                               onNext: (map) => _play(CastleDefense(map: map)),
                               onMenu: _toMenu,
                             ),
@@ -415,9 +428,13 @@ class _CastleGuardAppState extends State<CastleGuardApp>
     final tower = tile == null ? null : game.towerAt(tile);
     if (tower != null) {
       final cost = tower.upgradeCost;
+      final income = tower.kind.shoots
+          ? ""
+          : " · dalga sonu +${tower.incomeAfter(game.wave + 1)} 🪙";
       return _Panel(
         title:
-            "${tower.kind.emoji} ${tower.kind.title} · Seviye ${tower.level}",
+            "${tower.kind.emoji} ${tower.kind.title} · Seviye ${tower.level}"
+            "$income",
         children: [
           Expanded(
             child: FilledButton(
@@ -447,7 +464,9 @@ class _CastleGuardAppState extends State<CastleGuardApp>
       return _Panel(
         title: preview == null
             ? "Kule seç, menzilini haritada gör"
-            : "${preview.title}: kurmak için tekrar dokun",
+            : preview.shoots
+            ? "${preview.title}: kurmak için tekrar dokun"
+            : "${preview.title}: ateş etmez, her dalga sonu altın kazar",
         children: [
           for (final kind in TowerKind.values) ...[
             if (kind != TowerKind.values.first) const SizedBox(width: 8),
@@ -511,7 +530,39 @@ class _Menu extends StatelessWidget {
   final CastleProfile profile;
   final CastleDefense? saved;
   final VoidCallback onContinue;
-  final void Function(CastleMap map) onStart;
+  final void Function(CastleMap map, {bool endless}) onStart;
+
+  /// Lets the player pick the map for the sandbox.
+  Future<void> _chooseSandbox(BuildContext context) async {
+    final map = await showModalBottomSheet<CastleMap>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "Sonsuz mod: hangi haritada?",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 8),
+            for (final map in castleMaps)
+              ListTile(
+                key: ValueKey('sandbox-${map.id}'),
+                leading: Text(map.emoji, style: const TextStyle(fontSize: 28)),
+                title: Text(map.title),
+                subtitle: Text(
+                  "Rekor: ${profile.endlessBest[map.id] ?? 0} dalga",
+                ),
+                onTap: () => Navigator.pop(context, map),
+              ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+    if (map != null) onStart(map, endless: true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -545,8 +596,10 @@ class _Menu extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
                 ),
                 Text(
-                  "${saved.map.emoji} ${saved.map.title} · "
-                  "Dalga ${saved.wave}/${CastleDefense.waves} · "
+                  "${saved.endless ? '♾️' : saved.map.emoji} "
+                  "${saved.map.title} · "
+                  "Dalga ${saved.wave}"
+                  "${saved.endless ? '' : '/${CastleDefense.waves}'} · "
                   "❤️ ${saved.lives} · 🪙 ${saved.gold}",
                   style: const TextStyle(fontSize: 13),
                 ),
@@ -575,7 +628,21 @@ class _Menu extends StatelessWidget {
               },
             ),
           ),
-        const SizedBox(height: 8),
+        _SandboxCard(
+          profile: profile,
+          onTap: () {
+            if (profile.sandboxUnlocked) {
+              _chooseSandbox(context);
+              return;
+            }
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(content: Text("🔒 Önce üç haritayı da kurtar.")),
+              );
+          },
+        ),
+        const SizedBox(height: 18),
         Row(
           children: [
             Expanded(
@@ -612,6 +679,85 @@ class _Menu extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+/// The endless sandbox, locked until every map has been won.
+class _SandboxCard extends StatelessWidget {
+  const _SandboxCard({required this.profile, required this.onTap});
+
+  final CastleProfile profile;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final unlocked = profile.sandboxUnlocked;
+    final best = profile.endlessBest.values.fold(0, max);
+    return GestureDetector(
+      key: const ValueKey('castle-sandbox'),
+      onTap: onTap,
+      child: Opacity(
+        opacity: unlocked ? 1 : 0.6,
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF4A148C), Color(0xFF1A237E)],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: unlocked ? const Color(0xFFB388FF) : Colors.white24,
+              width: unlocked ? 2 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Text(
+                unlocked ? '♾️' : '🔒',
+                style: const TextStyle(fontSize: 40),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Sonsuz Mod",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      "Dalgalar hiç bitmez, her biri bir öncekinden zorlu. "
+                      "Kale düşene kadar dayan.",
+                      style: TextStyle(color: Colors.white, fontSize: 13),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      unlocked
+                          ? best > 0
+                                ? "Rekor: $best dalga"
+                                : "Açıldı! Haritanı seç."
+                          : "🔒 Üç haritayı da kurtarınca açılır.",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -911,6 +1057,15 @@ class _StatsPage extends StatelessWidget {
               value:
                   "${profile.best[map.id] ?? 0}/${CastleDefense.waves} dalga",
             ),
+          if (profile.endlessBest.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            const _MenuHeading("Sonsuz mod rekorları"),
+            for (final map in castleMaps)
+              _StatLine(
+                label: "${map.emoji} ${map.title}",
+                value: "${profile.endlessBest[map.id] ?? 0} dalga",
+              ),
+          ],
           const SizedBox(height: 16),
           const _MenuHeading("Alt edilen düşmanlar"),
           for (final kind in EnemyKind.values)
@@ -1025,6 +1180,7 @@ class _GameStatsSheet extends StatelessWidget {
                 ('🗼', "Kurulan kule", game.towersBuilt),
                 ('🪙', "Harcanan", game.goldSpent),
                 ('💰', "En çok altın", game.richest),
+                ('⛏️', "Kazılan", game.mined),
               ],
             ),
             const SizedBox(height: 12),
@@ -1067,7 +1223,12 @@ class _Hud extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text("Dalga ${game.wave}/${CastleDefense.waves}", style: style),
+              Text(
+                game.endless
+                    ? "Dalga ${game.wave} · ∞"
+                    : "Dalga ${game.wave}/${CastleDefense.waves}",
+                style: style,
+              ),
               Text(
                 "Rekor: $best dalga",
                 style: const TextStyle(color: Colors.white60, fontSize: 12),
@@ -1322,7 +1483,7 @@ class _BoardPainter extends CustomPainter {
       final tower = game.towerAt(chosen);
       final ghost = preview;
       final range = tower?.range ?? ghost?.range.first;
-      if (range != null) {
+      if (range != null && range > 0) {
         final centre = at(chosen.col + 0.5, chosen.row + 0.5);
         canvas
           ..drawCircle(
@@ -1418,6 +1579,8 @@ class _BoardPainter extends CustomPainter {
             TowerKind.cannon.splash * t * (0.4 + 0.6 * (1 - fade)),
             Paint()..color = Color.fromRGBO(255, 152, 0, 0.6 * fade),
           );
+        case TowerKind.mine:
+          break;
         case TowerKind.archer || TowerKind.frost:
           canvas.drawLine(
             at(shot.from.x, shot.from.y),

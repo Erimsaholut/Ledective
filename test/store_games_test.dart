@@ -194,6 +194,72 @@ void main() {
     });
   });
 
+  group('Gold mine and sandbox', () {
+    test('a mine costs more than it brings at first and pays off late', () {
+      int dug(int level, Iterable<int> waves) {
+        final mine = Tower(TowerKind.mine, (col: 0, row: 0))..level = level;
+        return waves.fold(0, (sum, w) => sum + mine.incomeAfter(w));
+      }
+
+      final cost = TowerKind.mine.cost;
+      expect(dug(1, [1, 2, 3, 4, 5]), lessThan(cost));
+      expect(dug(1, [for (var w = 1; w <= 20; w++) w]), greaterThan(3 * cost));
+      expect(dug(3, [20]), greaterThan(dug(1, [20]) * 4));
+    });
+
+    test('a mine shoots nothing and digs gold after each wave', () {
+      final game = CastleDefense(random: Random(1))..gold = 1000;
+      final mine = game.build(TowerKind.mine, (col: 2, row: 1))!;
+      game.build(TowerKind.archer, (col: 0, row: 4));
+      game.startWave();
+      while (game.waveRunning) {
+        game.update(0.05);
+      }
+      expect(game.shots.where((s) => s.kind == TowerKind.mine), isEmpty);
+      expect(game.mined, mine.incomeAfter(1));
+      expect(mine.incomeAfter(1), greaterThan(0));
+    });
+
+    test('the sandbox goes on past the twentieth wave', () {
+      final game = CastleDefense(endless: true, random: Random(1))
+        ..wave = CastleDefense.waves;
+      expect(game.isWon, isFalse);
+      expect(game.startWave(), isTrue);
+      expect(game.wave, CastleDefense.waves + 1);
+      final normal = CastleDefense(random: Random(1))
+        ..wave = CastleDefense.waves;
+      expect(normal.startWave(), isFalse);
+      int dragons(int n) => CastleDefense.waveEnemies(
+        n,
+      ).where((e) => e == EnemyKind.dragon).length;
+      expect(dragons(32), greaterThan(dragons(20)));
+      final copy = CastleDefense.fromJson(game.toJson());
+      expect(copy.endless, isTrue);
+      expect(copy.toJson(), game.toJson());
+    });
+
+    test('winning every map opens the sandbox, with records of its own', () {
+      final profile = CastleProfile();
+      for (final map in castleMaps) {
+        expect(profile.sandboxUnlocked, isFalse);
+        final game = CastleDefense(map: map, random: Random(2));
+        _defend(game, [TowerKind.archer]);
+        profile.record(game);
+      }
+      expect(profile.sandboxUnlocked, isTrue);
+      final endless = CastleDefense(endless: true, random: Random(1))
+        ..wave = 31
+        ..lives = 0;
+      final result = profile.record(endless);
+      expect(result.newBest, isTrue);
+      expect(profile.endlessBest['meadow'], 30);
+      expect(profile.best['meadow'], CastleDefense.waves);
+      expect(result.earned, contains(CastleAchievement.endless));
+      final copy = CastleProfile.fromJson(profile.toJson());
+      expect(copy.endlessBest, profile.endlessBest);
+    });
+  });
+
   group('CastleProfile', () {
     test('a win opens the next map', () {
       final profile = CastleProfile();

@@ -18,7 +18,9 @@ enum CastleAchievement {
   ),
   archersOnly("Okçular Loncası", '🏹', "Bir haritayı yalnız okçularla kurtar."),
   thousand("Bin Düşman", '⚔️', "Toplam 1000 düşman öldür."),
-  veteran("Emektar", '🎖️', "Toplam 100 dalgaya dayan.");
+  veteran("Emektar", '🎖️', "Toplam 100 dalgaya dayan."),
+  miner("Altın Damarı", '⛏️', "Madenlerinle bir oyunda 1000 altın kaz."),
+  endless("Sonsuz Muhafız", '♾️', "Sonsuz modda 30 dalgaya dayan.");
 
   const CastleAchievement(this.title, this.emoji, this.description);
 
@@ -33,6 +35,7 @@ class CastleProfile {
   CastleProfile({
     Set<String>? won,
     Map<String, int>? best,
+    Map<String, int>? endlessBest,
     Map<String, int>? killsBy,
     Set<CastleAchievement>? achievements,
     this.games = 0,
@@ -42,12 +45,14 @@ class CastleProfile {
     this.goldSpent = 0,
   }) : won = won ?? {},
        best = best ?? {},
+       endlessBest = endlessBest ?? {},
        killsBy = killsBy ?? {},
        achievements = achievements ?? {};
 
   factory CastleProfile.fromJson(Map<String, dynamic> json) => CastleProfile(
     won: {...(json['won'] as List? ?? const []).cast<String>()},
     best: Map<String, int>.from(json['best'] as Map? ?? const {}),
+    endlessBest: Map<String, int>.from(json['endlessBest'] as Map? ?? const {}),
     killsBy: Map<String, int>.from(json['killsBy'] as Map? ?? const {}),
     achievements: {
       for (final a in CastleAchievement.values)
@@ -63,8 +68,10 @@ class CastleProfile {
   /// Ids of the maps whose castle was saved.
   final Set<String> won;
 
-  /// The most waves held on each map, by id.
+  /// The most waves held on each map, by id, in the twenty-wave game and
+  /// in the sandbox.
   final Map<String, int> best;
+  final Map<String, int> endlessBest;
 
   /// Enemies killed in finished games, by [EnemyKind.name].
   final Map<String, int> killsBy;
@@ -79,6 +86,9 @@ class CastleProfile {
 
   int get losses => games - wins;
   int get kills => killsBy.values.fold(0, (a, b) => a + b);
+
+  /// The sandbox opens once every map has been won.
+  bool get sandboxUnlocked => castleMaps.every((map) => won.contains(map.id));
 
   /// The first map is always open; each other opens once the one before
   /// is won.
@@ -113,6 +123,8 @@ class CastleProfile {
         won && game.kindsBuilt.every((kind) => kind == TowerKind.archer),
       CastleAchievement.thousand => kills + game.kills >= 1000,
       CastleAchievement.veteran => waves + held(game) >= 100,
+      CastleAchievement.miner => game.mined >= 1000,
+      CastleAchievement.endless => game.endless && held(game) >= 30,
     };
   }
 
@@ -131,8 +143,9 @@ class CastleProfile {
   ({List<CastleAchievement> earned, bool newBest}) record(CastleDefense game) {
     final earned = unlock(game);
     final held = CastleProfile.held(game);
-    final newBest = held > (best[game.map.id] ?? 0);
-    if (newBest) best[game.map.id] = held;
+    final record = game.endless ? endlessBest : best;
+    final newBest = held > (record[game.map.id] ?? 0);
+    if (newBest) record[game.map.id] = held;
     if (game.isWon) {
       won.add(game.map.id);
       wins++;
@@ -150,6 +163,7 @@ class CastleProfile {
   Map<String, Object> toJson() => {
     'won': won.toList(),
     'best': best,
+    'endlessBest': endlessBest,
     'killsBy': killsBy,
     'achievements': [for (final a in achievements) a.name],
     'games': games,
