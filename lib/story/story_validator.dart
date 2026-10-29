@@ -196,6 +196,7 @@ List<StoryIssue> validateStory(
   for (final m in story.storyMails) {
     final where = 'mails.json › story › ${m.sender}';
     uses(m.requires, where);
+    sets(m.unlocksOnView, where);
     if (!mailIds.add(m.id)) error(where, 'aynı mail iki kez var');
     if (m.after.isNegative) error(where, '"afterMinutes" eksi olamaz');
   }
@@ -203,6 +204,7 @@ List<StoryIssue> validateStory(
   for (final m in pool.mails) {
     final where = 'mails.json › pool › ${m.id}';
     uses(m.requires, where);
+    sets(m.unlocksOnView, where);
     if (!mailIds.add(m.id)) error(where, 'aynı mail iki kez var');
     if (m.after != Duration.zero) {
       error(where, 'havuzdaki maillerde "afterMinutes" olmaz');
@@ -216,6 +218,7 @@ List<StoryIssue> validateStory(
   }
   for (final t in story.smsThreads) {
     uses(t.requires, 'sms.json › ${t.sender}');
+    sets(t.unlocksOnView, 'sms.json › ${t.sender}');
   }
   for (final t in story.bank.transactions) {
     uses(t.requires, 'bank.json › ${t.id}');

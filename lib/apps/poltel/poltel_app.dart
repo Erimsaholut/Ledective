@@ -149,8 +149,10 @@ class Poltel extends StatelessWidget {
                             },
                             isNew: !progress.hasSeen('poltel:${document.id}'),
                             onOpen: () {
-                              progress.markSeen('poltel:${document.id}');
-                              progress.discover(document.unlocksOnView);
+                              progress.markSeen(
+                                'poltel:${document.id}',
+                                document.unlocksOnView,
+                              );
                             },
                             page: switch (document) {
                               final Statement statement => StatementPage(

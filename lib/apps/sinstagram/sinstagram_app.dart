@@ -257,7 +257,10 @@ void openProfile(BuildContext context, String handle) {
     ).showSnackBar(SnackBar(content: Text("@$handle bulunamadı")));
     return;
   }
-  StoryProgress.instance.discover(profile.unlocksOnView);
+  StoryProgress.instance.markSeen(
+    'profile:${profile.handle}',
+    profile.unlocksOnView,
+  );
   Navigator.push(
     context,
     MaterialPageRoute<void>(builder: (_) => ProfilePage(profile: profile)),

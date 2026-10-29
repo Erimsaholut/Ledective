@@ -538,7 +538,7 @@ Oyuncunun gözden kaçırabileceği bir seçeneği bildirimle hatırlatır; Sett
 
 | Uygulama | Kilitlenir | Mesaj |
 | --- | --- | --- |
-| Poltel | (`status:suspended` ya da `status:dismissed`) | Hakkınızda yürütülen idari soruşturma nedeniyle erişim yetkiniz geçici olarak askıya alınmıştır. |
+| Poltel | (`status:suspended` ya da `status:dismissed`) | Hakkınızda yürütülen idari soruşturma nedeniyle erişim yetkiniz geçici olarak askıya alınmıştır. Da… |
 
 ## Final
 
@@ -618,6 +618,16 @@ Bir yolu açmak için: o bayrağın "Nasıl açılır" sütunundaki yollardan **
 | `case:internal-investigation` | Komiser hakkında idari inceleme başladı | Erdi › "Ben kimseyi aramadım."<br>Erdi › "Numaramı biri kullanıyor olmalı."<br>Erdi › "Kayıtları görmek istiyorum."<br>Süreli olay › bribe-kept: `mp:wrote` olduktan 45 dk sonra, `sent:bribe-return` olmadıysa | Özge › afterMezbaha (kendiliğinden yazar)<br>Özge › later (kendiliğinden yazar)<br>Erdi › desk (kendiliğinden yazar)<br>Erdi › soru "Müdürüm, iç denetim neden benim hesabım…"<br>Süreli olay › suspension başlar<br>Süreli olay › reprimand başlar<br>Mail › icdenetim.emniyet.gov.tr<br>Mail havuzu › hukuk-burosu.av.tr gelebilir |
 | `case:solved` | Berat cinayetinin faili doğru tespit edildi | Özge › "Gözaltına al."<br>Özge › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Özge › "Gitsin. Kızın yerini al."<br>Atakan › "Gözaltına al."<br>Atakan › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Atakan › "Gitsin. Kızın yerini al."<br>Behram › "Gözaltına al."<br>Behram › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Behram › "Gitsin. Kızın yerini al."<br>İnanç › "Gözaltına al."<br>İnanç › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>İnanç › "Gitsin. Kızın yerini al."<br>Doğa › "Gözaltına al."<br>Doğa › "Savcıyla konuşacağım. Ona koruma ve ind…"<br>Doğa › "Gitsin. Kızın yerini al." | 0532 190 19 07 › after (kendiliğinden yazar)<br>Final › Berat Yılmaz Dosyası › Adaletin Bedeli<br>Final › Berat Yılmaz Dosyası › Kirli Eller<br>Final › Berat Yılmaz Dosyası › Sessiz Zafer |
 | `case:wrong-person` | Yanlış kişi suçlandı | _henüz hiçbir şey_ | Final › Berat Yılmaz Dosyası › Yanlış İnsan |
+| `clue:airline` | Gizli son izi: 12 aydır uçuş kaydı yok (mail okundu) | Mail havuzu › havayolu.com.tr açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `clue:clinic` | Gizli son izi: poliklinik randevusu kaçırılmış (mail okundu) | Mail havuzu › randevu@ruhsagligi-poliklinigi.gov.tr açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `clue:doctor-sms` | Gizli son izi: Dr. Arıkan'ın mesajı (SMS okundu) | Messages › Dr. S. Arıkan açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `clue:green-prescription` | Gizli son izi: yeşil reçete (mail okundu) | Mail havuzu › bildirim@e-recete.saglik.gov.tr açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `clue:hotel` | Gizli son izi: otel rezervasyonu sistemde yok (mail okundu) | Mail havuzu › oteller.com açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `clue:mother-meds` | Gizli son izi: annenin ilaç hatırlatması (mail okundu) | Mail havuzu › annem@eposta.com açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `clue:no-travel-insurance` | Gizli son izi: yurt dışı poliçesi yok (mail okundu) | Mail havuzu › bilgi@sigortam.com açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `clue:pharmacy-bill` | Gizli son izi: eczane faturası (mail okundu) | Mail havuzu › efatura@sifaeczanesi.com.tr açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `clue:pharmacy-sms` | Gizli son izi: teslim alınmamış ilaç (SMS okundu) | Messages › SIFA ECZ açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
+| `clue:pill-box` | Gizli son izi: haftalık ilaç kutusu siparişi (mail okundu) | Mail havuzu › siparis@hepsibir.com açılınca | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `coverup:exposed` | Örtbas edilen suçlar ortaya çıktı | Süreli olay › exposure: `phone:prosecutor` ve (`adil:caught` ya da `emre:testimony`) olduktan 10 dk sonra<br>Süreli olay › exposure-press: `phone:press` olduktan 5 dk sonra | Mail havuzu › kampanya@kitapevi.com.tr gelebilir<br>News › "Yılmaz Vakfı’na savcılık operasyonu" çıkar<br>News › "Burs fuarına bu yıl az ilgi" çıkar<br>News › "Yılmaz ailesinin yazlığı sessizce satışa çıkarıldı" çıkar<br>Final › Berat Yılmaz Dosyası › Adaletin Bedeli<br>Final › Halit Yener |
 | `danisman:fled` | Halit Yener haberden sonra kaçtı | Süreli olay › exposure-press: `phone:press` olduktan 5 dk sonra | News › "Vakıf müdürü yurt dışına çıktı" çıkar<br>Final › Halit Yener |
 | `deniz:told` |  | Özge › "Söyleyin. Bilmeye hakkı var." | _henüz hiçbir şey (ileride bağlanacak)_ |

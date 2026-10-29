@@ -417,8 +417,10 @@ class _ArticlePageState extends State<ArticlePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final progress = StoryProgress.instance;
-      await progress.markSeen('news:${widget.item.key}');
-      await progress.discover(widget.item.article.unlocksOnRead);
+      await progress.markSeen(
+        'news:${widget.item.key}',
+        widget.item.article.unlocksOnRead,
+      );
     });
   }
 

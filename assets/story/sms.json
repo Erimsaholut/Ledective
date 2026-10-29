@@ -38,7 +38,8 @@
     "requires": "part1Done",
     "messages": [
       "Sayın hastamız, reçeteli ilacınız eczanemizde hazırdır. 5 gün içinde teslim alınmayan ilaçlar iade edilir. Şifa Eczanesi"
-    ]
+    ],
+    "unlocksOnView": ["clue:pharmacy-sms"]
   },
   {
     "sender": "Dr. S. Arıkan",
@@ -46,6 +47,7 @@
     "messages": [
       "Merhaba, ben Dr. Arıkan. Son iki randevunuza gelmediniz, telefonla da ulaşamadım.",
       "Nasıl olduğunuzu merak ediyorum. Uykularınız nasıl? Bir mesaj atmanız bile yeter."
-    ]
+    ],
+    "unlocksOnView": ["clue:doctor-sms"]
   }
 ]

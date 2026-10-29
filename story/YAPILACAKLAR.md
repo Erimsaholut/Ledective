@@ -125,9 +125,17 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 
 - [ ] **Gizli son için şüphe sayısı.** `doubt` var ve beş ipucu artırıyor;
   finalde yeterliyse çıkacak son seçenek henüz yazılmadı.
-- [ ] **Görevden uzaklaştırma kilidi.** Poltel kilitlenince laboratuvar da
-  kapanıyor. Ya laboratuvar ayrı bir uygulama olsun ya da kilitliyken
-  bekleyen incelemeler başka yoldan çözülsün.
+  - [x] Mail ve SMS artık açılınca bayrak açabiliyor (`unlocksOnView`).
+    İpucu mailleri ve SMS'leri `clue:` bayrakları açıyor.
+  - [x] Açılınca uygulanan etkiler artık bir kez sayılıyor (sesli mesajı
+    tekrar dinlemek `doubt`'u şişiriyordu).
+  - [ ] [?] Hangi `clue:` kaç puan sayacak ve final eşiği ne olacak (şu an
+    `doubt >= 3`)? Karar bekliyor.
+- [x] **Görevden uzaklaştırma kilidi.** Poltel kilitliyken bekleyen
+  incelemeler Pano'dan sürüyor ("Laboratuvar talebini sürdür"); kilit
+  ekranı da bunu söylüyor. Oyun takılmıyor.
+  - [ ] [?] Hikâye açısından: incelemeyi o sırada komisere güvenen biri mi
+    yapsın (ör. Doğa)? Karar sende.
 - [ ] **Rüşvet ikileminin eksik seçenekleri.** Savcılığa bildirmek, göndericiyi
   araştırmak.
 - [ ] **Senaryolu telefon aramaları.** Avukat, gazeteci, tanık (Phone uygulaması).
@@ -153,9 +161,9 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 - [x] Gizli son için sağlık izleri: ilaç kutusu, eczane faturası ve SMS'i,
   seyahat sigortası, e-reçete (yeşil reçete), annenin ilaç maili,
   Dr. Arıkan'ın SMS'i (`bible/01-ana-gizem.md`).
-- [ ] [?] Takvim'e kaçırılmış bir "Kontrol" randevusu eklensin mi?
-- [ ] Sohbetlerde mesajlar şu an toplu düşüyor; istenirse olaylarla gelen
-  mesajlar da birkaç saniye arayla tek tek gelebilir.
+- [x] Takvim'de dört haftada bir "Dr. Arıkan · kontrol" (7 ve 3 hafta önce).
+- [x] Sohbetlerde mesajlar tek tek, birkaç saniye arayla geliyor; her biri
+  kendi bildirimiyle; beklerken listede "yazıyor..." görünüyor.
 
 ## Hikâye planı (bible) adımları
 

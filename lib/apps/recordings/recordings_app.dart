@@ -56,8 +56,9 @@ class _RecordingsAppState extends State<RecordingsApp> {
     }
     _stop();
     setState(() => _playing = recording.id);
-    unawaited(_progress.markSeen('rec:${recording.id}'));
-    unawaited(_progress.discover(recording.unlocksOnListen));
+    unawaited(
+      _progress.markSeen('rec:${recording.id}', recording.unlocksOnListen),
+    );
     final audio = recording.audio;
     if (audio != null) {
       try {

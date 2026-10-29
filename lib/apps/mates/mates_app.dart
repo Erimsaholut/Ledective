@@ -180,7 +180,7 @@ class _MatesAppState extends State<MatesApp> {
               : 2;
           final story = [
             for (final person in people)
-              if (_progress.restore(person).$2 case final transcript
+              if (_progress.transcriptOf(person) case final transcript
                   when transcript.isNotEmpty)
                 (person, transcript),
           ];
@@ -193,7 +193,9 @@ class _MatesAppState extends State<MatesApp> {
             for (final (person, transcript) in story)
               _tile(
                 name: person,
-                preview: _preview(transcript),
+                preview: _progress.isTyping(person)
+                    ? "yazıyor..."
+                    : _preview(transcript),
                 unread: _progress.unreadCount(person),
                 awaitsReply: _progress.awaitsReply(person),
                 onTap: () =>

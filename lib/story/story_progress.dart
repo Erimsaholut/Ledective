@@ -179,6 +179,19 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /// Whether hints (state.json › `hints`) raise alerts.
   bool hintsOn = true;
 
+  /// Whether messages that arrive together show up one at a time, a few
+  /// seconds apart, each with its own banner. The app turns this on; tests
+  /// see every message at once unless they ask.
+  bool paceMessages = false;
+
+  /// The chat on screen, which paces its own messages.
+  String? openChat;
+
+  /// For chats whose new messages are still coming in: how many of the
+  /// other person's messages show so far, and when the next one does.
+  final Map<String, int> _shown = {};
+  final Map<String, DateTime> _nextMessage = {};
+
   StoryData get _story => StoryData.current;
 
   @override
@@ -233,6 +246,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     _values.clear();
     _timers.clear();
     _timersDone.clear();
+    _shown.clear();
+    _nextMessage.clear();
     _lastTick = null;
     _newsArrivals.clear();
     _mailArrivals.clear();
@@ -353,7 +368,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   Map<String, Set<String>> _snapshot() => {
     'chat': {
       for (final person in _story.conversations.keys)
-        for (var i = 0; i < unreadCount(person); i++) '$person#$i',
+        for (var i = 0; i < _incomingCount(person); i++) '$person#$i',
     },
     'poltel': {
       for (final d in _story.documents)
@@ -499,7 +514,11 @@ class StoryProgress extends ChangeNotifier implements StoryState {
         }
       }
       if (kind == 'chat') {
-        alerts.pushAll(_chatAlerts(added, except));
+        if (paceMessages) {
+          _queueMessages(added, except);
+        } else {
+          alerts.pushAll(_chatAlerts(added, except));
+        }
         continue;
       }
       for (final item in added) {
@@ -509,6 +528,87 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     }
     return true;
   }
+
+  /// Holds back the messages in [added] (see [paceMessages]); [deliver]
+  /// shows them.
+  void _queueMessages(Set<String> added, String? except) {
+    final byPerson = <String, int>{};
+    for (final item in added) {
+      final person = item.split('#').first;
+      if (person == except || person == openChat) continue;
+      byPerson[person] = (byPerson[person] ?? 0) + 1;
+    }
+    final now = _lastTick ?? DateTime.now();
+    for (final MapEntry(key: person, value: count) in byPerson.entries) {
+      _shown[person] ??= _incomingCount(person) - count;
+      _nextMessage[person] ??= now.add(const Duration(seconds: 1));
+    }
+  }
+
+  /// Time the other person takes to type [text].
+  static Duration _typingTime(String text) => Duration(
+    milliseconds: (1200 + text.length * 40).clamp(2000, 6000).toInt(),
+  );
+
+  /// Shows the next held-back message of each chat whose turn it is, with a
+  /// banner. Returns whether any showed.
+  bool _deliverMessages(DateTime now) {
+    var changed = false;
+    for (final person in _shown.keys.toList()) {
+      if (now.isBefore(_nextMessage[person]!)) continue;
+      final incoming = _incoming(person);
+      final shown = _shown[person]! + 1;
+      if (shown <= incoming.length && person != openChat) {
+        alerts.push(
+          StoryAlert(
+            app: 'MatesApp',
+            title: person,
+            body: incoming[shown - 1],
+            thread: person,
+          ),
+        );
+      }
+      changed = true;
+      if (shown >= incoming.length) {
+        _shown.remove(person);
+        _nextMessage.remove(person);
+      } else {
+        _shown[person] = shown;
+        _nextMessage[person] = now.add(_typingTime(incoming[shown]));
+      }
+    }
+    return changed;
+  }
+
+  /// Whether [person]'s messages are still coming in.
+  bool isTyping(String person) => _shown.containsKey(person);
+
+  /// [person]'s messages that haven't shown yet, which the chat that just
+  /// opened shows itself. They no longer raise banners.
+  int takeHeldBack(String person) {
+    final shown = _shown.remove(person);
+    _nextMessage.remove(person);
+    return shown == null ? 0 : _incomingCount(person) - shown;
+  }
+
+  /// The chat with [person] as far as it has come in.
+  List<ChatEntry> transcriptOf(String person) {
+    final transcript = restore(person).$2;
+    final shown = _shown[person];
+    if (shown == null) return transcript;
+    var seen = 0;
+    for (final (i, entry) in transcript.indexed) {
+      if (entry is IncomingMessage && ++seen > shown) {
+        return transcript.sublist(0, i);
+      }
+    }
+    return transcript;
+  }
+
+  List<String> _incoming(String person) => [
+    for (final entry in restore(person).$2)
+      if (entry case IncomingMessage(:final text)) text,
+  ];
 
   /// One notification per new message, each with its own text.
   List<StoryAlert> _chatAlerts(Set<String> added, String? except) {
@@ -668,10 +768,13 @@ class StoryProgress extends ChangeNotifier implements StoryState {
           .whereType<IncomingMessage>()
           .length;
 
+  /// [person]'s messages that have shown, see [paceMessages].
+  int _shownCount(String person) => _shown[person] ?? _incomingCount(person);
+
   /// Messages from [person] the player hasn't read yet.
   int unreadCount(String person) {
     final seen = _seenIncoming[person] ?? _initialSeen(person);
-    final unread = _incomingCount(person) - seen;
+    final unread = _shownCount(person) - seen;
     return unread < 0 ? 0 : unread;
   }
 
@@ -681,7 +784,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   static int _sum(int a, int b) => a + b;
 
   /// Whether [person] asked something the player hasn't answered yet.
-  bool awaitsReply(String person) => restore(person).$1.expectsReply;
+  bool awaitsReply(String person) =>
+      !isTyping(person) && restore(person).$1.expectsReply;
 
   /// Chats with unread messages or a question waiting for an answer.
   int get chatsNeedingAttention => _story.conversations.keys
@@ -690,7 +794,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
 
   Future<void> markRead(String person) async {
     alerts.clearGroup('MatesApp|$person');
-    final count = _incomingCount(person);
+    final count = _shownCount(person);
     if (_seenIncoming[person] == count) return;
     _seenIncoming[person] = count;
     notifyListeners();
@@ -700,8 +804,14 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /// Whether the player has opened an unlockable item, such as a document.
   bool hasSeen(String item) => _seenItems.contains(item);
 
-  Future<void> markSeen(String item) async {
+  /// Marks [item] opened and, the first time only, applies [effects], so
+  /// opening it again doesn't count twice (`doubt += 1`).
+  Future<void> markSeen(
+    String item, [
+    Iterable<String> effects = const [],
+  ]) async {
     if (!_seenItems.add(item)) return;
+    _apply(effects);
     notifyListeners();
     await _save();
   }
@@ -898,6 +1008,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   Future<void> tick({DateTime? now}) async {
     final time = now ?? DateTime.now();
     var changed = _startDrips(time);
+    changed |= _deliverMessages(time);
     await completeDueMissions(now: time);
     changed |= _announceNews(time);
     final last = _lastTick;

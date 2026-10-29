@@ -27,6 +27,7 @@ Kendiliğinden olanlar: `trait:<özellik>` (kişilik puanı) ve `paid:<alıcı>`
 | `heard:` | Bir isim ya da bilgi duyuldu | `heard:adil` |
 | `ev:` | Delil bulundu | `ev:torn-photo` |
 | `seen:` | Bir profil/kayıt görüldü | `seen:adil` |
+| `clue:` | Gizli son için bir iz okundu (mail, SMS) | `clue:clinic` |
 | `poltel:` | Kısıtlı kayda erişildi | `poltel:ozge-file-read` |
 | `news:` | Haber okundu | `news:old-case-found` |
 | `sent:` | Alıcıya para gönderildi (kendiliğinden) | `sent:bribe-return` |

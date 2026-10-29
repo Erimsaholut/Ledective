@@ -252,7 +252,11 @@ Ek ipuçları da oyunda [KANON, taslak]:
   - Dr. S. Arıkan'ın SMS'i: randevuya gelmediğini, ulaşamadığını söyler,
     nedenini söylemez. Uyarı ya da uzaklaştırma sonrası (`status:warned`
     ya da `status:suspended`).
-  - Bunlar da `doubt` saymıyor (mail ve SMS'te `unlocksOnView` yok).
+  - Takvim: her dört haftada bir "Dr. Arıkan · kontrol". Son ikisi 7 ve
+    3 hafta önce; poliklinik maili 3 hafta öncekine gelinmediğini söylüyor.
+  - Mail ve SMS ipuçları açılınca `clue:` bayrağı açar (ör. `clue:clinic`,
+    `clue:doctor-sms`). `doubt` saymıyorlar: hangilerinin kaç puan sayacağı
+    ve final eşiği (şu an `doubt >= 3`) karar bekliyor. [?]
 
 [?] Gizli son diğer finallerle nasıl birleşir: Kerem'in akıbeti ve dosyanın
 sonucu yine anlatılır mı, yoksa her şey yeniden mi okunur?

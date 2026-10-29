@@ -65,8 +65,14 @@ Bayrak açanlar:
 | Sesli mesaj dinlenince | `unlocksOnListen` |
 | Poltel belgesi açılınca | `unlocksOnView` |
 | Haber okununca | `unlocksOnRead` |
+| Mail açılınca | mails.json › `unlocksOnView` |
+| SMS konuşması açılınca | sms.json › `unlocksOnView` |
 | Para gönderilince | bank.json › `payees` › `unlocks` |
 | Süreli olayın süresi dolunca | state.json › `timers` › `unlocks` |
+
+Açılınca, dinlenince ya da okununca açılanlar sadece **ilk seferde**
+uygulanır: aynı maili ya da sesli mesajı tekrar açmak `doubt += 1`'i ikinci
+kez saymaz.
 
 Bekleyenler `requires` (hepsi açık olmalı) ve `requiresAny` (en az biri açık
 olmalı) alanlarını kullanır. İkisi de tek bir isim ya da isim listesi olabilir:
@@ -224,6 +230,10 @@ olaylar oradan ilgili düğüme gider, o düğümün seçenekleri de masaya dön
   de çıkar.
 - Her olay bir kez gerçekleşir. Aynı anda birden fazlası tutarsa listedeki
   sıraya göre, biri bitince diğeri gelir.
+- Aynı anda gelen mesajlar oyunda birkaç saniye arayla tek tek düşer, her
+  biri kendi bildirimiyle; o sırada sohbet listesinde "yazıyor..." görünür.
+  Oyuncu sohbeti açarsa kalanları orada yazılarak gelir. Yazarken bir şey
+  yapman gerekmez.
 
 ### Rehberde olmayan kişiler
 
@@ -516,7 +526,7 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
   - Yazarın hata ayıklama sayfasında (Ayarlar › Hikâye durumu) sıradaki
     maili ya da haberi beklemeden getiren düğmeler var.
 - **sms.json**: `sender`, `messages`, `daysAgo`, isteğe bağlı `requires` ya da
-  `requiresAny`.
+  `requiresAny`, `unlocksOnView`.
 - **bank.json**: tutarlar **kuruş** cinsindendir (`5000000` = 50.000,00 TL),
   eksi değer ödemedir. `requires` taşıyan işlemler hikâyede gelir ve bakiyeyi
   değiştirir; taşımayanlar başlangıç bakiyesine dahildir.

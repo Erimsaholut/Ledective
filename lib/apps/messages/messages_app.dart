@@ -73,7 +73,10 @@ class MessagesApp extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     onTap: () {
-                      progress.markSeen('sms:${thread.sender}');
+                      progress.markSeen(
+                        'sms:${thread.sender}',
+                        thread.unlocksOnView,
+                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(

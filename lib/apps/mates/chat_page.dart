@@ -48,9 +48,32 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     final (dialogue, transcript) = _progress.restore(widget.person);
     _dialogue = dialogue;
-    _entries = transcript;
+    _progress.openChat = widget.person;
+    // Messages still on their way come in here, one by one.
+    final held = _progress.takeHeldBack(widget.person);
+    var cut = transcript.length;
+    for (var seen = 0; held > 0 && cut > 0 && seen < held; cut--) {
+      if (transcript[cut - 1] is IncomingMessage) seen++;
+    }
+    _entries = transcript.sublist(0, cut);
     _progress.markRead(widget.person);
     _progress.addListener(_sync);
+    _reveal(transcript.sublist(cut));
+  }
+
+  /// Adds [entries] one at a time, as if the other person were typing them.
+  void _reveal(List<ChatEntry> entries) {
+    if (entries.isEmpty) return;
+    for (var i = 0; i < entries.length; i++) {
+      _replyTimers.add(
+        Timer(widget.replyDelay * (i + 1), () {
+          if (!mounted) return;
+          setState(() => _entries.add(entries[i]));
+          _progress.markRead(widget.person);
+          if (i == entries.length - 1) _sync();
+        }),
+      );
+    }
   }
 
   /// Saved choices this screen hasn't followed yet, such as an event that
@@ -66,6 +89,11 @@ class _ChatPageState extends State<ChatPage> {
     if (!mounted || _sending || _typing) return;
     final entries = _dialogue.replay(_unfollowed);
     if (entries.isEmpty) return;
+    if (_progress.paceMessages) {
+      _reveal(entries);
+      setState(() {});
+      return;
+    }
     setState(() => _entries.addAll(entries));
     _progress.markRead(widget.person);
   }
@@ -73,6 +101,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void dispose() {
     _progress.removeListener(_sync);
+    if (_progress.openChat == widget.person) _progress.openChat = null;
     for (final timer in _replyTimers) {
       timer.cancel();
     }

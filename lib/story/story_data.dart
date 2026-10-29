@@ -266,6 +266,7 @@ class Mail {
     this.subject = '',
     this.requires = Condition.always,
     this.after = Duration.zero,
+    this.unlocksOnView = const [],
   }) : _id = id;
 
   final String? _id;
@@ -273,6 +274,9 @@ class Mail {
   final String subject;
   final String body;
   final Condition requires;
+
+  /// Applied the first time the player opens the mail.
+  final List<String> unlocksOnView;
 
   /// Play time the mail takes to arrive once [requires] holds.
   final Duration after;
@@ -308,6 +312,7 @@ class SmsThread {
     required this.messages,
     this.daysAgo = 0,
     this.requires = Condition.always,
+    this.unlocksOnView = const [],
   });
 
   final String sender;
@@ -316,6 +321,9 @@ class SmsThread {
   /// Days before the first launch the messages were received.
   final int daysAgo;
   final Condition requires;
+
+  /// Applied the first time the player opens the thread.
+  final List<String> unlocksOnView;
 }
 
 class Post {
@@ -1084,6 +1092,7 @@ Mail _mail(_Reader r) => Mail(
   body: r.text('body'),
   requires: r.condition(),
   after: _after(r),
+  unlocksOnView: r.stringsOr('unlocksOnView'),
 );
 
 MailPool _mailPool(_Reader r) => MailPool(
@@ -1105,6 +1114,7 @@ SmsThread _sms(_Reader r) => SmsThread(
   messages: r.field('messages').strings,
   daysAgo: r.intOr('daysAgo', 0),
   requires: r.condition(),
+  unlocksOnView: r.stringsOr('unlocksOnView'),
 );
 
 Post _post(_Reader r, {String? author}) => Post(

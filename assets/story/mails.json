@@ -272,7 +272,8 @@
         "id": "hotel",
         "sender": "oteller.com",
         "subject": "Konaklamanızı değerlendirin",
-        "body": "Son konaklamanız nasıldı? Rezervasyon numaranız sistemde görünmüyor, ama yine de puan verebilirsiniz."
+        "body": "Son konaklamanız nasıldı? Rezervasyon numaranız sistemde görünmüyor, ama yine de puan verebilirsiniz.",
+        "unlocksOnView": ["clue:hotel"]
       },
       {
         "id": "ramazan-usta",
@@ -355,14 +356,16 @@
         "sender": "randevu@ruhsagligi-poliklinigi.gov.tr",
         "subject": "Kontrol randevunuz",
         "body": "Sayın hastamız, 3 hafta önceki kontrol randevunuza gelmediğiniz görülmüştür. İlaçlarınızın düzenli kullanımı için Dr. S. Arıkan sizi bekliyor.",
-        "requires": "leak:traced"
+        "requires": "leak:traced",
+        "unlocksOnView": ["clue:clinic"]
       },
       {
         "id": "airline-points",
         "sender": "havayolu.com.tr",
         "subject": "Mil puanlarınız",
         "body": "Son 12 ayda uçuş kaydınız bulunmadığından mil puanlarınızın süresi dolmak üzere.",
-        "requires": "leak:traced"
+        "requires": "leak:traced",
+        "unlocksOnView": ["clue:airline"]
       },
       {
         "id": "dizikutu-continue",
@@ -606,34 +609,39 @@
         "id": "pill-box",
         "sender": "siparis@hepsibir.com",
         "subject": "Siparişiniz kargoya verildi 📦",
-        "body": "Haftalık İlaç Düzenleyici (7 gün, sabah-akşam, kilitli kapak) siparişiniz kargoya verildi. Ürünü değerlendirmeyi unutmayın: Hayatınızı ne kadar düzene soktu?"
+        "body": "Haftalık İlaç Düzenleyici (7 gün, sabah-akşam, kilitli kapak) siparişiniz kargoya verildi. Ürünü değerlendirmeyi unutmayın: Hayatınızı ne kadar düzene soktu?",
+        "unlocksOnView": ["clue:pill-box"]
       },
       {
         "id": "mother-meds",
         "sender": "annem@eposta.com",
         "subject": "İlaçların",
-        "body": "Oğlum ilaçlarını yanına aldın mı? Tatilde de içmeyi unutma, sonra yine uyuyamazsın. Bir de oralar soğuk mu, montunu aldın mı?"
+        "body": "Oğlum ilaçlarını yanına aldın mı? Tatilde de içmeyi unutma, sonra yine uyuyamazsın. Bir de oralar soğuk mu, montunu aldın mı?",
+        "unlocksOnView": ["clue:mother-meds"]
       },
       {
         "id": "pharmacy-invoice",
         "sender": "efatura@sifaeczanesi.com.tr",
         "subject": "e-Arşiv faturanız oluşturuldu",
         "body": "Sayın müşterimiz, Şifa Eczanesi'nden yaptığınız alışverişe ait e-Arşiv faturanız oluşturulmuştur. Tutar: 186,40 TL (Reçeteli ilaç, 1 kalem, katılım payı dahil). Geçmiş olsun.",
-        "requires": "part1Done"
+        "requires": "part1Done",
+        "unlocksOnView": ["clue:pharmacy-bill"]
       },
       {
         "id": "travel-insurance",
         "sender": "bilgi@sigortam.com",
         "subject": "Seyahatinize çıkmadan önce",
         "body": "Sistemimizde adınıza tanımlı yurt dışı seyahat sağlık poliçesi bulunmamaktadır. Yurt dışında hastalanmak hem pahalı hem yorucu! Poliçenizi 2 dakikada oluşturun.",
-        "requires": "part1Done"
+        "requires": "part1Done",
+        "unlocksOnView": ["clue:no-travel-insurance"]
       },
       {
         "id": "e-prescription",
         "sender": "bildirim@e-recete.saglik.gov.tr",
         "subject": "Adınıza e-Reçete düzenlendi",
         "body": "Sayın vatandaşımız, Dr. S. Arıkan tarafından adınıza 1 adet e-Reçete düzenlenmiştir. Reçete türü: Yeşil reçete. İlacınızı reçete tarihinden itibaren en geç 5 gün içinde eczaneden teslim alınız.",
-        "requires": "leak:traced"
+        "requires": "leak:traced",
+        "unlocksOnView": ["clue:green-prescription"]
       }
     ]
   },

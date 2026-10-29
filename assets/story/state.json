@@ -48,6 +48,16 @@
     "kaymakam:informed": "Komiser kaymakama bilgi vermeyi kabul etti",
     "pressure:refused": "Komiser kaymakamı reddetti",
     "mp:wrote": "Milletvekili baba gizli numaradan yazdı, para yattı",
+    "clue:hotel": "Gizli son izi: otel rezervasyonu sistemde yok (mail okundu)",
+    "clue:airline": "Gizli son izi: 12 aydır uçuş kaydı yok (mail okundu)",
+    "clue:clinic": "Gizli son izi: poliklinik randevusu kaçırılmış (mail okundu)",
+    "clue:pill-box": "Gizli son izi: haftalık ilaç kutusu siparişi (mail okundu)",
+    "clue:mother-meds": "Gizli son izi: annenin ilaç hatırlatması (mail okundu)",
+    "clue:pharmacy-bill": "Gizli son izi: eczane faturası (mail okundu)",
+    "clue:no-travel-insurance": "Gizli son izi: yurt dışı poliçesi yok (mail okundu)",
+    "clue:green-prescription": "Gizli son izi: yeşil reçete (mail okundu)",
+    "clue:pharmacy-sms": "Gizli son izi: teslim alınmamış ilaç (SMS okundu)",
+    "clue:doctor-sms": "Gizli son izi: Dr. Arıkan'ın mesajı (SMS okundu)",
     "bribe:returned": "Para gönderene iade edildi",
     "adil:warns": "Büroya \"Çocuk bir şey bilmez\" telefonu geldi",
     "furkan:released": "Furkan serbest bırakıldı",
@@ -130,7 +140,7 @@
       "app": "Poltel",
       "lockedWhenAny": ["status:suspended", "status:dismissed"],
       "title": "Erişim askıya alındı",
-      "message": "Hakkınızda yürütülen idari soruşturma nedeniyle erişim yetkiniz geçici olarak askıya alınmıştır."
+      "message": "Hakkınızda yürütülen idari soruşturma nedeniyle erişim yetkiniz geçici olarak askıya alınmıştır. Daha önce açılmış laboratuvar talepleri Delil Panosu üzerinden işlenmeye devam eder."
     }
   ],
   "timers": [

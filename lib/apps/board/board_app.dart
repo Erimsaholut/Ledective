@@ -464,7 +464,13 @@ class _EvidenceSheet extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.science_rounded),
-                  label: const Text("Poltel Laboratuvarı'nda incele"),
+                  // Pending inspections go on from here while a suspension
+                  // locks Poltel, so the case can't get stuck.
+                  label: Text(
+                    progress.lockOf('Poltel') == null
+                        ? "Poltel Laboratuvarı'nda incele"
+                        : "Laboratuvar talebini sürdür",
+                  ),
                 ),
             ],
           ],

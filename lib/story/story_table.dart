@@ -454,13 +454,16 @@ class _TableWriter {
           ? ' (${m.after.inMinutes} dk sonra)'
           : '';
       _uses(m.requires, 'Mail › ${m.sender}$wait');
+      _sets(m.unlocksOnView, 'Mail › ${m.sender} açılınca');
     }
     for (final m in story.mailPool.mails) {
+      _sets(m.unlocksOnView, 'Mail havuzu › ${m.sender} açılınca');
       if (m.requires.isAlways) continue;
       _uses(m.requires, 'Mail havuzu › ${m.sender} gelebilir');
     }
     for (final t in story.smsThreads) {
       _uses(t.requires, 'Messages › ${t.sender}');
+      _sets(t.unlocksOnView, 'Messages › ${t.sender} açılınca');
     }
     for (final r in story.recordings) {
       _uses(r.requires, 'Kayıtlar › ${r.from} (${r.id}) gelir');

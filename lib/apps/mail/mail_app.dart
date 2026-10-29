@@ -78,7 +78,7 @@ class _MailAppState extends State<MailApp> {
   }
 
   void _open(Mail mail, DateTime time) {
-    StoryProgress.instance.markSeen('mail:${mail.id}');
+    StoryProgress.instance.markSeen('mail:${mail.id}', mail.unlocksOnView);
     Navigator.push(
       context,
       MaterialPageRoute<void>(

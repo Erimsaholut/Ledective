@@ -22,6 +22,7 @@ Future<void> main() async {
   // Draw edge to edge so the wallpaper runs under the status bar.
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await loadGameState();
+  StoryProgress.instance.paceMessages = true;
   // Officers come back, timers run and the farm calls whichever app is
   // open.
   Timer.periodic(const Duration(seconds: 2), (_) {

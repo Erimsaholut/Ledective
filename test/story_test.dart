@@ -906,6 +906,72 @@ void main() {
       expect(progress.has('case:internal-investigation'), isFalse);
     });
 
+    test('opening something again does not count twice', () async {
+      final progress = StoryProgress.instance;
+      final clinic = StoryData.current.mailPool.mails.firstWhere(
+        (m) => m.id == 'clinic',
+      );
+      expect(clinic.unlocksOnView, ['clue:clinic']);
+      await progress.markSeen('rec:test', ['doubt += 1']);
+      await progress.markSeen('rec:test', ['doubt += 1']);
+      expect(progress.value('doubt'), 1);
+    });
+
+    test('messages that arrive together come in one by one', () async {
+      final progress = StoryProgress.instance;
+      progress.paceMessages = true;
+      addTearDown(() => progress.paceMessages = false);
+      var clock = DateTime(2026, 3, 2, 10);
+      await progress.tick(now: clock);
+      await say('Özge', 'Neymiş bu kadar önemli olan durum');
+      await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
+      await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
+      expect(progress.isTyping('Özge'), isFalse, reason: 'the open chat');
+      final person = StoryData.current.conversations.keys.firstWhere(
+        progress.isTyping,
+      );
+      int shown() =>
+          progress.transcriptOf(person).whereType<IncomingMessage>().length;
+      int banners() =>
+          progress.alerts.items.where((a) => a.thread == person).length;
+      final total = progress
+          .restore(person)
+          .$2
+          .whereType<IncomingMessage>()
+          .length;
+      final before = shown();
+      expect(before, lessThan(total));
+      expect(banners(), 0);
+      expect(progress.awaitsReply(person), isFalse);
+
+      var last = before;
+      for (var i = 0; i < 40 && progress.isTyping(person); i++) {
+        clock = clock.add(const Duration(seconds: 2));
+        await progress.tick(now: clock);
+        expect(shown() - last, lessThanOrEqualTo(1), reason: 'one at a time');
+        last = shown();
+        expect(banners(), shown() - before);
+      }
+      expect(progress.isTyping(person), isFalse);
+      expect(shown(), total);
+      expect(progress.unreadCount(person), greaterThan(0));
+    });
+
+    test('a chat opened mid-way takes over the rest', () async {
+      final progress = StoryProgress.instance;
+      progress.paceMessages = true;
+      addTearDown(() => progress.paceMessages = false);
+      await progress.tick(now: DateTime(2026, 3, 2, 10));
+      await say('Özge', 'Neymiş bu kadar önemli olan durum');
+      await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
+      await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
+      final person = StoryData.current.conversations.keys.firstWhere(
+        progress.isTyping,
+      );
+      expect(progress.takeHeldBack(person), greaterThan(0));
+      expect(progress.isTyping(person), isFalse);
+    });
+
     group('hints', () {
       // Hints only, not the bank's own alerts, such as the incoming EFT.
       Iterable<String> bankAlerts() {
