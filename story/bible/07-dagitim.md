@@ -61,3 +61,28 @@ flowchart LR
 ```
 
 Bayraklar tarafının tamamı için: `dart run tool/validate_story.dart --graph`.
+
+## İpucu bildirimleri [KARAR: mekanizma · Taslak: metinler]
+
+Sohbet dışında, oyuncunun kendisinin başlatması gereken seçenekler (şimdilik
+ZaferBank'tan para göndermek) kolayca gözden kaçıyor. Bunlar için seçenek
+açıldıktan bir süre sonra, oyuncu hâlâ bir şey yapmadıysa tek bir bildirim
+gelir. Bildirim seçeneği gösterir ama ne yapılması gerektiğini söylemez:
+"iade edebilirsiniz", "iade etmelisiniz" değil.
+
+- Ses, uygulamanın kendi sesi: gerçek bir bankanın "hatalı gelen ödemeyi
+  iade edebilirsiniz" bildirimi gibi. Hikâyedeki birinin ağzından değil.
+- Her seçenek için en fazla bir ipucu; asıl süreli olaydan (ör. `bribe-kept`,
+  45 dk) epey önce gelir ki oyuncunun karar vermeye vakti olsun.
+- Oyuncu Settings › İpucu bildirimleri'nden kapatabilir. İpuçları hiçbir
+  bayrak açmaz; kapalıyken oyun aynı akar.
+- Teknik karşılığı: state.json › `hints`.
+
+| İpucu | Ne zaman | Gelmez | Bildirim |
+| --- | --- | --- | --- |
+| Rüşvetin iadesi | `mp:wrote` + 10 dk | İade edildiyse | ZaferBank: gelen EFT'yi Para Gönder › Gönderene iade ile geri gönderebilirsiniz |
+| Orhun'un borcu | `heard:orhun-debt` + 6 dk | Para gönderildiyse | ZaferBank: Orhun K. kayıtlı alıcılarınızda |
+| Avukat ücreti | `lawyer:offer` + 3 dk | Ödendiyse ya da oyuncu reddettiyse | ZaferBank: Av. Nesrin Kaya kayıtlı alıcılarınızda |
+
+[?] Sohbet dışındaki başka seçenekler (laboratuvar, Poltel sorguları, harita
+görevleri) de ipucu istiyor mu? Oyun testinde gözden kaçan çıkarsa eklenir.

@@ -147,6 +147,7 @@ class _TableWriter {
     _lab();
     _money();
     _timers();
+    _hints();
     _locks();
     _otherSources();
     _ending();
@@ -398,6 +399,31 @@ class _TableWriter {
         '| ${t.id} | ${_condition(t.when)} | ${t.duration.inMinutes} dk '
         '| ${t.unless.isAlways ? '—' : _condition(t.unless)} '
         '| ${_effects(t.unlocks)} |',
+      );
+    }
+    _line();
+  }
+
+  void _hints() {
+    if (story.state.hints.isEmpty) return;
+    _line('## İpuçları');
+    _line();
+    _line(
+      'Oyuncunun gözden kaçırabileceği bir seçeneği bildirimle hatırlatır; '
+      'Settings › İpucu bildirimleri kapalıysa gelmez.',
+    );
+    _line();
+    _line('| İpucu | Başlar | Süre | Gelmez | Bildirim |');
+    _line('| --- | --- | --- | --- | --- |');
+    for (final h in story.state.hints) {
+      final at = 'İpucu › ${h.id}';
+      _uses(h.when, '$at başlar');
+      _uses(h.unless, '$at gelmez');
+      final alert = h.alert!;
+      _line(
+        '| ${h.id} | ${_condition(h.when)} | ${h.duration.inMinutes} dk '
+        '| ${h.unless.isAlways ? '—' : _condition(h.unless)} '
+        '| ${alert.app}: ${alert.title} |',
       );
     }
     _line();

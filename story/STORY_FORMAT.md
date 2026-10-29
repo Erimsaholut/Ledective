@@ -380,6 +380,25 @@ değerlendirmesi yanlış, önyargılı ya da kasıtlı olabilir.
   sayılır: oyuncu telefonu kapatınca süre durur, kimse uygulamayı kapattığı
   için tanığını kaybetmez.
 
+### İpuçları (`hints`)
+
+Sohbet dışında oyuncunun kendisinin başlatması gereken, kolayca gözden kaçan
+seçenekler için (ör. ZaferBank'tan para göndermek). `when` tutmaya başladıktan
+`minutes` sonra, `unless` hâlâ tutmuyorsa tek bir bildirim gelir:
+
+```json
+"hints": [
+  {"id": "hint-bribe-return", "when": "mp:wrote", "minutes": 10,
+   "unless": "sent:bribe-return", "app": "ZaferBank",
+   "title": "Hesabınıza 50.000 TL geldi", "body": "... geri gönderebilirsiniz."}
+]
+```
+
+Süreli olaylar gibi sadece oyun süresi sayılır, ama ipuçları hiçbir bayrak
+açmaz. Oyuncu Settings › İpucu bildirimleri'ni kapatırsa gelmez. `unless`
+yazmayı unutma: yoksa oyuncu seçeneği kullanmış olsa da ipucu gelir.
+Kimlikler `timers` ile ortaktır, aynısı iki kez kullanılamaz.
+
 ## news.json: News uygulaması
 
 ```json

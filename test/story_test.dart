@@ -906,6 +906,54 @@ void main() {
       expect(progress.has('case:internal-investigation'), isFalse);
     });
 
+    group('hints', () {
+      // Hints only, not the bank's own alerts, such as the incoming EFT.
+      Iterable<String> bankAlerts() {
+        final hints = {
+          for (final h in StoryData.current.state.hints) h.alert!.title,
+        };
+        return StoryProgress.instance.alerts.items
+            .map((a) => a.title)
+            .where(hints.contains);
+      }
+
+      test('tell the player about the refund a while later', () async {
+        final progress = StoryProgress.instance;
+        final flags = progress.flags.toSet();
+        await progress.discover(['mp:wrote']);
+        await progress.advanceTimers(const Duration(minutes: 9));
+        expect(bankAlerts(), isEmpty);
+        await progress.advanceTimers(const Duration(minutes: 1));
+        expect(bankAlerts(), ['Hesabınıza 50.000 TL geldi']);
+        expect(progress.flags.toSet(), {...flags, 'mp:wrote'});
+        await progress.advanceTimers(const Duration(minutes: 30));
+        expect(bankAlerts(), hasLength(1), reason: 'only once');
+      });
+
+      test('stay quiet once the player has acted', () async {
+        final progress = StoryProgress.instance;
+        await progress.discover(['mp:wrote']);
+        final payee = StoryData.current.bank.payees.firstWhere(
+          (p) => p.id == 'bribe-return',
+        );
+        await progress.recordTransfer(payee, 5000000);
+        await progress.discover(['lawyer:offer', 'lawyer:declined']);
+        await progress.advanceTimers(const Duration(minutes: 20));
+        expect(bankAlerts(), isEmpty);
+      });
+
+      test('can be turned off', () async {
+        final progress = StoryProgress.instance;
+        await progress.setHints(false);
+        await progress.discover(['heard:orhun-debt']);
+        await progress.advanceTimers(const Duration(minutes: 20));
+        expect(bankAlerts(), isEmpty);
+        await progress.setHints(true);
+        await progress.advanceTimers(const Duration(minutes: 6));
+        expect(bankAlerts(), ['Kayıtlı alıcı: Orhun K.']);
+      });
+    });
+
     test('play time stops while the phone sleeps', () async {
       final progress = StoryProgress.instance;
       await progress.discover(['mp:wrote']);

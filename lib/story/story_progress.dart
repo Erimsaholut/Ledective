@@ -176,6 +176,9 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /// Divides mission durations, so story writers can test quickly.
   bool fastMissions = false;
 
+  /// Whether hints (state.json › `hints`) raise alerts.
+  bool hintsOn = true;
+
   StoryData get _story => StoryData.current;
 
   @override
@@ -241,6 +244,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     _newsDrip.clear();
     alerts.clear();
     fastMissions = prefs.getBool('fastMissions') ?? false;
+    hintsOn = prefs.getBool('hints') ?? true;
 
     final stored = prefs.getString(_prefsKey);
     if (stored != null) {
@@ -334,6 +338,13 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('fastMissions', value);
+  }
+
+  Future<void> setHints(bool value) async {
+    hintsOn = value;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hints', value);
   }
 
   /* ---------- Unlocking and alerts ---------- */
@@ -816,9 +827,15 @@ class StoryProgress extends ChangeNotifier implements StoryState {
 
   /* ---------- Timers ---------- */
 
+  /// Timers and, while they are on, hints.
+  Iterable<StoryTimer> get _allTimers => [
+    ..._story.state.timers,
+    if (hintsOn) ..._story.state.hints,
+  ];
+
   /// Starts timers whose condition just started holding.
   void _startTimers() {
-    for (final t in _story.state.timers) {
+    for (final t in _allTimers) {
       if (!_timers.containsKey(t.id) &&
           !_timersDone.contains(t.id) &&
           meets(t.when)) {
@@ -838,7 +855,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /// Play time left on [timerId], or null if it isn't running.
   Duration? timeLeft(String timerId) {
     final elapsed = _timers[timerId];
-    final timer = _story.state.timers.where((t) => t.id == timerId).firstOrNull;
+    final timer = _allTimers.where((t) => t.id == timerId).firstOrNull;
     if (elapsed == null || timer == null) return null;
     return timerDuration(timer) - Duration(milliseconds: elapsed);
   }
@@ -848,7 +865,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   Future<void> advanceTimers(Duration elapsed) async {
     _startTimers();
     if (_timers.isEmpty) return;
-    for (final t in _story.state.timers) {
+    for (final t in _allTimers) {
       final ran = _timers[t.id];
       if (ran == null) continue;
       if (!t.unless.isAlways && meets(t.unless)) {

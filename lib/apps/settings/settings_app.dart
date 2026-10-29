@@ -114,6 +114,18 @@ class SettingsApp extends StatelessWidget {
                     trailing: chevron,
                     onTap: () => _push(context, const ProfilePage()),
                   ),
+                  ListenableBuilder(
+                    listenable: StoryProgress.instance,
+                    builder: (context, _) => SwitchListTile.adaptive(
+                      secondary: const TileIcon(
+                        Icons.lightbulb_outline_rounded,
+                        color: AppColors.orange,
+                      ),
+                      title: const Text("İpucu bildirimleri"),
+                      value: StoryProgress.instance.hintsOn,
+                      onChanged: StoryProgress.instance.setHints,
+                    ),
+                  ),
                   ListTile(
                     leading: const TileIcon(
                       Icons.info_outline_rounded,

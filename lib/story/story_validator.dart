@@ -334,7 +334,7 @@ List<StoryIssue> validateStory(
     );
   }
 
-  // State: locks, timers.
+  // State: locks, timers, hints.
   for (final l in story.state.locks) {
     final where = 'state.json › locks › ${l.app}';
     if (!appNames.contains(l.app)) {
@@ -352,6 +352,20 @@ List<StoryIssue> validateStory(
     uses(t.unless, where);
     sets(t.unlocks, where);
     if (t.unlocks.isEmpty) warn(where, 'süre dolunca hiçbir şey olmuyor');
+  }
+  for (final h in story.state.hints) {
+    final where = 'state.json › hints › ${h.id}';
+    if (!timerIds.add(h.id)) error(where, 'bu kimlik iki kez kullanılmış');
+    if (h.when.isAlways) warn(where, '"when" yok: oyunun başında başlar');
+    if (h.unless.isAlways) {
+      warn(where, '"unless" yok: oyuncu zaten yapmış olsa da ipucu gelir');
+    }
+    final app = h.alert!.app;
+    if (!appNames.contains(app)) {
+      error(where, '"$app" diye bir uygulama yok (${appNames.join(', ')})');
+    }
+    uses(h.when, where);
+    uses(h.unless, where);
   }
 
   // Endings.

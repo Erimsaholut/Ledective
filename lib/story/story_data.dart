@@ -721,6 +721,7 @@ class StateData {
     this.flags = const {},
     this.locks = const [],
     this.timers = const [],
+    this.hints = const [],
     this.milestones = const [],
   });
 
@@ -735,6 +736,11 @@ class StateData {
   final Map<String, String> flags;
   final List<AppLock> locks;
   final List<StoryTimer> timers;
+
+  /// Timers that only raise an alert, telling the player about something
+  /// they can do but might not notice, such as sending money back. They
+  /// unlock nothing and stay quiet when hints are off in Settings.
+  final List<StoryTimer> hints;
 }
 
 class NewsOutlet {
@@ -1291,27 +1297,40 @@ StateData _state(_Reader r) => StateData(
             ),
           ) ??
       const [],
-  timers:
+  timers: r.optional('timers')?.list(_timer) ?? const [],
+  hints:
       r
-          .optional('timers')
+          .optional('hints')
           ?.list(
-            (t) => StoryTimer(
-              id: t.text('id'),
-              when: t.condition('when'),
-              duration: _minutes(t),
-              unless: t.condition('unless'),
-              unlocks: t.stringsOr('unlocks'),
-              alert: switch (t.optional('alert')) {
-                null => null,
-                final a => (
-                  app: a.text('app'),
-                  title: a.text('title'),
-                  body: a.text('body'),
-                ),
-              },
+            (h) => StoryTimer(
+              id: h.text('id'),
+              when: h.condition('when'),
+              duration: _minutes(h),
+              unless: h.condition('unless'),
+              alert: (
+                app: h.text('app'),
+                title: h.text('title'),
+                body: h.text('body'),
+              ),
             ),
           ) ??
       const [],
+);
+
+StoryTimer _timer(_Reader t) => StoryTimer(
+  id: t.text('id'),
+  when: t.condition('when'),
+  duration: _minutes(t),
+  unless: t.condition('unless'),
+  unlocks: t.stringsOr('unlocks'),
+  alert: switch (t.optional('alert')) {
+    null => null,
+    final a => (
+      app: a.text('app'),
+      title: a.text('title'),
+      body: a.text('body'),
+    ),
+  },
 );
 
 NewsData _news(_Reader r) => NewsData(

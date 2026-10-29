@@ -130,6 +130,12 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 - [x] Gizli son için üç ipucu maili kalıyor (otel, havayolu, poliklinik);
   `bible/01-ana-gizem.md` içinde kanon. Açılınca `doubt` artsın mı, sonra
   karar ver (mailler şu an `unlocksOnView` desteklemiyor).
+- [x] **İpucu bildirimleri.** Sohbet dışındaki seçenekler (ZaferBank'tan
+  rüşveti iade, Orhun'un borcu, avukat ücreti) bir süre sonra, oyuncu hâlâ
+  bir şey yapmadıysa tek bir bildirimle hatırlatılır (`state.json › hints`).
+  Settings › İpucu bildirimleri ile kapatılabilir.
+- [ ] [?] Laboratuvar, Poltel sorguları ya da harita görevlerinde gözden
+  kaçan seçenek var mı? Oyun testinde bakılacak, varsa ipucu eklenir.
 - [ ] Sohbetlerde mesajlar şu an toplu düşüyor; istenirse olaylarla gelen
   mesajlar da birkaç saniye arayla tek tek gelebilir.
 

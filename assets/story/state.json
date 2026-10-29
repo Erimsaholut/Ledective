@@ -260,6 +260,35 @@
       "unlocks": ["coverup:exposed", "danisman:fled"]
     }
   ],
+  "hints": [
+    {
+      "id": "hint-bribe-return",
+      "when": "mp:wrote",
+      "minutes": 10,
+      "unless": "sent:bribe-return",
+      "app": "ZaferBank",
+      "title": "Hesabınıza 50.000 TL geldi",
+      "body": "Beklemediğiniz bir ödeme mi? Para Gönder › Gönderene iade ile tutarı gönderen hesaba geri gönderebilirsiniz."
+    },
+    {
+      "id": "hint-orhun-debt",
+      "when": "heard:orhun-debt",
+      "minutes": 6,
+      "unless": "sent:orhun-debt",
+      "app": "ZaferBank",
+      "title": "Kayıtlı alıcı: Orhun K.",
+      "body": "Orhun K. kayıtlı alıcılarınızda. Para Gönder ile dilediğiniz tutarı gönderebilirsiniz."
+    },
+    {
+      "id": "hint-lawyer",
+      "when": "lawyer:offer",
+      "minutes": 3,
+      "unlessAny": ["sent:lawyer", "lawyer:declined"],
+      "app": "ZaferBank",
+      "title": "Kayıtlı alıcı: Av. Nesrin Kaya",
+      "body": "Avukatlık ücretini Para Gönder › Av. Nesrin Kaya ile ödeyebilirsiniz."
+    }
+  ],
   "milestones": [
     {"flag": "part1Done", "title": "Özge dosyayı anlatır, ilk belgeler gelir"},
     {"flag": "orhunDone", "title": "Orhun şüpheliyi bulduklarını söyler"},
