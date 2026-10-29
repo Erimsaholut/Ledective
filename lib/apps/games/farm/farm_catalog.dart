@@ -1,5 +1,17 @@
+/// Anything that can be kept in the barn and sold: a crop or an animal's
+/// product.
+abstract interface class FarmGood {
+  /// Saved with the farm; never change it once released.
+  String get id;
+  String get name;
+  String get emoji;
+
+  /// Coins one unit sells for at the market.
+  int get price;
+}
+
 /// Something to grow. Each field gives a few of it at harvest.
-class Crop {
+class Crop implements FarmGood {
   const Crop({
     required this.id,
     required this.name,
@@ -11,9 +23,11 @@ class Crop {
     required this.xp,
   });
 
-  /// Saved with the farm; never change it once released.
+  @override
   final String id;
+  @override
   final String name;
+  @override
   final String emoji;
 
   /// Farm level that unlocks it.
@@ -21,7 +35,7 @@ class Crop {
   final int seedCost;
   final Duration growTime;
 
-  /// Coins one unit sells for at the market.
+  @override
   final int price;
 
   /// Experience for harvesting one field of it.
@@ -105,6 +119,137 @@ const List<Crop> crops = [
 
 Crop cropById(String id) => crops.firstWhere((crop) => crop.id == id);
 
+/// What an animal gives once it has eaten.
+class AnimalProduct implements FarmGood {
+  const AnimalProduct({
+    required this.id,
+    required this.name,
+    required this.emoji,
+    required this.price,
+  });
+
+  @override
+  final String id;
+  @override
+  final String name;
+  @override
+  final String emoji;
+  @override
+  final int price;
+}
+
+/// A kind of farm animal. It eats crops from the barn and, after [time],
+/// leaves one [product] to collect.
+class Animal {
+  const Animal({
+    required this.id,
+    required this.name,
+    required this.emoji,
+    required this.home,
+    required this.level,
+    required this.price,
+    required this.feedId,
+    required this.feedCount,
+    required this.time,
+    required this.product,
+    required this.xp,
+  });
+
+  /// Saved with the farm; never change it once released.
+  final String id;
+  final String name;
+  final String emoji;
+
+  /// Where these animals live, e.g. "Kümes".
+  final String home;
+
+  /// Farm level that unlocks it.
+  final int level;
+
+  /// Coins for the first one; every further one costs this much more.
+  final int price;
+
+  /// The crop it eats, and how many per meal.
+  final String feedId;
+  final int feedCount;
+
+  /// How long it takes to make its product after a meal.
+  final Duration time;
+  final AnimalProduct product;
+
+  /// Experience for collecting one product.
+  final int xp;
+
+  Crop get feed => cropById(feedId);
+}
+
+/// Animals from cheap and quick to dear and slow. Each eats a crop the
+/// player has already unlocked by the time it is.
+const List<Animal> animals = [
+  Animal(
+    id: 'chicken',
+    name: "Tavuk",
+    emoji: '🐔',
+    home: "Kümes",
+    level: 2,
+    price: 40,
+    feedId: 'wheat',
+    feedCount: 1,
+    time: Duration(minutes: 2),
+    product: AnimalProduct(id: 'egg', name: "Yumurta", emoji: '🥚', price: 9),
+    xp: 2,
+  ),
+  Animal(
+    id: 'cow',
+    name: "İnek",
+    emoji: '🐄',
+    home: "Ahır",
+    level: 4,
+    price: 200,
+    feedId: 'corn',
+    feedCount: 2,
+    time: Duration(minutes: 5),
+    product: AnimalProduct(id: 'milk', name: "Süt", emoji: '🥛', price: 60),
+    xp: 6,
+  ),
+  Animal(
+    id: 'sheep',
+    name: "Koyun",
+    emoji: '🐑',
+    home: "Ağıl",
+    level: 6,
+    price: 600,
+    feedId: 'tomato',
+    feedCount: 2,
+    time: Duration(minutes: 12),
+    product: AnimalProduct(id: 'wool', name: "Yün", emoji: '🧶', price: 140),
+    xp: 14,
+  ),
+  Animal(
+    id: 'bee',
+    name: "Arı",
+    emoji: '🐝',
+    home: "Kovan",
+    level: 9,
+    price: 1500,
+    feedId: 'strawberry',
+    feedCount: 2,
+    time: Duration(minutes: 30),
+    product: AnimalProduct(id: 'honey', name: "Bal", emoji: '🍯', price: 320),
+    xp: 30,
+  ),
+];
+
+Animal animalById(String id) => animals.firstWhere((a) => a.id == id);
+
+/// Everything the barn can hold, crops first.
+final List<FarmGood> farmGoods = [
+  ...crops,
+  for (final animal in animals) animal.product,
+];
+
+FarmGood goodById(String id) => farmGoods.firstWhere((good) => good.id == id);
+
 /// What an owned farm tool does.
 enum ToolEffect {
   /// Crops grow faster.
@@ -121,6 +266,9 @@ enum ToolEffect {
 
   /// The market pays more.
   betterPrices,
+
+  /// Collect from and feed every animal at once.
+  tendAll,
 }
 
 /// Equipment bought once in the shop and kept for good.
@@ -178,6 +326,15 @@ const List<FarmTool> farmTools = [
     level: 4,
     price: 400,
     effect: ToolEffect.plantAll,
+  ),
+  FarmTool(
+    id: 'feeder',
+    name: "Otomatik Yemlik",
+    emoji: '🥣',
+    description: "Hayvanların ürünlerini toplar, açları tek dokunuşla besler.",
+    level: 5,
+    price: 500,
+    effect: ToolEffect.tendAll,
   ),
   FarmTool(
     id: 'harvester',

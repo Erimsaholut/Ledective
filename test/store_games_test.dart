@@ -2,11 +2,21 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/games/farm/farm_catalog.dart';
+import 'package:ledective/apps/games/farm/farm_league.dart';
 import 'package:ledective/apps/games/farm/farm_state.dart';
 import 'package:ledective/apps/games/space_runner/space_run.dart';
-import 'package:ledective/apps/games/word_hunt/word_hunt_round.dart';
 
 FarmTool _tool(String id) => farmTools.firstWhere((t) => t.id == id);
+
+/// Always rolls the lowest number, so every chance comes up.
+class _Lucky implements Random {
+  @override
+  double nextDouble() => 0;
+  @override
+  int nextInt(int max) => 0;
+  @override
+  bool nextBool() => true;
+}
 
 void main() {
   group('SpaceRun', () {
@@ -60,57 +70,6 @@ void main() {
         run.update(0.05);
       }
       expect(run.objects.where((o) => !o.isFuel), isNotEmpty);
-    });
-  });
-
-  group('WordHuntRound', () {
-    test('the word list is clean', () {
-      expect(turkishWords.length, greaterThan(900));
-      for (final word in turkishWords) {
-        expect(
-          word,
-          matches(RegExp(r'^[abcçdefgğhıijklmnoöprsştuüvyz]{3,8}$')),
-        );
-      }
-    });
-
-    test('every root hides enough words, itself included', () {
-      expect(WordHuntRound.roots.length, greaterThan(40));
-      for (final root in WordHuntRound.roots) {
-        final answers = WordHuntRound.answersFor(root);
-        expect(answers, contains(root));
-        expect(answers.length, greaterThanOrEqualTo(WordHuntRound.minAnswers));
-      }
-    });
-
-    test('answers only use the root letters, each as often as it has them', () {
-      final answers = WordHuntRound.answersFor('karton');
-      expect(answers, containsAll(['karton', 'kart', 'kar', 'ortak']));
-      expect(answers, isNot(contains('tarak')), reason: 'karton has one a');
-      expect(answers, isNot(contains('kitap')));
-    });
-
-    test('submitting scores new words only', () {
-      final round = WordHuntRound('karton', random: Random(1));
-      expect(round.letters..sort(), 'karton'.split('')..sort());
-      expect(round.submit('ka'), WordCheck.tooShort);
-      expect(round.submit('kotna'), WordCheck.notAWord);
-      expect(round.submit('kart'), WordCheck.accepted);
-      expect(round.submit('kart'), WordCheck.alreadyFound);
-      expect(round.submit('karton'), WordCheck.accepted);
-      expect(round.score, 60 + 150);
-      expect(round.longest, 'karton');
-      expect(round.missed, isNot(contains('kart')));
-    });
-
-    test('random rounds use the roots', () {
-      final round = WordHuntRound.random(random: Random(3));
-      expect(WordHuntRound.roots, contains(round.root));
-    });
-
-    test('Turkish capitals keep the dots right', () {
-      expect(turkishUpper('kılıç işi'), 'KILIÇ İŞİ');
-      expect(turkishLower('KILIÇ İŞİ'), 'kılıç işi');
     });
   });
 
@@ -229,15 +188,100 @@ void main() {
       expect(farm.orders.first, isNot(same(order)));
     });
 
-    test('the daily bonus comes once a day', () {
+    test('the daily gift grows with the streak and resets on a missed day', () {
       final farm = FarmState();
       expect(farm.claimDailyBonus(now), 30);
       expect(farm.claimDailyBonus(now.add(const Duration(hours: 5))), isNull);
-      expect(farm.claimDailyBonus(now.add(const Duration(days: 1))), 30);
+      expect(farm.claimDailyBonus(now.add(const Duration(days: 1))), 40);
+      expect(farm.streakDay, 2);
+      for (var day = 2; day < 7; day++) {
+        farm.claimDailyBonus(now.add(Duration(days: day)));
+      }
+      expect(farm.streakDay, 7);
+      expect(farm.coins, FarmState.startCoins + 580 + 7 * 10);
+      // The streak goes round again after the big seventh day.
+      expect(farm.claimDailyBonus(now.add(const Duration(days: 7))), 30);
+      expect(farm.claimDailyBonus(now.add(const Duration(days: 9))), 30);
+      expect(farm.streak, 1, reason: 'a day was missed');
+    });
+
+    test('a lucky harvest gives double', () {
+      final farm = FarmState()..plant(0, wheat, now);
+      final ready = now.add(wheat.growTime);
+      expect(farm.harvest(0, ready, random: _Lucky()), 4);
+      farm.plant(0, wheat, ready);
+      expect(farm.harvest(0, ready.add(wheat.growTime), random: Random(1)), 2);
+    });
+
+    test('animals eat crops from the barn and give their product', () {
+      final chicken = animalById('chicken');
+      final farm = FarmState(coins: 1000);
+      expect(farm.buyAnimal(chicken), isFalse, reason: 'level 2 animal');
+      farm.level = 2;
+      expect(farm.buyAnimal(chicken), isTrue);
+      expect(farm.coins, 1000 - chicken.price);
+      expect(farm.animalPrice(chicken), 2 * chicken.price);
+
+      expect(farm.feed(0, now), isFalse, reason: 'no wheat in the barn');
+      farm.barn['wheat'] = 1;
+      expect(farm.feed(0, now), isTrue);
+      expect(farm.barn, isEmpty);
+      expect(farm.animals[0].progress(now.add(chicken.time ~/ 2)), 0.5);
+      expect(farm.collect(0, now.add(const Duration(minutes: 1))), 0);
+      final xp = farm.xp;
+      expect(farm.collect(0, now.add(chicken.time)), 1);
+      expect(farm.barn['egg'], 1);
+      expect(farm.xp, xp + chicken.xp);
+      expect(farm.animals[0].isHungry, isTrue);
+      expect(farm.sell('egg', 1), isTrue);
+    });
+
+    test('a pen holds five animals', () {
+      final cow = animalById('cow');
+      final farm = FarmState(level: 4, coins: 1 << 20);
+      while (farm.buyAnimal(cow)) {}
+      expect(farm.animalsOf(cow), hasLength(FarmState.maxAnimalsPerKind));
+      expect(farm.animalPrice(cow), isNull);
+    });
+
+    test('the feeder collects from and feeds every animal', () {
+      final chicken = animalById('chicken');
+      final farm = FarmState(level: 5, coins: 1 << 20)
+        ..buyAnimal(chicken)
+        ..buyAnimal(chicken)
+        ..buyAnimal(chicken)
+        ..barn['wheat'] = 3;
+      expect(farm.tendAll(now).fed, 0, reason: 'no feeder yet');
+      farm.buyTool(_tool('feeder'));
+      expect(farm.tendAll(now).fed, 3);
+      final later = now.add(chicken.time);
+      expect(farm.animalsReady(later), 3);
+      farm.barn['wheat'] = 2;
+      final result = farm.tendAll(later);
+      expect(result.collected, {'egg': 3});
+      expect(result.fed, 2, reason: 'wheat for only two');
+    });
+
+    test('orders ask for the products of animals the farm keeps', () {
+      final farm = FarmState(level: 4, coins: 1000)
+        ..buyAnimal(animalById('cow'));
+      final asked = <String>{};
+      final random = Random(5);
+      for (var i = 0; i < 40; i++) {
+        asked.addAll(farm.newOrder(random: random).items.keys);
+      }
+      expect(asked, contains('milk'));
+      expect(asked, isNot(contains('egg')), reason: 'no chickens');
     });
 
     test('survives a JSON round trip', () {
       final farm = FarmState(level: 4, coins: 500)
+        ..rollWeek(now)
+        ..buyAnimal(animalById('chicken'))
+        ..barn['wheat'] = 1
+        ..feed(0, now)
+        ..addXp(3)
+        ..standings(now.add(const Duration(hours: 5)))
         ..plant(1, carrot, now)
         ..barn['corn'] = 3
         ..buyTool(_tool('watering-can'))
@@ -249,6 +293,89 @@ void main() {
       expect(copy.has(ToolEffect.faster), isTrue);
       copy.barn['corn'] = 4;
       expect(farm.barn['corn'], 3, reason: 'the copy has its own barn');
+      expect(copy.animals.single.readyAt, farm.animals.single.readyAt);
+      expect(copy.rivalScores, farm.rivalScores);
+    });
+
+    test('a save from before animals and the league still loads', () {
+      final old = FarmState(level: 3, coins: 70).toJson()
+        ..removeWhere(
+          (key, _) => !{
+            'coins',
+            'xp',
+            'level',
+            'plots',
+            'barn',
+            'tools',
+            'orders',
+            'bonusDay',
+          }.contains(key),
+        );
+      final farm = FarmState.fromJson(old);
+      expect(farm.animals, isEmpty);
+      expect(farm.weekStart, isNull);
+      expect(farm.rollWeek(now), isNull, reason: 'the first week starts');
+      expect(farm.leagueRank(now), greaterThan(0));
+    });
+  });
+
+  group('Village league', () {
+    final monday = DateTime(2026, 10, 26);
+
+    test('neighbours keep playing while the player is away', () {
+      final farm = FarmState(level: 5)
+        ..rollWeek(monday.add(const Duration(hours: 9)));
+      expect(farm.weekStart, monday);
+      var last = List.of(farm.rivalScores);
+      for (var hour = 1; hour <= 72; hour++) {
+        farm.standings(monday.add(Duration(hours: hour)));
+        for (var i = 0; i < last.length; i++) {
+          expect(farm.rivalScores[i], greaterThanOrEqualTo(last[i]));
+        }
+        last = List.of(farm.rivalScores);
+      }
+      expect(farm.leagueRank(monday.add(const Duration(days: 3))), 10);
+    });
+
+    test('earning experience climbs the table', () {
+      final farm = FarmState(level: 5)..rollWeek(monday);
+      final noon = monday.add(const Duration(hours: 36));
+      final rank = farm.leagueRank(noon);
+      farm.addXp(400);
+      expect(farm.leagueRank(noon), lessThan(rank));
+      expect(farm.standings(noon).first.isPlayer, isTrue);
+    });
+
+    test('the end of the week pays for the rank and starts over', () {
+      final farm = FarmState(level: 5)..rollWeek(monday);
+      farm
+        ..addXp(5000)
+        ..level = 5;
+      final coins = farm.coins;
+      expect(farm.rollWeek(monday.add(const Duration(days: 6))), isNull);
+      final result = farm.rollWeek(monday.add(const Duration(days: 8)));
+      expect(result!.rank, 1);
+      expect(result.reward, FarmLeague.reward(1, 5));
+      expect(farm.coins, coins + result.reward);
+      expect(farm.trophies, 1);
+      expect(farm.weekStart, monday.add(const Duration(days: 7)));
+      expect(farm.weekScore, 0);
+      expect(farm.rivalScores.every((s) => s == 0), isTrue);
+    });
+
+    test('a steady player can win only by playing a lot', () {
+      int finish(int perHour) {
+        final farm = FarmState(level: 5)..rollWeek(monday);
+        for (var hour = 1; hour <= 7 * 24; hour++) {
+          farm.standings(monday.add(Duration(hours: hour)));
+          if (hour % 24 >= 9) farm.addXp(perHour);
+        }
+        return farm.leagueRank(monday.add(FarmLeague.week));
+      }
+
+      expect(finish(0), 10);
+      expect(finish(6), inInclusiveRange(3, 7));
+      expect(finish(20), 1);
     });
   });
 }

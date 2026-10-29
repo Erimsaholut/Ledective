@@ -11,8 +11,6 @@ import 'package:ledective/apps/games/space_runner/space_runner_app.dart';
 import 'package:ledective/apps/games/sudoku/sudoku_app.dart';
 import 'package:ledective/apps/games/sudoku/sudoku_game.dart';
 import 'package:ledective/apps/games/sudoku/sudoku_puzzle.dart';
-import 'package:ledective/apps/games/word_hunt/word_hunt_app.dart';
-import 'package:ledective/apps/games/word_hunt/word_hunt_round.dart';
 import 'package:ledective/apps/map/map_app.dart';
 import 'package:ledective/apps/news/news_app.dart';
 import 'package:ledective/apps/settings/story_state_page.dart';
@@ -536,43 +534,6 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('words are made from the letters until time is up', (
-    tester,
-  ) async {
-    _phoneSize(tester);
-    final round = WordHuntRound('karton', random: Random(1));
-    await tester.pumpWidget(
-      MaterialApp(home: WordHuntApp(initialRound: round)),
-    );
-    await tester.pump();
-
-    Future<void> spell(String word) async {
-      final used = <int>{};
-      for (final letter in word.split('')) {
-        final i = [
-          for (var i = 0; i < round.letters.length; i++) i,
-        ].firstWhere((i) => round.letters[i] == letter && used.add(i));
-        await tester.tap(find.byKey(ValueKey('letter-$i')));
-        await tester.pump();
-      }
-      await tester.tap(find.text('Gönder'));
-      await tester.pump();
-    }
-
-    await spell('kart');
-    expect(find.text('+60 · KART'), findsOneWidget);
-    expect(find.widgetWithText(Chip, 'KART'), findsOneWidget);
-    await spell('kart');
-    expect(find.text('Bunu zaten buldun'), findsOneWidget);
-
-    await tester.pump(WordHuntRound.duration);
-    await tester.pump();
-    expect(find.text('Süre doldu!'), findsOneWidget);
-    expect(find.text('Yeni rekor!'), findsOneWidget);
-    final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getInt(WordHuntApp.bestKey), 60);
-  });
-
   testWidgets('the farm grows, harvests, sells and is saved', (tester) async {
     _phoneSize(tester);
     var now = DateTime(2026, 10, 28, 9);
@@ -580,8 +541,11 @@ void main() {
       home: FarmApp(clock: () => now, random: Random(1)),
     );
     await tester.pumpWidget(farm());
-    await tester.pump();
-    expect(find.text('Günlük hediye: +30 🪙'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Günlük hediye'), findsOneWidget);
+    expect(find.text('+30 🪙'), findsOneWidget);
+    await tester.tap(find.text('Topla'));
+    await tester.pumpAndSettle();
     expect(find.text('🪙 50'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('plot-0')));
@@ -596,7 +560,7 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.tap(find.byKey(const ValueKey('plot-0')));
     await tester.pumpAndSettle();
-    expect(find.text('+2 🌾 Buğday · +1 XP'), findsOneWidget);
+    expect(find.textContaining('+2 🌾 Buğday · +1 XP'), findsOneWidget);
     expect(find.text('1 / 10 XP'), findsOneWidget);
 
     await tester.tap(find.text('Ambar'));
@@ -613,6 +577,16 @@ void main() {
     await tester.tap(find.text('Dükkân'));
     await tester.pumpAndSettle();
     expect(find.text('Sulama Kovası'), findsOneWidget);
+    await tester.tap(find.text('Hayvanlar'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Seviye 2\'te açılır'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('league')));
+    await tester.pumpAndSettle();
+    expect(find.text('Köy Ligi'), findsOneWidget);
+    expect(find.text('Sen'), findsOneWidget);
+    expect(find.text('Ayşe Teyze'), findsOneWidget);
+    await tester.tapAt(const Offset(20, 20));
+    await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
 
     // Reopening the farm the same day brings it back, without a new gift.
@@ -627,6 +601,49 @@ void main() {
     await tester.pump();
     expect(find.text('🪙 54'), findsOneWidget);
     expect(find.textContaining('Günlük hediye'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('farm animals are bought, fed and collected', (tester) async {
+    _phoneSize(tester);
+    var now = DateTime(2026, 10, 28, 9);
+    final saved = FarmState(level: 2, coins: 100)
+      ..barn['wheat'] = 1
+      ..claimDailyBonus(now)
+      ..rollWeek(now);
+    SharedPreferences.setMockInitialValues({
+      'flutter.${FarmApp.saveKey}': json.encode(saved.toJson()),
+    });
+    await tester.pumpWidget(
+      MaterialApp(
+        home: FarmApp(clock: () => now, random: Random(3)),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Hayvanlar'));
+    await tester.pumpAndSettle();
+    expect(find.text('🐔 Kümes · 0/5'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('buy-chicken')));
+    await tester.pumpAndSettle();
+    expect(find.text('🐔 Kümes · 1/5'), findsOneWidget);
+    expect(find.textContaining('Yeni bir Tavuk aldın'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('animal-0')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Tavuk karnını doyurdu'), findsOneWidget);
+
+    now = now.add(const Duration(minutes: 2));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.tap(find.byKey(const ValueKey('animal-0')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('🥚 Yumurta · +'), findsOneWidget);
+
+    // Hungry again, with no wheat left.
+    await tester.tap(find.byKey(const ValueKey('animal-0')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('ambarda 1 🌾 Buğday olmalı'), findsOneWidget);
+    expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
   });
 }

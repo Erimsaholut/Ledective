@@ -4,7 +4,6 @@ import '../../home/app_icon.dart';
 import '../games/farm/farm_app.dart';
 import '../games/space_runner/space_runner_app.dart';
 import '../games/sudoku/sudoku_app.dart';
-import '../games/word_hunt/word_hunt_app.dart';
 
 /// A game that can be downloaded from AppShop. Once installed it gets its
 /// own icon on the home screen.
@@ -81,16 +80,6 @@ const List<StoreGame> storeGames = [
     colors: [Color(0xFF7F5AF0), Color(0xFF16123F)],
     app: SpaceRunnerApp(),
     dataKeys: [SpaceRunnerApp.bestKey],
-  ),
-  StoreGame(
-    id: 'word-hunt',
-    title: "Kelime Avı",
-    description:
-        "Karışık harflerden kelime türet, süre dolmadan en yüksek puanı topla.",
-    icon: Icons.abc_rounded,
-    colors: [Color(0xFFFFD166), Color(0xFFF77F00)],
-    app: WordHuntApp(),
-    dataKeys: [WordHuntApp.bestKey],
   ),
   StoreGame(
     id: 'castle-guard',
