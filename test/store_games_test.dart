@@ -5,8 +5,11 @@ import 'package:ledective/apps/games/castle_guard/castle_defense.dart';
 import 'package:ledective/apps/games/farm/farm_catalog.dart';
 import 'package:ledective/apps/games/farm/farm_cosmetics.dart';
 import 'package:ledective/apps/games/farm/farm_league.dart';
+import 'package:ledective/apps/games/farm/farm_reminder.dart';
 import 'package:ledective/apps/games/farm/farm_state.dart';
 import 'package:ledective/apps/games/space_runner/space_run.dart';
+import 'package:ledective/story/story_progress.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 FarmTool _tool(String id) => farmTools.firstWhere((t) => t.id == id);
 
@@ -244,14 +247,22 @@ void main() {
     });
 
     test('levelling up pays a reward and unlocks crops', () {
-      final farm = FarmState()..addXp(10);
+      final farm = FarmState()..addXp(11);
       expect(farm.level, 2);
       expect(farm.xp, 0);
       expect(farm.coins, FarmState.startCoins + FarmState.levelReward(2));
       expect(farm.unlockedCrops, contains(carrot));
       farm.addXp(1000);
-      expect(farm.level, greaterThan(5));
+      expect(farm.level, greaterThan(4));
       expect(farm.xp, lessThan(farm.xpToNextLevel));
+    });
+
+    test('later levels take much longer than the first ones', () {
+      int need(int level) => FarmState(level: level).xpToNextLevel;
+      expect(need(1), 11);
+      expect(need(5), 275);
+      expect(need(10), 1550);
+      expect(need(10), greaterThan(2.5 * (5 * 10 * 10 + 5 * 10)));
     });
 
     test('selling and buying fields', () {
@@ -300,8 +311,8 @@ void main() {
     });
 
     test('orders ask for unlocked crops and pay better than the market', () {
-      final farm = FarmState(level: 6)..fillOrders(random: Random(1));
-      expect(farm.orders, hasLength(FarmState.orderSlots));
+      final farm = FarmState(level: 6)..fillOrders(now, random: Random(1));
+      expect(farm.orders, hasLength(FarmState.startOrderSlots));
       for (final order in farm.orders) {
         var market = 0;
         order.items.forEach((id, count) {
@@ -319,6 +330,31 @@ void main() {
       expect(farm.coins, greaterThanOrEqualTo(coins + order.coins));
       expect(farm.barn, isEmpty);
       expect(farm.orders.first, isNot(same(order)));
+    });
+
+    test('a turned-down order leaves its slot empty for a while', () {
+      final farm = FarmState(level: 3)..fillOrders(now, random: Random(1));
+      farm.cancelOrder(0, now);
+      expect(farm.orders, hasLength(FarmState.startOrderSlots - 1));
+      expect(farm.fillOrders(now.add(const Duration(minutes: 9))), 0);
+      expect(farm.orders, hasLength(FarmState.startOrderSlots - 1));
+      expect(farm.fillOrders(now.add(FarmState.orderCooldown)), 1);
+      expect(farm.orderWaits, isEmpty);
+      expect(farm.orders, hasLength(FarmState.startOrderSlots));
+    });
+
+    test('more order slots are bought, up to five', () {
+      final farm = FarmState(coins: 100000)..fillOrders(now);
+      final paid = <int>[];
+      for (int? price; (price = farm.nextOrderSlotPrice) != null;) {
+        paid.add(price!);
+        expect(farm.buyOrderSlot(now), isTrue);
+        expect(farm.orders, hasLength(farm.orderSlots));
+      }
+      expect(paid, FarmState.orderSlotPrices);
+      expect(farm.orderSlots, FarmState.maxOrderSlots);
+      expect(farm.buyOrderSlot(now), isFalse);
+      expect(farm.coins, 100000 - paid.fold(0, (a, b) => a + b));
     });
 
     test('the daily gift grows with the streak and resets on a missed day', () {
@@ -395,6 +431,83 @@ void main() {
       expect(result.fed, 2, reason: 'wheat for only two');
     });
 
+    test('animal tools give more, quicker products for less feed', () {
+      final cow = animalById('cow');
+      final farm = FarmState(level: 15, coins: 1 << 20)
+        ..buyAnimal(cow)
+        ..barn['corn'] = 10;
+      expect(farm.feedCountOf(cow), 2);
+      expect(farm.productsPerAnimal, 1);
+      farm
+        ..buyTool(_tool('milking-kit'))
+        ..buyTool(_tool('barn-radio'))
+        ..buyTool(_tool('feed-silo'));
+      expect(farm.feedCountOf(cow), 1);
+      expect(farm.feedCountOf(animalById('chicken')), 1, reason: 'at least 1');
+      expect(farm.feed(0, now), isTrue);
+      expect(farm.barn['corn'], 9);
+      final ready = now.add(cow.time * 0.75);
+      final xp = farm.xp;
+      expect(farm.collect(0, ready), 2);
+      expect(farm.xp, xp + cow.xp, reason: 'tools add no experience');
+      farm.buyTool(_tool('modern-barn'));
+      expect(farm.productsPerAnimal, 3);
+    });
+
+    test('seed, order and luck tools', () {
+      final farm = FarmState(level: 12, coins: 1 << 20)
+        ..fillOrders(now, random: Random(3));
+      final tomato = cropById('tomato');
+      final order = farm.orders.first;
+      expect(farm.seedCostOf(tomato), tomato.seedCost);
+      expect(farm.orderCoins(order), order.coins);
+      expect(farm.luckChance, FarmState.luckyChance);
+      farm
+        ..buyTool(_tool('seed-store'))
+        ..buyTool(_tool('truck'))
+        ..buyTool(_tool('clover'));
+      expect(farm.seedCostOf(tomato), (tomato.seedCost / 2).round());
+      expect(farm.orderCoins(order), (order.coins * 1.3).round());
+      expect(farm.luckChance, closeTo(0.2, 1e-9));
+      farm.barn.addAll(order.items);
+      final coins = farm.coins;
+      farm.deliver(0);
+      expect(farm.coins, coins + (order.coins * 1.3).round());
+    });
+
+    test('tells when every growing field will be ready', () {
+      final farm = FarmState(level: 2, coins: 100);
+      expect(farm.allReadyAt(now), isNull);
+      farm
+        ..plant(0, wheat, now)
+        ..plant(1, carrot, now);
+      final last = now.add(carrot.growTime);
+      expect(farm.allReadyAt(now), last);
+      expect(farm.allReadyAt(last), isNull, reason: 'all ready already');
+    });
+
+    test('the phone is told once every field is ready', () async {
+      SharedPreferences.setMockInitialValues({});
+      final farm = FarmState(level: 2, coins: 100)
+        ..plant(0, wheat, now)
+        ..plant(1, carrot, now);
+      await FarmReminder.schedule(farm, now);
+      final alerts = AlertQueue();
+      await FarmReminder.tick(alerts, now: now.add(wheat.growTime));
+      expect(alerts.items, isEmpty, reason: 'the carrots still grow');
+
+      FarmReminder.farmOpen = true;
+      await FarmReminder.tick(alerts, now: now.add(carrot.growTime));
+      expect(alerts.items, isEmpty, reason: 'the farm is on screen');
+      FarmReminder.farmOpen = false;
+
+      await FarmReminder.tick(alerts, now: now.add(carrot.growTime));
+      expect(alerts.items.single.app, "Bereket Çiftliği");
+      expect(alerts.items.single.body, contains('2 tarlanın hepsi hazır'));
+      await FarmReminder.tick(alerts, now: now.add(const Duration(hours: 1)));
+      expect(alerts.items, hasLength(1), reason: 'only once');
+    });
+
     test('orders ask for the products of animals the farm keeps', () {
       final farm = FarmState(level: 4, coins: 1000)
         ..buyAnimal(animalById('cow'));
@@ -418,7 +531,9 @@ void main() {
         ..plant(1, carrot, now)
         ..barn['corn'] = 3
         ..buyTool(_tool('watering-can'))
-        ..fillOrders(random: Random(4))
+        ..fillOrders(now, random: Random(4))
+        ..cancelOrder(0, now)
+        ..buyOrderSlot(now, random: Random(4))
         ..claimDailyBonus(now)
         ..offerUntil = now.add(const Duration(hours: 1))
         ..offerCheckedAt = now
@@ -436,6 +551,8 @@ void main() {
       expect(copy.tier, LeagueTier.silver);
       expect(copy.hat, cosmeticById('straw-hat'));
       expect(copy.decorations, farm.decorations);
+      expect(copy.orderSlots, 3);
+      expect(copy.orderWaits, farm.orderWaits);
     });
 
     test('the ZaferBank chest turns up rarely and holds five of all', () {

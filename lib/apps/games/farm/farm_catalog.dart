@@ -269,6 +269,24 @@ enum ToolEffect {
 
   /// Collect from and feed every animal at once.
   tendAll,
+
+  /// Every animal gives more of its product.
+  moreProducts,
+
+  /// Animals make their products faster.
+  fasterAnimals,
+
+  /// Animals eat less per meal.
+  lessFeed,
+
+  /// Lucky doubles come more often.
+  luckier,
+
+  /// Seeds cost less.
+  cheaperSeeds,
+
+  /// Neighbours pay more for their orders.
+  betterOrders,
 }
 
 /// Equipment bought once in the shop and kept for good.
@@ -337,6 +355,16 @@ const List<FarmTool> farmTools = [
     effect: ToolEffect.tendAll,
   ),
   FarmTool(
+    id: 'seed-store',
+    name: "Tohum Ambarı",
+    emoji: '🌰',
+    description: "Tohumlar yarı fiyatına gelir.",
+    level: 5,
+    price: 700,
+    effect: ToolEffect.cheaperSeeds,
+    amount: 0.5,
+  ),
+  FarmTool(
     id: 'harvester',
     name: "Biçerdöver",
     emoji: '⚙️',
@@ -344,6 +372,26 @@ const List<FarmTool> farmTools = [
     level: 6,
     price: 800,
     effect: ToolEffect.harvestAll,
+  ),
+  FarmTool(
+    id: 'barn-radio',
+    name: "Ahır Radyosu",
+    emoji: '📻',
+    description: "Müzik dinleyen hayvanlar %25 daha hızlı ürün verir.",
+    level: 6,
+    price: 1200,
+    effect: ToolEffect.fasterAnimals,
+    amount: 0.25,
+  ),
+  FarmTool(
+    id: 'milking-kit',
+    name: "Sağım ve Toplama Seti",
+    emoji: '🧺',
+    description: "Her hayvan bir ürün fazla verir.",
+    level: 7,
+    price: 2000,
+    effect: ToolEffect.moreProducts,
+    amount: 1,
   ),
   FarmTool(
     id: 'sprinkler',
@@ -356,6 +404,16 @@ const List<FarmTool> farmTools = [
     amount: 0.3,
   ),
   FarmTool(
+    id: 'feed-silo',
+    name: "Yem Silosu",
+    emoji: '🛢️',
+    description: "Hayvanlar her öğünde bir yem eksik yer.",
+    level: 9,
+    price: 3000,
+    effect: ToolEffect.lessFeed,
+    amount: 1,
+  ),
+  FarmTool(
     id: 'market-stall',
     name: "Pazar Tezgâhı",
     emoji: '🏪',
@@ -366,6 +424,26 @@ const List<FarmTool> farmTools = [
     amount: 0.25,
   ),
   FarmTool(
+    id: 'truck',
+    name: "Nakliye Kamyoneti",
+    emoji: '🚚',
+    description: "Siparişlerden %30 daha çok para gelir.",
+    level: 11,
+    price: 4500,
+    effect: ToolEffect.betterOrders,
+    amount: 0.3,
+  ),
+  FarmTool(
+    id: 'clover',
+    name: "Dört Yapraklı Yonca",
+    emoji: '🍀',
+    description: "Bereketli hasat ve bereketli ürün şansı iki katına çıkar.",
+    level: 12,
+    price: 5000,
+    effect: ToolEffect.luckier,
+    amount: 0.1,
+  ),
+  FarmTool(
     id: 'greenhouse',
     name: "Sera",
     emoji: '🏡',
@@ -374,5 +452,15 @@ const List<FarmTool> farmTools = [
     price: 6000,
     effect: ToolEffect.biggerHarvest,
     amount: 2,
+  ),
+  FarmTool(
+    id: 'modern-barn',
+    name: "Modern Ahır",
+    emoji: '🏛️',
+    description: "Her hayvan bir ürün daha fazla verir.",
+    level: 15,
+    price: 12000,
+    effect: ToolEffect.moreProducts,
+    amount: 1,
   ),
 ];

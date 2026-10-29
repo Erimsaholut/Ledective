@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'apps/games/farm/farm_reminder.dart';
 import 'data/game_state.dart';
 import 'home/alert_banner.dart';
 import 'home/epilogue_page.dart';
@@ -21,11 +22,12 @@ Future<void> main() async {
   // Draw edge to edge so the wallpaper runs under the status bar.
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await loadGameState();
-  // Officers come back and timers run whichever app is open.
-  Timer.periodic(
-    const Duration(seconds: 2),
-    (_) => StoryProgress.instance.tick(),
-  );
+  // Officers come back, timers run and the farm calls whichever app is
+  // open.
+  Timer.periodic(const Duration(seconds: 2), (_) {
+    StoryProgress.instance.tick();
+    FarmReminder.tick(StoryProgress.instance.alerts);
+  });
   runApp(const LedectiveApp());
 }
 

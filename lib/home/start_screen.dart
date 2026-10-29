@@ -209,6 +209,7 @@ Future<void> openAlert(NavigatorState navigator, StoryAlert alert) async {
 AppIcon? homeIcon(String title) => [
   ..._pages.expand((page) => page),
   ..._dock,
+  for (final game in storeGamesWithIds(InstalledGames.ids.value)) game.homeIcon,
 ].where((icon) => icon.title == title).firstOrNull;
 
 class StartScreen extends StatefulWidget {

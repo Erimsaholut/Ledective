@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../home/app_icon.dart';
 import '../games/castle_guard/castle_guard_app.dart';
 import '../games/farm/farm_app.dart';
+import '../games/farm/farm_reminder.dart';
 import '../games/space_runner/space_runner_app.dart';
 import '../games/sudoku/sudoku_app.dart';
 
@@ -74,7 +75,7 @@ const List<StoreGame> storeGames = [
     icon: Icons.agriculture_rounded,
     colors: [Color(0xFF9BE15D), Color(0xFF2E7D32)],
     app: FarmApp(),
-    dataKeys: [FarmApp.saveKey],
+    dataKeys: [FarmApp.saveKey, FarmReminder.saveKey],
   ),
   StoreGame(
     id: 'space-runner',

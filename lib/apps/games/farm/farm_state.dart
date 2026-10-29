@@ -119,6 +119,8 @@ class FarmState {
     Map<String, int>? barn,
     Set<String>? tools,
     List<FarmOrder>? orders,
+    int? orderSlots,
+    List<DateTime>? orderWaits,
     List<FarmAnimal>? animals,
     this.lastBonusDay,
     this.streak = 0,
@@ -142,6 +144,8 @@ class FarmState {
        barn = barn ?? {},
        tools = tools ?? {},
        orders = orders ?? [],
+       orderSlots = orderSlots ?? max(startOrderSlots, orders?.length ?? 0),
+       orderWaits = orderWaits ?? [],
        animals = animals ?? [],
        weekLevel = weekLevel ?? level;
 
@@ -158,6 +162,11 @@ class FarmState {
     orders: [
       for (final order in json['orders'] as List)
         FarmOrder.fromJson(order as Map<String, dynamic>),
+    ],
+    orderSlots: json['orderSlots'] as int?,
+    orderWaits: [
+      for (final at in json['orderWaits'] as List? ?? const [])
+        DateTime.fromMillisecondsSinceEpoch(at as int),
     ],
     animals: [
       for (final animal in json['animals'] as List? ?? const [])
@@ -197,7 +206,14 @@ class FarmState {
   static const startCoins = 20;
   static const startPlots = 4;
   static const maxPlots = 16;
-  static const orderSlots = 3;
+  static const startOrderSlots = 2;
+  static const maxOrderSlots = 5;
+
+  /// Coins to open the third, fourth and fifth slot on the order board.
+  static const orderSlotPrices = [400, 2000, 8000];
+
+  /// How long the slot of a turned-down order stays empty.
+  static const orderCooldown = Duration(minutes: 10);
   static const maxAnimalsPerKind = 5;
 
   /// Chance that a harvest or an animal gives double.
@@ -230,6 +246,12 @@ class FarmState {
   /// Ids of the tools bought.
   final Set<String> tools;
   final List<FarmOrder> orders;
+
+  /// Slots open on the order board.
+  int orderSlots;
+
+  /// When each slot emptied by a turned-down order takes a new one.
+  final List<DateTime> orderWaits;
   final List<FarmAnimal> animals;
 
   /// The day the daily bonus was last collected, as `yyyy-mm-dd`.
@@ -275,29 +297,51 @@ class FarmState {
 
   bool has(ToolEffect effect) => _owned(effect).isNotEmpty;
 
-  /// Experience needed to go from this level to the next.
-  int get xpToNextLevel => 5 * level * level + 5 * level;
+  /// The summed [FarmTool.amount] of the tools owned with [effect].
+  double _bonus(ToolEffect effect) =>
+      _owned(effect).fold(0.0, (sum, tool) => sum + tool.amount);
+
+  /// Experience needed to go from this level to the next. It climbs
+  /// steeply, so the tools that speed the farm up don't race it through
+  /// the levels.
+  int get xpToNextLevel =>
+      level * level * level + 5 * level * level + 5 * level;
 
   /// How long crops take compared with their [Crop.growTime].
   double get growthFactor =>
       _owned(ToolEffect.faster).fold(1.0, (f, tool) => f * (1 - tool.amount));
 
-  int get harvestPerPlot =>
-      2 +
-      _owned(
-        ToolEffect.biggerHarvest,
-      ).fold(0, (sum, tool) => sum + tool.amount.round());
+  int get harvestPerPlot => 2 + _bonus(ToolEffect.biggerHarvest).round();
 
-  int priceOf(FarmGood good) {
-    final bonus = _owned(
-      ToolEffect.betterPrices,
-    ).fold(0.0, (sum, tool) => sum + tool.amount);
-    return (good.price * (1 + bonus)).round();
-  }
+  /// How many products an animal gives at a time.
+  int get productsPerAnimal => 1 + _bonus(ToolEffect.moreProducts).round();
+
+  int priceOf(FarmGood good) =>
+      (good.price * (1 + _bonus(ToolEffect.betterPrices))).round();
+
+  int seedCostOf(Crop crop) =>
+      (crop.seedCost * (1 - _bonus(ToolEffect.cheaperSeeds))).round();
+
+  /// Crops [kind] eats per meal; never less than one.
+  int feedCountOf(Animal kind) =>
+      max(1, kind.feedCount - _bonus(ToolEffect.lessFeed).round());
+
+  Duration productTimeOf(Animal kind) => Duration(
+    milliseconds:
+        (kind.time.inMilliseconds * (1 - _bonus(ToolEffect.fasterAnimals)))
+            .round(),
+  );
+
+  /// Coins [order] pays on delivery.
+  int orderCoins(FarmOrder order) =>
+      (order.coins * (1 + _bonus(ToolEffect.betterOrders))).round();
+
+  /// Chance that a harvest or an animal gives double.
+  double get luckChance => luckyChance + _bonus(ToolEffect.luckier);
 
   /// Rolls for a lucky double. Without [random] luck never strikes.
   bool _lucky(Random? random) =>
-      random != null && random.nextDouble() < luckyChance;
+      random != null && random.nextDouble() < luckChance;
 
   Duration growTimeOf(Crop crop) => Duration(
     milliseconds: (crop.growTime.inMilliseconds * growthFactor).round(),
@@ -316,14 +360,26 @@ class FarmState {
 
   int readyCount(DateTime now) => plots.where((p) => p.isReady(now)).length;
 
+  /// When the last crop growing now is ready, so every planted field is
+  /// waiting for harvest; null if nothing is still growing.
+  DateTime? allReadyAt(DateTime now) {
+    final growing = [
+      for (final plot in plots)
+        if (plot.readyAt != null) plot.readyAt!,
+    ];
+    if (growing.isEmpty || growing.every((at) => !now.isBefore(at))) {
+      return null;
+    }
+    return growing.reduce((a, b) => a.isAfter(b) ? a : b);
+  }
+
   /// Sows [crop] in field [index]. Fails on a busy field, a locked crop or
   /// too few coins.
   bool plant(int index, Crop crop, DateTime now) {
     final plot = plots[index];
-    if (!plot.isEmpty || !isUnlocked(crop) || coins < crop.seedCost) {
-      return false;
-    }
-    coins -= crop.seedCost;
+    final cost = seedCostOf(crop);
+    if (!plot.isEmpty || !isUnlocked(crop) || coins < cost) return false;
+    coins -= cost;
     plot
       ..cropId = crop.id
       ..plantedAt = now
@@ -447,30 +503,32 @@ class FarmState {
 
   bool canFeed(FarmAnimal animal) =>
       animal.isHungry &&
-      (barn[animal.kind.feedId] ?? 0) >= animal.kind.feedCount;
+      (barn[animal.kind.feedId] ?? 0) >= feedCountOf(animal.kind);
 
   /// Gives animal [index] its meal from the barn.
   bool feed(int index, DateTime now) {
     final animal = animals[index];
     if (!canFeed(animal)) return false;
-    _take(animal.kind.feedId, animal.kind.feedCount);
+    _take(animal.kind.feedId, feedCountOf(animal.kind));
     animal
       ..fedAt = now
-      ..readyAt = now.add(animal.kind.time);
+      ..readyAt = now.add(productTimeOf(animal.kind));
     return true;
   }
 
   /// Puts animal [index]'s product in the barn. Returns how many, or 0 if
-  /// it isn't ready. With [random], a lucky animal gives double.
+  /// it isn't ready. With [random], a lucky animal gives double. Tools
+  /// give more products but not more experience.
   int collect(int index, DateTime now, {Random? random}) {
     final animal = animals[index];
     if (!animal.isReady(now)) return 0;
-    final amount = _lucky(random) ? 2 : 1;
+    final luck = _lucky(random) ? 2 : 1;
+    final amount = productsPerAnimal * luck;
     _put(animal.kind.product.id, amount);
     animal
       ..fedAt = null
       ..readyAt = null;
-    addXp(animal.kind.xp * amount);
+    addXp(animal.kind.xp * luck);
     return amount;
   }
 
@@ -503,22 +561,44 @@ class FarmState {
     final order = orders[index];
     if (!canDeliver(order)) return false;
     order.items.forEach(_take);
-    coins += order.coins;
+    coins += orderCoins(order);
     addXp(order.xp);
     orders[index] = newOrder(random: random);
     return true;
   }
 
-  /// Turns down order [index] for a different one.
-  void replaceOrder(int index, {Random? random}) {
-    orders[index] = newOrder(random: random);
+  /// Turns down order [index]. Its slot takes a new order only after
+  /// [orderCooldown].
+  void cancelOrder(int index, DateTime now) {
+    orders.removeAt(index);
+    orderWaits.add(now.add(orderCooldown));
   }
 
-  /// Fills the order board up to [orderSlots].
-  void fillOrders({Random? random}) {
-    while (orders.length < orderSlots) {
+  /// Fills the order board's free slots, and those whose wait is over.
+  /// Returns how many orders came in.
+  int fillOrders(DateTime now, {Random? random}) {
+    orderWaits.removeWhere((at) => !now.isBefore(at));
+    var added = 0;
+    while (orders.length + orderWaits.length < orderSlots) {
       orders.add(newOrder(random: random));
+      added++;
     }
+    return added;
+  }
+
+  /// Price of the next slot on the order board, or null once all are open.
+  int? get nextOrderSlotPrice => orderSlots >= maxOrderSlots
+      ? null
+      : orderSlotPrices[orderSlots - startOrderSlots];
+
+  /// Opens one more slot on the order board, with an order in it.
+  bool buyOrderSlot(DateTime now, {Random? random}) {
+    final price = nextOrderSlotPrice;
+    if (price == null || coins < price) return false;
+    coins -= price;
+    orderSlots++;
+    fillOrders(now, random: random);
+    return true;
   }
 
   /// An order for one to three of the newest unlocked crops and the
@@ -719,6 +799,8 @@ class FarmState {
     'barn': barn,
     'tools': tools.toList(),
     'orders': [for (final order in orders) order.toJson()],
+    'orderSlots': orderSlots,
+    'orderWaits': [for (final at in orderWaits) at.millisecondsSinceEpoch],
     'animals': [for (final animal in animals) animal.toJson()],
     'bonusDay': lastBonusDay,
     'streak': streak,

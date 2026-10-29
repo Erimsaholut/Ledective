@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' show PointerDeviceKind;
@@ -580,7 +581,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('plot-0')));
     await tester.pumpAndSettle();
     expect(find.textContaining('+2 🌾 Buğday · +1 XP'), findsOneWidget);
-    expect(find.text('1 / 10 XP'), findsOneWidget);
+    expect(find.text('1 / 11 XP'), findsOneWidget);
 
     await tester.tap(find.text('Ambar'));
     await tester.pumpAndSettle();
@@ -592,7 +593,8 @@ void main() {
     // The other tabs lay out on a phone.
     await tester.tap(find.text('Siparişler'));
     await tester.pumpAndSettle();
-    expect(find.text('Teslim et'), findsNWidgets(FarmState.orderSlots));
+    expect(find.text('Teslim et'), findsNWidgets(FarmState.startOrderSlots));
+    expect(find.text('Sipariş Panosu'), findsOneWidget);
     await tester.tap(find.text('Dükkân'));
     await tester.pumpAndSettle();
     expect(find.text('Sulama Kovası'), findsOneWidget);
@@ -680,11 +682,25 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Süsleme'));
     await tester.pumpAndSettle();
+    // The shop's own list, not the row of themes in it.
+    final shop = find
+        .byWidgetPredicate(
+          (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+        )
+        .last;
     await tester.scrollUntilVisible(
       find.byKey(const ValueKey('cosmetic-tree')),
       200,
-      scrollable: find.byType(Scrollable).last,
+      scrollable: shop,
     );
+    // Bring it to the middle, clear of the tab bar.
+    unawaited(
+      Scrollable.ensureVisible(
+        tester.element(find.byKey(const ValueKey('cosmetic-tree'))),
+        alignment: 0.5,
+      ),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('cosmetic-tree')));
     await tester.pumpAndSettle();
     expect(find.textContaining('Ulu Çınar artık senin'), findsOneWidget);

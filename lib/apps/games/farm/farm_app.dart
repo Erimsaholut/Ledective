@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/bank_account.dart';
+import '../../../story/story_progress.dart';
 import '../../../theme/app_theme.dart';
 import '../../shopper/shopper_app.dart' show formatLira;
 import 'farm_catalog.dart';
 import 'farm_cosmetics.dart';
 import 'farm_league.dart';
+import 'farm_reminder.dart';
 import 'farm_state.dart';
 
 /// Bereket Çiftliği from AppShop: grow crops in real time, sell them or
@@ -54,12 +56,15 @@ class _FarmAppState extends State<FarmApp> {
   @override
   void initState() {
     super.initState();
+    FarmReminder.farmOpen = true;
+    StoryProgress.instance.alerts.clearApp(FarmReminder.app);
     _load();
     // Growing crops tick on screen, and neighbours keep playing.
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
       setState(() {});
       _watchLeague();
+      _watchOrders();
       _watchOffer();
     });
   }
@@ -67,6 +72,7 @@ class _FarmAppState extends State<FarmApp> {
   @override
   void dispose() {
     _timer?.cancel();
+    FarmReminder.farmOpen = false;
     _save();
     super.dispose();
   }
@@ -85,7 +91,7 @@ class _FarmAppState extends State<FarmApp> {
     farm ??= FarmState();
     final now = _now;
     final week = farm.rollWeek(now);
-    farm.fillOrders(random: widget.random);
+    farm.fillOrders(now, random: widget.random);
     final bonus = farm.claimDailyBonus(now);
     // Neighbours keep playing while the farm is closed.
     final table = farm.standings(now);
@@ -115,6 +121,17 @@ class _FarmAppState extends State<FarmApp> {
     farm.lastRank = rank;
     if (last != null && rank > last) {
       _toast("👀 ${table[rank - 2].name} seni geçti! Ligde $rank. sıradasın.");
+    }
+  }
+
+  /// Puts new orders on the board once the slots of turned-down ones are
+  /// free again.
+  void _watchOrders() {
+    final farm = _farm;
+    if (farm == null) return;
+    if (farm.fillOrders(_now, random: widget.random) > 0) {
+      _save();
+      _toast("📋 Sipariş panosuna yeni sipariş geldi!");
     }
   }
 
@@ -163,6 +180,7 @@ class _FarmAppState extends State<FarmApp> {
     if (farm == null) return;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(FarmApp.saveKey, json.encode(farm.toJson()));
+    await FarmReminder.schedule(farm, _now);
   }
 
   /// Runs [action] on the farm, saves, shows [toast] and celebrates any
@@ -381,8 +399,9 @@ class _FarmAppState extends State<FarmApp> {
 
   Widget _cropOption(BuildContext context, FarmState farm, Crop crop) {
     final unlocked = farm.isUnlocked(crop);
-    final affordable = farm.coins >= crop.seedCost;
-    final seed = crop.seedCost == 0 ? "bedava" : "${crop.seedCost} 🪙";
+    final cost = farm.seedCostOf(crop);
+    final affordable = farm.coins >= cost;
+    final seed = cost == 0 ? "bedava" : "$cost 🪙";
     return ListTile(
       key: ValueKey('crop-${crop.id}'),
       tileColor: Colors.transparent,
@@ -453,13 +472,16 @@ class _FarmAppState extends State<FarmApp> {
     final product = kind.product;
     final now = _now;
     if (animal.isReady(now)) {
+      final usual = farm.productsPerAnimal;
       var amount = 0;
       _act(
         (f) => amount = f.collect(index, now, random: _random),
-        toast: () =>
-            "${amount > 1 ? "🍀 Çifte ürün! " : ""}"
-            "+$amount ${product.emoji} ${product.name} · "
-            "+${kind.xp * amount} XP",
+        toast: () {
+          final lucky = amount > usual;
+          return "${lucky ? "🍀 Çifte ürün! " : ""}"
+              "+$amount ${product.emoji} ${product.name} · "
+              "+${kind.xp * (lucky ? 2 : 1)} XP";
+        },
       );
     } else if (!animal.isHungry) {
       _toast(
@@ -471,11 +493,13 @@ class _FarmAppState extends State<FarmApp> {
         (f) => f.feed(index, now),
         toast: () =>
             "${kind.emoji} ${kind.name} karnını doyurdu · "
-            "${formatGrowTime(kind.time)} sonra ${product.emoji}",
+            "${formatGrowTime(farm.productTimeOf(kind))} sonra "
+            "${product.emoji}",
       );
     } else {
       _toast(
-        "${kind.name} için ambarda ${kind.feedCount} ${kind.feed.emoji} "
+        "${kind.name} için ambarda ${farm.feedCountOf(kind)} "
+        "${kind.feed.emoji} "
         "${kind.feed.name} olmalı",
       );
     }
@@ -788,17 +812,13 @@ class _FarmAppState extends State<FarmApp> {
   }
 
   Widget _buildOrders(FarmState farm) {
+    final now = _now;
+    final slotPrice = farm.nextOrderSlotPrice;
     return ListView(
       padding: const EdgeInsets.all(14),
       children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 10),
-          child: Text(
-            "Komşuların ürün bekliyor. Siparişler pazardan çok daha iyi "
-            "kazandırır.",
-            style: TextStyle(color: AppColors.secondaryLabel),
-          ),
-        ),
+        _OrderBoardHeader(farm: farm),
+        const SizedBox(height: 12),
         for (var i = 0; i < farm.orders.length; i++)
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
@@ -807,42 +827,110 @@ class _FarmAppState extends State<FarmApp> {
               farm: farm,
               onDeliver: () {
                 final order = farm.orders[i];
+                final coins = farm.orderCoins(order);
                 _act(
                   (f) => f.deliver(i, random: widget.random),
-                  toast: () =>
-                      "Teslim edildi: +${order.coins} 🪙 · +${order.xp} XP",
+                  toast: () => "Teslim edildi: +$coins 🪙 · +${order.xp} XP",
                 );
               },
-              onReplace: () =>
-                  _act((f) => f.replaceOrder(i, random: widget.random)),
+              onCancel: () => _cancelOrder(i),
+            ),
+          ),
+        for (final at in [...farm.orderWaits]..sort())
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: _OrderSlot(
+              emoji: '⏳',
+              title: "Yeni sipariş bekleniyor",
+              subtitle: "${formatGrowTime(at.difference(now))} sonra gelir",
+            ),
+          ),
+        if (slotPrice != null)
+          _OrderSlot(
+            emoji: '🔒',
+            title: "${farm.orderSlots + 1}. sipariş yeri",
+            subtitle: "Aynı anda bir sipariş daha al",
+            action: FilledButton(
+              key: const ValueKey('buy-order-slot'),
+              onPressed: farm.coins >= slotPrice
+                  ? () => _act(
+                      (f) => f.buyOrderSlot(_now, random: widget.random),
+                      toast: () => "📋 Panoya yeni bir sipariş yeri açıldı!",
+                    )
+                  : null,
+              style: FilledButton.styleFrom(backgroundColor: _green),
+              child: Text("$slotPrice 🪙"),
             ),
           ),
       ],
     );
   }
 
+  Future<void> _cancelOrder(int index) async {
+    final minutes = FarmState.orderCooldown.inMinutes;
+    final cancel = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Sipariş iptal edilsin mi?"),
+        content: Text(
+          "Komşun başka birini bulur, ama bu yere $minutes dakika yeni "
+          "sipariş gelmez.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Vazgeç"),
+          ),
+          FilledButton(
+            key: const ValueKey('confirm-cancel-order'),
+            onPressed: () => Navigator.pop(context, true),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.red),
+            child: const Text("İptal et"),
+          ),
+        ],
+      ),
+    );
+    if (cancel != true || !mounted) return;
+    _act(
+      (f) => f.cancelOrder(index, _now),
+      toast: () => "Sipariş iptal edildi. Yenisi $minutes dakika sonra gelir.",
+    );
+  }
+
   Widget _buildShop(FarmState farm) {
+    final collected = cosmetics.where((c) => c.price > 0 && farm.owns(c));
     return ListView(
       padding: const EdgeInsets.all(14),
       children: [
-        SegmentedButton<bool>(
-          segments: const [
-            ButtonSegment(
-              value: false,
-              icon: Icon(Icons.handyman_rounded),
-              label: Text("Aletler"),
+        Row(
+          children: [
+            Expanded(
+              child: _ShopSwitch(
+                key: const ValueKey('shop-tools'),
+                emoji: '🛠️',
+                title: "Aletler",
+                subtitle: "${farm.tools.length}/${farmTools.length} alındı",
+                colors: const [Color(0xFF43A047), Color(0xFF1B5E20)],
+                selected: !_cosmeticShop,
+                onTap: () => setState(() => _cosmeticShop = false),
+              ),
             ),
-            ButtonSegment(
-              value: true,
-              icon: Icon(Icons.palette_rounded),
-              label: Text("Süsleme"),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _ShopSwitch(
+                key: const ValueKey('shop-cosmetics'),
+                emoji: '🎨',
+                title: "Süsleme",
+                subtitle:
+                    "${collected.length}/${cosmetics.length - 1} koleksiyon",
+                colors: const [Color(0xFFE056FD), Color(0xFF7B1FA2)],
+                selected: _cosmeticShop,
+                onTap: () => setState(() => _cosmeticShop = true),
+              ),
             ),
           ],
-          selected: {_cosmeticShop},
-          onSelectionChanged: (choice) =>
-              setState(() => _cosmeticShop = choice.single),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
         ...(_cosmeticShop ? _cosmeticsShop(farm) : _toolShop(farm)),
       ],
     );
@@ -850,6 +938,26 @@ class _FarmAppState extends State<FarmApp> {
 
   List<Widget> _toolShop(FarmState farm) {
     final plotPrice = farm.nextPlotPrice;
+    const groups = {
+      "Tarla aletleri": [
+        ToolEffect.faster,
+        ToolEffect.biggerHarvest,
+        ToolEffect.plantAll,
+        ToolEffect.harvestAll,
+        ToolEffect.cheaperSeeds,
+      ],
+      "Hayvan aletleri": [
+        ToolEffect.tendAll,
+        ToolEffect.moreProducts,
+        ToolEffect.fasterAnimals,
+        ToolEffect.lessFeed,
+      ],
+      "Pazar ve şans": [
+        ToolEffect.betterPrices,
+        ToolEffect.betterOrders,
+        ToolEffect.luckier,
+      ],
+    };
     return [
       Card(
         child: ListTile(
@@ -871,64 +979,68 @@ class _FarmAppState extends State<FarmApp> {
                 ),
         ),
       ),
-      const Padding(
-        padding: EdgeInsets.fromLTRB(4, 18, 4, 8),
-        child: Text(
-          "Tarım aletleri",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-        ),
-      ),
-      for (final tool in farmTools)
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: _ToolCard(
-            tool: tool,
-            farm: farm,
-            onBuy: () => _act(
-              (f) => f.buyTool(tool),
-              toast: () => "${tool.emoji} ${tool.name} artık senin!",
+      for (final group in groups.entries) ...[
+        _ShopHeading(group.key),
+        for (final tool in farmTools)
+          if (group.value.contains(tool.effect))
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _ToolCard(
+                tool: tool,
+                farm: farm,
+                onBuy: () => _act(
+                  (f) => f.buyTool(tool),
+                  toast: () => "${tool.emoji} ${tool.name} artık senin!",
+                ),
+              ),
             ),
-          ),
-        ),
+      ],
     ];
   }
 
   List<Widget> _cosmeticsShop(FarmState farm) {
-    const sections = {
-      CosmeticSlot.theme: "Temalar",
-      CosmeticSlot.decoration: "Bahçe süsleri",
-      CosmeticSlot.hat: "Şapkalar",
-    };
+    void buy(Cosmetic cosmetic) => _act(
+      (f) => f.buyCosmetic(cosmetic),
+      toast: () => "${cosmetic.emoji} ${cosmetic.name} artık senin!",
+    );
+    void use(Cosmetic cosmetic) => _act((f) => f.useCosmetic(cosmetic));
+    List<Cosmetic> of(CosmeticSlot slot) =>
+        cosmetics.where((c) => c.slot == slot).toList();
     return [
-      const Text(
-        "Paranı çiftliğini güzelleştirmeye harca. Şapkan ligde adının "
-        "yanında görünür.",
-        style: TextStyle(color: AppColors.secondaryLabel),
-      ),
-      for (final section in sections.entries) ...[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
-          child: Text(
-            section.value,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-        ),
-        for (final cosmetic in cosmetics)
-          if (cosmetic.slot == section.key)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: _CosmeticCard(
-                cosmetic: cosmetic,
-                farm: farm,
-                onBuy: () => _act(
-                  (f) => f.buyCosmetic(cosmetic),
-                  toast: () =>
-                      "${cosmetic.emoji} ${cosmetic.name} artık senin!",
+      _FarmShowcase(farm: farm),
+      const _ShopHeading("Temalar"),
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (final theme in of(CosmeticSlot.theme))
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: _ThemeSwatch(
+                  theme: theme,
+                  farm: farm,
+                  onBuy: () => buy(theme),
+                  onUse: () => use(theme),
                 ),
-                onUse: () => _act((f) => f.useCosmetic(cosmetic)),
               ),
-            ),
-      ],
+          ],
+        ),
+      ),
+      const _ShopHeading("Bahçe süsleri"),
+      _CosmeticGrid(
+        items: of(CosmeticSlot.decoration),
+        farm: farm,
+        onBuy: buy,
+        onUse: use,
+      ),
+      const _ShopHeading("Şapkalar · ligde adının yanında"),
+      _CosmeticGrid(
+        items: of(CosmeticSlot.hat),
+        farm: farm,
+        onBuy: buy,
+        onUse: use,
+      ),
+      const SizedBox(height: 12),
     ];
   }
 }
@@ -1225,8 +1337,223 @@ class _OfferDialog extends StatelessWidget {
 }
 
 /// A cosmetic in the shop: for sale, in use, or owned and ready to use.
-class _CosmeticCard extends StatelessWidget {
-  const _CosmeticCard({
+/// One of the big buttons switching the shop between tools and
+/// cosmetics.
+class _ShopSwitch extends StatelessWidget {
+  const _ShopSwitch({
+    super.key,
+    required this.emoji,
+    required this.title,
+    required this.subtitle,
+    required this.colors,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String emoji;
+  final String title;
+  final String subtitle;
+  final List<Color> colors;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ink = selected ? Colors.white : colors.last;
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          gradient: selected
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: colors,
+                )
+              : null,
+          color: selected ? null : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: colors.first.withValues(alpha: selected ? 0 : 0.6),
+            width: 2,
+          ),
+          boxShadow: [
+            if (selected)
+              BoxShadow(
+                color: colors.last.withValues(alpha: 0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 30)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: ink,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: ink.withValues(alpha: 0.85),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ShopHeading extends StatelessWidget {
+  const _ShopHeading(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
+    child: Text(
+      text,
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+    ),
+  );
+}
+
+/// How rare a cosmetic is, by its price.
+({String label, Color color}) _rarity(Cosmetic cosmetic) =>
+    switch (cosmetic.price) {
+      < 1000 => (label: "Sıradan", color: const Color(0xFF43A047)),
+      < 5000 => (label: "Nadir", color: const Color(0xFF1E88E5)),
+      < 20000 => (label: "Destansı", color: const Color(0xFF8E24AA)),
+      _ => (label: "Efsanevi", color: const Color(0xFFF57C00)),
+    };
+
+/// The farm as the cosmetics make it look, and how much of the collection
+/// is owned.
+class _FarmShowcase extends StatelessWidget {
+  const _FarmShowcase({required this.farm});
+
+  final FarmState farm;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = farm.theme;
+    final decorations = farm.decorations;
+    final forSale = cosmetics.where((c) => c.price > 0);
+    final owned = forSale.where(farm.owns).length;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.white, width: 3),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x29000000),
+            blurRadius: 12,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: ColoredBox(
+          color: Color(theme.background!),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          farm.hat?.emoji ?? ' ',
+                          style: const TextStyle(fontSize: 22, height: 1),
+                        ),
+                        const Text('🧑‍🌾', style: TextStyle(fontSize: 40)),
+                      ],
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: decorations.isEmpty
+                          ? const Text(
+                              "Bahçen boş duruyor. Bir süs al, komşular "
+                              "görsün!",
+                              style: TextStyle(color: AppColors.secondaryLabel),
+                            )
+                          : Wrap(
+                              spacing: 4,
+                              children: [
+                                for (final d in decorations)
+                                  Text(
+                                    d.emoji,
+                                    style: const TextStyle(fontSize: 30),
+                                  ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(height: 14, color: Color(theme.soil!)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+                child: Row(
+                  children: [
+                    Text(
+                      "${theme.emoji} ${theme.name}",
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: owned / forSale.length,
+                          minHeight: 8,
+                          color: const Color(0xFF8E24AA),
+                          backgroundColor: Colors.white70,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      "$owned/${forSale.length}",
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The buy, use or "in use" control of a cosmetic.
+class _CosmeticAction extends StatelessWidget {
+  const _CosmeticAction({
     required this.cosmetic,
     required this.farm,
     required this.onBuy,
@@ -1240,58 +1567,218 @@ class _CosmeticCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final owned = farm.owns(cosmetic);
+    const compact = EdgeInsets.symmetric(horizontal: 10);
+    if (!farm.owns(cosmetic)) {
+      return FilledButton(
+        key: ValueKey('cosmetic-${cosmetic.id}'),
+        onPressed: farm.coins >= cosmetic.price ? onBuy : null,
+        style: FilledButton.styleFrom(
+          backgroundColor: _rarity(cosmetic).color,
+          padding: compact,
+          visualDensity: VisualDensity.compact,
+        ),
+        child: Text("${cosmetic.price} 🪙"),
+      );
+    }
     final inUse = switch (cosmetic.slot) {
       CosmeticSlot.theme => farm.themeId == cosmetic.id,
       CosmeticSlot.hat => farm.hatId == cosmetic.id,
-      CosmeticSlot.decoration => owned,
+      CosmeticSlot.decoration => true,
     };
-    final Widget trailing;
-    if (!owned) {
-      trailing = FilledButton(
-        key: ValueKey('cosmetic-${cosmetic.id}'),
-        onPressed: farm.coins >= cosmetic.price ? onBuy : null,
-        style: FilledButton.styleFrom(backgroundColor: _FarmAppState._green),
-        child: Text("${cosmetic.price} 🪙"),
-      );
-    } else if (cosmetic.slot == CosmeticSlot.hat) {
-      trailing = TextButton(
+    if (cosmetic.slot == CosmeticSlot.hat) {
+      return OutlinedButton(
         onPressed: onUse,
+        style: OutlinedButton.styleFrom(
+          padding: compact,
+          visualDensity: VisualDensity.compact,
+        ),
         child: Text(inUse ? "Çıkar" : "Tak"),
       );
-    } else if (inUse) {
-      trailing = const Text(
-        "Sende ✓",
-        style: TextStyle(
-          color: _FarmAppState._green,
-          fontWeight: FontWeight.w700,
+    }
+    if (inUse) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: Text(
+          "Sende ✓",
+          style: TextStyle(
+            color: _FarmAppState._green,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       );
-    } else {
-      trailing = TextButton(onPressed: onUse, child: const Text("Kullan"));
     }
-    final theme = cosmetic.slot == CosmeticSlot.theme;
-    return Card(
-      child: ListTile(
-        leading: theme
-            ? CircleAvatar(
-                backgroundColor: Color(cosmetic.background!),
-                child: CircleAvatar(
-                  radius: 11,
-                  backgroundColor: Color(cosmetic.soil!),
-                ),
-              )
-            : Text(cosmetic.emoji, style: const TextStyle(fontSize: 30)),
-        title: Text(
-          cosmetic.name,
-          style: const TextStyle(fontWeight: FontWeight.w600),
+    return OutlinedButton(
+      onPressed: onUse,
+      style: OutlinedButton.styleFrom(
+        padding: compact,
+        visualDensity: VisualDensity.compact,
+      ),
+      child: const Text("Kullan"),
+    );
+  }
+}
+
+/// A theme with a preview of its colours.
+class _ThemeSwatch extends StatelessWidget {
+  const _ThemeSwatch({
+    required this.theme,
+    required this.farm,
+    required this.onBuy,
+    required this.onUse,
+  });
+
+  final Cosmetic theme;
+  final FarmState farm;
+  final VoidCallback onBuy;
+  final VoidCallback onUse;
+
+  @override
+  Widget build(BuildContext context) {
+    final inUse = farm.themeId == theme.id;
+    return Container(
+      width: 126,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: inUse ? _FarmAppState._green : const Color(0x1F000000),
+          width: inUse ? 2.5 : 1,
         ),
-        subtitle: Text(switch (cosmetic.slot) {
-          CosmeticSlot.theme => "Çiftliğin renkleri değişir",
-          CosmeticSlot.decoration => "Tarlanın yanında durur",
-          CosmeticSlot.hat => "Ligde adının yanında görünür",
-        }),
-        trailing: trailing,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          Container(
+            height: 54,
+            color: Color(theme.background!),
+            alignment: Alignment.center,
+            child: Text(theme.emoji, style: const TextStyle(fontSize: 26)),
+          ),
+          Container(height: 10, color: Color(theme.soil!)),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+            child: Column(
+              children: [
+                Text(
+                  theme.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 6),
+                _CosmeticAction(
+                  cosmetic: theme,
+                  farm: farm,
+                  onBuy: onBuy,
+                  onUse: onUse,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Decorations or hats, three to a row.
+class _CosmeticGrid extends StatelessWidget {
+  const _CosmeticGrid({
+    required this.items,
+    required this.farm,
+    required this.onBuy,
+    required this.onUse,
+  });
+
+  final List<Cosmetic> items;
+  final FarmState farm;
+  final void Function(Cosmetic cosmetic) onBuy;
+  final void Function(Cosmetic cosmetic) onUse;
+
+  @override
+  Widget build(BuildContext context) {
+    const gap = 10.0;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = (constraints.maxWidth - 2 * gap) / 3;
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: [
+            for (final item in items)
+              SizedBox(
+                width: width,
+                child: _CosmeticTile(
+                  cosmetic: item,
+                  farm: farm,
+                  onBuy: () => onBuy(item),
+                  onUse: () => onUse(item),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _CosmeticTile extends StatelessWidget {
+  const _CosmeticTile({
+    required this.cosmetic,
+    required this.farm,
+    required this.onBuy,
+    required this.onUse,
+  });
+
+  final Cosmetic cosmetic;
+  final FarmState farm;
+  final VoidCallback onBuy;
+  final VoidCallback onUse;
+
+  @override
+  Widget build(BuildContext context) {
+    final rarity = _rarity(cosmetic);
+    final owned = farm.owns(cosmetic);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(6, 10, 6, 8),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [rarity.color.withValues(alpha: 0.16), Colors.white],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: rarity.color.withValues(alpha: owned ? 0.9 : 0.45),
+          width: owned ? 2 : 1.2,
+        ),
+      ),
+      child: Column(
+        children: [
+          Text(cosmetic.emoji, style: const TextStyle(fontSize: 36)),
+          const SizedBox(height: 4),
+          Text(
+            cosmetic.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+          ),
+          Text(
+            rarity.label,
+            style: TextStyle(
+              fontSize: 11,
+              color: rarity.color,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 6),
+          _CosmeticAction(
+            cosmetic: cosmetic,
+            farm: farm,
+            onBuy: onBuy,
+            onUse: onUse,
+          ),
+        ],
       ),
     );
   }
@@ -1541,9 +2028,10 @@ class _AnimalPen extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 unlocked
-                    ? "${kind.feedCount} ${kind.feed.emoji} yer, "
-                          "${formatGrowTime(kind.time)} sonra "
-                          "${product.emoji} ${product.name} verir · "
+                    ? "${farm.feedCountOf(kind)} ${kind.feed.emoji} yer, "
+                          "${formatGrowTime(farm.productTimeOf(kind))} sonra "
+                          "${farm.productsPerAnimal} ${product.emoji} "
+                          "${product.name} verir · "
                           "tanesi ${farm.priceOf(product)} 🪙"
                     : "Seviye ${kind.level}'te açılır: "
                           "${kind.name}, ${product.emoji} ${product.name} verir",
@@ -1850,13 +2338,13 @@ class _OrderCard extends StatelessWidget {
     required this.order,
     required this.farm,
     required this.onDeliver,
-    required this.onReplace,
+    required this.onCancel,
   });
 
   final FarmOrder order;
   final FarmState farm;
   final VoidCallback onDeliver;
-  final VoidCallback onReplace;
+  final VoidCallback onCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -1883,14 +2371,14 @@ class _OrderCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "Ödül: ${order.coins} 🪙 · ${order.xp} XP",
+                    "Ödül: ${farm.orderCoins(order)} 🪙 · ${order.xp} XP",
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
                 IconButton(
-                  onPressed: onReplace,
-                  tooltip: "Başka sipariş",
-                  icon: const Icon(Icons.refresh_rounded),
+                  onPressed: onCancel,
+                  tooltip: "Siparişi iptal et",
+                  icon: const Icon(Icons.close_rounded),
                 ),
                 FilledButton(
                   onPressed: farm.canDeliver(order) ? onDeliver : null,
@@ -1903,6 +2391,111 @@ class _OrderCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// The top of the order board: how many slots are open and in use.
+class _OrderBoardHeader extends StatelessWidget {
+  const _OrderBoardHeader({required this.farm});
+
+  final FarmState farm;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFB07A4A), Color(0xFF8A5A33)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          const Text('📋', style: TextStyle(fontSize: 34)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Sipariş Panosu",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  "Komşuların pazardan çok daha iyi öder.",
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.85)),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    for (var i = 0; i < FarmState.maxOrderSlots; i++)
+                      Container(
+                        width: 22,
+                        height: 8,
+                        margin: const EdgeInsets.only(right: 5),
+                        decoration: BoxDecoration(
+                          color: i < farm.orders.length
+                              ? const Color(0xFFFFD166)
+                              : i < farm.orderSlots
+                              ? Colors.white54
+                              : Colors.black26,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    const SizedBox(width: 4),
+                    Text(
+                      "${farm.orderSlots}/${FarmState.maxOrderSlots} yer",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// An order board slot without an order: waiting for one, or still to
+/// be bought.
+class _OrderSlot extends StatelessWidget {
+  const _OrderSlot({
+    required this.emoji,
+    required this.title,
+    required this.subtitle,
+    this.action,
+  });
+
+  final String emoji;
+  final String title;
+  final String subtitle;
+  final Widget? action;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0x33000000), width: 1.5),
+      ),
+      child: ListTile(
+        leading: Text(emoji, style: const TextStyle(fontSize: 28)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        subtitle: Text(subtitle),
+        trailing: action,
       ),
     );
   }
