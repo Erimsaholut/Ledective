@@ -138,6 +138,7 @@ class FarmState {
     Set<String>? owned,
     this.themeId = 'spring',
     this.hatId,
+    this.showDecorations = true,
   }) : owned = owned ?? {},
        rivalScores = rivalScores ?? List.filled(FarmLeague.paces.length, 0.0),
        plots = plots ?? [for (var i = 0; i < startPlots; i++) Plot()],
@@ -201,6 +202,7 @@ class FarmState {
     owned: {...(json['owned'] as List? ?? const []).cast<String>()},
     themeId: json['theme'] as String? ?? 'spring',
     hatId: json['hat'] as String?,
+    showDecorations: json['showDecor'] as bool? ?? true,
   );
 
   static const startCoins = 20;
@@ -291,6 +293,10 @@ class FarmState {
   final Set<String> owned;
   String themeId;
   String? hatId;
+
+  /// Whether the garden decorations stand beside the fields; some find
+  /// them distracting.
+  bool showDecorations;
 
   Iterable<FarmTool> _owned(ToolEffect effect) =>
       farmTools.where((t) => t.effect == effect && tools.contains(t.id));
@@ -818,5 +824,6 @@ class FarmState {
     'owned': owned.toList(),
     'theme': themeId,
     'hat': hatId,
+    'showDecor': showDecorations,
   };
 }

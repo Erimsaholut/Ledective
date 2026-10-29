@@ -644,6 +644,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Tahta Ligi'), findsOneWidget);
     expect(find.text('Sen'), findsOneWidget);
+    // A neighbour's row opens their farm.
+    await tester.tap(find.byKey(const ValueKey('league-row-0')));
+    await tester.pumpAndSettle();
+    expect(find.text('Kupa'), findsOneWidget);
+    expect(find.text('Süsler'), findsOneWidget);
+    await tester.tap(find.text('Kapat'));
+    await tester.pumpAndSettle();
     await tester.tapAt(const Offset(20, 20));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
@@ -746,6 +753,11 @@ void main() {
     await tester.tap(find.text('Tarla'));
     await tester.pumpAndSettle();
     expect(find.text('🌳'), findsOneWidget);
+
+    // Decorations can be put out of sight.
+    await tester.tap(find.byKey(const ValueKey('hide-decorations')));
+    await tester.pumpAndSettle();
+    expect(find.text('🌳'), findsNothing);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
   });

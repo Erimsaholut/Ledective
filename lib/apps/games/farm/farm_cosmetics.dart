@@ -20,6 +20,7 @@ class Cosmetic {
     required this.price,
     this.background,
     this.soil,
+    this.pattern,
   });
 
   /// Saved with the farm; never change it once released.
@@ -32,6 +33,9 @@ class Cosmetic {
   /// For a theme, the ARGB colours of the farm's background and soil.
   final int? background;
   final int? soil;
+
+  /// For a theme, the emoji scattered over the farm's background.
+  final String? pattern;
 }
 
 /// The look a farm starts with; it is free and always owned.
@@ -55,6 +59,7 @@ const List<Cosmetic> cosmetics = [
     price: 1500,
     background: 0xFFFBE3C4,
     soil: 0xFF7A4A2A,
+    pattern: '🍂',
   ),
   Cosmetic(
     id: 'winter',
@@ -64,6 +69,7 @@ const List<Cosmetic> cosmetics = [
     price: 4000,
     background: 0xFFE3F0FA,
     soil: 0xFF6D5A50,
+    pattern: '❄️',
   ),
   Cosmetic(
     id: 'lavender',
@@ -73,6 +79,7 @@ const List<Cosmetic> cosmetics = [
     price: 9000,
     background: 0xFFEDE3F7,
     soil: 0xFF6B4E71,
+    pattern: '🌸',
   ),
   Cosmetic(
     id: 'golden',
@@ -82,6 +89,7 @@ const List<Cosmetic> cosmetics = [
     price: 25000,
     background: 0xFFFFF3C4,
     soil: 0xFFA0701F,
+    pattern: '✨',
   ),
   Cosmetic(
     id: 'tree',

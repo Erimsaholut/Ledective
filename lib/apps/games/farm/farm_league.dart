@@ -98,7 +98,7 @@ abstract final class FarmLeague {
   static List<String> namesFor(DateTime weekStart) {
     final week = weekStart.millisecondsSinceEpoch;
     final shuffled = [..._names]
-      ..sort((a, b) => _noise('$a|$week').compareTo(_noise('$b|$week')));
+      ..sort((a, b) => noise('$a|$week').compareTo(noise('$b|$week')));
     return shuffled.take(paces.length).toList();
   }
 
@@ -167,7 +167,7 @@ abstract final class FarmLeague {
       final overlap =
           (end < hour + 1 ? end : hour + 1) - (start > hour ? start : hour);
       if (overlap <= 0) continue;
-      final u = _noise('$name|${weekStart.millisecondsSinceEpoch}|$hour');
+      final u = noise('$name|${weekStart.millisecondsSinceEpoch}|$hour');
       final awake = weekStart.add(Duration(hours: hour)).hour < 7 ? 0.15 : 1;
       played += 3 * u * u * awake / _meanWakefulness * overlap;
     }
@@ -202,7 +202,7 @@ abstract final class FarmLeague {
 
   /// A repeatable number in [0, 1) for [key]. Kept within 2^53 so it gives
   /// the same answer on the web.
-  static double _noise(String key) {
+  static double noise(String key) {
     const m = 2147483647;
     var h = 17;
     for (final unit in key.codeUnits) {

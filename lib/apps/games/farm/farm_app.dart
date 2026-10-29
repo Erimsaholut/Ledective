@@ -12,6 +12,7 @@ import '../../shopper/shopper_app.dart' show formatLira;
 import 'farm_catalog.dart';
 import 'farm_cosmetics.dart';
 import 'farm_league.dart';
+import 'farm_profile.dart';
 import 'farm_reminder.dart';
 import 'farm_state.dart';
 
@@ -362,7 +363,7 @@ class _FarmAppState extends State<FarmApp> {
         trophies: farm.trophies,
         level: farm.weekLevel,
         tier: farm.tier,
-        hat: farm.hat?.emoji,
+        profiles: profilesFor(farm, table, now),
       ),
     );
   }
@@ -540,19 +541,22 @@ class _FarmAppState extends State<FarmApp> {
       ),
       body: farm == null
           ? const SizedBox()
-          : Column(
-              children: [
-                _Header(farm: farm),
-                Expanded(
-                  child: switch (_tab) {
-                    0 => _buildField(farm),
-                    1 => _buildAnimals(farm),
-                    2 => _buildBarn(farm),
-                    3 => _buildOrders(farm),
-                    _ => _buildShop(farm),
-                  },
-                ),
-              ],
+          : _ThemePattern(
+              pattern: farm.theme.pattern,
+              child: Column(
+                children: [
+                  _Header(farm: farm),
+                  Expanded(
+                    child: switch (_tab) {
+                      0 => _buildField(farm),
+                      1 => _buildAnimals(farm),
+                      2 => _buildBarn(farm),
+                      3 => _buildOrders(farm),
+                      _ => _buildShop(farm),
+                    },
+                  ),
+                ],
+              ),
             ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tab,
@@ -658,27 +662,47 @@ class _FarmAppState extends State<FarmApp> {
               ),
           ],
         ),
-        if (farm.decorations.isNotEmpty)
+        if (farm.showDecorations && farm.decorations.isNotEmpty)
           Container(
             margin: const EdgeInsets.only(top: 14),
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(10, 10, 4, 10),
             decoration: BoxDecoration(
               color: const Color(0x66FFFFFF),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 10,
-              runSpacing: 6,
+            child: Row(
               children: [
-                for (final decoration in farm.decorations)
-                  Tooltip(
-                    message: decoration.name,
-                    child: Text(
-                      decoration.emoji,
-                      style: const TextStyle(fontSize: 34),
-                    ),
+                Expanded(
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 10,
+                    runSpacing: 6,
+                    children: [
+                      for (final decoration in farm.decorations)
+                        Tooltip(
+                          message: decoration.name,
+                          child: Text(
+                            decoration.emoji,
+                            style: const TextStyle(fontSize: 34),
+                          ),
+                        ),
+                    ],
                   ),
+                ),
+                IconButton(
+                  key: const ValueKey('hide-decorations'),
+                  tooltip: "Süsleri gizle",
+                  onPressed: () => _act(
+                    (f) => f.showDecorations = false,
+                    toast: () =>
+                        "Süsler gizlendi. Dükkân › Süsleme'den yeniden "
+                        "açabilirsin.",
+                  ),
+                  icon: const Icon(
+                    Icons.visibility_off_rounded,
+                    color: AppColors.secondaryLabel,
+                  ),
+                ),
               ],
             ),
           ),
@@ -1008,6 +1032,15 @@ class _FarmAppState extends State<FarmApp> {
         cosmetics.where((c) => c.slot == slot).toList();
     return [
       _FarmShowcase(farm: farm),
+      SwitchListTile(
+        key: const ValueKey('show-decorations'),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+        title: const Text("Süsleri tarlada göster"),
+        subtitle: const Text("Kapalıyken süslerin sadece burada görünür."),
+        value: farm.showDecorations,
+        activeThumbColor: _green,
+        onChanged: (show) => _act((f) => f.showDecorations = show),
+      ),
       const _ShopHeading("Temalar"),
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -1478,40 +1511,45 @@ class _FarmShowcase extends StatelessWidget {
           color: Color(theme.background!),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          farm.hat?.emoji ?? ' ',
-                          style: const TextStyle(fontSize: 22, height: 1),
-                        ),
-                        const Text('🧑‍🌾', style: TextStyle(fontSize: 40)),
-                      ],
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: decorations.isEmpty
-                          ? const Text(
-                              "Bahçen boş duruyor. Bir süs al, komşular "
-                              "görsün!",
-                              style: TextStyle(color: AppColors.secondaryLabel),
-                            )
-                          : Wrap(
-                              spacing: 4,
-                              children: [
-                                for (final d in decorations)
-                                  Text(
-                                    d.emoji,
-                                    style: const TextStyle(fontSize: 30),
-                                  ),
-                              ],
-                            ),
-                    ),
-                  ],
+              _ThemePattern(
+                pattern: theme.pattern,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            farm.hat?.emoji ?? ' ',
+                            style: const TextStyle(fontSize: 22, height: 1),
+                          ),
+                          const Text('🧑‍🌾', style: TextStyle(fontSize: 40)),
+                        ],
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: decorations.isEmpty
+                            ? const Text(
+                                "Bahçen boş duruyor. Bir süs al, komşular "
+                                "görsün!",
+                                style: TextStyle(
+                                  color: AppColors.secondaryLabel,
+                                ),
+                              )
+                            : Wrap(
+                                spacing: 4,
+                                children: [
+                                  for (final d in decorations)
+                                    Text(
+                                      d.emoji,
+                                      style: const TextStyle(fontSize: 30),
+                                    ),
+                                ],
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Container(height: 14, color: Color(theme.soil!)),
@@ -1837,7 +1875,7 @@ class _LeagueSheet extends StatelessWidget {
     required this.trophies,
     required this.level,
     required this.tier,
-    this.hat,
+    required this.profiles,
   });
 
   final List<LeagueEntry> table;
@@ -1847,8 +1885,8 @@ class _LeagueSheet extends StatelessWidget {
   final int level;
   final LeagueTier tier;
 
-  /// The emoji of the hat the farmer wears, shown by their name.
-  final String? hat;
+  /// The farm behind each row of [table], shown when it is tapped.
+  final List<FarmProfile> profiles;
 
   String get _left {
     final days = timeLeft.inDays;
@@ -1925,7 +1963,13 @@ class _LeagueSheet extends StatelessWidget {
               children: [
                 for (var i = 0; i < table.length; i++)
                   ListTile(
+                    key: ValueKey('league-row-$i'),
                     dense: true,
+                    onTap: () => showDialog<void>(
+                      context: context,
+                      builder: (context) =>
+                          _FarmProfileDialog(profile: profiles[i]),
+                    ),
                     tileColor: table[i].isPlayer
                         ? const Color(0xFFE8F5D6)
                         : Colors.transparent,
@@ -1942,9 +1986,7 @@ class _LeagueSheet extends StatelessWidget {
                       ),
                     ),
                     title: Text(
-                      table[i].isPlayer && hat != null
-                          ? "$hat ${table[i].name}"
-                          : table[i].name,
+                      [?profiles[i].hat?.emoji, table[i].name].join(" "),
                       style: TextStyle(
                         fontWeight: table[i].isPlayer
                             ? FontWeight.w800
@@ -1985,6 +2027,264 @@ class _LeagueSheet extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A farm from the league table: its level, fields, animals and what it
+/// has bought to look good.
+class _FarmProfileDialog extends StatelessWidget {
+  const _FarmProfileDialog({required this.profile});
+
+  final FarmProfile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = profile.theme;
+    final decorations = profile.decorations;
+    return Dialog(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            color: Color(theme.background!),
+            child: _ThemePattern(
+              pattern: theme.pattern,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
+                child: Column(
+                  children: [
+                    Text(
+                      profile.hat?.emoji ?? ' ',
+                      style: const TextStyle(fontSize: 26, height: 1),
+                    ),
+                    const Text('🧑‍🌾', style: TextStyle(fontSize: 48)),
+                    Text(
+                      profile.isPlayer ? "Senin çiftliğin" : profile.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.shield_rounded,
+                          size: 16,
+                          color: Color(profile.tier.color),
+                        ),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            "Seviye ${profile.level} · "
+                            "${profile.tier.title} Ligi",
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Container(height: 10, color: Color(theme.soil!)),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    _ProfileStat(
+                      emoji: '🟫',
+                      value: profile.fields,
+                      label: "Tarla",
+                    ),
+                    _ProfileStat(
+                      emoji: '🐾',
+                      value: profile.animalCount,
+                      label: "Hayvan",
+                    ),
+                    _ProfileStat(
+                      emoji: '🌳',
+                      value: decorations.length,
+                      label: "Süs",
+                    ),
+                    _ProfileStat(
+                      emoji: '🏆',
+                      value: profile.trophies,
+                      label: "Kupa",
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                _ProfileLine(
+                  title: "Hayvanlar",
+                  text: profile.herd.isEmpty
+                      ? "Henüz hayvanı yok"
+                      : [
+                          for (final e in profile.herd.entries)
+                            "${e.key.emoji} ×${e.value}",
+                        ].join("   "),
+                ),
+                _ProfileLine(
+                  title: "Süsler",
+                  text: decorations.isEmpty
+                      ? "Henüz süs almamış"
+                      : decorations.map((d) => d.emoji).join(" "),
+                ),
+                _ProfileLine(
+                  title: "Tema",
+                  text: "${theme.emoji} ${theme.name}",
+                ),
+                if (profile.hat case final hat?)
+                  _ProfileLine(
+                    title: "Şapka",
+                    text: "${hat.emoji} ${hat.name}",
+                  ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Kapat"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileStat extends StatelessWidget {
+  const _ProfileStat({
+    required this.emoji,
+    required this.value,
+    required this.label,
+  });
+
+  final String emoji;
+  final int value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Expanded(
+    child: Column(
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 22)),
+        Text(
+          "$value",
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+        ),
+        Text(
+          label,
+          style: const TextStyle(color: AppColors.secondaryLabel, fontSize: 12),
+        ),
+      ],
+    ),
+  );
+}
+
+class _ProfileLine extends StatelessWidget {
+  const _ProfileLine({required this.title, required this.text});
+
+  final String title;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 82,
+          child: Text(
+            title,
+            style: const TextStyle(color: AppColors.secondaryLabel),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// A theme's emoji scattered faintly over the background behind [child].
+class _ThemePattern extends StatelessWidget {
+  const _ThemePattern({required this.pattern, required this.child});
+
+  final String? pattern;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final pattern = this.pattern;
+    if (pattern == null) return child;
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: IgnorePointer(
+            child: ExcludeSemantics(
+              child: CustomPaint(painter: _PatternPainter(pattern)),
+            ),
+          ),
+        ),
+        child,
+      ],
+    );
+  }
+}
+
+class _PatternPainter extends CustomPainter {
+  _PatternPainter(this.pattern);
+
+  final String pattern;
+
+  /// Distance between the emoji, in pixels.
+  static const _gap = 58.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final painter = TextPainter(
+      text: TextSpan(
+        text: pattern,
+        style: const TextStyle(fontSize: 20, color: Colors.black),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    // Faint, so the farm in front stays easy to read.
+    canvas.saveLayer(
+      Offset.zero & size,
+      Paint()..color = const Color(0x38FFFFFF),
+    );
+    for (var row = 0; row * _gap < size.height + _gap; row++) {
+      // Every other row sits half a step over, like wallpaper.
+      final shift = row.isOdd ? _gap / 2 : 0.0;
+      for (var x = -_gap + shift; x < size.width + _gap; x += _gap) {
+        canvas
+          ..save()
+          ..translate(x + 10, row * _gap + 10)
+          // A slight tilt that changes along the row, so it looks scattered.
+          ..rotate(((row * 7 + x ~/ _gap) % 5 - 2) * 0.18);
+        painter.paint(canvas, Offset(-painter.width / 2, -painter.height / 2));
+        canvas.restore();
+      }
+    }
+    canvas.restore();
+    painter.dispose();
+  }
+
+  @override
+  bool shouldRepaint(_PatternPainter old) => old.pattern != pattern;
 }
 
 /// A pen of one kind of animal, with the next one for sale.

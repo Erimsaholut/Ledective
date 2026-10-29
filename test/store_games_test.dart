@@ -6,6 +6,7 @@ import 'package:ledective/apps/games/castle_guard/castle_profile.dart';
 import 'package:ledective/apps/games/farm/farm_catalog.dart';
 import 'package:ledective/apps/games/farm/farm_cosmetics.dart';
 import 'package:ledective/apps/games/farm/farm_league.dart';
+import 'package:ledective/apps/games/farm/farm_profile.dart';
 import 'package:ledective/apps/games/farm/farm_reminder.dart';
 import 'package:ledective/apps/games/farm/farm_state.dart';
 import 'package:ledective/apps/games/space_runner/space_run.dart';
@@ -732,6 +733,91 @@ void main() {
       expect(farm.weekStart, isNull);
       expect(farm.rollWeek(now), isNull, reason: 'the first week starts');
       expect(farm.leagueRank(now), greaterThan(0));
+    });
+  });
+
+  group('Farm profiles', () {
+    final now = DateTime(2026, 10, 28, 12);
+
+    test('a neighbour looks the same every time and fits their level', () {
+      FarmProfile ayse() => FarmProfile.neighbour(
+        "Ayşe Teyze",
+        pace: 1.3,
+        level: 8,
+        tier: LeagueTier.silver,
+      );
+      expect(ayse().level, ayse().level);
+      expect(ayse().hat, ayse().hat);
+      expect(ayse().decorations, ayse().decorations);
+      for (final name in ["Ayşe Teyze", "Hasan Dayı", "Zeynep", "Kerem"]) {
+        for (final pace in FarmLeague.paces) {
+          final farm = FarmProfile.neighbour(
+            name,
+            pace: pace,
+            level: 6,
+            tier: LeagueTier.wood,
+          );
+          expect(
+            farm.fields,
+            inInclusiveRange(FarmState.startPlots, FarmState.maxPlots),
+          );
+          for (final entry in farm.herd.entries) {
+            expect(entry.key.level, lessThanOrEqualTo(farm.level));
+            expect(
+              entry.value,
+              inInclusiveRange(1, FarmState.maxAnimalsPerKind),
+            );
+          }
+          expect(farm.theme.price, lessThanOrEqualTo(farm.level * 1500));
+        }
+      }
+    });
+
+    test('quicker neighbours have come further, higher tiers dress up', () {
+      double mean(double pace) {
+        var sum = 0;
+        for (final name in ["Ayşe Teyze", "Hasan Dayı", "Zeynep", "Kerem"]) {
+          sum += FarmProfile.neighbour(
+            name,
+            pace: pace,
+            level: 8,
+            tier: LeagueTier.wood,
+          ).level;
+        }
+        return sum / 4;
+      }
+
+      expect(mean(1.45), greaterThan(mean(0.45)));
+      int hats(LeagueTier tier) => [
+        for (var i = 0; i < 30; i++)
+          FarmProfile.neighbour('Komşu $i', pace: 1, level: 8, tier: tier),
+      ].where((f) => f.hat != null).length;
+      expect(hats(LeagueTier.diamond), greaterThan(hats(LeagueTier.wood)));
+    });
+
+    test('the player\'s own row shows the real farm', () {
+      final farm = FarmState(level: 4, coins: 5000)
+        ..rollWeek(now)
+        ..buyAnimal(animalById('chicken'))
+        ..buyAnimal(animalById('chicken'))
+        ..buyCosmetic(cosmeticById('tree'))
+        ..buyCosmetic(cosmeticById('cowboy'));
+      final table = farm.standings(now);
+      final profiles = profilesFor(farm, table, now);
+      expect(profiles, hasLength(table.length));
+      final mine = profiles[FarmLeague.rankOf(table) - 1];
+      expect(mine.isPlayer, isTrue);
+      expect(mine.herd, {animalById('chicken'): 2});
+      expect(mine.decorations, [cosmeticById('tree')]);
+      expect(mine.hat, cosmeticById('cowboy'));
+      expect(mine.fields, farm.plots.length);
+    });
+
+    test('hiding the decorations is remembered', () {
+      final farm = FarmState()..showDecorations = false;
+      expect(FarmState.fromJson(farm.toJson()).showDecorations, isFalse);
+      final old = farm.toJson()..remove('showDecor');
+      expect(FarmState.fromJson(old).showDecorations, isTrue);
     });
   });
 
