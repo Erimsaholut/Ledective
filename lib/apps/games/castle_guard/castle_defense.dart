@@ -169,38 +169,43 @@ class Shot {
   static const life = 0.15;
 }
 
-/// One game of Kale Muhafızı. Enemies come down a winding road in waves;
-/// towers built beside it shoot them for gold. The castle falls when its
-/// lives run out, and is saved after the last wave.
-class CastleDefense {
-  CastleDefense({Random? random}) : _random = random ?? Random();
+/// A battlefield: the road enemies take to the castle, how the ground
+/// looks and how much tougher the enemies are than on the first.
+class CastleMap {
+  CastleMap({
+    required this.id,
+    required this.title,
+    required this.emoji,
+    required this.description,
+    required this.waypoints,
+    required this.grass,
+    required this.roadColor,
+    this.hpScale = 1,
+    this.startGold = CastleDefense.startGold,
+  });
 
-  static const cols = 8;
-  static const rows = 12;
-  static const waves = 20;
-  static const startGold = 150;
-  static const startLives = 20;
-
-  /// Seconds between enemies in a wave.
-  static const spawnGap = 0.8;
+  /// Saved with the progress; never change it once released.
+  final String id;
+  final String title;
+  final String emoji;
+  final String description;
 
   /// The road's corners, from where enemies come in to the castle gate.
-  static const List<Tile> waypoints = [
-    (col: 1, row: -1),
-    (col: 1, row: 2),
-    (col: 6, row: 2),
-    (col: 6, row: 5),
-    (col: 1, row: 5),
-    (col: 1, row: 8),
-    (col: 6, row: 8),
-    (col: 6, row: 11),
-  ];
+  final List<Tile> waypoints;
+
+  /// The two shades of the grass checkerboard, and the road, as ARGB.
+  final List<int> grass;
+  final int roadColor;
+
+  /// Enemy health compared with the first map.
+  final double hpScale;
+  final int startGold;
 
   /// The tile the castle stands on, at the end of the road.
-  static Tile get castle => waypoints.last;
+  Tile get castle => waypoints.last;
 
   /// Every tile the road covers.
-  static final Set<Tile> road = {
+  late final Set<Tile> road = {
     for (var i = 1; i < waypoints.length; i++)
       ..._between(waypoints[i - 1], waypoints[i]),
   };
@@ -217,14 +222,14 @@ class CastleDefense {
   }
 
   /// The road's length in tiles.
-  static final double roadLength = [
+  late final double roadLength = [
     for (var i = 1; i < waypoints.length; i++)
       (waypoints[i].col - waypoints[i - 1].col).abs() +
           (waypoints[i].row - waypoints[i - 1].row).abs(),
   ].fold(0, (a, b) => a + b).toDouble();
 
   /// Where on the board an enemy [distance] tiles down the road is.
-  static ({double x, double y}) positionAt(double distance) {
+  ({double x, double y}) positionAt(double distance) {
     var left = distance;
     for (var i = 1; i < waypoints.length; i++) {
       final a = waypoints[i - 1];
@@ -241,18 +246,173 @@ class CastleDefense {
     }
     return (x: castle.col + 0.5, y: castle.row + 0.5);
   }
+}
+
+/// The three maps, each opened by saving the castle on the one before.
+/// On each the enemies are tougher than on the last.
+final List<CastleMap> castleMaps = [
+  CastleMap(
+    id: 'meadow',
+    title: "Yeşil Vadi",
+    emoji: '🌿',
+    description: "Uzun, kıvrımlı bir yol. Kuleleri öğrenmek için ideal.",
+    waypoints: const [
+      (col: 1, row: -1),
+      (col: 1, row: 2),
+      (col: 6, row: 2),
+      (col: 6, row: 5),
+      (col: 1, row: 5),
+      (col: 1, row: 8),
+      (col: 6, row: 8),
+      (col: 6, row: 11),
+    ],
+    grass: const [0xFF7CB342, 0xFF8BC34A],
+    roadColor: 0xFFD9BC8C,
+  ),
+  CastleMap(
+    id: 'swamp',
+    title: "Sisli Bataklık",
+    emoji: '🐸',
+    description: "Bataklığın düşmanları daha dayanıklı. Kulelerini iyi seç.",
+    waypoints: const [
+      (col: 1, row: -1),
+      (col: 1, row: 8),
+      (col: 4, row: 8),
+      (col: 4, row: 2),
+      (col: 6, row: 2),
+      (col: 6, row: 11),
+    ],
+    grass: const [0xFF5D7A4A, 0xFF6B8A56],
+    roadColor: 0xFF8D7B5A,
+    hpScale: 1.25,
+    startGold: 170,
+  ),
+  CastleMap(
+    id: 'mountain',
+    title: "Ejderha Dağı",
+    emoji: '🌋',
+    description: "En güçlü düşmanlar burada. Gerçek muhafızlar için.",
+    waypoints: const [
+      (col: 1, row: -1),
+      (col: 1, row: 9),
+      (col: 3, row: 9),
+      (col: 3, row: 2),
+      (col: 5, row: 2),
+      (col: 5, row: 10),
+      (col: 7, row: 10),
+    ],
+    grass: const [0xFF8A7F72, 0xFF978C7F],
+    roadColor: 0xFF5A4A42,
+    hpScale: 1.4,
+    startGold: 190,
+  ),
+];
+
+CastleMap castleMapById(String id) =>
+    castleMaps.firstWhere((map) => map.id == id);
+
+/// One game of Kale Muhafızı. Enemies come down a winding road in waves;
+/// towers built beside it shoot them for gold. The castle falls when its
+/// lives run out, and is saved after the last wave.
+class CastleDefense {
+  CastleDefense({CastleMap? map, Random? random})
+    : map = map ?? castleMaps.first,
+      _random = random ?? Random() {
+    gold = this.map.startGold;
+    richest = gold;
+  }
+
+  /// Picks up a game saved with [toJson].
+  factory CastleDefense.fromJson(Map<String, dynamic> json, {Random? random}) {
+    final game = CastleDefense(
+      map: castleMapById(json['map'] as String),
+      random: random,
+    );
+    game
+      ..gold = json['gold'] as int
+      ..lives = json['lives'] as int
+      ..wave = json['wave'] as int
+      ..kills = json['kills'] as int
+      ..towersBuilt = json['built'] as int? ?? 0
+      ..goldSpent = json['spent'] as int? ?? 0
+      ..richest = json['richest'] as int? ?? game.gold
+      .._untilSpawn = (json['untilSpawn'] as num? ?? 0).toDouble();
+    (json['killsBy'] as Map? ?? const {}).forEach(
+      (kind, count) =>
+          game.killsBy[EnemyKind.values.byName(kind as String)] = count as int,
+    );
+    game.kindsBuilt.addAll([
+      for (final kind in json['kinds'] as List? ?? const [])
+        TowerKind.values.byName(kind as String),
+    ]);
+    for (final t in json['towers'] as List) {
+      final tower = t as Map<String, dynamic>;
+      game.towers.add(
+        Tower(TowerKind.values.byName(tower['kind'] as String), (
+            col: tower['col'] as int,
+            row: tower['row'] as int,
+          ))
+          ..level = tower['level'] as int
+          ..spent = tower['spent'] as int,
+      );
+    }
+    for (final e in json['enemies'] as List) {
+      final enemy = e as Map<String, dynamic>;
+      game.enemies.add(
+        Enemy(
+            EnemyKind.values.byName(enemy['kind'] as String),
+            maxHp: (enemy['maxHp'] as num).toDouble(),
+          )
+          ..hp = (enemy['hp'] as num).toDouble()
+          ..distance = (enemy['distance'] as num).toDouble()
+          ..slowFactor = (enemy['slowFactor'] as num).toDouble()
+          ..slowFor = (enemy['slowFor'] as num).toDouble(),
+      );
+    }
+    game._toSpawn.addAll([
+      for (final kind in json['toSpawn'] as List)
+        EnemyKind.values.byName(kind as String),
+    ]);
+    return game;
+  }
+
+  static const cols = 8;
+  static const rows = 12;
+  static const waves = 20;
+  static const startGold = 150;
+  static const startLives = 20;
+
+  /// Seconds between enemies in a wave.
+  static const spawnGap = 0.8;
+
+  final CastleMap map;
+
+  Set<Tile> get road => map.road;
+  Tile get castle => map.castle;
 
   final Random _random;
   final List<Tower> towers = [];
   final List<Enemy> enemies = [];
   final List<Shot> shots = [];
 
-  int gold = startGold;
+  late int gold;
   int lives = startLives;
 
   /// The wave being fought or last fought; 0 before the first.
   int wave = 0;
   int kills = 0;
+
+  /// What this game has seen so far, for the statistics and achievements.
+  final Map<EnemyKind, int> killsBy = {};
+  final Set<TowerKind> kindsBuilt = {};
+  int towersBuilt = 0;
+  int goldSpent = 0;
+
+  /// The most gold held at once.
+  late int richest;
+
+  /// The highest level any tower has reached.
+  int get topLevel => towers.fold(0, (top, t) => max(top, t.level));
 
   /// Enemies of this wave still to come in.
   final List<EnemyKind> _toSpawn = [];
@@ -281,16 +441,18 @@ class CastleDefense {
 
   Tower? build(TowerKind kind, Tile tile) {
     if (isOver || !canBuildOn(tile) || gold < kind.cost) return null;
-    gold -= kind.cost;
+    _spend(kind.cost);
     final tower = Tower(kind, tile);
     towers.add(tower);
+    towersBuilt++;
+    kindsBuilt.add(kind);
     return tower;
   }
 
   bool upgrade(Tower tower) {
     final cost = tower.upgradeCost;
     if (isOver || cost == null || gold < cost) return false;
-    gold -= cost;
+    _spend(cost);
     tower
       ..level += 1
       ..spent += cost;
@@ -299,7 +461,17 @@ class CastleDefense {
 
   void sell(Tower tower) {
     if (isOver || !towers.remove(tower)) return;
-    gold += tower.refund;
+    _earn(tower.refund);
+  }
+
+  void _spend(int amount) {
+    gold -= amount;
+    goldSpent += amount;
+  }
+
+  void _earn(int amount) {
+    gold += amount;
+    richest = max(richest, gold);
   }
 
   /// The enemies of wave [n]: goblins at first, then faster, tougher and
@@ -342,7 +514,7 @@ class CastleDefense {
     _untilSpawn -= dt;
     if (_toSpawn.isNotEmpty && _untilSpawn <= 0) {
       final kind = _toSpawn.removeAt(0);
-      enemies.add(Enemy(kind, maxHp: kind.hp * toughness(wave)));
+      enemies.add(Enemy(kind, maxHp: kind.hp * toughness(wave) * map.hpScale));
       _untilSpawn = spawnGap * (0.85 + 0.3 * _random.nextDouble());
     }
 
@@ -354,7 +526,7 @@ class CastleDefense {
       enemy.distance += enemy.kind.speed * enemy.slowFactor * dt;
     }
     enemies.removeWhere((enemy) {
-      if (enemy.distance < roadLength) return false;
+      if (enemy.distance < map.roadLength) return false;
       lives = max(0, lives - enemy.kind.damage);
       return true;
     });
@@ -369,8 +541,9 @@ class CastleDefense {
     }
     enemies.removeWhere((enemy) {
       if (!enemy.isDead) return false;
-      gold += enemy.kind.reward;
+      _earn(enemy.kind.reward);
       kills++;
+      killsBy[enemy.kind] = (killsBy[enemy.kind] ?? 0) + 1;
       return true;
     });
 
@@ -379,7 +552,7 @@ class CastleDefense {
     }
     shots.removeWhere((shot) => shot.age > Shot.life);
 
-    if (wasRunning && !waveRunning && !isLost) gold += waveBonus(wave);
+    if (wasRunning && !waveRunning && !isLost) _earn(waveBonus(wave));
   }
 
   /// The enemy in reach that is furthest down the road.
@@ -387,7 +560,7 @@ class CastleDefense {
     Enemy? best;
     for (final enemy in enemies) {
       if (enemy.isDead) continue;
-      final p = positionAt(enemy.distance);
+      final p = map.positionAt(enemy.distance);
       final dx = p.x - tower.x;
       final dy = p.y - tower.y;
       if (dx * dx + dy * dy > tower.range * tower.range) continue;
@@ -397,11 +570,11 @@ class CastleDefense {
   }
 
   void _fire(Tower tower, Enemy target) {
-    final at = positionAt(target.distance);
+    final at = map.positionAt(target.distance);
     shots.add(Shot(from: (x: tower.x, y: tower.y), to: at, kind: tower.kind));
     final hit = tower.kind.splash > 0
         ? enemies.where((enemy) {
-            final p = positionAt(enemy.distance);
+            final p = map.positionAt(enemy.distance);
             final dx = p.x - at.x;
             final dy = p.y - at.y;
             return dx * dx + dy * dy <= tower.kind.splash * tower.kind.splash;
@@ -416,4 +589,40 @@ class CastleDefense {
       }
     }
   }
+
+  Map<String, Object> toJson() => {
+    'map': map.id,
+    'gold': gold,
+    'lives': lives,
+    'wave': wave,
+    'kills': kills,
+    'built': towersBuilt,
+    'spent': goldSpent,
+    'richest': richest,
+    'untilSpawn': _untilSpawn,
+    'killsBy': {for (final e in killsBy.entries) e.key.name: e.value},
+    'kinds': [for (final kind in kindsBuilt) kind.name],
+    'towers': [
+      for (final t in towers)
+        {
+          'kind': t.kind.name,
+          'col': t.tile.col,
+          'row': t.tile.row,
+          'level': t.level,
+          'spent': t.spent,
+        },
+    ],
+    'enemies': [
+      for (final e in enemies)
+        {
+          'kind': e.kind.name,
+          'hp': e.hp,
+          'maxHp': e.maxHp,
+          'distance': e.distance,
+          'slowFactor': e.slowFactor,
+          'slowFor': e.slowFor,
+        },
+    ],
+    'toSpawn': [for (final kind in _toSpawn) kind.name],
+  };
 }

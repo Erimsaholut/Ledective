@@ -91,12 +91,16 @@ const List<StoreGame> storeGames = [
     id: 'castle-guard',
     title: "Kale Muhafızı",
     description:
-        "Yolun kenarına kuleler kur, 20 dalga boyunca goblinlere, devlere ve "
-        "ejderhalara karşı kaleni koru.",
+        "Yolun kenarına kuleler kur, üç haritada 20'şer dalga boyunca "
+        "goblinlere, devlere ve ejderhalara karşı kaleni koru.",
     icon: Icons.castle_rounded,
     colors: [Color(0xFF8D99AE), Color(0xFF2B2D42)],
     app: CastleGuardApp(),
-    dataKeys: [CastleGuardApp.bestKey],
+    dataKeys: [
+      CastleGuardApp.bestKey,
+      CastleGuardApp.profileKey,
+      CastleGuardApp.gameKey,
+    ],
   ),
   StoreGame(
     id: 'word-hunt',

@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/bank/transfer_page.dart';
 import 'package:ledective/apps/games/castle_guard/castle_defense.dart';
 import 'package:ledective/apps/games/castle_guard/castle_guard_app.dart';
+import 'package:ledective/apps/games/castle_guard/castle_profile.dart';
 import 'package:ledective/apps/games/farm/farm_app.dart';
 import 'package:ledective/apps/games/farm/farm_state.dart';
 import 'package:ledective/apps/games/space_runner/space_runner_app.dart';
@@ -711,18 +712,38 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('towers are built and the castle can fall', (tester) async {
+  testWidgets('towers are previewed, built and kept across visits', (
+    tester,
+  ) async {
     _phoneSize(tester);
     await tester.pumpWidget(const MaterialApp(home: CastleGuardApp()));
+    await tester.pumpAndSettle();
+
+    // The later maps stay locked until the first is won.
+    expect(find.text('1. Yeşil Vadi'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('map-swamp')));
+    await tester.pump();
+    expect(
+      find.text('🔒 Önce Yeşil Vadi haritasını kurtar.'),
+      findsNWidgets(2),
+      reason: 'on the card and in the toast',
+    );
+    expect(find.byKey(const ValueKey('castle-board')), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('map-meadow')));
     await tester.pump();
     expect(find.text('🪙 ${CastleDefense.startGold}'), findsOneWidget);
 
-    // Tap the grass beside the first bend of the road and build an archer.
+    // Choosing a tower only previews it; choosing it again builds it.
     final board = tester.getRect(find.byKey(const ValueKey('castle-board')));
     final tile = board.width / CastleDefense.cols;
-    await tester.tapAt(board.topLeft + Offset(2.5 * tile, 1.5 * tile));
+    final grass = board.topLeft + Offset(2.5 * tile, 1.5 * tile);
+    await tester.tapAt(grass);
     await tester.pump();
-    expect(find.text('Kule kur'), findsOneWidget);
+    expect(find.text('Kule seç, menzilini haritada gör'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('build-archer')));
+    await tester.pump();
+    expect(find.text('🪙 ${CastleDefense.startGold}'), findsOneWidget);
+    expect(find.text('Okçu Kulesi: kurmak için tekrar dokun'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('build-archer')));
     await tester.pump();
     expect(
@@ -734,8 +755,18 @@ void main() {
     await tester.pump();
     expect(find.text('🏹 Okçu Kulesi · Seviye 2'), findsOneWidget);
 
-    // Deselect, then send the first wave and let the archer work.
-    await tester.tapAt(board.topLeft + Offset(2.5 * tile, 1.5 * tile));
+    // Tapping the previewed tile again builds too.
+    final other = board.topLeft + Offset(0.5 * tile, 4.5 * tile);
+    await tester.tapAt(other);
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('build-archer')));
+    await tester.pump();
+    await tester.tapAt(other);
+    await tester.pump();
+    expect(find.text('🏹 Okçu Kulesi · Seviye 1'), findsOneWidget);
+
+    // Deselect, then send the first wave and let the towers work.
+    await tester.tapAt(other);
     await tester.pump();
     await tester.tap(find.byKey(const ValueKey('start-wave')));
     for (var i = 0; i < 300; i++) {
@@ -743,8 +774,46 @@ void main() {
     }
     expect(find.text('Dalga 1/${CastleDefense.waves}'), findsOneWidget);
     expect(tester.takeException(), isNull);
-    await tester.pumpWidget(const SizedBox());
 
+    // Leaving keeps the game; coming back continues it.
+    await tester.tap(find.byKey(const ValueKey('castle-menu')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('castle-continue')), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(CastleGuardApp.gameKey), isNotNull);
+    await tester.pumpWidget(const MaterialApp(home: CastleGuardApp()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('castle-continue')));
+    await tester.pump();
+    expect(find.text('Dalga 1/${CastleDefense.waves}'), findsOneWidget);
+    await tester.tapAt(grass);
+    await tester.pump();
+    expect(find.text('🏹 Okçu Kulesi · Seviye 2'), findsOneWidget);
+
+    // The record and achievements are a tap away on the menu.
+    await tester.tap(find.byKey(const ValueKey('castle-menu')));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('castle-stats')),
+      200,
+    );
+    await tester.tap(find.byKey(const ValueKey('castle-achievements')));
+    await tester.pumpAndSettle();
+    expect(find.text('Usta Mimar'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('castle-stats')));
+    await tester.pumpAndSettle();
+    expect(find.text('🌿 Yeşil Vadi'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a fallen castle is recorded and can be played again', (
+    tester,
+  ) async {
+    _phoneSize(tester);
     // A castle with one life left and no towers falls to the first goblin.
     final doomed = CastleDefense(random: Random(1))..lives = 1;
     await tester.pumpWidget(
@@ -757,13 +826,16 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
     }
     expect(find.text('Kale düştü!'), findsOneWidget);
-    expect(find.text('Tekrar oyna'), findsOneWidget);
+    expect(find.text('Ana menü'), findsOneWidget);
+    await tester.pump();
     final prefs = await SharedPreferences.getInstance();
-    expect(
-      prefs.getInt(CastleGuardApp.bestKey),
-      isNull,
-      reason: 'no wave held',
+    final profile = CastleProfile.fromJson(
+      json.decode(prefs.getString(CastleGuardApp.profileKey)!)
+          as Map<String, dynamic>,
     );
+    expect(profile.games, 1);
+    expect(profile.losses, 1);
+    expect(prefs.getString(CastleGuardApp.gameKey), isNull);
     await tester.tap(find.text('Tekrar oyna'));
     await tester.pump();
     expect(find.text('❤️ ${CastleDefense.startLives}'), findsOneWidget);

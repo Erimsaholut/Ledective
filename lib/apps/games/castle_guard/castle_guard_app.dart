@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -6,16 +7,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../theme/app_theme.dart';
 import 'castle_defense.dart';
+import 'castle_profile.dart';
 
 /// Kale Muhafızı from AppShop: build towers beside the road and hold the
-/// castle through twenty waves of goblins, orcs, giants and dragons.
+/// castle through twenty waves of goblins, orcs, giants and dragons, on
+/// three maps that open one after another.
 class CastleGuardApp extends StatefulWidget {
   const CastleGuardApp({super.key, this.initialGame});
 
-  /// Where the most waves held is saved.
+  /// Where the record and the game in progress are saved.
+  static const profileKey = 'castleGuard.profile';
+  static const gameKey = 'castleGuard.game';
+
+  /// Where the first version saved the most waves held; read once into the
+  /// record.
   static const bestKey = 'castleGuard.best';
 
-  /// A game to start from; tests pass one with a known state.
+  /// A game to start in instead of the menu; tests pass one with a known
+  /// state.
   final CastleDefense? initialGame;
 
   @override
@@ -26,32 +35,105 @@ class _CastleGuardAppState extends State<CastleGuardApp>
     with SingleTickerProviderStateMixin {
   static const _background = Color(0xFF33402B);
 
+  /// Game seconds between saves while a wave runs.
+  static const _saveEvery = 3.0;
+
   late final Ticker _ticker = createTicker(_onTick);
-  late CastleDefense _game = widget.initialGame ?? CastleDefense();
   Duration _lastTick = Duration.zero;
+  CastleProfile _profile = CastleProfile();
+
+  /// The game on screen, or null while the menu is.
+  CastleDefense? _game;
+
+  /// A game left half way, offered on the menu.
+  CastleDefense? _saved;
+  bool _loaded = false;
+
   Tile? _selected;
+
+  /// The tower shown on [_selected] before it is built.
+  TowerKind? _preview;
   bool _fast = false;
-  int _best = 0;
-  bool _newBest = false;
-  bool _finished = false;
+  double _sinceSave = 0;
+  ({List<CastleAchievement> earned, bool newBest})? _result;
 
   @override
   void initState() {
     super.initState();
-    _loadBest();
-    _ticker.start();
+    _game = widget.initialGame;
+    _load();
+    _runTicker();
   }
 
-  Future<void> _loadBest() async {
+  /// Runs the frame ticker only while a game is being played.
+  void _runTicker() {
+    final playing = _game != null && !_game!.isOver;
+    if (playing && !_ticker.isActive) {
+      _lastTick = Duration.zero;
+      _ticker.start();
+    } else if (!playing && _ticker.isActive) {
+      _ticker.stop();
+    }
+  }
+
+  Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
-    final best = prefs.getInt(CastleGuardApp.bestKey) ?? 0;
-    if (mounted) setState(() => _best = best);
+    var profile = CastleProfile();
+    final stored = prefs.getString(CastleGuardApp.profileKey);
+    if (stored != null) {
+      try {
+        profile = CastleProfile.fromJson(
+          json.decode(stored) as Map<String, dynamic>,
+        );
+      } on Object {
+        // A record from an older version; start a new one.
+      }
+    } else if (prefs.getInt(CastleGuardApp.bestKey) case final best?) {
+      profile.best[castleMaps.first.id] = best;
+    }
+    CastleDefense? saved;
+    final game = prefs.getString(CastleGuardApp.gameKey);
+    if (game != null) {
+      try {
+        saved = CastleDefense.fromJson(
+          json.decode(game) as Map<String, dynamic>,
+        );
+      } on Object {
+        // A game from an older version; it can't be continued.
+      }
+    }
+    if (!mounted) return;
+    setState(() {
+      _profile = profile;
+      if (widget.initialGame == null) _saved = saved;
+      _loaded = true;
+    });
   }
 
   @override
   void dispose() {
     _ticker.dispose();
+    _saveGame();
     super.dispose();
+  }
+
+  /// Saves the game on screen, or forgets it once it's over.
+  Future<void> _saveGame() async {
+    final game = _game ?? _saved;
+    final prefs = await SharedPreferences.getInstance();
+    if (game == null || game.isOver) {
+      await prefs.remove(CastleGuardApp.gameKey);
+    } else {
+      await prefs.setString(CastleGuardApp.gameKey, json.encode(game.toJson()));
+    }
+  }
+
+  Future<void> _saveProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      CastleGuardApp.profileKey,
+      json.encode(_profile.toJson()),
+    );
   }
 
   void _onTick(Duration elapsed) {
@@ -59,75 +141,228 @@ class _CastleGuardAppState extends State<CastleGuardApp>
     final dt = min((elapsed - _lastTick).inMicroseconds / 1e6, 0.05);
     _lastTick = elapsed;
     final game = _game;
-    if (game.isOver || (!game.waveRunning && game.shots.isEmpty)) return;
+    if (game == null ||
+        game.isOver ||
+        (!game.waveRunning && game.shots.isEmpty)) {
+      return;
+    }
+    final wasRunning = game.waveRunning;
     setState(() {
       for (var i = 0; i < (_fast ? 2 : 1); i++) {
         game.update(dt);
       }
     });
-    if (game.isOver && !_finished) _finish(game);
+    if (game.isOver) {
+      _finish(game);
+    } else if (wasRunning && !game.waveRunning) {
+      _waveBeaten(game);
+    } else if ((_sinceSave += dt) >= _saveEvery) {
+      _sinceSave = 0;
+      _saveGame();
+    }
   }
 
-  /// Waves the castle held out against.
-  static int _held(CastleDefense game) =>
-      game.isWon ? CastleDefense.waves : max(0, game.wave - 1);
-
-  Future<void> _finish(CastleDefense game) async {
-    _finished = true;
-    _selected = null;
-    final held = _held(game);
-    if (held <= _best) return;
-    setState(() {
-      _best = held;
-      _newBest = true;
-    });
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(CastleGuardApp.bestKey, held);
+  void _waveBeaten(CastleDefense game) {
+    _announce(_profile.unlock(game));
+    _saveGame();
+    _saveProfile();
   }
 
-  void _restart() {
+  void _finish(CastleDefense game) {
+    if (_result != null) return;
     setState(() {
-      _game = CastleDefense();
       _selected = null;
-      _newBest = false;
-      _finished = false;
+      _preview = null;
+      _result = _profile.record(game);
     });
+    _runTicker();
+    _saveGame();
+    _saveProfile();
   }
 
-  void _tapBoard(Offset position, double tile) {
-    if (_game.isOver) return;
+  void _announce(List<CastleAchievement> earned) {
+    if (earned.isEmpty || !mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            [
+              for (final a in earned) "🏆 Başarım: ${a.emoji} ${a.title}",
+            ].join("\n"),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+  }
+
+  /// Starts a new game on [map], after asking if it would end one left
+  /// half way.
+  Future<void> _start(CastleMap map) async {
+    final saved = _saved;
+    if (saved != null) {
+      final replace = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Yeni oyun başlasın mı?"),
+          content: Text(
+            "${saved.map.title} haritasında ${saved.wave}. dalgada kalan "
+            "oyunun silinir.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Vazgeç"),
+            ),
+            FilledButton(
+              key: const ValueKey('confirm-new-game'),
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("Yeni oyun"),
+            ),
+          ],
+        ),
+      );
+      if (replace != true || !mounted) return;
+    }
+    _play(CastleDefense(map: map));
+  }
+
+  void _play(CastleDefense game) {
+    setState(() {
+      _game = game;
+      _saved = null;
+      _selected = null;
+      _preview = null;
+      _result = null;
+      _sinceSave = 0;
+    });
+    _runTicker();
+    _saveGame();
+  }
+
+  /// Leaves the game for the menu; it waits there to be continued.
+  void _toMenu() {
+    final game = _game;
+    setState(() {
+      _saved = game == null || game.isOver ? null : game;
+      _game = null;
+      _selected = null;
+      _preview = null;
+      _result = null;
+    });
+    _runTicker();
+    _saveGame();
+  }
+
+  void _tapBoard(CastleDefense game, Offset position, double tile) {
+    if (game.isOver) return;
     final tapped = (
       col: (position.dx / tile).floor(),
       row: (position.dy / tile).floor(),
     );
-    final buildable = _game.towerAt(tapped) != null || _game.canBuildOn(tapped);
+    // Tapping the previewed tower's tile again builds it.
+    if (tapped == _selected && _preview != null) {
+      _confirmBuild(game);
+      return;
+    }
+    final buildable = game.towerAt(tapped) != null || game.canBuildOn(tapped);
     setState(() {
       _selected = tapped == _selected || !buildable ? null : tapped;
+      _preview = null;
     });
   }
 
-  void _build(TowerKind kind) {
+  /// Shows [kind] on the chosen tile with its reach; choosing it again
+  /// builds it.
+  void _choose(CastleDefense game, TowerKind kind) {
+    if (_preview == kind) {
+      _confirmBuild(game);
+    } else {
+      setState(() => _preview = kind);
+    }
+  }
+
+  void _confirmBuild(CastleDefense game) {
     final tile = _selected;
-    if (tile == null) return;
+    final kind = _preview;
+    if (tile == null || kind == null) return;
     setState(() {
-      if (_game.build(kind, tile) == null) _selected = null;
+      if (game.build(kind, tile) == null) _selected = null;
+      _preview = null;
     });
+    _announce(_profile.unlock(game));
+    _saveGame();
+  }
+
+  void _upgrade(CastleDefense game, Tower tower) {
+    setState(() => game.upgrade(tower));
+    _announce(_profile.unlock(game));
+    _saveGame();
+  }
+
+  void _sell(CastleDefense game, Tower tower) {
+    setState(() {
+      game.sell(tower);
+      _selected = null;
+    });
+    _saveGame();
+  }
+
+  void _showGameStats(CastleDefense game) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (context) => _GameStatsSheet(game: game),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final game = _game;
+    if (game == null) {
+      return Scaffold(
+        backgroundColor: _background,
+        appBar: AppBar(
+          title: const Text("Kale Muhafızı"),
+          backgroundColor: _background,
+          foregroundColor: Colors.white,
+        ),
+        body: !_loaded
+            ? const SizedBox()
+            : _Menu(
+                profile: _profile,
+                saved: _saved,
+                onContinue: () => _play(_saved!),
+                onStart: _start,
+              ),
+      );
+    }
+    final result = _result;
+    final next = castleMaps.indexOf(game.map) + 1;
     return Scaffold(
       backgroundColor: _background,
       appBar: AppBar(
-        title: const Text("Kale Muhafızı"),
+        title: Text("${game.map.emoji} ${game.map.title}"),
         backgroundColor: _background,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            key: const ValueKey('castle-game-stats'),
+            tooltip: "Bu oyunun istatistikleri",
+            onPressed: () => _showGameStats(game),
+            icon: const Icon(Icons.bar_chart_rounded),
+          ),
+          IconButton(
+            key: const ValueKey('castle-menu'),
+            tooltip: "Ana menü",
+            onPressed: _toMenu,
+            icon: const Icon(Icons.home_rounded),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            _Hud(game: game, best: _best),
+            _Hud(game: game, best: _profile.best[game.map.id] ?? 0),
             Expanded(
               child: Center(
                 child: AspectRatio(
@@ -140,18 +375,24 @@ class _CastleGuardAppState extends State<CastleGuardApp>
                         children: [
                           GestureDetector(
                             key: const ValueKey('castle-board'),
-                            onTapUp: (d) => _tapBoard(d.localPosition, tile),
+                            onTapUp: (d) =>
+                                _tapBoard(game, d.localPosition, tile),
                             child: CustomPaint(
-                              painter: _BoardPainter(game, _selected),
+                              painter: _BoardPainter(game, _selected, _preview),
                             ),
                           ),
-                          if (game.isOver)
+                          if (game.isOver && result != null)
                             _EndOverlay(
-                              won: game.isWon,
-                              held: _held(game),
-                              kills: game.kills,
-                              newBest: _newBest,
-                              onRestart: _restart,
+                              game: game,
+                              earned: result.earned,
+                              newBest: result.newBest,
+                              next: game.isWon && next < castleMaps.length
+                                  ? castleMaps[next]
+                                  : null,
+                              onRestart: () =>
+                                  _play(CastleDefense(map: game.map)),
+                              onNext: (map) => _play(CastleDefense(map: map)),
+                              onMenu: _toMenu,
                             ),
                         ],
                       );
@@ -182,7 +423,7 @@ class _CastleGuardAppState extends State<CastleGuardApp>
             child: FilledButton(
               key: const ValueKey('upgrade'),
               onPressed: cost != null && game.gold >= cost
-                  ? () => setState(() => game.upgrade(tower))
+                  ? () => _upgrade(game, tower)
                   : null,
               child: Text(
                 cost == null ? "En üst seviye" : "Geliştir · $cost 🪙",
@@ -193,10 +434,7 @@ class _CastleGuardAppState extends State<CastleGuardApp>
           Expanded(
             child: OutlinedButton(
               key: const ValueKey('sell'),
-              onPressed: () => setState(() {
-                game.sell(tower);
-                _selected = null;
-              }),
+              onPressed: () => _sell(game, tower),
               style: OutlinedButton.styleFrom(foregroundColor: Colors.white),
               child: Text("Sat · +${tower.refund} 🪙"),
             ),
@@ -205,8 +443,11 @@ class _CastleGuardAppState extends State<CastleGuardApp>
       );
     }
     if (tile != null) {
+      final preview = _preview;
       return _Panel(
-        title: "Kule kur",
+        title: preview == null
+            ? "Kule seç, menzilini haritada gör"
+            : "${preview.title}: kurmak için tekrar dokun",
         children: [
           for (final kind in TowerKind.values) ...[
             if (kind != TowerKind.values.first) const SizedBox(width: 8),
@@ -214,7 +455,8 @@ class _CastleGuardAppState extends State<CastleGuardApp>
               child: _BuildButton(
                 kind: kind,
                 affordable: game.gold >= kind.cost,
-                onPressed: () => _build(kind),
+                chosen: preview == kind,
+                onPressed: () => _choose(game, kind),
               ),
             ),
           ],
@@ -252,6 +494,549 @@ class _CastleGuardAppState extends State<CastleGuardApp>
           icon: const Icon(Icons.fast_forward_rounded),
         ),
       ],
+    );
+  }
+}
+
+/// The game's home: the game to continue, the maps with the locked ones
+/// shown, and the ways to the achievements and statistics.
+class _Menu extends StatelessWidget {
+  const _Menu({
+    required this.profile,
+    required this.saved,
+    required this.onContinue,
+    required this.onStart,
+  });
+
+  final CastleProfile profile;
+  final CastleDefense? saved;
+  final VoidCallback onContinue;
+  final void Function(CastleMap map) onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    final saved = this.saved;
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+      children: [
+        const Center(child: Text('🏰', style: TextStyle(fontSize: 64))),
+        const Center(
+          child: Text(
+            "Kaleni 20 dalga boyunca koru",
+            style: TextStyle(color: Colors.white70),
+          ),
+        ),
+        const SizedBox(height: 16),
+        if (saved != null) ...[
+          FilledButton(
+            key: const ValueKey('castle-continue'),
+            onPressed: onContinue,
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFC0392B),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+            ),
+            child: Column(
+              children: [
+                const Text(
+                  "▶ Devam et",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                ),
+                Text(
+                  "${saved.map.emoji} ${saved.map.title} · "
+                  "Dalga ${saved.wave}/${CastleDefense.waves} · "
+                  "❤️ ${saved.lives} · 🪙 ${saved.gold}",
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+        const _MenuHeading("Haritalar"),
+        for (final map in castleMaps)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: _MapCard(
+              map: map,
+              profile: profile,
+              onTap: () {
+                if (profile.isUnlocked(map)) {
+                  onStart(map);
+                  return;
+                }
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(content: Text("🔒 ${_lockedHint(map)}")),
+                  );
+              },
+            ),
+          ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: _MenuButton(
+                key: const ValueKey('castle-achievements'),
+                emoji: '🏆',
+                title: "Başarımlar",
+                subtitle:
+                    "${profile.achievements.length}/"
+                    "${CastleAchievement.values.length}",
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => _AchievementsPage(profile: profile),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _MenuButton(
+                key: const ValueKey('castle-stats'),
+                emoji: '📊',
+                title: "İstatistikler",
+                subtitle: "${profile.games} oyun",
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => _StatsPage(profile: profile),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// What opens [map]: saving the castle on the map before it.
+String _lockedHint(CastleMap map) =>
+    "Önce ${castleMaps[castleMaps.indexOf(map) - 1].title} haritasını kurtar.";
+
+class _MenuHeading extends StatelessWidget {
+  const _MenuHeading(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(2, 4, 2, 10),
+    child: Text(
+      text,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 18,
+        fontWeight: FontWeight.w800,
+      ),
+    ),
+  );
+}
+
+class _MapCard extends StatelessWidget {
+  const _MapCard({
+    required this.map,
+    required this.profile,
+    required this.onTap,
+  });
+
+  final CastleMap map;
+  final CastleProfile profile;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final unlocked = profile.isUnlocked(map);
+    final won = profile.won.contains(map.id);
+    final best = profile.best[map.id] ?? 0;
+    final level = castleMaps.indexOf(map) + 1;
+    final status = !unlocked
+        ? "🔒 ${_lockedHint(map)}"
+        : won
+        ? "✅ Kurtarıldı · Rekor $best/${CastleDefense.waves}"
+        : best > 0
+        ? "Rekor: $best/${CastleDefense.waves} dalga"
+        : "Henüz oynanmadı";
+    return GestureDetector(
+      key: ValueKey('map-${map.id}'),
+      onTap: onTap,
+      child: Opacity(
+        opacity: unlocked ? 1 : 0.6,
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              // Darkened, so the white text reads on every map.
+              colors: [
+                for (final c in [map.grass.last, map.roadColor])
+                  Color.lerp(Color(c), Colors.black, 0.45)!,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: won ? AppColors.yellow : Colors.white24,
+              width: won ? 2 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Text(
+                unlocked ? map.emoji : '🔒',
+                style: const TextStyle(fontSize: 40),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "$level. ${map.title}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      "Zorluk ${'★' * level}${'☆' * (castleMaps.length - level)}",
+                      style: const TextStyle(color: AppColors.yellow),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      map.description,
+                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      status,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MenuButton extends StatelessWidget {
+  const _MenuButton({
+    super.key,
+    required this.emoji,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final String emoji;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white12,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 28)),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AchievementsPage extends StatelessWidget {
+  const _AchievementsPage({required this.profile});
+
+  final CastleProfile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: _CastleGuardAppState._background,
+      appBar: AppBar(
+        title: Text(
+          "Başarımlar · ${profile.achievements.length}/"
+          "${CastleAchievement.values.length}",
+        ),
+        backgroundColor: _CastleGuardAppState._background,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          for (final a in CastleAchievement.values)
+            _AchievementRow(
+              achievement: a,
+              earned: profile.achievements.contains(a),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AchievementRow extends StatelessWidget {
+  const _AchievementRow({required this.achievement, required this.earned});
+
+  final CastleAchievement achievement;
+  final bool earned;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: earned ? const Color(0x33FFD54F) : Colors.white10,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: earned ? AppColors.yellow : Colors.white12),
+      ),
+      child: Row(
+        children: [
+          Opacity(
+            opacity: earned ? 1 : 0.35,
+            child: Text(
+              achievement.emoji,
+              style: const TextStyle(fontSize: 32),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  achievement.title,
+                  style: TextStyle(
+                    color: earned ? Colors.white : Colors.white60,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  achievement.description,
+                  style: const TextStyle(color: Colors.white60, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          Text(earned ? '✅' : '🔒', style: const TextStyle(fontSize: 18)),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatsPage extends StatelessWidget {
+  const _StatsPage({required this.profile});
+
+  final CastleProfile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: _CastleGuardAppState._background,
+      appBar: AppBar(
+        title: const Text("İstatistikler"),
+        backgroundColor: _CastleGuardAppState._background,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _StatGrid(
+            stats: [
+              ('🎮', "Oyun", profile.games),
+              ('🏰', "Zafer", profile.wins),
+              ('🔥', "Yenilgi", profile.losses),
+              ('🌊', "Dalga", profile.waves),
+              ('⚔️', "Düşman", profile.kills),
+              ('🗼', "Kule", profile.towers),
+              ('🪙', "Harcanan", profile.goldSpent),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const _MenuHeading("Haritalarda rekor"),
+          for (final map in castleMaps)
+            _StatLine(
+              label: "${map.emoji} ${map.title}",
+              value:
+                  "${profile.best[map.id] ?? 0}/${CastleDefense.waves} dalga",
+            ),
+          const SizedBox(height: 16),
+          const _MenuHeading("Alt edilen düşmanlar"),
+          for (final kind in EnemyKind.values)
+            _StatLine(
+              label: "${kind.emoji} ${kind.title}",
+              value: "${profile.killsBy[kind.name] ?? 0}",
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Numbers in tiles, three to a row.
+class _StatGrid extends StatelessWidget {
+  const _StatGrid({required this.stats});
+
+  final List<(String, String, int)> stats;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = (constraints.maxWidth - 20) / 3;
+        return Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            for (final (emoji, label, value) in stats)
+              Container(
+                width: width,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white10,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Column(
+                  children: [
+                    Text(emoji, style: const TextStyle(fontSize: 24)),
+                    Text(
+                      "$value",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        color: Colors.white60,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _StatLine extends StatelessWidget {
+  const _StatLine({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(label, style: const TextStyle(color: Colors.white)),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// The game in progress in numbers.
+class _GameStatsSheet extends StatelessWidget {
+  const _GameStatsSheet({required this.game});
+
+  final CastleDefense game;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: _CastleGuardAppState._background,
+      child: SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+          children: [
+            _MenuHeading("${game.map.emoji} ${game.map.title} · bu oyun"),
+            _StatGrid(
+              stats: [
+                ('🌊', "Dalga", game.wave),
+                ('⚔️', "Düşman", game.kills),
+                ('❤️', "Kalan can", game.lives),
+                ('🗼', "Kurulan kule", game.towersBuilt),
+                ('🪙', "Harcanan", game.goldSpent),
+                ('💰', "En çok altın", game.richest),
+              ],
+            ),
+            const SizedBox(height: 12),
+            for (final kind in EnemyKind.values)
+              if ((game.killsBy[kind] ?? 0) > 0)
+                _StatLine(
+                  label: "${kind.emoji} ${kind.title}",
+                  value: "${game.killsBy[kind]}",
+                ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -327,15 +1112,19 @@ class _Panel extends StatelessWidget {
   }
 }
 
+/// A tower to choose; once chosen it is previewed on the board and this
+/// button confirms it.
 class _BuildButton extends StatelessWidget {
   const _BuildButton({
     required this.kind,
     required this.affordable,
+    required this.chosen,
     required this.onPressed,
   });
 
   final TowerKind kind;
   final bool affordable;
+  final bool chosen;
   final VoidCallback onPressed;
 
   @override
@@ -344,16 +1133,26 @@ class _BuildButton extends StatelessWidget {
       key: ValueKey('build-${kind.name}'),
       onPressed: affordable ? onPressed : null,
       style: FilledButton.styleFrom(
+        backgroundColor: chosen ? const Color(0xFF43A047) : null,
+        foregroundColor: chosen ? Colors.white : null,
         padding: const EdgeInsets.symmetric(horizontal: 4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: chosen
+              ? const BorderSide(color: Colors.white, width: 2)
+              : BorderSide.none,
+        ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(kind.emoji, style: const TextStyle(fontSize: 22)),
           Text(
-            "${kind.cost} 🪙",
-            style: const TextStyle(fontWeight: FontWeight.w700),
+            chosen ? "Kur ✓" : "${kind.cost} 🪙",
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: chosen ? Colors.white : null,
+            ),
           ),
         ],
       ),
@@ -363,59 +1162,115 @@ class _BuildButton extends StatelessWidget {
 
 class _EndOverlay extends StatelessWidget {
   const _EndOverlay({
-    required this.won,
-    required this.held,
-    required this.kills,
+    required this.game,
+    required this.earned,
     required this.newBest,
+    required this.next,
     required this.onRestart,
+    required this.onNext,
+    required this.onMenu,
   });
 
-  final bool won;
-  final int held;
-  final int kills;
+  final CastleDefense game;
+  final List<CastleAchievement> earned;
   final bool newBest;
+
+  /// The map this win opened, if any.
+  final CastleMap? next;
   final VoidCallback onRestart;
+  final void Function(CastleMap map) onNext;
+  final VoidCallback onMenu;
 
   @override
   Widget build(BuildContext context) {
+    final won = game.isWon;
+    final next = this.next;
     return ColoredBox(
-      color: const Color(0xB3000000),
+      color: const Color(0xCC000000),
       child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(won ? '🏰' : '🔥', style: const TextStyle(fontSize: 56)),
-            const SizedBox(height: 8),
-            Text(
-              won ? "Kale kurtuldu!" : "Kale düştü!",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 26,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              "$held dalga dayandın · $kills düşman",
-              style: const TextStyle(color: Colors.white70),
-            ),
-            if (newBest)
-              const Padding(
-                padding: EdgeInsets.only(top: 6),
-                child: Text(
-                  "Yeni rekor!",
-                  style: TextStyle(
-                    color: AppColors.yellow,
-                    fontWeight: FontWeight.w700,
-                  ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(won ? '🏰' : '🔥', style: const TextStyle(fontSize: 56)),
+              const SizedBox(height: 8),
+              Text(
+                won ? "Kale kurtuldu!" : "Kale düştü!",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
-            const SizedBox(height: 16),
-            FilledButton(
-              onPressed: onRestart,
-              child: const Text("Tekrar oyna"),
-            ),
-          ],
+              const SizedBox(height: 6),
+              Text(
+                "${CastleProfile.held(game)} dalga dayandın · "
+                "${game.kills} düşman",
+                style: const TextStyle(color: Colors.white70),
+              ),
+              if (newBest)
+                const Padding(
+                  padding: EdgeInsets.only(top: 6),
+                  child: Text(
+                    "Yeni rekor!",
+                    style: TextStyle(
+                      color: AppColors.yellow,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              for (final a in earned)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Text(
+                    "🏆 ${a.emoji} ${a.title}",
+                    style: const TextStyle(
+                      color: AppColors.yellow,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              if (next != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    "Yeni harita açıldı: ${next.emoji} ${next.title}",
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              const SizedBox(height: 16),
+              if (next != null) ...[
+                FilledButton(
+                  key: const ValueKey('next-map'),
+                  onPressed: () => onNext(next),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFF43A047),
+                  ),
+                  child: Text("${next.title} haritasına geç"),
+                ),
+                const SizedBox(height: 8),
+              ],
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 10,
+                runSpacing: 8,
+                children: [
+                  FilledButton(
+                    onPressed: onRestart,
+                    child: const Text("Tekrar oyna"),
+                  ),
+                  OutlinedButton(
+                    onPressed: onMenu,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text("Ana menü"),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -425,10 +1280,13 @@ class _EndOverlay extends StatelessWidget {
 /// Grass, the road, the castle, towers, enemies and shots. Everything is
 /// placed in tiles and drawn at real pixel sizes, so emoji stay sharp.
 class _BoardPainter extends CustomPainter {
-  _BoardPainter(this.game, this.selected);
+  _BoardPainter(this.game, this.selected, this.preview);
 
   final CastleDefense game;
   final Tile? selected;
+
+  /// A tower shown on [selected] before it is built.
+  final TowerKind? preview;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -438,20 +1296,18 @@ class _BoardPainter extends CustomPainter {
     for (var c = 0; c < CastleDefense.cols; c++) {
       for (var r = 0; r < CastleDefense.rows; r++) {
         final rect = Rect.fromLTWH(c * t, r * t, t, t);
-        final onRoad = CastleDefense.road.contains((col: c, row: r));
+        final onRoad = game.road.contains((col: c, row: r));
         canvas.drawRect(
           rect,
           Paint()
-            ..color = onRoad
-                ? const Color(0xFFD9BC8C)
-                : (c + r).isEven
-                ? const Color(0xFF7CB342)
-                : const Color(0xFF8BC34A),
+            ..color = Color(
+              onRoad ? game.map.roadColor : game.map.grass[(c + r) % 2],
+            ),
         );
       }
     }
 
-    final castle = CastleDefense.castle;
+    final castle = game.castle;
     _emoji(canvas, '🏰', at(castle.col + 0.5, castle.row + 0.5), t * 0.85);
 
     final chosen = selected;
@@ -464,22 +1320,33 @@ class _BoardPainter extends CustomPainter {
           ..strokeWidth = 3,
       );
       final tower = game.towerAt(chosen);
-      if (tower != null) {
-        final centre = at(tower.x, tower.y);
+      final ghost = preview;
+      final range = tower?.range ?? ghost?.range.first;
+      if (range != null) {
+        final centre = at(chosen.col + 0.5, chosen.row + 0.5);
         canvas
           ..drawCircle(
             centre,
-            tower.range * t,
+            range * t,
             Paint()..color = const Color(0x22FFFFFF),
           )
           ..drawCircle(
             centre,
-            tower.range * t,
+            range * t,
             Paint()
               ..color = const Color(0x88FFFFFF)
               ..style = PaintingStyle.stroke
               ..strokeWidth = 1.5,
           );
+      }
+      if (tower == null && ghost != null) {
+        final centre = at(chosen.col + 0.5, chosen.row + 0.5);
+        canvas.drawCircle(
+          centre,
+          t * 0.42,
+          Paint()..color = const Color(0x888D8D8D),
+        );
+        _emoji(canvas, ghost.emoji, centre, t * 0.48, opacity: 0.75);
       }
     }
 
@@ -511,7 +1378,7 @@ class _BoardPainter extends CustomPainter {
     }
 
     for (final enemy in game.enemies) {
-      final p = CastleDefense.positionAt(enemy.distance);
+      final p = game.map.positionAt(enemy.distance);
       final centre = at(p.x, p.y);
       if (enemy.slowFactor < 1) {
         canvas.drawCircle(
@@ -565,11 +1432,20 @@ class _BoardPainter extends CustomPainter {
     }
   }
 
-  void _emoji(Canvas canvas, String emoji, Offset centre, double size) {
+  void _emoji(
+    Canvas canvas,
+    String emoji,
+    Offset centre,
+    double size, {
+    double opacity = 1,
+  }) {
     final painter = TextPainter(
       text: TextSpan(
         text: emoji,
-        style: TextStyle(fontSize: size),
+        style: TextStyle(
+          fontSize: size,
+          color: Color.fromRGBO(0, 0, 0, opacity),
+        ),
       ),
       textDirection: TextDirection.ltr,
     )..layout();

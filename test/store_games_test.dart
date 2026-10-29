@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/games/castle_guard/castle_defense.dart';
+import 'package:ledective/apps/games/castle_guard/castle_profile.dart';
 import 'package:ledective/apps/games/farm/farm_catalog.dart';
 import 'package:ledective/apps/games/farm/farm_cosmetics.dart';
 import 'package:ledective/apps/games/farm/farm_league.dart';
@@ -26,7 +27,7 @@ class _Lucky implements Random {
 /// Plays [game] like a sensible player: before every wave it builds
 /// [mix] towers on the tiles that see the most road, then upgrades.
 void _defend(CastleDefense game, List<TowerKind> mix) {
-  int roadInReach(Tile t) => CastleDefense.road
+  int roadInReach(Tile t) => game.road
       .where((r) => pow(r.col - t.col, 2) + pow(r.row - t.row, 2) <= 6)
       .length;
   final spots =
@@ -60,20 +61,24 @@ void _defend(CastleDefense game, List<TowerKind> mix) {
 
 void main() {
   group('CastleDefense', () {
-    test('the road runs unbroken from the edge to the castle', () {
-      final start = CastleDefense.positionAt(0);
-      expect(start.y, lessThan(0), reason: 'enemies come in from outside');
-      expect(CastleDefense.positionAt(CastleDefense.roadLength), (
-        x: CastleDefense.castle.col + 0.5,
-        y: CastleDefense.castle.row + 0.5,
-      ));
-      for (var d = 1.0; d < CastleDefense.roadLength; d += 0.5) {
-        final p = CastleDefense.positionAt(d);
-        expect(
-          CastleDefense.road,
-          contains((col: p.x.floor(), row: p.y.floor())),
-        );
+    test('every road runs unbroken from the edge to the castle', () {
+      for (final map in castleMaps) {
+        final start = map.positionAt(0);
+        expect(start.y, lessThan(0), reason: 'enemies come in from outside');
+        expect(map.positionAt(map.roadLength), (
+          x: map.castle.col + 0.5,
+          y: map.castle.row + 0.5,
+        ));
+        for (var d = 1.0; d < map.roadLength; d += 0.5) {
+          final p = map.positionAt(d);
+          expect(map.road, contains((col: p.x.floor(), row: p.y.floor())));
+        }
+        for (final tile in map.road) {
+          expect(tile.col, inInclusiveRange(0, CastleDefense.cols - 1));
+          expect(tile.row, inInclusiveRange(0, CastleDefense.rows - 1));
+        }
       }
+      expect(castleMaps.map((m) => m.id).toSet(), hasLength(3));
     });
 
     test('towers go on the grass, cost gold and refund part of it', () {
@@ -152,6 +157,110 @@ void main() {
         _defend(game, mix);
         expect(game.isWon, isTrue, reason: '$mix');
       }
+    });
+
+    test('the later maps are harder but can be won', () {
+      final lives = <int>[];
+      for (final map in castleMaps) {
+        final game = CastleDefense(map: map, random: Random(2));
+        _defend(game, [TowerKind.archer]);
+        lives.add(game.lives);
+      }
+      expect(lives, everyElement(greaterThan(0)));
+      expect(lives.last, lessThan(lives.first));
+    });
+
+    test('a game is saved and picked up mid-wave', () {
+      final game = CastleDefense(map: castleMaps[1], random: Random(3))
+        ..build(TowerKind.archer, (col: 2, row: 1))
+        ..build(TowerKind.frost, (col: 0, row: 4));
+      game
+        ..upgrade(game.towers.first)
+        ..startWave();
+      for (var i = 0; i < 80; i++) {
+        game.update(0.05);
+      }
+      expect(game.enemies, isNotEmpty);
+      final copy = CastleDefense.fromJson(game.toJson(), random: Random(3));
+      expect(copy.toJson(), game.toJson());
+      expect(copy.map, castleMaps[1]);
+      expect(copy.waveRunning, isTrue);
+      while (copy.waveRunning) {
+        copy.update(0.05);
+      }
+      expect(copy.wave, 1);
+      expect(copy.kills, greaterThan(game.kills));
+    });
+  });
+
+  group('CastleProfile', () {
+    test('a win opens the next map', () {
+      final profile = CastleProfile();
+      expect(profile.isUnlocked(castleMaps[0]), isTrue);
+      expect(profile.isUnlocked(castleMaps[1]), isFalse);
+      final game = CastleDefense(random: Random(2));
+      _defend(game, [TowerKind.archer]);
+      final result = profile.record(game);
+      expect(result.newBest, isTrue);
+      expect(profile.best['meadow'], CastleDefense.waves);
+      expect(profile.isUnlocked(castleMaps[1]), isTrue);
+      expect(profile.isUnlocked(castleMaps[2]), isFalse);
+      expect(
+        result.earned,
+        containsAll([
+          CastleAchievement.firstBlood,
+          CastleAchievement.meadow,
+          CastleAchievement.archersOnly,
+          CastleAchievement.dragonSlayer,
+        ]),
+      );
+      expect(
+        profile.unlock(CastleDefense()),
+        isEmpty,
+        reason: 'each is earned once',
+      );
+    });
+
+    test('a lost game counts in the statistics', () {
+      final profile = CastleProfile();
+      final game = CastleDefense(random: Random(1));
+      while (!game.isOver) {
+        game
+          ..startWave()
+          ..update(0.05);
+      }
+      final result = profile.record(game);
+      expect(profile.games, 1);
+      expect(profile.losses, 1);
+      expect(profile.waves, CastleProfile.held(game));
+      expect(profile.kills, 0);
+      expect(result.earned, isEmpty);
+      expect(profile.isUnlocked(castleMaps[1]), isFalse);
+    });
+
+    test('achievements come while playing, too', () {
+      final profile = CastleProfile();
+      final game = CastleDefense()..gold = 1000;
+      final tower = game.build(TowerKind.cannon, (col: 2, row: 1))!;
+      game
+        ..upgrade(tower)
+        ..upgrade(tower);
+      expect(
+        profile.unlock(game),
+        containsAll([CastleAchievement.masterBuilder]),
+      );
+      expect(profile.achievements, contains(CastleAchievement.masterBuilder));
+    });
+
+    test('survives a JSON round trip', () {
+      final profile = CastleProfile();
+      final game = CastleDefense(random: Random(2));
+      _defend(game, [TowerKind.archer]);
+      profile.record(game);
+      final copy = CastleProfile.fromJson(profile.toJson());
+      expect(copy.toJson(), profile.toJson());
+      expect(copy.achievements, profile.achievements);
+      expect(copy.killsBy, profile.killsBy);
     });
   });
 
