@@ -477,6 +477,7 @@ class Evidence {
     this.requires = Condition.always,
     this.links = const [],
     this.inspection,
+    this.code,
   });
 
   final String id;
@@ -490,6 +491,31 @@ class Evidence {
   /// Ids of related evidence, drawn as strings on the board.
   final List<String> links;
   final Inspection? inspection;
+
+  /// A line on it written in a cipher, which Şifre Çözücü recognises once
+  /// the player reads it back.
+  final HiddenCode? code;
+}
+
+/// A line hidden in a cipher. The evidence's description shows it
+/// enciphered; [text] is how it reads once solved.
+class HiddenCode {
+  const HiddenCode({
+    required this.cipher,
+    required this.text,
+    this.shift = 0,
+    this.unlocks = const [],
+  });
+
+  /// One of Şifre Çözücü's ciphers: caesar, atbash, morse or reverse.
+  final String cipher;
+
+  /// For caesar, how many letters along it was moved.
+  final int shift;
+  final String text;
+
+  /// Applied the first time the player reads it back.
+  final List<String> unlocks;
 }
 
 /// A lab minigame in Poltel that reveals what a piece of evidence means.
@@ -1190,6 +1216,15 @@ Evidence _evidence(_Reader r) => Evidence(
   image: r.textOr('image'),
   requires: r.condition(),
   links: r.stringsOr('links'),
+  code: switch (r.optional('code')) {
+    null => null,
+    final c => HiddenCode(
+      cipher: c.text('cipher'),
+      shift: c.intOr('shift', 0),
+      text: c.text('text'),
+      unlocks: c.stringsOr('unlocks'),
+    ),
+  },
   inspection: switch (r.optional('inspection')) {
     null => null,
     final i => switch (i.text('type')) {

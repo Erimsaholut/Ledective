@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../story/story_data.dart';
+import '../../../story/story_progress.dart';
 import 'ciphers.dart';
 
 const _background = Color(0xFF111111);
@@ -25,6 +27,9 @@ class _CipherAppState extends State<CipherApp> {
   /// For Sezar, whether the message is being read rather than written.
   bool _decode = false;
 
+  /// Evidence from the case whose hidden line the result is.
+  Evidence? _found;
+
   @override
   void dispose() {
     _input.dispose();
@@ -33,6 +38,16 @@ class _CipherAppState extends State<CipherApp> {
 
   String get _output =>
       apply(_cipher, _input.text, shift: _decode ? -_shift : _shift);
+
+  /// Applies [change], then checks whether the result is a line from the
+  /// case, such as the one in Berat's notebook.
+  void _changed(VoidCallback change) {
+    setState(change);
+    final output = _output;
+    StoryProgress.instance.recognise(output).then((evidence) {
+      if (mounted && output == _output) setState(() => _found = evidence);
+    });
+  }
 
   void _copy() {
     Clipboard.setData(ClipboardData(text: _output));
@@ -71,7 +86,7 @@ class _CipherAppState extends State<CipherApp> {
                 borderSide: BorderSide.none,
               ),
             ),
-            onChanged: (_) => setState(() {}),
+            onChanged: (_) => _changed(() {}),
           ),
           const SizedBox(height: 14),
           Wrap(
@@ -88,7 +103,7 @@ class _CipherAppState extends State<CipherApp> {
                   labelStyle: TextStyle(
                     color: cipher == _cipher ? Colors.black : Colors.white,
                   ),
-                  onSelected: (_) => setState(() => _cipher = cipher),
+                  onSelected: (_) => _changed(() => _cipher = cipher),
                 ),
             ],
           ),
@@ -106,7 +121,7 @@ class _CipherAppState extends State<CipherApp> {
                     max: alphabet.length - 1.0,
                     divisions: alphabet.length - 2,
                     activeColor: _gold,
-                    onChanged: (v) => setState(() => _shift = v.round()),
+                    onChanged: (v) => _changed(() => _shift = v.round()),
                   ),
                 ),
               ],
@@ -118,7 +133,7 @@ class _CipherAppState extends State<CipherApp> {
               ],
               selected: {_decode},
               onSelectionChanged: (choice) =>
-                  setState(() => _decode = choice.single),
+                  _changed(() => _decode = choice.single),
               style: SegmentedButton.styleFrom(
                 foregroundColor: Colors.white,
                 selectedBackgroundColor: _gold,
@@ -156,6 +171,22 @@ class _CipherAppState extends State<CipherApp> {
               ],
             ),
           ),
+          if (_found case final evidence?) ...[
+            const SizedBox(height: 12),
+            Container(
+              key: const ValueKey('cipher-found'),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: _gold.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Text(
+                "🕵️ Bu, \"${evidence.name}\" üzerindeki şifreli satır! "
+                "Ekipten birine haber verebilirsin.",
+                style: const TextStyle(color: Colors.white, fontSize: 15),
+              ),
+            ),
+          ],
           if (_cipher == Cipher.caesar && _input.text.trim().isNotEmpty)
             Theme(
               data: Theme.of(
@@ -163,6 +194,10 @@ class _CipherAppState extends State<CipherApp> {
               ).copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
                 key: const ValueKey('all-shifts'),
+                // Without these the tile takes the app theme's white and
+                // its white text disappears.
+                backgroundColor: _card,
+                collapsedBackgroundColor: _card,
                 collapsedIconColor: Colors.white70,
                 iconColor: _gold,
                 title: const Text(
@@ -182,7 +217,7 @@ class _CipherAppState extends State<CipherApp> {
                         caesar(_input.text, -shift),
                         style: const TextStyle(color: Colors.white),
                       ),
-                      onTap: () => setState(() {
+                      onTap: () => _changed(() {
                         _shift = shift;
                         _decode = true;
                       }),

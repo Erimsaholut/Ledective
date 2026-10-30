@@ -337,6 +337,29 @@ değerlendirmesi yanlış, önyargılı ya da kasıtlı olabilir.
 
 `links`: panoda kırmızı iple bağlanacak diğer deliller.
 
+### Şifreli satır (`code`)
+
+Bir delilin üzerinde şifreli bir satır olabilir. Oyuncu onu AppShop'taki
+Şifre Çözücü ile çözünce oyun bunu kendisi fark eder ve `unlocks` uygulanır
+(bir kez). Ardından bir sohbette `requires` ile o bayrağı bekleyen bir soru
+açılabilir: "Şifreyi çözdüm".
+
+```json
+{"id": "notebook", "description": "... anlamsız bir satır var: IGI EÜEHM EĞREHMR. ÖEÜHIYN FNPNÇŞÜ.",
+ "code": {"cipher": "caesar", "shift": 5, "text": "ECE ARADI AÇMADIM. KARDEŞİ BİLİYOR.",
+          "unlocks": ["decoded:notebook"]}}
+```
+
+- `cipher`: `caesar` (Sezar, `shift` kadar kaydırma), `atbash`, `morse` ya da
+  `reverse` (tersten).
+- `text`: satırın çözülmüş hâli. Şifreli hâlini `description`'a sen yaz;
+  doğrulayıcı doğru yazılıp yazılmadığını kontrol eder ve yanlışsa olması
+  gerekeni söyler.
+- Satır, delil bulunmadan tanınmaz. Pano'da açıklama seçilebilir, oyuncu
+  satırı kopyalayıp Şifre Çözücü'ye yapıştırabilir.
+- Oyuncu uygulamayı bilmiyor olabilir: state.json › `hints` ile AppShop'tan
+  bir hatırlatma gönder (`hint-cipher`).
+
 ## sinstagram.json
 
 - `feed`: ana akış. Büro ve rastgele kişilerin gönderileri.

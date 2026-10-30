@@ -71,6 +71,14 @@ Yollar birleşebilir, ama önceki seçimlerin sonuçlarını taşımalıdır
      yorumu) → yorumlardaki `k.aydin` (bio: "Kardeşi.") → Kerem'in adı.
   5. Ece'nin adıyla → haritada Aydın ailesinin evi → komşular: "sakallı, deri
      ceketli" → Kerem'in adı.
+  6. [Taslak] **Defterdeki şifre** (Bölüm II'den itibaren): Berat'ın defterinin
+     son sayfasında babası okumasın diye Sezar ile (5 kaydırma) yazdığı bir
+     satır var. AppShop'taki Şifre Çözücü ile çözülünce: "ECE ARADI
+     AÇMADIM. KARDEŞİ BİLİYOR." Oyun çözüldüğünü kendisi anlar
+     (`decoded:notebook`). Oyuncu Özge'ye yazınca Özge kızı bulur: Ece Aydın
+     (`heard:ece`, trust +5). "Kardeşi" yırtık fotoğrafın arkasındaki kelimeyle
+     aynı: iki ipucu birbirini doğrular. Şifre Çözücü indirilmemişse bir süre
+     sonra AppShop'tan reklam gibi bir ipucu bildirimi gelir.
 - **Kimlik:** Kerem'in adı + kamera karesi + (aynı adam ya da gönüllü olduğu)
   → Atakan ehliyet fotoğrafını karşılaştırır → `kerem:identified`.
 - **Kerem yazar:** Ece'nin hattından: "Kızlardan biri hâlâ hayatta. Cumaya

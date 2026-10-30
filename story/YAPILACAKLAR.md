@@ -170,6 +170,12 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
   bildirimde: "4 yeni konum · Berat'ın Evi, Kampüs Kafe, Üniversite ve Adli
   Tıp Kurumu". Mail, SMS ve haberler göndereniyle tek tek kalıyor.
 
+- [x] **Şifre Çözücü hikâyede.** Berat'ın defterinde Sezar ile yazılmış bir
+  satır; çözülünce oyun anlıyor, Özge'ye anlatınca Ece Aydın'ın adı çıkıyor
+  (Bölüm III'e 6. yol). Uygulama indirilmemişse AppShop'tan ipucu gelir.
+- [ ] [?] Başka şifreli satırlar: Kerem'in Ece'nin hattından yazdığı bir
+  mesaj (Mors?), Adil'in listesi (Atbaş?). İstenirse aynı yapıyla eklenir.
+
 ## Hikâye planı (bible) adımları
 
 - [x] 1. Evren ve ana gizem (temel kararlar)

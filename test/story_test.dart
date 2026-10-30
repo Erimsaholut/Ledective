@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/board/board_app.dart';
+import 'package:ledective/apps/store_apps/cipher/ciphers.dart';
 import 'package:ledective/apps/news/news_app.dart';
 import 'package:ledective/apps/poltel/poltel_app.dart';
 import 'package:ledective/apps/sinstagram/sinstagram_app.dart';
@@ -917,6 +918,20 @@ void main() {
       expect(places.single.title, '$opened yeni konum');
       expect(places.single.body, contains("Berat'ın Evi"));
       expect(places.single.body, contains(' ve '));
+    });
+
+    test('Şifre Çözücü recognises the line in Berat\'s notebook', () async {
+      final progress = StoryProgress.instance;
+      final notebook = StoryData.current.evidence.firstWhere(
+        (e) => e.id == 'notebook',
+      );
+      final hidden = notebook.description.split(': ').last;
+      final solved = caesar(hidden, -notebook.code!.shift);
+      expect(await progress.recognise(solved), isNull, reason: 'not found yet');
+      await progress.discover(['ev:notebook']);
+      expect(await progress.recognise(hidden), isNull, reason: 'not solved');
+      expect(await progress.recognise(solved), same(notebook));
+      expect(progress.has('decoded:notebook'), isTrue);
     });
 
     test('opening something again does not count twice', () async {

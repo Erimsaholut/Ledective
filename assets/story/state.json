@@ -58,6 +58,8 @@
     "clue:green-prescription": "Gizli son izi: yeşil reçete (mail okundu)",
     "clue:pharmacy-sms": "Gizli son izi: teslim alınmamış ilaç (SMS okundu)",
     "clue:doctor-sms": "Gizli son izi: Dr. Arıkan'ın mesajı (SMS okundu)",
+    "decoded:notebook": "Berat'ın defterindeki şifreli satır çözüldü",
+    "told:notebook-code": "Defterdeki şifre Özge'ye anlatıldı",
     "bribe:returned": "Para gönderene iade edildi",
     "adil:warns": "Büroya \"Çocuk bir şey bilmez\" telefonu geldi",
     "furkan:released": "Furkan serbest bırakıldı",
@@ -271,6 +273,15 @@
     }
   ],
   "hints": [
+    {
+      "id": "hint-cipher",
+      "when": "ev:notebook",
+      "minutes": 8,
+      "unless": "decoded:notebook",
+      "app": "AppShop",
+      "title": "Şifre Çözücü",
+      "body": "Anlamsız harflerden oluşan bir not mu buldunuz? Şifre Çözücü ile saniyeler içinde okuyun. AppShop'ta ücretsiz."
+    },
     {
       "id": "hint-bribe-return",
       "when": "mp:wrote",

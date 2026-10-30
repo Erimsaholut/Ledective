@@ -433,7 +433,8 @@ class _EvidenceSheet extends StatelessWidget {
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 6),
-            Text(evidence.description),
+            // Selectable, so a hidden line can be copied into Şifre Çözücü.
+            SelectableText(evidence.description),
             if (evidence.image case final image?
                 when inspection == null || done) ...[
               const SizedBox(height: 12),

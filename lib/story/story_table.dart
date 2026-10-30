@@ -331,6 +331,9 @@ class _TableWriter {
       _uses(e.requires, 'Pano › ${e.name} bulunur');
       final i = e.inspection;
       if (i != null) _sets(i.unlocks, 'Laboratuvar › ${e.name}');
+      if (e.code case final c?) {
+        _sets(c.unlocks, 'Şifre Çözücü › ${e.name} çözülünce');
+      }
       _line(
         '| ${_cell(e.name)} | ${_condition(e.requires)} '
         '| ${switch (i) {

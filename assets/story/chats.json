@@ -241,6 +241,17 @@
             "unlocks": ["heard:ece"]
           },
           {
+            "label": "Berat’ın defterindeki şifreyi çözdüm: “Ece aradı, açmadım. Kardeşi biliyor.”",
+            "requires": "decoded:notebook",
+            "replies": [
+              "Ece mi? Berat’ın arkadaşları arasında Ece diye biri yoktu amirim. Bir dakika bakıyorum.",
+              "Buldum. Üç yıl önce ölen burslu bir öğrenci var: Ece Aydın. Dosyası intihar deyip takipsizlikle kapanmış.",
+              "Demek o gece Berat’ı aramış ve Berat açmamış. “Kardeşi biliyor”... Ece’nin bir kardeşi var demek. Şifreyi nasıl çözdünüz amirim?"
+            ],
+            "traits": ["merak"],
+            "unlocks": ["told:notebook-code", "heard:ece", "trust:Özge += 5"]
+          },
+          {
             "label": "Arşivdeki takipsizlik haberindeki kızın adını bulabilir misin?",
             "requires": "news:old-case-found",
             "replies": [
@@ -375,6 +386,17 @@
               "Biri onun hattını hâlâ kullanıyor."
             ],
             "unlocks": ["heard:ece"]
+          },
+          {
+            "label": "Berat’ın defterindeki şifreyi çözdüm: “Ece aradı, açmadım. Kardeşi biliyor.”",
+            "requires": "decoded:notebook",
+            "replies": [
+              "Ece mi? Berat’ın arkadaşları arasında Ece diye biri yoktu amirim. Bir dakika bakıyorum.",
+              "Buldum. Üç yıl önce ölen burslu bir öğrenci var: Ece Aydın. Dosyası intihar deyip takipsizlikle kapanmış.",
+              "Demek o gece Berat’ı aramış ve Berat açmamış. “Kardeşi biliyor”... Ece’nin bir kardeşi var demek. Şifreyi nasıl çözdünüz amirim?"
+            ],
+            "traits": ["merak"],
+            "unlocks": ["told:notebook-code", "heard:ece", "trust:Özge += 5"]
           },
           {
             "label": "Arşivdeki takipsizlik haberindeki kızın adını bulabilir misin?",

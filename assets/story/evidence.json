@@ -41,7 +41,8 @@
   {
     "id": "notebook",
     "name": "Berat'ın Defteri",
-    "description": "Üniversitedeki dolabından çıktı. Bazı satırlar silinmiş gibi.",
+    "description": "Üniversitedeki dolabından çıktı. Bazı satırlar silinmiş gibi. Son sayfada, büyük harflerle ve bastırarak yazılmış anlamsız bir satır var: IGI EÜEHM EĞREHMR. ÖEÜHIYN FNPNÇŞÜ.",
+    "code": {"cipher": "caesar", "shift": 5, "text": "ECE ARADI AÇMADIM. KARDEŞİ BİLİYOR.", "unlocks": ["decoded:notebook"]},
     "image": "assets/story/images/notebook_page.png",
     "requires": "ev:notebook",
     "links": ["glass"],

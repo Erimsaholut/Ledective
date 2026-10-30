@@ -1,3 +1,4 @@
+import '../apps/store_apps/cipher/ciphers.dart';
 import 'dialogue.dart';
 import 'story_data.dart';
 
@@ -286,6 +287,24 @@ List<StoryIssue> validateStory(
     for (final link in e.links) {
       if (!evidenceIds.contains(link)) {
         error(where, '"$link" diye bir delil yok');
+      }
+    }
+    if (e.code case final code?) {
+      sets(code.unlocks, '$where › code');
+      final cipher = Cipher.values
+          .where((c) => c.name == code.cipher)
+          .firstOrNull;
+      if (cipher == null) {
+        error(
+          where,
+          '"${code.cipher}" diye bir şifre yok '
+          '(${Cipher.values.map((c) => c.name).join(', ')})',
+        );
+      } else {
+        final hidden = apply(cipher, code.text, shift: code.shift);
+        if (!e.description.contains(hidden)) {
+          error(where, 'açıklamada şifreli satır yok, şöyle olmalı: "$hidden"');
+        }
       }
     }
     final inspection = e.inspection;

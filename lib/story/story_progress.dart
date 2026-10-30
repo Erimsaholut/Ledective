@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/game_clock.dart';
+import '../theme/turkish_text.dart';
 import 'dialogue.dart';
 import 'drip_feed.dart';
 import 'news_feed.dart';
@@ -875,6 +876,24 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     notifyListeners();
     await _save();
   }
+
+  /// The evidence whose hidden line [decoded] is, read back in Şifre
+  /// Çözücü, or null. The first time, applies what solving it opens.
+  Future<Evidence?> recognise(String decoded) async {
+    final key = _letters(decoded);
+    if (key.length < 6) return null;
+    for (final e in _story.evidence) {
+      final code = e.code;
+      if (code == null || !meets(e.requires)) continue;
+      if (!key.contains(_letters(code.text))) continue;
+      await markSeen('code:${e.id}', code.unlocks);
+      return e;
+    }
+    return null;
+  }
+
+  static String _letters(String text) =>
+      turkishUpper(text).replaceAll(RegExp('[^A-ZÇĞİÖŞÜ0-9]'), '');
 
   /// Questions and answers recorded while the player chatted with
   /// [person], for statements built from an interrogation.
