@@ -45,11 +45,27 @@ Future<void> _pumpApp(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-/// The [label] button of [game] in AppShop.
-Finder _storeButton(String game, String label) => find.descendant(
-  of: find.widgetWithText(Card, game),
-  matching: find.text(label),
-);
+/// The [label] button of item [id] in AppShop, on the page in front.
+Finder _storeButton(String id, String label) => find
+    .descendant(of: find.byKey(ValueKey('get-$id')), matching: find.text(label))
+    .hitTestable();
+
+/// Opens AppShop's [tab] and brings item [id]'s row into view.
+Future<void> _toStoreRow(WidgetTester tester, String tab, String id) async {
+  await tester.tap(find.widgetWithText(NavigationDestination, tab));
+  await tester.pumpAndSettle();
+  final list = find.byKey(
+    ValueKey(tab == 'Oyunlar' ? 'store-games' : 'store-apps'),
+  );
+  await tester.scrollUntilVisible(
+    find.byKey(ValueKey('row-$id')),
+    200,
+    scrollable: find
+        .descendant(of: list, matching: find.byType(Scrollable))
+        .first,
+  );
+  await tester.pumpAndSettle();
+}
 
 Finder _homeIcon(String title) => find
     .byWidgetPredicate((w) => w is AppIcon && w.title == title)
@@ -373,22 +389,32 @@ void main() {
     await _toSecondPage(tester);
     expect(_homeIcon('Sudoku'), findsNothing);
 
+    // The store opens on Today, with the editors' picks.
     await tester.tap(_homeIcon('AppShop'));
     await tester.pumpAndSettle();
-    expect(find.text('Sudoku'), findsOneWidget);
-    await tester.tap(_storeButton('Sudoku', 'İndir'));
+    expect(find.text('Bugün'), findsWidgets);
+    expect(find.byKey(const ValueKey('story-castle-guard')), findsOneWidget);
+    expect(find.text('EDİTÖRÜN SEÇİMİ'), findsOneWidget);
+
+    await _toStoreRow(tester, 'Oyunlar', 'sudoku');
+    expect(
+      find.text('Sizin için önerilenler'),
+      findsNothing,
+      reason: 'scrolled past',
+    );
+    await tester.tap(_storeButton('sudoku', 'İndir'));
     await tester.pump(const Duration(milliseconds: 500));
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    expect(find.text('Aç'), findsNothing);
+    expect(find.byKey(const ValueKey('progress-sudoku')), findsOneWidget);
+    expect(_storeButton('sudoku', 'Aç'), findsNothing);
     await tester.pump(InstalledGames.downloadTime);
     await tester.pumpAndSettle();
-    expect(find.text('Aç'), findsOneWidget);
+    expect(_storeButton('sudoku', 'Aç'), findsOneWidget);
     expect(InstalledGames.ids.value, ['sudoku']);
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getStringList('installedGames'), ['sudoku']);
 
     // "Aç" opens the game.
-    await tester.tap(find.text('Aç'));
+    await tester.tap(_storeButton('sudoku', 'Aç'));
     await tester.pumpAndSettle();
     expect(find.text('Zorluk seç'), findsOneWidget);
     final navigator = tester.state<NavigatorState>(
@@ -416,18 +442,32 @@ void main() {
     expect(prefs.getStringList('installedGames'), isEmpty);
     expect(prefs.containsKey(SudokuApp.saveKey), isFalse);
 
-    // The store offers it again, and can delete it as well.
+    // Its store page offers it again, and can delete it as well.
     await tester.tap(_homeIcon('AppShop'));
     await tester.pumpAndSettle();
-    expect(_storeButton('Sudoku', 'İndir'), findsOneWidget);
-    await tester.tap(_storeButton('Sudoku', 'İndir'));
+    await _toStoreRow(tester, 'Oyunlar', 'sudoku');
+    await tester.tap(find.byKey(const ValueKey('row-sudoku')));
+    await tester.pumpAndSettle();
+    expect(find.text('Mantık Atölyesi'), findsWidgets);
+    expect(find.text('Açıklama'), findsOneWidget);
+    await tester.tap(_storeButton('sudoku', 'İndir'));
     await tester.pump(InstalledGames.downloadTime);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('uninstall')),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byKey(const ValueKey('page-sudoku')),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.tap(find.byKey(const ValueKey('uninstall')));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, 'Sil'));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(TextButton, 'Sil').last);
-    await tester.pumpAndSettle();
-    expect(_storeButton('Sudoku', 'İndir'), findsOneWidget);
+    expect(find.byKey(const ValueKey('uninstall')), findsNothing);
     expect(InstalledGames.ids.value, isEmpty);
   });
 
@@ -436,17 +476,18 @@ void main() {
     await _toSecondPage(tester);
     await tester.tap(_homeIcon('AppShop'));
     await tester.pumpAndSettle();
+    await _toStoreRow(tester, 'Oyunlar', 'sudoku');
 
     // A download can be stopped by tapping its progress.
-    await tester.tap(_storeButton('Sudoku', 'İndir'));
+    await tester.tap(_storeButton('sudoku', 'İndir'));
     await tester.pump(const Duration(milliseconds: 300));
-    await tester.tap(find.byType(CircularProgressIndicator));
+    await tester.tap(find.byKey(const ValueKey('progress-sudoku')));
     await tester.pump();
     expect(InstalledGames.downloads.value, isEmpty);
-    expect(_storeButton('Sudoku', 'İndir'), findsOneWidget);
+    expect(_storeButton('sudoku', 'İndir'), findsOneWidget);
 
     // Leaving the store half way doesn't stop it.
-    await tester.tap(_storeButton('Sudoku', 'İndir'));
+    await tester.tap(_storeButton('sudoku', 'İndir'));
     await tester.pump(const Duration(milliseconds: 500));
     final navigator = tester.state<NavigatorState>(
       find.byType(Navigator).first,
@@ -464,7 +505,8 @@ void main() {
     // Opened again, the store knows it is there.
     await tester.tap(_homeIcon('AppShop'));
     await tester.pumpAndSettle();
-    expect(_storeButton('Sudoku', 'Aç'), findsOneWidget);
+    await _toStoreRow(tester, 'Oyunlar', 'sudoku');
+    expect(_storeButton('sudoku', 'Aç'), findsOneWidget);
   });
 
   testWidgets(
@@ -475,29 +517,22 @@ void main() {
       await tester.tap(_homeIcon('AppShop'));
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(
-        _storeButton('Pist Canavarı', 'İndir'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(_storeButton('Pist Canavarı', 'İndir'));
+      await _toStoreRow(tester, 'Oyunlar', 'track-monster');
+      await tester.tap(_storeButton('track-monster', 'İndir'));
       await tester.pumpAndSettle();
       expect(find.text('Ülkenizde kullanılamıyor'), findsOneWidget);
-      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(
+        find.byKey(const ValueKey('progress-track-monster')),
+        findsNothing,
+      );
       await tester.tap(find.text('Tamam'));
       await tester.pumpAndSettle();
-      expect(_storeButton('Pist Canavarı', 'İndir'), findsOneWidget);
+      expect(_storeButton('track-monster', 'İndir'), findsOneWidget);
 
       // A game still being made says so instead of downloading.
+      await _toStoreRow(tester, 'Oyunlar', 'word-hunt');
       expect(find.text('Geliştirme aşamasında'), findsOneWidget);
-      await tester.scrollUntilVisible(
-        _storeButton('Kelime Avı', 'Yakında'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(_storeButton('Kelime Avı', 'Yakında'));
+      await tester.tap(_storeButton('word-hunt', 'Yakında'));
       await tester.pumpAndSettle();
       expect(find.text('Geliştirme aşamasında'), findsNWidgets(2));
       await tester.tap(find.text('Tamam'));
@@ -505,6 +540,41 @@ void main() {
       expect(InstalledGames.ids.value, isEmpty);
     },
   );
+
+  testWidgets('apps are found on their shelf and by search', (tester) async {
+    await _pumpApp(tester);
+    await _toSecondPage(tester);
+    await tester.tap(_homeIcon('AppShop'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(NavigationDestination, 'Uygulamalar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Öne çıkanlar'), findsOneWidget);
+    expect(find.byKey(const ValueKey('banner-cipher')), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(NavigationDestination, 'Ara'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('store-search')), 'hesap');
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('row-pro-calculator')), findsOneWidget);
+    expect(find.byKey(const ValueKey('row-sudoku')), findsNothing);
+    await tester.tap(_storeButton('pro-calculator', 'İndir'));
+    await tester.pump(InstalledGames.downloadTime);
+    await tester.pumpAndSettle();
+
+    // The calculator works out what is typed.
+    await tester.tap(_storeButton('pro-calculator', 'Aç'));
+    await tester.pumpAndSettle();
+    for (final key in ['2', '×', '(', '3', '+', '4', ')']) {
+      await tester.tap(find.byKey(ValueKey('key-$key')));
+      await tester.pump();
+    }
+    expect(find.text('= 14'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('key-=')));
+    await tester.pump();
+    expect(find.text('14'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('installed games are still there after a restart', (
     tester,

@@ -217,7 +217,7 @@ Future<void> openAlert(NavigatorState navigator, StoryAlert alert) async {
 AppIcon? homeIcon(String title) => [
   ..._pages.expand((page) => page),
   ..._dock,
-  for (final game in storeGamesWithIds(InstalledGames.ids.value)) game.homeIcon,
+  for (final game in storeItemsWithIds(InstalledGames.ids.value)) game.homeIcon,
 ].where((icon) => icon.title == title).firstOrNull;
 
 class StartScreen extends StatefulWidget {
@@ -275,16 +275,16 @@ class _StartScreenState extends State<StartScreen> {
                           builder: (context, _) => _HomePage(
                             apps: [
                               ..._pages[1],
-                              for (final game in storeGamesWithIds(
+                              for (final game in storeItemsWithIds(
                                 InstalledGames.ids.value,
                               ))
-                                InstalledGameIcon(game: game),
+                                InstalledAppIcon(game: game),
                               // Downloads show up already, still loading.
-                              for (final game in storeGamesWithIds(
+                              for (final game in storeItemsWithIds(
                                 InstalledGames.downloads.value.keys,
                               ))
                                 if (!InstalledGames.isInstalled(game.id))
-                                  DownloadingGameIcon(
+                                  DownloadingAppIcon(
                                     key: ValueKey('downloading-${game.id}'),
                                     game: game,
                                   ),
