@@ -448,6 +448,42 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   Article? _fillerArticle(String id) =>
       _story.news.filler.articles.where((a) => a.id == id).firstOrNull;
 
+  /// Whether [mail] belongs to the story and so never goes to Spam: story
+  /// mail, and everyday mail that waits for an event or leaves a trace.
+  bool isCanonMail(Mail mail) =>
+      _story.storyMails.contains(mail) ||
+      !mail.requires.isAlways ||
+      mail.unlocksOnView.isNotEmpty;
+
+  /// Arrived mail the phone files under Spam, newest first: scams right
+  /// away, and everyday mail the player has read once [MailPool.keepRead]
+  /// newer everyday mails came after it. Mail the player marked "Spam
+  /// değil" stays in the inbox.
+  List<(Mail, DateTime)> get spam {
+    final keep = _story.mailPool.keepRead;
+    var newer = 0;
+    final filed = <(Mail, DateTime)>[];
+    for (final entry in inbox) {
+      final mail = entry.$1;
+      if (hasSeen('notspam:${mail.id}') || isCanonMail(mail)) continue;
+      if (mail.spam) {
+        filed.add(entry);
+      } else if (newer++ >= keep && hasSeen('mail:${mail.id}')) {
+        filed.add(entry);
+      }
+    }
+    return filed;
+  }
+
+  /// Arrived mail outside Spam, newest first.
+  List<(Mail, DateTime)> get inboxFolder {
+    final filed = {for (final (m, _) in spam) m.id};
+    return [
+      for (final entry in inbox)
+        if (!filed.contains(entry.$1.id)) entry,
+    ];
+  }
+
   /// Mail that has arrived, newest first, with the time it came.
   List<(Mail, DateTime)> get inbox {
     final firstOpen = GameClock.current.firstOpen;
@@ -469,11 +505,17 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     meets: meets,
     ready: _isReady,
     arrivedAt: (id) => _newsArrivals[id],
-    filler: [
-      for (final d in _newsDrip.drops)
-        if (_fillerArticle(d.id) case final a?) NewsItem(a, d.at, run: d.run),
-    ],
+    filler: _everydayNews,
+    read: (item) => hasSeen('news:${item.key}'),
   );
+
+  List<NewsItem> get _everydayNews => [
+    for (final d in _newsDrip.drops)
+      if (_fillerArticle(d.id) case final a?) NewsItem(a, d.at, run: d.run),
+  ];
+
+  /// Everyday news that has left the feed, newest first, for the archive.
+  List<NewsItem> get archivedNews => oldNews(_everydayNews, newsFeedAt());
 
   /// Raises a banner for scheduled news that came out since the last tick.
   /// Returns whether any did.
@@ -733,7 +775,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
         final m =
             _story.storyMails.where((m) => m.id == item).firstOrNull ??
             _poolMail(item);
-        if (m == null) return null;
+        // The filter catches scams before they ring.
+        if (m == null || (m.spam && !isCanonMail(m))) return null;
         return StoryAlert(
           app: 'Mail',
           title: m.sender,

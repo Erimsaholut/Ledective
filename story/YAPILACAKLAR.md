@@ -170,6 +170,9 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
   bildirimde: "4 yeni konum · Berat'ın Evi, Kampüs Kafe, Üniversite ve Adli
   Tıp Kurumu". Mail, SMS ve haberler göndereniyle tek tek kalıyor.
 
+- [x] **Spam klasörü.** Dolandırıcılık mailleri doğrudan Spam'e; okunmuş
+  eski gündelik mailler (en yeni 8'in dışındakiler) sonradan düşer. Kanon
+  mailler düşmez. Okunmuş eski gündelik haberler Arşiv'e geçer.
 - [x] **Şifre Çözücü hikâyede.** Berat'ın defterinde Sezar ile yazılmış bir
   satır; çözülünce oyun anlıyor, Özge'ye anlatınca Ece Aydın'ın adı çıkıyor
   (Bölüm III'e 6. yol). Uygulama indirilmemişse AppShop'tan ipucu gelir.

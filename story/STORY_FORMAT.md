@@ -482,7 +482,9 @@ komik haberler bir havuzda durur:
   sayılmaz. Aralıklar ve sıra rastgeledir.
 - Oyun başladığında ilk `start` haber zaten akıştadır (son bir iki güne
   yayılmış, bildirimsiz).
-- Akışta en son `keep` zamansız haber durur, eskileri düşer.
+- Akışta en son `keep` zamansız haber durur. Daha eskiler okununca akıştan
+  çıkıp Arşiv sekmesindeki "Eski haberler"e geçer (aramada da bulunur);
+  okunmamışlar akışta kalır. Hikâye haberleri hiç çıkmaz.
 - Oyuncu News'u açmadan `pauseAfter` (varsayılan 4) zamansız haber gelince
   havuz bekler; News açılınca birkaç dakika içinde kaldığı yerden devam
   eder. `0` hiç beklemez. Hikâye haberleri beklemez.
@@ -522,7 +524,8 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
 
   ```json
   {
-    "pool": {"minMinutes": 6, "maxMinutes": 16, "start": 3, "pauseAfter": 4, "mails": [
+    "pool": {"minMinutes": 6, "maxMinutes": 16, "start": 3, "pauseAfter": 4, "keepRead": 8, "mails": [
+      {"id": "lottery", "sender": "sanslisiniz.biz", "subject": "TEBRİKLER!", "body": "...", "spam": true},
       {"id": "pizza", "sender": "pizzaci.com.tr", "subject": "Seni özledik!", "body": "..."},
       {"id": "journalist-1", "sender": "haber@gundem24.com.tr", "subject": "Görüşme talebi",
        "body": "...", "requires": "part1Done"}
@@ -541,6 +544,12 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
     sırasını bekler: olaylardan sonra gelen gazeteci, okur, avukat mailleri.
     Oyuncu Mail'i açmadan `pauseAfter` (varsayılan 4) gündelik mail gelince
     havuz bekler, Mail açılınca devam eder. Hikâye mailleri beklemez.
+  - **Spam:** `"spam": true` dolandırıcılık mailleri doğrudan Spam
+    klasörüne gider ve bildirim çıkarmaz. Okunmuş gündelik mailler de en yeni
+    `keepRead` (varsayılan 8) gündelik mailin dışında kalınca Spam'e düşer.
+    Kanon mailler hiç düşmez: `story` mailleri ve havuzda `requires` ya da
+    `unlocksOnView` taşıyanlar (ör. gizli son ipuçları). Oyuncu spamdaki bir
+    maili açıp "Spam değil" diyebilir.
   - `story`: hikâyenin mailleri, `requires` açılınca gelir. `afterMinutes`
     ile koşuldan o kadar dakika oyun süresi sonra gelir.
   - `subject` listede ve bildirimde görünür; `id` verilmezse gönderen ve

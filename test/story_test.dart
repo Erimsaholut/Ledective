@@ -1264,6 +1264,63 @@ void main() {
       expect(ids(), contains('leave-cancelled'));
     });
 
+    test('scams and old read mail go to Spam, story mail never', () async {
+      final progress = StoryProgress.instance;
+      await progress.tick(now: clock);
+      await progress.discover([StoryFlags.part1Done]);
+      for (var i = 0; i < 25; i++) {
+        await progress.dripNow();
+      }
+      // Unread mail only goes to Spam if it's a scam, and scams don't ring.
+      for (final (mail, _) in progress.spam) {
+        expect(mail.spam, isTrue, reason: mail.id);
+        expect(
+          progress.alerts.items.where((a) => a.body == mail.subject),
+          isEmpty,
+        );
+      }
+      for (final (mail, _) in progress.inbox) {
+        await progress.markSeen('mail:${mail.id}');
+      }
+      final spam = [for (final (m, _) in progress.spam) m];
+      expect(spam.where((m) => !m.spam), isNotEmpty);
+      expect(spam.any(progress.isCanonMail), isFalse);
+      final everyday = progress.inboxFolder.where(
+        (e) => !progress.isCanonMail(e.$1),
+      );
+      expect(everyday, hasLength(StoryData.current.mailPool.keepRead));
+      expect(
+        progress.inboxFolder.map((e) => e.$1.id),
+        contains('berat-priority'),
+        reason: 'story mail stays',
+      );
+      final rescued = spam.firstWhere((m) => !m.spam);
+      await progress.markSeen('notspam:${rescued.id}');
+      expect(progress.inboxFolder.map((e) => e.$1), contains(rescued));
+    });
+
+    test('old everyday news moves to the archive once read', () async {
+      final progress = StoryProgress.instance;
+      await progress.tick(now: clock);
+      for (var i = 0; i < 12; i++) {
+        await progress.dripNow(mail: false);
+      }
+      final filler = StoryData.current.news.filler;
+      final everydayIds = {for (final a in filler.articles) a.id};
+      List<NewsItem> everyday() => progress
+          .newsFeedAt()
+          .where((i) => everydayIds.contains(i.article.id))
+          .toList();
+      final total = everyday().length;
+      expect(total, greaterThan(filler.keep), reason: 'unread ones stay');
+      expect(progress.archivedNews, isEmpty);
+      for (final item in everyday()) {
+        await progress.markSeen('news:${item.key}');
+      }
+      expect(everyday(), hasLength(filler.keep));
+      expect(progress.archivedNews, hasLength(total - filler.keep));
+    });
+
     test('wait while the player doesn\'t open Mail or News', () async {
       final progress = StoryProgress.instance;
       progress.fastMissions = true;

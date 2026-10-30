@@ -267,6 +267,7 @@ class Mail {
     this.requires = Condition.always,
     this.after = Duration.zero,
     this.unlocksOnView = const [],
+    this.spam = false,
   }) : _id = id;
 
   final String? _id;
@@ -277,6 +278,10 @@ class Mail {
 
   /// Applied the first time the player opens the mail.
   final List<String> unlocksOnView;
+
+  /// A scam the phone's filter catches: it goes straight to Spam, with no
+  /// banner.
+  final bool spam;
 
   /// Play time the mail takes to arrive once [requires] holds.
   final Duration after;
@@ -294,6 +299,7 @@ class MailPool {
     this.maxMinutes = 15,
     this.start = 3,
     this.pauseAfter = 4,
+    this.keepRead = 8,
   });
 
   final List<Mail> mails;
@@ -304,6 +310,10 @@ class MailPool {
   /// The pool waits once this many have come without the player opening
   /// Mail, and goes on when they do. 0 never waits.
   final int pauseAfter;
+
+  /// How many of the latest everyday mails stay in the inbox; older ones
+  /// the player has read go to Spam. Story mail always stays.
+  final int keepRead;
 }
 
 class SmsThread {
@@ -1119,6 +1129,7 @@ Mail _mail(_Reader r) => Mail(
   requires: r.condition(),
   after: _after(r),
   unlocksOnView: r.stringsOr('unlocksOnView'),
+  spam: r.boolOr('spam'),
 );
 
 MailPool _mailPool(_Reader r) => MailPool(
@@ -1127,6 +1138,7 @@ MailPool _mailPool(_Reader r) => MailPool(
   maxMinutes: r.intOr('maxMinutes', 15),
   start: r.intOr('start', 3),
   pauseAfter: r.intOr('pauseAfter', 4),
+  keepRead: r.intOr('keepRead', 8),
 );
 
 /// The optional `afterMinutes` wait of mails and articles.

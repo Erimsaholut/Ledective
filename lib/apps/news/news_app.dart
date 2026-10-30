@@ -27,6 +27,7 @@ List<NewsItem> searchArticles(String query, StoryProgress progress) {
   final firstOpen = GameClock.current.firstOpen;
   final items = [
     ...currentNews(progress),
+    ...progress.archivedNews,
     for (final a in news.articles)
       if (a.archive && progress.meets(a.requires))
         NewsItem(
@@ -201,17 +202,7 @@ class _NewsAppState extends State<NewsApp> {
         ),
         Expanded(
           child: _query.text.trim().length < 3
-              ? const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(32),
-                    child: Text(
-                      "Gazete arşivlerinde yıllar öncesine kadar arama "
-                      "yapabilirsin.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: AppColors.secondaryLabel),
-                    ),
-                  ),
-                )
+              ? _oldNews()
               : results.isEmpty
               ? const Center(
                   child: Text(
@@ -230,6 +221,32 @@ class _NewsAppState extends State<NewsApp> {
       ],
     );
   }
+}
+
+/// The archive tab before a search: what to search for, and the everyday
+/// news that has left the feed.
+Widget _oldNews() {
+  final old = StoryProgress.instance.archivedNews;
+  const hint = Padding(
+    padding: EdgeInsets.all(32),
+    child: Text(
+      "Gazete arşivlerinde yıllar öncesine kadar arama yapabilirsin.",
+      textAlign: TextAlign.center,
+      style: TextStyle(color: AppColors.secondaryLabel),
+    ),
+  );
+  if (old.isEmpty) return const Center(child: hint);
+  return ListView(
+    padding: const EdgeInsets.only(bottom: 16),
+    children: [
+      hint,
+      const _SectionHeader("Eski haberler"),
+      for (final (i, item) in old.indexed) ...[
+        if (i > 0) const Divider(indent: 16, endIndent: 16),
+        _ArticleTile(item: item),
+      ],
+    ],
+  );
 }
 
 class _SectionHeader extends StatelessWidget {

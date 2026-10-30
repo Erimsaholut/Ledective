@@ -7,9 +7,11 @@ import '../../theme/app_theme.dart';
 import '../../theme/turkish_dates.dart';
 import '../../widgets/avatar.dart';
 
-/// Mail that arrived and hasn't been opened.
-int unreadMailCount(StoryProgress progress) =>
-    progress.inbox.where((e) => !progress.hasSeen('mail:${e.$1.id}')).length;
+/// Mail in the inbox that hasn't been opened. Spam doesn't count, as on a
+/// phone.
+int unreadMailCount(StoryProgress progress) => progress.inboxFolder
+    .where((e) => !progress.hasSeen('mail:${e.$1.id}'))
+    .length;
 
 class MailApp extends StatefulWidget {
   const MailApp({super.key});
@@ -22,6 +24,9 @@ class _MailAppState extends State<MailApp> {
   static const _deletedKey = 'deletedMails';
 
   Set<String> _deleted = {};
+
+  /// Whether the Spam folder is showing instead of the inbox.
+  bool _showSpam = false;
 
   @override
   void initState() {
@@ -43,10 +48,13 @@ class _MailAppState extends State<MailApp> {
     setState(() => _deleted = {...?prefs.getStringList(_deletedKey)});
   }
 
-  /// Mail that has arrived, newest first. New mail comes by itself: some
+  /// The folder on screen, newest first. New mail comes by itself: some
   /// with the story, the rest now and then while the player plays.
-  List<(Mail, DateTime)> _inbox(StoryProgress progress) => [
-    for (final entry in progress.inbox)
+  List<(Mail, DateTime)> _folder(
+    StoryProgress progress, {
+    required bool spam,
+  }) => [
+    for (final entry in spam ? progress.spam : progress.inboxFolder)
       if (!_deleted.contains(entry.$1.id)) entry,
   ];
 
@@ -78,12 +86,20 @@ class _MailAppState extends State<MailApp> {
   }
 
   void _open(Mail mail, DateTime time) {
-    StoryProgress.instance.markSeen('mail:${mail.id}', mail.unlocksOnView);
+    final progress = StoryProgress.instance;
+    progress.markSeen('mail:${mail.id}', mail.unlocksOnView);
+    final inSpam = _showSpam;
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (_) =>
-            _MailPage(mail: mail, time: time, onDelete: () => _delete(mail)),
+        builder: (_) => _MailPage(
+          mail: mail,
+          time: time,
+          onDelete: () => _delete(mail),
+          onNotSpam: inSpam
+              ? () => progress.markSeen('notspam:${mail.id}')
+              : null,
+        ),
       ),
     );
   }
@@ -96,20 +112,61 @@ class _MailAppState extends State<MailApp> {
       body: ListenableBuilder(
         listenable: progress,
         builder: (context, _) {
-          final inbox = _inbox(progress);
+          final inbox = _folder(progress, spam: _showSpam);
+          final spamCount = _folder(progress, spam: true).length;
           return CustomScrollView(
             slivers: [
-              const SliverAppBar.large(
+              SliverAppBar.large(
                 backgroundColor: Colors.white,
-                title: Text("Gelen Kutusu"),
+                title: Text(_showSpam ? "Spam" : "Gelen Kutusu"),
               ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: SegmentedButton<bool>(
+                    showSelectedIcon: false,
+                    segments: [
+                      const ButtonSegment(
+                        value: false,
+                        icon: Icon(Icons.inbox_rounded),
+                        label: Text("Gelen Kutusu"),
+                      ),
+                      ButtonSegment(
+                        value: true,
+                        icon: const Icon(Icons.report_gmailerrorred_rounded),
+                        label: Text(
+                          spamCount == 0 ? "Spam" : "Spam ($spamCount)",
+                        ),
+                      ),
+                    ],
+                    selected: {_showSpam},
+                    onSelectionChanged: (choice) =>
+                        setState(() => _showSpam = choice.single),
+                  ),
+                ),
+              ),
+              if (_showSpam && inbox.isNotEmpty)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
+                    child: Text(
+                      "Dolandırıcılık gibi görünen mailler ve okuduğun eski "
+                      "gündelik mailler buraya düşer. Önemli bir şeyse aç ve "
+                      "\"Spam değil\"e dokun.",
+                      style: TextStyle(
+                        color: AppColors.secondaryLabel,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ),
               if (inbox.isEmpty)
-                const SliverFillRemaining(
+                SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(
                     child: Text(
-                      "Gelen kutusu boş",
-                      style: TextStyle(color: AppColors.secondaryLabel),
+                      _showSpam ? "Spam klasörü boş" : "Gelen kutusu boş",
+                      style: const TextStyle(color: AppColors.secondaryLabel),
                     ),
                   ),
                 ),
@@ -215,11 +272,15 @@ class _MailPage extends StatelessWidget {
     required this.mail,
     required this.time,
     required this.onDelete,
+    this.onNotSpam,
   });
 
   final Mail mail;
   final DateTime time;
   final VoidCallback onDelete;
+
+  /// Moves a mail opened from Spam back to the inbox.
+  final VoidCallback? onNotSpam;
 
   @override
   Widget build(BuildContext context) {
@@ -244,6 +305,33 @@ class _MailPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          if (onNotSpam case final notSpam?) ...[
+            Container(
+              padding: const EdgeInsets.fromLTRB(14, 6, 6, 6),
+              decoration: BoxDecoration(
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.report_gmailerrorred_rounded,
+                    color: AppColors.secondaryLabel,
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(child: Text("Bu mail Spam klasöründe.")),
+                  TextButton(
+                    onPressed: () {
+                      notSpam();
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Spam değil"),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           Row(
             children: [
               Avatar(name: mail.sender, icon: Icons.alternate_email_rounded),

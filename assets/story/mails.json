@@ -3,6 +3,8 @@
     "minMinutes": 6,
     "maxMinutes": 16,
     "start": 3,
+    "pauseAfter": 4,
+    "keepRead": 8,
     "mails": [
       {
         "id": "conference",
@@ -122,13 +124,15 @@
         "id": "lottery",
         "sender": "sanslisiniz.biz",
         "subject": "TEBRİKLER! Kazandınız!!!",
-        "body": "Sayın Bay/Bayan KULLANICI, 1.000.000 € kazandınız. Ödülünüzü almak için kimlik ve kart bilgilerinizi yanıtlayın. (Siz polissiniz, bunu zaten biliyorsunuz.)"
+        "body": "Sayın Bay/Bayan KULLANICI, 1.000.000 € kazandınız. Ödülünüzü almak için kimlik ve kart bilgilerinizi yanıtlayın. (Siz polissiniz, bunu zaten biliyorsunuz.)",
+        "spam": true
       },
       {
         "id": "prince",
         "sender": "kraliyet.mail",
         "subject": "Acil yardım",
-        "body": "Ben uzak bir ülkenin prensiyim. Servetimi aktarmak için hesabınıza ihtiyacım var. Bu sefer gerçekten."
+        "body": "Ben uzak bir ülkenin prensiyim. Servetimi aktarmak için hesabınıza ihtiyacım var. Bu sefer gerçekten.",
+        "spam": true
       },
       {
         "id": "bank-campaign",
@@ -254,7 +258,8 @@
         "id": "crypto",
         "sender": "koin-firsati.net",
         "subject": "Paranı 100 katına çıkar",
-        "body": "Yeni koin: KOMİSERCOİN. Ön satışta! Yatırım tavsiyesi değildir, ama tavsiye ederiz."
+        "body": "Yeni koin: KOMİSERCOİN. Ön satışta! Yatırım tavsiyesi değildir, ama tavsiye ederiz.",
+        "spam": true
       },
       {
         "id": "travel-deal",
@@ -509,19 +514,22 @@
         "id": "phishing-sinsta",
         "sender": "destek@sinstagram-guvenlik.biz",
         "subject": "Hesabınız 24 saat içinde silinecek!!!",
-        "body": "Sayın kullanıcı, hesabınız telif ihlali nedeniyle silinecektir. İtiraz etmek için şifrenizi bu maile yanıt olarak yazın. Sinstagram Güvenlik Ekibi (gerçekten biziz)."
+        "body": "Sayın kullanıcı, hesabınız telif ihlali nedeniyle silinecektir. İtiraz etmek için şifrenizi bu maile yanıt olarak yazın. Sinstagram Güvenlik Ekibi (gerçekten biziz).",
+        "spam": true
       },
       {
         "id": "phishing-inheritance",
         "sender": "avukat.miras@uzakakraba.net",
         "subject": "Uzak akrabanızdan 4,2 milyon dolar miras",
-        "body": "Sayın Bay/Bayan [SOYADINIZ], soyadınızı taşıyan uzak bir akrabanız vefat etmiştir. Mirasın size aktarılması için sadece 'dosya masrafı' olarak 500 TL göndermeniz yeterlidir."
+        "body": "Sayın Bay/Bayan [SOYADINIZ], soyadınızı taşıyan uzak bir akrabanız vefat etmiştir. Mirasın size aktarılması için sadece 'dosya masrafı' olarak 500 TL göndermeniz yeterlidir.",
+        "spam": true
       },
       {
         "id": "phishing-cargo",
         "sender": "bilgi@kargo-takip-tr.info",
         "subject": "Kargonuz gümrükte bekliyor",
-        "body": "Gönderiniz gümrükte 'eksik adres' nedeniyle beklemektedir. 12,90 TL gümrük ücretini ödemek için bağlantıya tıklayın. Takip no: TR000000000. Kargo firması: Kargo."
+        "body": "Gönderiniz gümrükte 'eksik adres' nedeniyle beklemektedir. 12,90 TL gümrük ücretini ödemek için bağlantıya tıklayın. Takip no: TR000000000. Kargo firması: Kargo.",
+        "spam": true
       },
       {
         "id": "horoscope",

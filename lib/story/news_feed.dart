@@ -18,6 +18,16 @@ class NewsItem {
   String get key => run == 0 ? article.id : '${article.id}#$run';
 }
 
+/// Everyday news that has left the feed, newest first: what the archive
+/// lists as old news. [feed] is the feed as [newsFeed] gives it.
+List<NewsItem> oldNews(Iterable<NewsItem> filler, List<NewsItem> feed) {
+  final shown = {for (final item in feed) item.key};
+  return [
+    for (final item in filler)
+      if (!shown.contains(item.key)) item,
+  ]..sort((a, b) => b.published.compareTo(a.published));
+}
+
 /// The News feed at [now], newest first: story articles whose condition
 /// holds (published when they arrived, see [arrivedAt]; [ready] holds back
 /// the ones still on their way), articles scheduled for a day after
@@ -30,6 +40,7 @@ List<NewsItem> newsFeed(
   bool Function(Article article)? ready,
   DateTime? Function(String articleId)? arrivedAt,
   Iterable<NewsItem> filler = const [],
+  bool Function(NewsItem item)? read,
 }) {
   final day = DateTime(firstOpen.year, firstOpen.month, firstOpen.day);
   final items = <NewsItem>[];
@@ -63,12 +74,14 @@ List<NewsItem> newsFeed(
   }
   final everyday = filler.toList()
     ..sort((a, b) => a.published.compareTo(b.published));
+  // The latest [FillerNews.keep] stay, and older ones until they're read;
+  // read ones move to the archive (see [oldNews]).
   final keep = max(1, news.filler.keep);
-  items.addAll(
-    everyday.length <= keep
-        ? everyday
-        : everyday.sublist(everyday.length - keep),
-  );
+  final cut = max(0, everyday.length - keep);
+  items.addAll([
+    for (final (i, item) in everyday.indexed)
+      if (i >= cut || !(read?.call(item) ?? true)) item,
+  ]);
   // Same time: the article listed later in the file is the newer one.
   final order = {for (final (i, a) in news.articles.indexed) a.id: i};
   items.sort((a, b) {

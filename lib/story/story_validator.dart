@@ -210,6 +210,9 @@ List<StoryIssue> validateStory(
     if (m.after != Duration.zero) {
       error(where, 'havuzdaki maillerde "afterMinutes" olmaz');
     }
+    if (m.spam && (!m.requires.isAlways || m.unlocksOnView.isNotEmpty)) {
+      warn(where, 'hikâyeye bağlı mail spam olmaz, "spam" yok sayılır');
+    }
   }
   if (pool.minMinutes < 1 || pool.maxMinutes < pool.minMinutes) {
     error(
