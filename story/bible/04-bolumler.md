@@ -167,12 +167,54 @@ hikâyeleri, İkilem 3, 4, 9) Bölüm V'e kaydı.
   gizli son, final soruşturması (`final:ready`).
 
 ## Bölüm VI — Gerçeğin Bedeli
-**Durum:** [ÖNERİ]
+**Durum:** [ÖNERİ, taslak] (30.10.2026). Kararlar: Hakan'ın hedefi Emre,
+final savcıya ifade, ekip hikâyesi Orhun'un borcu.
+**Açılış:** `farm:entered`
+**Kapanış:** `final:ready` (savcıya ifade bitince)
 
-- Cinayetin ve bağlantılı suçların önemli kısmı ortaya çıkar. Oyuncu artık
-  kimin suçlu olduğuna değil, **hangi delili kime vereceğine ve kimi
-  koruyacağına** karar verir.
-- İkilemler: 7, 8.
+- **Oyuncunun amacı:** Emre'yi ifade verene kadar hayatta tutmak, emri
+  verenleri ortaya çıkarmak, kendi dosyasını kapatmak.
+- **Emre ve Hakan (İkilem 4 + 5):**
+  - Emre kurtarıldıysa (`emre:rescued`) hastanede, sonra güvenli bir evde.
+    Ağ onu susturmak için Hakan Demir'i tutar.
+  - İşaretler: Behram'ın muhbiri "biri hastanede Emre'yi soruyor" der;
+    hastane kamerası; Atakan plakadan adamı bulur: sabıkasız, işsiz, eşi
+    kanser tedavisinde. Oyuncu önce profesyonel tetikçi sanar.
+  - Koruma (İkilem 5): resmî koruma (ağın içeride adamı varsa yeri sızar),
+    Emre'yi gizlice taşımak (Doğa ya da Orhun; güvene bağlı), tuzak kurmak
+    (Emre yem olur; integrity −, başarılıysa Hakan yakalanır). Süreli: bir
+    şey yapılmazsa Hakan güvenli eve ulaşır.
+  - Hakan yakalanınca itiraf eder (İkilem 4): hukuki işlem / eşine yasal
+    yardım bul (ZaferBank'tan hastane hesabına ödeme, `payees`) / kaçmasına
+    göz yum / itirafı emir zinciri için kullan (Halit Yener'e, oradan babaya
+    gider; Hakan'ın ailesi tehlikeye girer).
+  - Hakan'ın eşi [ÖNERİ isim: Nermin Demir] paranın nereden geldiğini
+    öğrenirse tedaviyi reddedebilir; kendi kararını verir.
+  - Emre kurtarılmadıysa Hakan hikâyesi açılmaz; [?] yerine ne olur?
+- **Orhun'un borcu:** Ağ Orhun'a son kez gelir: borcunu kapatma karşılığında
+  Emre'nin yeri. Önceki seçimler belirler:
+  - Borcunu ödediysen (`orhun:helped`): reddeder ve hemen haber verir.
+  - İç denetime bildirdiysen (`orhun:reported`): susar; güvenli evin yeri
+    Hakan'a sızar (süre kısalır).
+  - Hiçbiri: sana yazar, ne yapacağını sorar: şimdi öde / bildir / güven.
+- **Milletvekiliyle son yüzleşme:** Haluk Yılmaz gizli numaradan son kez
+  yazar: dosyayı Kerem'le kapat, vakfı unut; karşılığında görevine dönersin
+  (uzaklaştırıldıysan). Kabul (kirli eller), ret, ya da konuşmayı kaydetmek
+  (delil; savcıya ifadede kullanılabilir).
+- **Final soruşturması: savcıya ifade** (MatesApp, yeni kişi: Cumhuriyet
+  Savcısı [ÖNERİ isim: Leyla Koç]). Sorular, toplanan bayraklara göre
+  seçenek açar:
+  - "Berat Yılmaz'ı kim öldürdü?" Kerem / Adil / bilmiyorum
+    (`case:solved`, `case:wrong-person`).
+  - "Emri kim verdi?" Halit Yener / milletvekili (kayıt ya da itiraf
+    varsa) / bilmiyorum.
+  - "Basına kim sızdırdı?" Atakan / Orhun / bilmiyorum / ben. Yanlış kişiyi
+    suçlamanın bedeli burada (güven kaybı, haksız ihbar).
+  - "İzinde, yurt dışındaydınız, değil mi?" `doubt` yeterliyse gizli
+    seçenek: "Nerede olduğumu bilmiyorum." → `twist:never-abroad` → telefon
+    bozulur (01-ana-gizem.md › Gizli son).
+  - İfade bitince `final:ready`.
+- **İkilemler:** 4, 5, 7'nin sonu (yayın yapıldıysa sonuçları), 8 [?].
 
 ## Final — Kimin Adaleti?
 **Durum:** İskelet [KANON], metinler [ÖNERİ]

@@ -207,10 +207,9 @@ kapatıldı"). Hattı hâlâ kullanılıyor.
 tedavi parası karşılığında bir cinayet teklif eder ve Hakan kabul eder.
 Oyuncu onu önce profesyonel tetikçi sanar. Ayrıntı: İkilem 4.
 
-Berat'ın katili **değil** (katil Kerem). [?] Hakan'ın hedefi kim olabilir:
-Kerem'e ulaşmaya çalışan bir tanık, Selin Aras, Furkan ya da kayıp
-öğrencilerden hayatta olan. Bölüm IV'te ağın Kerem'i susturmak için onu
-tutması da düşünülebilir.
+Berat'ın katili **değil** (katil Kerem). **Hedefi Emre [KARAR, 30.10.2026]:**
+çiftlikten kurtarılan ve vakfa karşı ifade verecek öğrenci. Ağ, Emre'yi
+susturmak için Hakan'ı tutar (Bölüm VI).
 
 ### Hakan'ın eşi
 Tedavi parasının nereden geldiğini bilmez. Gerçeği öğrenirse bu parayla

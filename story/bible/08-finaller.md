@@ -66,10 +66,14 @@ yazıldıkça her birine o hikâyenin bayraklarına bağlı seçenekler eklenir
 | --- | --- |
 | Hiç yurt dışında değildi | `twist:never-abroad` |
 
-Sadece yeterince ipucu toplayan oyuncu bu sona ulaşır (öneri: gizli `doubt`
-sayısı; bkz. 01). Bu bölüm sadece o zaman görünür ve diğer bütün bölümleri yeniden
-okutur: sızıntılar, kimsenin nerede olduğunu bilmemesi, annenin "senin
-oralarda" demesi. Ayrıntılar 01-ana-gizem.md'de.
+Sadece yeterince ipucu toplayan oyuncu bu sona ulaşır (gizli `doubt`
+sayısı; bkz. 01). **[KARAR, 30.10.2026]** Diğer bölümlerin yerine geçer:
+final ekranından önce telefon bozulur (sayılar, galeri, "SEN DELİ
+DEĞİLSİN" mailleri, hasta bakıcının ses kaydı) ve komiserin her şeyi
+uydurduğu ortaya çıkar. Ayrıntılar 01-ana-gizem.md › Gizli son.
+
+**Final soruşturması [KARAR]:** savcıya ifade, MatesApp'te. Sorular ve
+seçenekler 04-bolumler.md › Bölüm VI.
 
 ### [?] Eklenecek bölümler
 

@@ -258,8 +258,43 @@ Ek ipuçları da oyunda [KANON, taslak]:
     `clue:doctor-sms`). `doubt` saymıyorlar: hangilerinin kaç puan sayacağı
     ve final eşiği (şu an `doubt >= 3`) karar bekliyor. [?]
 
-[?] Gizli son diğer finallerle nasıl birleşir: Kerem'in akıbeti ve dosyanın
-sonucu yine anlatılır mı, yoksa her şey yeniden mi okunur?
+### Gizli son: telefon bozulur [KARAR, 30.10.2026]
+
+Kullanıcının kararı (kendi sözleriyle): "Gizli sona girildikten sonra oyun
+bozulmaya başlamalı, sayılar kafayı yemeli, galerideki fotoğraflar ilaç ve
+akıl hastanesi fotoları ile dolmalı, bütün maillerde aynı şeyler yazmalı,
+büyük harflerle SEN DELİ DEĞİLSİN SEN DELİ DEĞİLSİN yazmalı sayfalar boyunca.
+Karakterimiz zır deli çıkacak ve her şeyi uydurmuş olacak. Sonuna ses
+kayıtlarında hasta bakıcının ses kaydı eklenebilir."
+
+Yani gizli son normal finallerle birleşmez; onların **yerine** geçer ve
+oynanan her şeyi geri dönüp yalanlar.
+
+**Oyundaki karşılığı [ÖNERİ, taslak]:** Final soruşturmasında gizli seçenek
+seçilince (`twist:never-abroad`) telefon birkaç dakika içinde dağılır:
+1. Sayılar: banka bakiyesi, saat, rozet sayıları anlamsızlaşır (999+, 88:88,
+   eksi bakiyeler); takvim günleri karışır.
+2. Galeri: komiserin kareleri birer birer ilaç kutuları, hastane koridoru,
+   parmaklıklı pencere, kapalı perdeli oda fotoğraflarıyla yer değiştirir.
+3. Mail: gelen kutusu ve Spam baştan sona aynı mailin kopyalarıyla dolar:
+   gönderen yok, konu ve metin büyük harflerle "SEN DELİ DEĞİLSİN".
+4. Sohbetler: ekibin mesajları teker teker "Bu mesaj silindi"ye döner;
+   sohbet listesinde tek bir kişi kalır. [?] Kim? (Dr. Arıkan?)
+5. Kayıtlar: en sonda yeni bir ses kaydı: hasta bakıcı. [Kullanıcı kendisi
+   kaydedecek.] Ne söylediği: [?]
+6. Son ekran: [?]
+
+[?] "Her şeyi uydurmuş olacak" ne kadarını kapsıyor?
+- Berat'ın ölümü gerçek mi, yoksa komiser onu da haberlerden mi kurdu?
+- Ekip (Özge, Orhun, Atakan...) gerçek kişiler mi, hiç var olmadılar mı?
+- Haberlerdeki "dosyayı yöneten amir yurt dışında" cümleleri kim hakkında?
+- Sızıntılar (gece üçte arayan numara) bu okumada ne anlama geliyor?
+Bunların cevabı, oyuna serpiştirilmiş ipuçlarının ikinci oynayışta nasıl
+okunacağını belirler.
+
+Not [ÖNERİ]: Ruh hastalığını korkutucu bir "deli" figürüne indirmemek için
+hasta bakıcının sesi sıcak ve sakin olabilir; dehşet, komiserin kendi
+kurduğu dünyanın çökmesinden gelir, hastalığın kendisinden değil.
 
 ### Kim ne biliyor, kim yalan söylüyor?
 

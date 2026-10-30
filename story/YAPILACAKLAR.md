@@ -118,8 +118,11 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 - [x] Behram'ın sırrı: narkotik, Adil muhbir olduğu için cuma gecelerine göz yumdu.
 - [x] Basına kim sızdırıyor? Komiserin kendisi (hatırlamadığı gece aramaları).
 - [x] Adil'in deposundaki listede geçen "H.Y." kim? Danışman Halit Yener.
-- [ ] Hakan Demir'in hedefi kim? (Berat'ın katili artık o değil.)
-- [ ] Gizli son ("hiç yurt dışında değildi") diğer finallerle nasıl birleşir?
+- [x] Hakan Demir'in hedefi: Emre (Bölüm VI).
+- [x] Gizli son diğerlerinin yerine geçer: telefon bozulur, komiser her şeyi
+  uydurmuş (`bible/01-ana-gizem.md`).
+- [ ] [?] "Her şeyi uydurmuş" neyi kapsıyor? Berat'ın ölümü, ekip, sızıntılar
+  gerçek mi? Hasta bakıcının kaydında ne söylenecek?
 
 ## Sistemler
 
@@ -192,6 +195,17 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 - [ ] 9. Tutarlılık kontrolü (`bible/09-kontrol.md`)
 
 ## Yayın
+
+### Alpha demo (arkadaşlara APK) — sonra
+
+- [ ] Sürüm `0.5.0-alpha` (şu an Flutter'ın varsayılanı `1.0.0+1`).
+- [ ] Android APK (`flutter build apk --release`), imzalama anahtarı.
+- [ ] Kapsam: demo nerede bitecek? Bölüm VI yazıldıktan sonra karar ver;
+      sonuna "Demo sonu, teşekkürler" ekranı.
+- [ ] Test görselleri kalabilir ama belli olsun: üzerine küçük bir "TEST
+      GÖRSELİ" etiketi.
+- [ ] Yazar ayarlarını (Hızlı görevler, Hikâye durumu) demoda gizle.
+- [ ] Geri bildirim bağlantısı (ör. form) ve "nerede takıldın?" sorusu.
 
 - [ ] `chore/modernize-codebase` branch'ini GitHub'a gönder (onay bekliyor).
 - [ ] GitHub'da eski bir commit'in SHA ile hâlâ açılabilmesi: destek talebi ya
