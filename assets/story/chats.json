@@ -307,6 +307,29 @@
           {
             "requires": ["ev:berat-phone", "!phone:decided"],
             "next": "ozgeTapes"
+          },
+          {
+            "requires": [
+              "hakan:seen",
+              "!emre:protection",
+              "!hakan:caught"
+            ],
+            "next": "ozgeEmre"
+          },
+          {
+            "requires": [
+              "hakan:caught",
+              "emre:hurt",
+              "!hakan:dealt"
+            ],
+            "next": "ozgeHakanHurt"
+          },
+          {
+            "requires": [
+              "hakan:caught",
+              "!hakan:dealt"
+            ],
+            "next": "ozgeHakan"
           }
         ]
       },
@@ -454,6 +477,29 @@
           {
             "requires": ["ev:berat-phone", "!phone:decided"],
             "next": "ozgeTapes2"
+          },
+          {
+            "requires": [
+              "hakan:seen",
+              "!emre:protection",
+              "!hakan:caught"
+            ],
+            "next": "ozgeEmre2"
+          },
+          {
+            "requires": [
+              "hakan:caught",
+              "emre:hurt",
+              "!hakan:dealt"
+            ],
+            "next": "ozgeHakanHurt2"
+          },
+          {
+            "requires": [
+              "hakan:caught",
+              "!hakan:dealt"
+            ],
+            "next": "ozgeHakan2"
           }
         ]
       },
@@ -808,6 +854,456 @@
             "next": "later"
           }
         ]
+      },
+      "ozgeEmre": {
+        "incoming": [
+          "Amirim hastanede biri Emre’yi soruyormuş. Behram’ın adamı görmüş.",
+          "Emre’yi ne yapalım? Neye karar verirsek hemen yapmam lazım."
+        ],
+        "options": [
+          {
+            "label": "Resmî koruma iste. Kapısına iki polis.",
+            "replies": [
+              "İstiyorum. Ama koruma talebi sisteme girer amirim; kim okursa okusun."
+            ],
+            "traits": [
+              "temkinli"
+            ],
+            "requires": "!hakan:caught",
+            "unlocks": [
+              "emre:protection",
+              "emre:guarded",
+              "witnessDanger += 5"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Kimseye söylemeden başka yere taşıyalım. Doğa’nın bir akrabasının evi var.",
+            "replies": [
+              "Doğa kabul etti. Gece çıkarıyoruz, kayda geçmeyecek.",
+              "Yerini sadece biz bileceğiz amirim. Biz ve Orhun; arabayı o kullanacak."
+            ],
+            "requires": [
+              "trust:Doğa >= 40",
+              "!hakan:caught"
+            ],
+            "unlocks": [
+              "emre:protection",
+              "emre:hidden",
+              "integrity -= 5",
+              "trust:Doğa += 5"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Emre’yi yem yapalım. Adam gelsin, suçüstü alalım.",
+            "replies": [
+              "Amirim... çocuk zaten yeterince yaşadı.",
+              "Peki. Odayı boşaltıp bekleyeceğiz. Emre’ye ne diyeceğimi bilmiyorum."
+            ],
+            "traits": [
+              "cesur"
+            ],
+            "requires": "!hakan:caught",
+            "unlocks": [
+              "emre:protection",
+              "emre:bait",
+              "integrity -= 10",
+              "trust:Özge -= 10"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Ne oldu Özge?",
+            "replies": [
+              "Anlatayım amirim."
+            ],
+            "requires": "hakan:caught",
+            "unlocks": [
+              "emre:protection"
+            ],
+            "next": "afterMezbaha"
+          }
+        ]
+      },
+      "ozgeEmre2": {
+        "incoming": [
+          "Amirim hastanede biri Emre’yi soruyormuş. Behram’ın adamı görmüş.",
+          "Emre’yi ne yapalım? Neye karar verirsek hemen yapmam lazım."
+        ],
+        "options": [
+          {
+            "label": "Resmî koruma iste. Kapısına iki polis.",
+            "replies": [
+              "İstiyorum. Ama koruma talebi sisteme girer amirim; kim okursa okusun."
+            ],
+            "traits": [
+              "temkinli"
+            ],
+            "requires": "!hakan:caught",
+            "unlocks": [
+              "emre:protection",
+              "emre:guarded",
+              "witnessDanger += 5"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Kimseye söylemeden başka yere taşıyalım. Doğa’nın bir akrabasının evi var.",
+            "replies": [
+              "Doğa kabul etti. Gece çıkarıyoruz, kayda geçmeyecek.",
+              "Yerini sadece biz bileceğiz amirim. Biz ve Orhun; arabayı o kullanacak."
+            ],
+            "requires": [
+              "trust:Doğa >= 40",
+              "!hakan:caught"
+            ],
+            "unlocks": [
+              "emre:protection",
+              "emre:hidden",
+              "integrity -= 5",
+              "trust:Doğa += 5"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Emre’yi yem yapalım. Adam gelsin, suçüstü alalım.",
+            "replies": [
+              "Amirim... çocuk zaten yeterince yaşadı.",
+              "Peki. Odayı boşaltıp bekleyeceğiz. Emre’ye ne diyeceğimi bilmiyorum."
+            ],
+            "traits": [
+              "cesur"
+            ],
+            "requires": "!hakan:caught",
+            "unlocks": [
+              "emre:protection",
+              "emre:bait",
+              "integrity -= 10",
+              "trust:Özge -= 10"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Ne oldu Özge?",
+            "replies": [
+              "Anlatayım amirim."
+            ],
+            "requires": "hakan:caught",
+            "unlocks": [
+              "emre:protection"
+            ],
+            "next": "later"
+          }
+        ]
+      },
+      "ozgeHakanHurt": {
+        "incoming": [
+          "Amirim... Hakan Emre’ye ulaşmış.",
+          "Çocuğu bıçaklamış ama derin değil, yaşıyor. Hakan kaçmamış; koridorda oturmuş, polisi beklemiş.",
+          "Emre ifade vermeyeceğini söylüyor. Korkuyor.",
+          "Babası olacak yaşta bir adam amirim. Ağladı.",
+          "Eşi kanser. Tedavi parası için kabul etmiş. Parayı veren Halit Yener’in şoförü.",
+          "Bana sorduğu tek şey eşinin tedavisinin kesilip kesilmeyeceği oldu."
+        ],
+        "options": [
+          {
+            "label": "Yasal süreci başlat. Ne yaptıysa onu ödesin.",
+            "replies": [
+              "Tutanağı hazırlıyorum amirim.",
+              "Eşine kim söyleyecek?"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:charged",
+              "integrity += 5"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Eşinin tedavisi için yasal bir yol bulalım. Karşılığında her şeyi anlatsın.",
+            "replies": [
+              "Hastanenin sosyal hizmet birimiyle konuşurum amirim.",
+              "Bu ayın tedavi payını kimse ödemezse tedavi kesiliyormuş. Hesap numarasını size atıyorum.",
+              "Hakan her şeyi anlatacağını söyledi."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:wife-help",
+              "hakan:testimony",
+              "trust:Özge += 5"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Bırak gitsin. Eşinin yanında olsun.",
+            "replies": [
+              "Amirim, adam bir çocuğa zarar vermeye geldi!",
+              "...Peki."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:released",
+              "player:dirty-hands",
+              "integrity -= 15",
+              "trust:Özge -= 15"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Halit Yener’i ve şoförünü teşhis etsin. Hemen.",
+            "replies": [
+              "Teşhis edecek amirim.",
+              "Ama bunu duydukları gün eşinin hastane odasına da birini gönderirler."
+            ],
+            "traits": [
+              "cesur"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:testimony",
+              "witnessDanger += 15",
+              "pressure += 10"
+            ],
+            "next": "afterMezbaha"
+          }
+        ]
+      },
+      "ozgeHakanHurt2": {
+        "incoming": [
+          "Amirim... Hakan Emre’ye ulaşmış.",
+          "Çocuğu bıçaklamış ama derin değil, yaşıyor. Hakan kaçmamış; koridorda oturmuş, polisi beklemiş.",
+          "Emre ifade vermeyeceğini söylüyor. Korkuyor.",
+          "Babası olacak yaşta bir adam amirim. Ağladı.",
+          "Eşi kanser. Tedavi parası için kabul etmiş. Parayı veren Halit Yener’in şoförü.",
+          "Bana sorduğu tek şey eşinin tedavisinin kesilip kesilmeyeceği oldu."
+        ],
+        "options": [
+          {
+            "label": "Yasal süreci başlat. Ne yaptıysa onu ödesin.",
+            "replies": [
+              "Tutanağı hazırlıyorum amirim.",
+              "Eşine kim söyleyecek?"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:charged",
+              "integrity += 5"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Eşinin tedavisi için yasal bir yol bulalım. Karşılığında her şeyi anlatsın.",
+            "replies": [
+              "Hastanenin sosyal hizmet birimiyle konuşurum amirim.",
+              "Bu ayın tedavi payını kimse ödemezse tedavi kesiliyormuş. Hesap numarasını size atıyorum.",
+              "Hakan her şeyi anlatacağını söyledi."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:wife-help",
+              "hakan:testimony",
+              "trust:Özge += 5"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Bırak gitsin. Eşinin yanında olsun.",
+            "replies": [
+              "Amirim, adam bir çocuğa zarar vermeye geldi!",
+              "...Peki."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:released",
+              "player:dirty-hands",
+              "integrity -= 15",
+              "trust:Özge -= 15"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Halit Yener’i ve şoförünü teşhis etsin. Hemen.",
+            "replies": [
+              "Teşhis edecek amirim.",
+              "Ama bunu duydukları gün eşinin hastane odasına da birini gönderirler."
+            ],
+            "traits": [
+              "cesur"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:testimony",
+              "witnessDanger += 15",
+              "pressure += 10"
+            ],
+            "next": "later"
+          }
+        ]
+      },
+      "ozgeHakan": {
+        "incoming": [
+          "Hakan Demir elimizde amirim. Hiç direnmedi.",
+          "Babası olacak yaşta bir adam amirim. Ağladı.",
+          "Eşi kanser. Tedavi parası için kabul etmiş. Parayı veren Halit Yener’in şoförü.",
+          "Bana sorduğu tek şey eşinin tedavisinin kesilip kesilmeyeceği oldu."
+        ],
+        "options": [
+          {
+            "label": "Yasal süreci başlat. Ne yaptıysa onu ödesin.",
+            "replies": [
+              "Tutanağı hazırlıyorum amirim.",
+              "Eşine kim söyleyecek?"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:charged",
+              "integrity += 5"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Eşinin tedavisi için yasal bir yol bulalım. Karşılığında her şeyi anlatsın.",
+            "replies": [
+              "Hastanenin sosyal hizmet birimiyle konuşurum amirim.",
+              "Bu ayın tedavi payını kimse ödemezse tedavi kesiliyormuş. Hesap numarasını size atıyorum.",
+              "Hakan her şeyi anlatacağını söyledi."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:wife-help",
+              "hakan:testimony",
+              "trust:Özge += 5"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Bırak gitsin. Eşinin yanında olsun.",
+            "replies": [
+              "Amirim, adam bir çocuğa zarar vermeye geldi!",
+              "...Peki."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:released",
+              "player:dirty-hands",
+              "integrity -= 15",
+              "trust:Özge -= 15"
+            ],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Halit Yener’i ve şoförünü teşhis etsin. Hemen.",
+            "replies": [
+              "Teşhis edecek amirim.",
+              "Ama bunu duydukları gün eşinin hastane odasına da birini gönderirler."
+            ],
+            "traits": [
+              "cesur"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:testimony",
+              "witnessDanger += 15",
+              "pressure += 10"
+            ],
+            "next": "afterMezbaha"
+          }
+        ]
+      },
+      "ozgeHakan2": {
+        "incoming": [
+          "Hakan Demir elimizde amirim. Hiç direnmedi.",
+          "Babası olacak yaşta bir adam amirim. Ağladı.",
+          "Eşi kanser. Tedavi parası için kabul etmiş. Parayı veren Halit Yener’in şoförü.",
+          "Bana sorduğu tek şey eşinin tedavisinin kesilip kesilmeyeceği oldu."
+        ],
+        "options": [
+          {
+            "label": "Yasal süreci başlat. Ne yaptıysa onu ödesin.",
+            "replies": [
+              "Tutanağı hazırlıyorum amirim.",
+              "Eşine kim söyleyecek?"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:charged",
+              "integrity += 5"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Eşinin tedavisi için yasal bir yol bulalım. Karşılığında her şeyi anlatsın.",
+            "replies": [
+              "Hastanenin sosyal hizmet birimiyle konuşurum amirim.",
+              "Bu ayın tedavi payını kimse ödemezse tedavi kesiliyormuş. Hesap numarasını size atıyorum.",
+              "Hakan her şeyi anlatacağını söyledi."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:wife-help",
+              "hakan:testimony",
+              "trust:Özge += 5"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Bırak gitsin. Eşinin yanında olsun.",
+            "replies": [
+              "Amirim, adam bir çocuğa zarar vermeye geldi!",
+              "...Peki."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:released",
+              "player:dirty-hands",
+              "integrity -= 15",
+              "trust:Özge -= 15"
+            ],
+            "next": "later"
+          },
+          {
+            "label": "Halit Yener’i ve şoförünü teşhis etsin. Hemen.",
+            "replies": [
+              "Teşhis edecek amirim.",
+              "Ama bunu duydukları gün eşinin hastane odasına da birini gönderirler."
+            ],
+            "traits": [
+              "cesur"
+            ],
+            "unlocks": [
+              "hakan:dealt",
+              "hakan:testimony",
+              "witnessDanger += 15",
+              "pressure += 10"
+            ],
+            "next": "later"
+          }
+        ]
       }
     }
   },
@@ -966,6 +1462,40 @@
           {
             "requires": ["mp:wrote", "!orhun:approached"],
             "next": "orhunVisit"
+          },
+          {
+            "requires": [
+              "emre:rescued",
+              "hakan:seen",
+              "orhun:helped",
+              "!orhun:offer"
+            ],
+            "next": "orhunOfferHelped"
+          },
+          {
+            "requires": [
+              "emre:rescued",
+              "hakan:seen",
+              "orhun:reported",
+              "!orhun:offer"
+            ],
+            "next": "orhunOfferCold"
+          },
+          {
+            "requires": [
+              "emre:rescued",
+              "hakan:seen",
+              "!orhun:offer"
+            ],
+            "next": "orhunOffer"
+          },
+          {
+            "requires": [
+              "orhun:promised",
+              "orhun:helped",
+              "!orhun:thanked"
+            ],
+            "next": "orhunPaid"
           }
         ]
       },
@@ -1026,6 +1556,40 @@
           {
             "requires": ["mezbaha-found", "!orhun:blood"],
             "next": "orhunBlood"
+          },
+          {
+            "requires": [
+              "emre:rescued",
+              "hakan:seen",
+              "orhun:helped",
+              "!orhun:offer"
+            ],
+            "next": "orhunOfferHelped2"
+          },
+          {
+            "requires": [
+              "emre:rescued",
+              "hakan:seen",
+              "orhun:reported",
+              "!orhun:offer"
+            ],
+            "next": "orhunOfferCold2"
+          },
+          {
+            "requires": [
+              "emre:rescued",
+              "hakan:seen",
+              "!orhun:offer"
+            ],
+            "next": "orhunOffer2"
+          },
+          {
+            "requires": [
+              "orhun:promised",
+              "orhun:helped",
+              "!orhun:thanked"
+            ],
+            "next": "orhunPaid2"
           }
         ]
       },
@@ -1101,6 +1665,274 @@
             "label": "Bu bilgiyi şimdilik raporlara yazma.",
             "replies": ["Emin misiniz amirim? Erdi Müdürüm görürse..."],
             "unlocks": ["orhun:blood", "player:dirty-hands"],
+            "next": "afterPlate"
+          }
+        ]
+      },
+      "orhunOfferHelped": {
+        "incoming": [
+          "Amirim yine geldiler. Bu sefer borcumu kapatacaklarmış; karşılığında Emre’nin nerede olduğunu soruyorlar.",
+          "Borcum yok artık, sizin sayenizde. Kovdum. Arabanın plakasını da Atakan’a verdim."
+        ],
+        "options": [
+          {
+            "label": "Sağ ol Orhun.",
+            "replies": [
+              "Asıl ben sağ olayım amirim."
+            ],
+            "unlocks": [
+              "orhun:offer",
+              "orhun:refused",
+              "trust:Orhun += 10"
+            ],
+            "next": "afterStatement"
+          }
+        ]
+      },
+      "orhunOfferHelped2": {
+        "incoming": [
+          "Amirim yine geldiler. Bu sefer borcumu kapatacaklarmış; karşılığında Emre’nin nerede olduğunu soruyorlar.",
+          "Borcum yok artık, sizin sayenizde. Kovdum. Arabanın plakasını da Atakan’a verdim."
+        ],
+        "options": [
+          {
+            "label": "Sağ ol Orhun.",
+            "replies": [
+              "Asıl ben sağ olayım amirim."
+            ],
+            "unlocks": [
+              "orhun:offer",
+              "orhun:refused",
+              "trust:Orhun += 10"
+            ],
+            "next": "afterPlate"
+          }
+        ]
+      },
+      "orhunOfferCold": {
+        "incoming": [
+          "Bir şey yok amirim. Her şey yolunda."
+        ],
+        "options": [
+          {
+            "label": "Emin misin?",
+            "replies": [
+              "Eminim."
+            ],
+            "unlocks": [
+              "orhun:offer",
+              "orhun:sold"
+            ],
+            "next": "afterStatement"
+          },
+          {
+            "label": "(Cevap verme)",
+            "replies": [],
+            "silent": true,
+            "unlocks": [
+              "orhun:offer",
+              "orhun:sold"
+            ],
+            "next": "afterStatement"
+          }
+        ]
+      },
+      "orhunOfferCold2": {
+        "incoming": [
+          "Bir şey yok amirim. Her şey yolunda."
+        ],
+        "options": [
+          {
+            "label": "Emin misin?",
+            "replies": [
+              "Eminim."
+            ],
+            "unlocks": [
+              "orhun:offer",
+              "orhun:sold"
+            ],
+            "next": "afterPlate"
+          },
+          {
+            "label": "(Cevap verme)",
+            "replies": [],
+            "silent": true,
+            "unlocks": [
+              "orhun:offer",
+              "orhun:sold"
+            ],
+            "next": "afterPlate"
+          }
+        ]
+      },
+      "orhunOffer": {
+        "incoming": [
+          "Amirim size bir şey söylemem lazım.",
+          "O takım elbiseli adam yine geldi. Borcumu kapatacaklarmış. Tek istedikleri Emre’nin nerede olduğu.",
+          "Söylemedim. Ama icra yarın evime geliyor amirim."
+        ],
+        "options": [
+          {
+            "label": "Borcunu ben kapatırım. Sakın söyleme.",
+            "replies": [
+              "Amirim... ciddi misiniz?",
+              "Hesabımı biliyorsunuz. Bugün olmazsa yarın kapıdalar."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "orhun:offer",
+              "orhun:promised",
+              "heard:orhun-debt"
+            ],
+            "next": "afterStatement"
+          },
+          {
+            "label": "Bunu iç denetime bildirmem gerek.",
+            "replies": [
+              "...Biliyordum.",
+              "Siz bilirsiniz amirim."
+            ],
+            "traits": [
+              "temkinli"
+            ],
+            "unlocks": [
+              "orhun:offer",
+              "orhun:reported",
+              "trust:Orhun -= 20",
+              "integrity += 5"
+            ],
+            "next": "afterStatement"
+          },
+          {
+            "label": "Sana güveniyorum Orhun.",
+            "replies": [
+              "Sağ olun amirim. Ağzımı açmayacağım."
+            ],
+            "requires": "trust:Orhun >= 60",
+            "unlocks": [
+              "orhun:offer",
+              "orhun:refused"
+            ],
+            "next": "afterStatement"
+          },
+          {
+            "label": "Sana güveniyorum Orhun.",
+            "replies": [
+              "...Tamam amirim."
+            ],
+            "requires": "trust:Orhun < 60",
+            "unlocks": [
+              "orhun:offer",
+              "orhun:sold"
+            ],
+            "next": "afterStatement"
+          }
+        ]
+      },
+      "orhunOffer2": {
+        "incoming": [
+          "Amirim size bir şey söylemem lazım.",
+          "O takım elbiseli adam yine geldi. Borcumu kapatacaklarmış. Tek istedikleri Emre’nin nerede olduğu.",
+          "Söylemedim. Ama icra yarın evime geliyor amirim."
+        ],
+        "options": [
+          {
+            "label": "Borcunu ben kapatırım. Sakın söyleme.",
+            "replies": [
+              "Amirim... ciddi misiniz?",
+              "Hesabımı biliyorsunuz. Bugün olmazsa yarın kapıdalar."
+            ],
+            "traits": [
+              "merhamet"
+            ],
+            "unlocks": [
+              "orhun:offer",
+              "orhun:promised",
+              "heard:orhun-debt"
+            ],
+            "next": "afterPlate"
+          },
+          {
+            "label": "Bunu iç denetime bildirmem gerek.",
+            "replies": [
+              "...Biliyordum.",
+              "Siz bilirsiniz amirim."
+            ],
+            "traits": [
+              "temkinli"
+            ],
+            "unlocks": [
+              "orhun:offer",
+              "orhun:reported",
+              "trust:Orhun -= 20",
+              "integrity += 5"
+            ],
+            "next": "afterPlate"
+          },
+          {
+            "label": "Sana güveniyorum Orhun.",
+            "replies": [
+              "Sağ olun amirim. Ağzımı açmayacağım."
+            ],
+            "requires": "trust:Orhun >= 60",
+            "unlocks": [
+              "orhun:offer",
+              "orhun:refused"
+            ],
+            "next": "afterPlate"
+          },
+          {
+            "label": "Sana güveniyorum Orhun.",
+            "replies": [
+              "...Tamam amirim."
+            ],
+            "requires": "trust:Orhun < 60",
+            "unlocks": [
+              "orhun:offer",
+              "orhun:sold"
+            ],
+            "next": "afterPlate"
+          }
+        ]
+      },
+      "orhunPaid": {
+        "incoming": [
+          "Para geldi amirim. Ne diyeceğimi bilmiyorum.",
+          "Adam bu sabah yine kapıdaydı. Yüzüne kapattım."
+        ],
+        "options": [
+          {
+            "label": "Önemli değil. Emre’yi koru, yeter.",
+            "replies": [
+              "Korurum amirim. Söz."
+            ],
+            "unlocks": [
+              "orhun:thanked",
+              "orhun:refused",
+              "trust:Orhun += 10"
+            ],
+            "next": "afterStatement"
+          }
+        ]
+      },
+      "orhunPaid2": {
+        "incoming": [
+          "Para geldi amirim. Ne diyeceğimi bilmiyorum.",
+          "Adam bu sabah yine kapıdaydı. Yüzüne kapattım."
+        ],
+        "options": [
+          {
+            "label": "Önemli değil. Emre’yi koru, yeter.",
+            "replies": [
+              "Korurum amirim. Söz."
+            ],
+            "unlocks": [
+              "orhun:thanked",
+              "orhun:refused",
+              "trust:Orhun += 10"
+            ],
             "next": "afterPlate"
           }
         ]
@@ -1218,6 +2050,13 @@
           {
             "requires": ["kerem:met", "envoy:atakan", "!envoy:reported"],
             "next": "meetAtakan"
+          },
+          {
+            "requires": [
+              "hakan:seen",
+              "!atakan:hakan"
+            ],
+            "next": "atakanHakan"
           }
         ]
       },
@@ -1269,6 +2108,13 @@
           {
             "requires": ["kerem:met", "envoy:atakan", "!envoy:reported"],
             "next": "meetAtakan2"
+          },
+          {
+            "requires": [
+              "hakan:seen",
+              "!atakan:hakan"
+            ],
+            "next": "atakanHakan2"
           }
         ]
       },
@@ -1533,6 +2379,80 @@
             "next": "afterCctv"
           }
         ]
+      },
+      "atakanHakan": {
+        "incoming": [
+          "Amirim hastane kamerasından adamı buldum. Hakan Demir, 44 yaşında.",
+          "Sabıkası yok. Altı aydır işsiz. Eşi aynı hastanenin onkoloji katında yatıyor.",
+          "Tetikçiye benzemiyor amirim. Ama geçen hafta hesabına 200.000 lira girmiş, gönderen bir paravan şirket."
+        ],
+        "options": [
+          {
+            "label": "Gözaltına alın. Hemen.",
+            "replies": [
+              "Ekip yolda amirim."
+            ],
+            "unlocks": [
+              "atakan:hakan",
+              "heard:hakan",
+              "hakan:caught"
+            ],
+            "next": "idle"
+          },
+          {
+            "label": "Bırakın yürüsün. Kime gideceğini görelim.",
+            "replies": [
+              "Riskli amirim. Ama tamam, iki kişiyle takipteyiz."
+            ],
+            "traits": [
+              "temkinli"
+            ],
+            "unlocks": [
+              "atakan:hakan",
+              "heard:hakan",
+              "hakan:watched",
+              "witnessDanger += 5"
+            ],
+            "next": "idle"
+          }
+        ]
+      },
+      "atakanHakan2": {
+        "incoming": [
+          "Amirim hastane kamerasından adamı buldum. Hakan Demir, 44 yaşında.",
+          "Sabıkası yok. Altı aydır işsiz. Eşi aynı hastanenin onkoloji katında yatıyor.",
+          "Tetikçiye benzemiyor amirim. Ama geçen hafta hesabına 200.000 lira girmiş, gönderen bir paravan şirket."
+        ],
+        "options": [
+          {
+            "label": "Gözaltına alın. Hemen.",
+            "replies": [
+              "Ekip yolda amirim."
+            ],
+            "unlocks": [
+              "atakan:hakan",
+              "heard:hakan",
+              "hakan:caught"
+            ],
+            "next": "afterCctv"
+          },
+          {
+            "label": "Bırakın yürüsün. Kime gideceğini görelim.",
+            "replies": [
+              "Riskli amirim. Ama tamam, iki kişiyle takipteyiz."
+            ],
+            "traits": [
+              "temkinli"
+            ],
+            "unlocks": [
+              "atakan:hakan",
+              "heard:hakan",
+              "hakan:watched",
+              "witnessDanger += 5"
+            ],
+            "next": "afterCctv"
+          }
+        ]
       }
     }
   },
@@ -1615,6 +2535,13 @@
           {
             "requires": ["kerem:met", "envoy:behram", "!envoy:reported"],
             "next": "meetBehram"
+          },
+          {
+            "requires": [
+              "hakan:seen",
+              "!behram:hakan"
+            ],
+            "next": "behramHakan"
           }
         ]
       },
@@ -1627,6 +2554,13 @@
           {
             "requires": ["kerem:met", "envoy:behram", "!envoy:reported"],
             "next": "meetBehram2"
+          },
+          {
+            "requires": [
+              "hakan:seen",
+              "!behram:hakan"
+            ],
+            "next": "behramHakan2"
           }
         ],
         "ask": [
@@ -1809,6 +2743,66 @@
               "player:dirty-hands",
               "integrity -= 20",
               "trust:Behram -= 10"
+            ],
+            "next": "afterRaid"
+          }
+        ]
+      },
+      "behramHakan": {
+        "incoming": [
+          "Komiserim, hastanedeki muhbirim aradı.",
+          "Biri iki gündür Emre’nin odasını soruyor. Kırklarında, takım elbiseli ama ayakkabıları eski.",
+          "Profesyonel değil. Ama kararlı. Gözlerinden belli."
+        ],
+        "options": [
+          {
+            "label": "Fotoğrafını çeksin, Atakan’a yollasın.",
+            "replies": [
+              "Çekti bile. Atakan’a gönderdim."
+            ],
+            "unlocks": [
+              "behram:hakan",
+              "trust:Behram += 5"
+            ],
+            "next": "raid"
+          },
+          {
+            "label": "Dokunmasın. Sadece izlesin.",
+            "replies": [
+              "Tamam. Ama bu adam bir şey yapacak komiserim."
+            ],
+            "unlocks": [
+              "behram:hakan"
+            ],
+            "next": "raid"
+          }
+        ]
+      },
+      "behramHakan2": {
+        "incoming": [
+          "Komiserim, hastanedeki muhbirim aradı.",
+          "Biri iki gündür Emre’nin odasını soruyor. Kırklarında, takım elbiseli ama ayakkabıları eski.",
+          "Profesyonel değil. Ama kararlı. Gözlerinden belli."
+        ],
+        "options": [
+          {
+            "label": "Fotoğrafını çeksin, Atakan’a yollasın.",
+            "replies": [
+              "Çekti bile. Atakan’a gönderdim."
+            ],
+            "unlocks": [
+              "behram:hakan",
+              "trust:Behram += 5"
+            ],
+            "next": "afterRaid"
+          },
+          {
+            "label": "Dokunmasın. Sadece izlesin.",
+            "replies": [
+              "Tamam. Ama bu adam bir şey yapacak komiserim."
+            ],
+            "unlocks": [
+              "behram:hakan"
             ],
             "next": "afterRaid"
           }
@@ -3243,6 +4237,13 @@
           {
             "requires": ["case:solved", "!mp:killer"],
             "next": "mpKiller"
+          },
+          {
+            "requires": [
+              "farm:entered",
+              "!mp:last-offer"
+            ],
+            "next": "mpLast"
           }
         ]
       },
@@ -3296,6 +4297,79 @@
             "replies": ["Ben öğrenirim Komiser Bey. Her zaman öğrenirim."],
             "next": "after",
             "unlocks": ["mp:killer"]
+          }
+        ]
+      },
+      "mpLast": {
+        "incoming": [
+          "Bir daha yazmayacağım demiştim.",
+          "Çiftliğe girmişsiniz. Halit’in orada ne yaptığını ben de sizin kadar yeni öğrendim. Bunu bilin.",
+          "Size son bir teklifim var: dosya Kerem Aydın’la kapansın. Vakıf, burslar, Halit... hepsi ayrı bir dosya olsun, başka bir savcıya gitsin.",
+          "Karşılığında hakkınızdaki iç denetim dosyası kapanır. Bunu yapabilecek tek kişi benim."
+        ],
+        "options": [
+          {
+            "label": "Kabul.",
+            "replies": [
+              "Akıllıca. Kimse bilmeyecek."
+            ],
+            "unlocks": [
+              "mp:last-offer",
+              "mp:answered",
+              "mp:deal",
+              "player:dirty-hands",
+              "integrity -= 20",
+              "pressure -= 20"
+            ],
+            "next": "after"
+          },
+          {
+            "label": "Hayır. Ve bu mesajı savcıya iletiyorum.",
+            "replies": [
+              "İletin. Gizli bir numaradan atılmış bir mesaj. Kimin olduğunu kanıtlayın.",
+              "Oğlum da sizin gibi inatçıydı."
+            ],
+            "traits": [
+              "cesur"
+            ],
+            "unlocks": [
+              "mp:last-offer",
+              "mp:answered",
+              "mp:refused",
+              "ev:mp-message",
+              "pressure += 15",
+              "integrity += 5"
+            ],
+            "next": "after"
+          },
+          {
+            "label": "Hayır.",
+            "replies": [
+              "Siz bilirsiniz Komiser Bey."
+            ],
+            "unlocks": [
+              "mp:last-offer",
+              "mp:answered",
+              "mp:refused",
+              "pressure += 10"
+            ],
+            "next": "after"
+          },
+          {
+            "label": "Oğlunuz her şeyi anlatmaya hazırdı. Biliyor muydunuz?",
+            "replies": [
+              "...",
+              "Berat bana hiçbir şey anlatmazdı.",
+              "Belki de anlatmak istediği tek gece buydu."
+            ],
+            "requires": "heard:berat-repentant",
+            "unlocks": [
+              "mp:last-offer",
+              "mp:answered",
+              "mp:refused",
+              "heard:mp-broken"
+            ],
+            "next": "after"
           }
         ]
       }
@@ -3741,6 +4815,198 @@
             "replies": ["Benim inanmam yetmez. Denetim kurulunun inanması lazım."],
             "next": "desk",
             "unlocks": ["lawyer:alibi"]
+          }
+        ]
+      }
+    }
+  },
+  "Savcı Leyla Koç": {
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "prosecutor:calls",
+        "incoming": [
+          "Komiser Bey, merhaba. Cumhuriyet Savcısı Leyla Koç. Berat Yılmaz dosyası artık bende.",
+          "Size dört sorum var. Cevaplarınız ifade tutanağına geçecek. İyi düşünün."
+        ],
+        "options": [
+          {
+            "label": "Sorun.",
+            "replies": [
+              "İlk sorum."
+            ],
+            "unlocks": [
+              "prosecutor:started"
+            ],
+            "next": "killer"
+          }
+        ]
+      },
+      "killer": {
+        "incoming": [
+          "Berat Yılmaz’ı kim öldürdü?"
+        ],
+        "options": [
+          {
+            "label": "Kerem Aydın.",
+            "replies": [
+              "Delilleriniz bunu destekliyor. Not ediyorum."
+            ],
+            "requires": "heard:kerem",
+            "unlocks": [
+              "final:killer-kerem"
+            ],
+            "next": "network"
+          },
+          {
+            "label": "Adil Karaca.",
+            "replies": [
+              "Adil Karaca... Bunu da yazıyorum."
+            ],
+            "requires": "heard:adil",
+            "unlocks": [
+              "final:killer-adil",
+              "case:wrong-person"
+            ],
+            "next": "network"
+          },
+          {
+            "label": "Bilmiyorum.",
+            "replies": [
+              "Dürüstlüğünüz için teşekkürler."
+            ],
+            "unlocks": [
+              "final:killer-unknown",
+              "!case:solved"
+            ],
+            "next": "network"
+          }
+        ]
+      },
+      "network": {
+        "incoming": [
+          "Bu ölümün ve kayıp öğrencilerin arkasında kim var?"
+        ],
+        "options": [
+          {
+            "label": "Halit Yener ve vakıf.",
+            "replies": [
+              "Kayıtlar ve ifadeler bunu gösteriyor."
+            ],
+            "requires": "heard:danisman",
+            "unlocks": [
+              "final:named-yener"
+            ],
+            "next": "leak"
+          },
+          {
+            "label": "Milletvekili Haluk Yılmaz.",
+            "replies": [
+              "Bu ağır bir iddia Komiser Bey.",
+              "Elinizdekiler yeterli olabilir. Olmayabilir de."
+            ],
+            "requiresAny": [
+              "heard:mp-tape",
+              "ev:mp-message",
+              "hakan:testimony"
+            ],
+            "unlocks": [
+              "final:named-mp",
+              "pressure += 10"
+            ],
+            "next": "leak"
+          },
+          {
+            "label": "Bilmiyorum.",
+            "replies": [
+              "Peki."
+            ],
+            "unlocks": [
+              "final:named-none"
+            ],
+            "next": "leak"
+          }
+        ]
+      },
+      "leak": {
+        "incoming": [
+          "Soruşturma boyunca basına bilgi sızdı. Sızdıran kim?"
+        ],
+        "options": [
+          {
+            "label": "Atakan Kutay.",
+            "replies": [
+              "Gerekçenizi tutanağa yazıyorum."
+            ],
+            "unlocks": [
+              "leak:blamed-atakan",
+              "trust:Atakan -= 30",
+              "integrity -= 10"
+            ],
+            "next": "abroad"
+          },
+          {
+            "label": "Orhun.",
+            "replies": [
+              "Gerekçenizi tutanağa yazıyorum."
+            ],
+            "unlocks": [
+              "leak:blamed-orhun",
+              "trust:Orhun -= 30",
+              "integrity -= 10"
+            ],
+            "next": "abroad"
+          },
+          {
+            "label": "Bilmiyorum.",
+            "replies": [
+              "Peki."
+            ],
+            "unlocks": [
+              "leak:unknown"
+            ],
+            "next": "abroad"
+          },
+          {
+            "label": "Aramalar benim numaramdan yapılmış. Ama ben hatırlamıyorum.",
+            "replies": [
+              "Hatırlamıyor musunuz?",
+              "...Bunu da yazıyorum."
+            ],
+            "requires": "leak:traced",
+            "unlocks": [
+              "leak:admitted",
+              "doubt += 1"
+            ],
+            "next": "abroad"
+          }
+        ]
+      },
+      "abroad": {
+        "incoming": [
+          "Son sorum: olaylar başladığında izindeydiniz, yurt dışındaydınız. Doğru mu?"
+        ],
+        "options": [
+          {
+            "label": "Evet. İzindeydim.",
+            "replies": [
+              "Teşekkür ederim Komiser Bey. İfadeniz bitti."
+            ],
+            "unlocks": [
+              "final:ready"
+            ]
+          },
+          {
+            "label": "...Nerede olduğumu bilmiyorum.",
+            "replies": [
+              "Ne demek istiyorsunuz?",
+              "Komiser Bey?"
+            ],
+            "requires": "doubt >= 3",
+            "unlocks": [
+              "twist:never-abroad",
+              "final:ready"
+            ]
           }
         ]
       }

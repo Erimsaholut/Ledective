@@ -93,7 +93,8 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 - [x] **Berat'ın kanıtları.** Buluşmada telefon ele geçiyor (`ev:berat-phone`).
 - [x] Berat'ın telefonundaki kayıtlar: savcılık, basın ya da kasa (Bölüm V).
 - [x] **Kerem'le buluşma ve İkilem 2** (Bölüm IV).
-- [ ] Sızıntı için yanlış kişiyi suçlamanın bedeli (Atakan, Orhun, kaymakam, Erdi).
+- [x] Sızıntı için yanlış kişiyi suçlamanın bedeli: savcıya ifadede Atakan ya
+  da Orhun suçlanırsa güven −30, dürüstlük −10, finalde sonucu var.
 - [x] **Kerem'le yüzleşme ve İkilem 2.** Gözaltı, savcıyla iş birliği ya da kaçmasına
   göz yumup kayıpların yerini öğrenmek.
 - [x] **Kayıp öğrenci (hayatta olan):** Melis, cuma süresi (Bölüm IV).
@@ -107,9 +108,15 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 
 - [x] Kerem Adil'in peşinde: pansiyona yetişilmezse Adil'i öldürür (Bölüm V).
 - [x] Danışmanın kimliği: Halit Yener, "H.Y." (Bölüm V). Yüzleşme Bölüm VI.
-- [ ] Hakan Demir'in hikâyesi (İkilem 4) ve ekibin kişisel hikâyeleri (İkilem 3, 9)
-- [ ] Milletvekiliyle son yüzleşme
-- [ ] Final soruşturması ve `final:ready`; gizli sonun son seçeneği
+- [x] Hakan Demir (İkilem 4), Emre'nin korunması (İkilem 5), Orhun'un borcu.
+- [ ] Ekibin diğer kişisel hikâyeleri: Atakan (yeni sır gerekiyor, İkilem 3
+  artık kanonla çelişiyor), Doğa (İkilem 9), Eski Dosya (İkilem 10).
+- [x] Milletvekiliyle son yüzleşme (son teklif)
+- [x] Final soruşturması: savcıya ifade, `final:ready`; gizli seçenek
+  (`doubt >= 3`).
+- [ ] **Gizli son: telefon bozulur.** `twist:never-abroad` açılınca sayılar,
+  galeri, mail, sohbetler ve son ses kaydı (`bible/01-ana-gizem.md`).
+  Görseller ve hasta bakıcının kaydı gerekiyor.
 
 ## Açık sorular (önce karar)
 

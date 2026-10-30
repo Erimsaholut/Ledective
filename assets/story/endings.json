@@ -86,6 +86,10 @@
       "id": "career",
       "title": "Komiser",
       "variants": [
+        {
+          "requires": "twist:never-abroad",
+          "text": "[Taslak] Hiçbir yere gitmemiştiniz. (Gizli son: telefon bozulur; bkz. bible 01 › Gizli son.)"
+        },
         {"requires": "legal:warrant-issued", "text": "[Taslak] Hakkında yakalama kararı çıkarıldı."},
         {"requires": "status:dismissed", "text": "[Taslak] Meslekten çıkarıldı."},
         {"requires": "status:suspended", "text": "[Taslak] Görevden uzaklaştırıldı."},
@@ -104,6 +108,10 @@
       "id": "witnesses",
       "title": "Tanıklar",
       "variants": [
+        {
+          "requires": "emre:hurt",
+          "text": "[Taslak] Emre hayatta kaldı, ama hastane odasında yaşadıklarından sonra ifade vermedi. Duruşmada tanık sandalyesi boş kaldı."
+        },
         {
           "requires": ["girl:rescued", "emre:rescued"],
           "text": "[Taslak] Melis de Emre de kurtarıldı. İkisi aynı duruşmada tanık kürsüsüne çıktı."
@@ -126,6 +134,52 @@
       ]
     },
     {
+      "id": "hakan",
+      "title": "Hakan Demir",
+      "variants": [
+        {
+          "requires": "hakan:released",
+          "text": "[Taslak] Hakan Demir serbest bırakıldı. Eşinin tedavisi sürüyor; Hakan’ın her gece hastanenin bahçesinde oturduğu söyleniyor."
+        },
+        {
+          "requires": "hakan:wife-paid",
+          "text": "[Taslak] Hakan Demir tutuklandı. Eşi Nermin tedaviye devam etti; parayı kimin ödediğini kimseye söylemedi."
+        },
+        {
+          "requires": "hakan:testimony",
+          "text": "[Taslak] Hakan Demir’in ifadesi emir zincirini Halit Yener’in kapısına kadar taşıdı."
+        },
+        {
+          "requires": "hakan:charged",
+          "text": "[Taslak] Hakan Demir yargılandı. Duruşmada eşinin tedavisini sordu, cevap alamadı."
+        },
+        {
+          "text": "[Taslak] Hakan Demir’in adı bu dosyada hiç geçmedi."
+        }
+      ]
+    },
+    {
+      "id": "mp",
+      "title": "Haluk Yılmaz",
+      "variants": [
+        {
+          "requires": "final:named-mp",
+          "text": "[Taslak] Savcılık Milletvekili Haluk Yılmaz hakkında fezleke hazırladı. Meclis’te sıra bekliyor."
+        },
+        {
+          "requires": "mp:deal",
+          "text": "[Taslak] Milletvekili Yılmaz’ın adı hiçbir tutanağa geçmedi. Komiserin iç denetim dosyası da bir sabah sessizce kapandı."
+        },
+        {
+          "requires": "heard:mp-broken",
+          "text": "[Taslak] Haluk Yılmaz, oğlunun her şeyi anlatmaya hazır olduğunu duyduğu geceden sonra bir daha kürsüye çıkmadı."
+        },
+        {
+          "text": "[Taslak] Haluk Yılmaz bir sonraki seçimde yeniden aday oldu."
+        }
+      ]
+    },
+    {
       "id": "Özge",
       "title": "Özge",
       "variants": [
@@ -138,6 +192,10 @@
       "id": "Atakan",
       "title": "Atakan",
       "variants": [
+        {
+          "requires": "leak:blamed-atakan",
+          "text": "[Taslak] Atakan, sızıntıyı onun yaptığını söyleyen ifadeyi okudu. İç denetim hiçbir şey bulamadı; Atakan yine de ekipten ayrıldı."
+        },
         {"requires": "trust:Atakan >= 70", "text": "[Taslak] Atakan komisere hâlâ güveniyor."},
         {"requires": "trust:Atakan <= 30", "text": "[Taslak] Atakan ekipten ayrılmayı düşünüyor."},
         {"text": "[Taslak] Atakan için hikâye henüz yazılmadı."}
@@ -147,6 +205,18 @@
       "id": "Orhun",
       "title": "Orhun",
       "variants": [
+        {
+          "requires": "orhun:sold",
+          "text": "[Taslak] Orhun, Emre’nin nerede olduğunu sattı. Borcu kapandı. Bir daha kimsenin gözünün içine bakamadı."
+        },
+        {
+          "requires": "leak:blamed-orhun",
+          "text": "[Taslak] Orhun, sızıntı için kendisinin suçlandığını savcılıktan öğrendi. Komisere bir daha yazmadı."
+        },
+        {
+          "requires": "orhun:refused",
+          "text": "[Taslak] Orhun ağın teklifini geri çevirdi. Borçla da olsa, başı dik kaldı."
+        },
         {"requires": "trust:Orhun >= 70", "text": "[Taslak] Orhun komisere hâlâ güveniyor."},
         {"requires": "trust:Orhun <= 30", "text": "[Taslak] Orhun ekipten ayrılmayı düşünüyor."},
         {"text": "[Taslak] Orhun için hikâye henüz yazılmadı."}

@@ -337,6 +337,44 @@
       "body": [
         "Amirin hâlâ yurt dışında olduğu belirtiliyor. Ancak hangi ülkede bulunduğu konusunda emniyet açıklama yapmadı."
       ]
+    },
+    {
+      "id": "hospital-arrest",
+      "outlet": "sehir-postasi",
+      "daysAgo": 0,
+      "requires": "hakan:caught",
+      "afterMinutes": 4,
+      "title": "Kurtarılan öğrencinin hastanesinde gözaltı",
+      "summary": "Çiftlikten kurtarılan öğrencinin odasını soran bir kişi gözaltına alındı.",
+      "author": "Selin Aras",
+      "tags": [
+        "hastane",
+        "emre",
+        "gözaltı"
+      ],
+      "body": [
+        "Emniyet, gözaltına alınan 44 yaşındaki kişinin öğrencinin yattığı katta günlerdir dolaştığını doğruladı.",
+        "Şüphelinin eşinin aynı hastanede tedavi gördüğü öğrenildi. Kimin adına hareket ettiği araştırılıyor."
+      ]
+    },
+    {
+      "id": "emre-attacked",
+      "outlet": "gundem24",
+      "daysAgo": 0,
+      "requires": "emre:hurt",
+      "afterMinutes": 2,
+      "title": "Kurtarılan öğrenciye hastanede saldırı",
+      "summary": "Çiftlik evinin bodrumundan kurtarılan öğrenci hafif yaralandı.",
+      "author": "Gündem24",
+      "tags": [
+        "hastane",
+        "emre",
+        "saldırı"
+      ],
+      "body": [
+        "Hayati tehlikesi olmadığı bildirilen öğrencinin, saldırının ardından ifade vermeyi reddettiği iddia edildi.",
+        "Saldırgan olay yerinde gözaltına alındı."
+      ]
     }
   ],
   "filler": {

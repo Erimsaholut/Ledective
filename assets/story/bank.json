@@ -70,6 +70,19 @@
       "requires": "lawyer:offer",
       "minAmount": 1500000,
       "unlocks": ["lawyer:hired"]
+    },
+    {
+      "id": "hakan-wife",
+      "name": "Onkoloji · N. Demir",
+      "iban": "TR58 0001 2009 4420 0016 0071 18",
+      "note": "Nermin Demir’in bu ayki tedavi payı (15.000 TL)",
+      "requires": "hakan:wife-help",
+      "minAmount": 1500000,
+      "unlocks": [
+        "hakan:wife-paid",
+        "integrity -= 5",
+        "pressure += 5"
+      ]
     }
   ]
 }

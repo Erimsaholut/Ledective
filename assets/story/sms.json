@@ -49,5 +49,14 @@
       "Nasıl olduğunuzu merak ediyorum. Uykularınız nasıl? Bir mesaj atmanız bile yeter."
     ],
     "unlocksOnView": ["clue:doctor-sms"]
+  },
+  {
+    "sender": "Nermin Demir",
+    "requires": "sent:hakan-wife",
+    "messages": [
+      "Hastane borcumuzu kapatan sizmişsiniz. Hakan her şeyi anlattı.",
+      "Tedaviye devam edeceğim, çünkü kızım için yaşamam lazım.",
+      "Ama bu parayı size borçlu kalmayacağım. Hakan’ı da affetmeyeceğim."
+    ]
   }
 ]

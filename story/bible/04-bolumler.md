@@ -167,8 +167,9 @@ hikâyeleri, İkilem 3, 4, 9) Bölüm V'e kaydı.
   gizli son, final soruşturması (`final:ready`).
 
 ## Bölüm VI — Gerçeğin Bedeli
-**Durum:** [ÖNERİ, taslak] (30.10.2026). Kararlar: Hakan'ın hedefi Emre,
-final savcıya ifade, ekip hikâyesi Orhun'un borcu.
+**Durum:** [KANON, taslak] (30.10.2026), oyunda. Kararlar: Hakan'ın hedefi
+Emre, final savcıya ifade, ekip hikâyesi Orhun'un borcu. Süreler ve bayraklar:
+`story/HIKAYE_SEMASI.md`.
 **Açılış:** `farm:entered`
 **Kapanış:** `final:ready` (savcıya ifade bitince)
 

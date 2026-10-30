@@ -135,7 +135,48 @@
     "lawyer:offer": "Avukat Nesrin Kaya yazdı",
     "lawyer:hired": "Avukata ücret gönderildi",
     "status:warned": "Komiser kınama cezası aldı, görevde kaldı",
-    "danisman:fled": "Halit Yener haberden sonra kaçtı"
+    "danisman:fled": "Halit Yener haberden sonra kaçtı",
+    "hakan:seen": "Hastanede Emre’yi soran yabancı görüldü",
+    "heard:hakan": "Hakan Demir’in kimliği öğrenildi",
+    "hakan:watched": "Hakan gözaltına alınmadan takip edildi",
+    "heard:hakan-handler": "Hakan’ı ayarlayan adam bulundu: Halit Yener’in şoförü",
+    "emre:protection": "Emre için koruma kararı verildi (İkilem 5)",
+    "emre:guarded": "Emre’ye resmî koruma",
+    "emre:hidden": "Emre kayıt dışı güvenli eve taşındı",
+    "emre:bait": "Emre tuzakta yem yapıldı",
+    "emre:hurt": "Hakan Emre’ye ulaştı; Emre yaralandı, ifade vermiyor",
+    "hakan:caught": "Hakan Demir yakalandı",
+    "hakan:surrendered": "Hakan kendini teslim etti",
+    "ev:hakan-in-act": "Hakan suçüstü yakalandı",
+    "hakan:dealt": "Hakan hakkında karar verildi (İkilem 4)",
+    "hakan:charged": "Hakan için yasal süreç başladı",
+    "hakan:wife-help": "Hakan’ın eşine yasal yardım yolu açıldı",
+    "hakan:wife-paid": "Hakan’ın eşinin tedavi payı ödendi",
+    "hakan:released": "Hakan serbest bırakıldı",
+    "hakan:testimony": "Hakan emir zincirini teşhis etti",
+    "orhun:offer": "Ağ Orhun’a Emre’nin yerini sordu",
+    "orhun:promised": "Komiser Orhun’un borcunu kapatmaya söz verdi",
+    "orhun:refused": "Orhun ağı reddetti",
+    "orhun:sold": "Orhun Emre’nin yerini verdi",
+    "orhun:thanked": "Orhun borcun ödendiğini söyledi",
+    "mp:last-offer": "Milletvekili son teklifini yaptı",
+    "mp:answered": "Milletvekilinin son teklifi cevaplandı",
+    "mp:deal": "Komiser milletvekilinin teklifini kabul etti",
+    "mp:refused": "Komiser milletvekilini reddetti",
+    "ev:mp-message": "Milletvekilinin teklifi savcıya iletildi",
+    "heard:mp-broken": "Milletvekili oğlunun pişmanlığını duydu",
+    "prosecutor:calls": "Savcı ifadeye çağırır (final)",
+    "prosecutor:started": "Savcıya ifade başladı",
+    "final:killer-kerem": "İfadede fail Kerem gösterildi",
+    "final:killer-adil": "İfadede fail Adil gösterildi",
+    "final:killer-unknown": "İfadede fail bilinmiyor denildi",
+    "final:named-yener": "İfadede Halit Yener suçlandı",
+    "final:named-mp": "İfadede milletvekili suçlandı",
+    "final:named-none": "İfadede emri veren söylenmedi",
+    "leak:blamed-atakan": "Sızıntı için Atakan suçlandı",
+    "leak:blamed-orhun": "Sızıntı için Orhun suçlandı",
+    "leak:unknown": "Sızıntı için kimse suçlanmadı",
+    "leak:admitted": "Komiser aramaların kendi numarasından yapıldığını kabul etti"
   },
   "locks": [
     {
@@ -270,6 +311,141 @@
       "when": "phone:press",
       "minutes": 5,
       "unlocks": ["coverup:exposed", "danisman:fled"]
+    },
+    {
+      "id": "hakan-seen",
+      "when": "emre:rescued",
+      "minutes": 4,
+      "unlocks": [
+        "hakan:seen"
+      ]
+    },
+    {
+      "id": "hakan-arrives",
+      "when": "hakan:seen",
+      "minutes": 15,
+      "unlessAny": [
+        "emre:guarded",
+        "emre:hidden",
+        "emre:bait",
+        "hakan:caught"
+      ],
+      "unlocks": [
+        "emre:hurt",
+        "witnessDanger += 20"
+      ]
+    },
+    {
+      "id": "hakan-guarded",
+      "when": "emre:guarded",
+      "minutes": 6,
+      "unless": "hakan:caught",
+      "unlocks": [
+        "hakan:caught"
+      ]
+    },
+    {
+      "id": "hakan-bait",
+      "when": "emre:bait",
+      "minutes": 4,
+      "unless": "hakan:caught",
+      "unlocks": [
+        "hakan:caught",
+        "ev:hakan-in-act"
+      ]
+    },
+    {
+      "id": "hakan-safehouse",
+      "when": [
+        "emre:hidden",
+        "orhun:sold"
+      ],
+      "minutes": 6,
+      "unless": "hakan:caught",
+      "unlocks": [
+        "emre:hurt",
+        "witnessDanger += 20"
+      ]
+    },
+    {
+      "id": "hakan-gives-up",
+      "when": "emre:hidden",
+      "minutes": 20,
+      "unless": "hakan:caught",
+      "unlocks": [
+        "hakan:caught",
+        "hakan:surrendered"
+      ]
+    },
+    {
+      "id": "hakan-watched",
+      "when": "hakan:watched",
+      "minutes": 8,
+      "unless": "hakan:caught",
+      "unlocks": [
+        "hakan:caught",
+        "heard:hakan-handler"
+      ]
+    },
+    {
+      "id": "hakan-after-hurt",
+      "when": "emre:hurt",
+      "minutes": 6,
+      "unless": "hakan:caught",
+      "unlocks": [
+        "hakan:caught",
+        "hakan:surrendered"
+      ]
+    },
+    {
+      "id": "orhun-decides",
+      "when": "orhun:promised",
+      "minutes": 6,
+      "unless": "orhun:helped",
+      "unlocks": [
+        "orhun:sold"
+      ]
+    },
+    {
+      "id": "orhun-after-report",
+      "when": [
+        "orhun:offer",
+        "orhun:reported"
+      ],
+      "minutes": 5,
+      "unless": "orhun:refused",
+      "unlocks": [
+        "orhun:sold"
+      ]
+    },
+    {
+      "id": "prosecutor-calls",
+      "when": [
+        "farm:entered",
+        "mp:answered"
+      ],
+      "whenAny": [
+        "hakan:dealt",
+        "farm:empty"
+      ],
+      "minutes": 4,
+      "unlocks": [
+        "prosecutor:calls"
+      ],
+      "alert": {
+        "app": "MatesApp",
+        "title": "Savcı Leyla Koç",
+        "body": "Komiser Bey, ifadenizi almam gerekiyor."
+      }
+    },
+    {
+      "id": "prosecutor-fallback",
+      "when": "farm:entered",
+      "minutes": 50,
+      "unless": "prosecutor:calls",
+      "unlocks": [
+        "prosecutor:calls"
+      ]
     }
   ],
   "hints": [
@@ -308,6 +484,15 @@
       "app": "ZaferBank",
       "title": "Kayıtlı alıcı: Av. Nesrin Kaya",
       "body": "Avukatlık ücretini Para Gönder › Av. Nesrin Kaya ile ödeyebilirsiniz."
+    },
+    {
+      "id": "hint-hakan-wife",
+      "when": "hakan:wife-help",
+      "minutes": 4,
+      "unless": "sent:hakan-wife",
+      "app": "ZaferBank",
+      "title": "Kayıtlı alıcı: Onkoloji · N. Demir",
+      "body": "Tedavi payını Para Gönder › Onkoloji · N. Demir ile ödeyebilirsiniz."
     }
   ],
   "milestones": [
@@ -332,6 +517,10 @@
     {"flag": "phone:decided", "title": "Berat’ın kayıtları: kime verilecek?"},
     {"flag": "leak:traced", "title": "Sızıntı komiserin numarasına çıkar"},
     {"flag": "farm:entered", "title": "Çiftliğe girilir: Emre"},
-    {"flag": "final:ready", "title": "Final soruşturması (henüz yazılmadı)"}
+    {"flag": "hakan:seen", "title": "Hastanede Emre’yi soran adam (İkilem 5)"},
+    {"flag": "hakan:caught", "title": "Hakan Demir yakalanır (İkilem 4)"},
+    {"flag": "mp:answered", "title": "Milletvekilinin son teklifi"},
+    {"flag": "prosecutor:calls", "title": "Savcı ifadeye çağırır"},
+    {"flag": "final:ready", "title": "Savcıya ifade: final"}
   ]
 }

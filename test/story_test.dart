@@ -847,6 +847,101 @@ void main() {
       });
     });
 
+    group('chapter VI', () {
+      StoryProgress progress() => StoryProgress.instance;
+
+      Future<void> emreRescued() async {
+        await progress().discover([StoryFlags.part1Done]);
+        await say('Özge', 'Neymiş bu kadar önemli olan durum');
+        await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
+        await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
+        await progress().discover(['emre:rescued', 'farm:entered']);
+        await progress().advanceTimers(const Duration(minutes: 4));
+        expect(progress().has('hakan:seen'), isTrue);
+      }
+
+      Iterable<String> ozgeSaid() => progress()
+          .restore('Özge')
+          .$2
+          .whereType<IncomingMessage>()
+          .map((m) => m.text);
+
+      test('a guard catches Hakan, and the statement ends the game', () async {
+        await emreRescued();
+        await say('Özge', 'Resmî koruma iste. Kapısına iki polis.');
+        await progress().advanceTimers(const Duration(minutes: 6));
+        expect(progress().has('hakan:caught'), isTrue);
+        expect(progress().has('emre:hurt'), isFalse);
+        await say(
+          'Özge',
+          'Eşinin tedavisi için yasal bir yol bulalım. '
+              'Karşılığında her şeyi anlatsın.',
+        );
+        final payee = StoryData.current.bank.payees.firstWhere(
+          (p) => p.id == 'hakan-wife',
+        );
+        expect(progress().meets(payee.requires), isTrue);
+        await progress().recordTransfer(payee, payee.minAmount);
+        expect(progress().has('hakan:wife-paid'), isTrue);
+        expect(
+          StoryData.current.smsThreads
+              .where((t) => progress().meets(t.requires))
+              .map((t) => t.sender),
+          contains('Nermin Demir'),
+        );
+
+        await progress().discover(['mp:answered', 'heard:kerem']);
+        await progress().advanceTimers(const Duration(minutes: 4));
+        expect(progress().has('prosecutor:calls'), isTrue);
+        const prosecutor = 'Savcı Leyla Koç';
+        await say(prosecutor, 'Sorun.');
+        await say(prosecutor, 'Kerem Aydın.');
+        await say(prosecutor, 'Bilmiyorum.');
+        await say(prosecutor, 'Bilmiyorum.');
+        expect(
+          progress().restore(prosecutor).$1.options.map((o) => o.label),
+          isNot(contains('...Nerede olduğumu bilmiyorum.')),
+          reason: 'not enough doubt',
+        );
+        await say(prosecutor, 'Evet. İzindeydim.');
+        expect(progress().isOver, isTrue);
+        final hakan = StoryData.current.endings.sections.firstWhere(
+          (s) => s.id == 'hakan',
+        );
+        expect(progress().ending(hakan)!.text, contains('Nermin'));
+      });
+
+      test('left alone, Hakan reaches Emre', () async {
+        await emreRescued();
+        await progress().advanceTimers(const Duration(minutes: 15));
+        expect(progress().has('emre:hurt'), isTrue);
+        await progress().advanceTimers(const Duration(minutes: 6));
+        expect(progress().has('hakan:caught'), isTrue);
+        // The question about protecting him came too late.
+        await say('Özge', 'Ne oldu Özge?');
+        expect(ozgeSaid(), contains('Amirim... Hakan Emre’ye ulaşmış.'));
+      });
+
+      test('a hiding place Orhun sold is found', () async {
+        await emreRescued();
+        await progress().discover(['emre:hidden', 'orhun:sold']);
+        await progress().advanceTimers(const Duration(minutes: 6));
+        expect(progress().has('emre:hurt'), isTrue);
+      });
+
+      test('enough doubt opens the hidden answer', () async {
+        await progress().discover(['prosecutor:calls', 'doubt = 3']);
+        const prosecutor = 'Savcı Leyla Koç';
+        await say(prosecutor, 'Sorun.');
+        await say(prosecutor, 'Bilmiyorum.');
+        await say(prosecutor, 'Bilmiyorum.');
+        await say(prosecutor, 'Bilmiyorum.');
+        await say(prosecutor, '...Nerede olduğumu bilmiyorum.');
+        expect(progress().has('twist:never-abroad'), isTrue);
+        expect(progress().isOver, isTrue);
+      });
+    });
+
     test('choices change numbers within their limits', () async {
       final progress = StoryProgress.instance;
       expect(progress.value('trust:Özge'), 50);

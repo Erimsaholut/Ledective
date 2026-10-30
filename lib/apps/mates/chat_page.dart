@@ -111,9 +111,10 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _send(int index) async {
+    // Until the replies are queued, nothing else may show: the next
+    // node's messages would otherwise come before them.
     _sending = true;
     final option = await _progress.choose(widget.person, _dialogue, index);
-    _sending = false;
     // The player is watching the replies arrive, so they count as read.
     await _progress.markRead(widget.person);
     if (!mounted) return;
@@ -125,6 +126,8 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       if (!option.silent) _entries.add(OutgoingMessage(option.message));
     });
+    _sending = false;
+    if (replies.isEmpty) _sync();
 
     for (var i = 0; i < replies.length; i++) {
       _replyTimers.add(
