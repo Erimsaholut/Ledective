@@ -6,7 +6,7 @@ const appNames = [
   'Mail', 'Photos', 'Camera', 'Calendar', 'Clock', 'Poltel', 'Harita', //
   'Pano', 'Notes', 'Sinstagram', 'ZaferBank', 'Kayıtlar', 'News', //
   'Settings', 'Games', 'Music', 'Pian', 'Shopper', 'AppShop', 'Phone', //
-  'Messages', 'MatesApp', 'Contacts',
+  'Messages', 'MatesApp', 'Contacts', 'Hesap Makinesi',
 ];
 
 enum IssueLevel {

@@ -93,7 +93,7 @@ void main() {
     const firstPage = [
       'Mail', 'Photos', 'Camera', 'Calendar', 'Clock', 'Poltel', 'Harita',
       'Pano', 'Notes', 'Sinstagram', 'ZaferBank', 'Kayıtlar', 'News', //
-      'Settings',
+      'Hesap Makinesi', 'Settings',
       // The dock.
       'Phone', 'Messages', 'MatesApp', 'Contacts',
     ];

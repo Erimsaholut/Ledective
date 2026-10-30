@@ -160,15 +160,20 @@ class AppIcon extends StatelessWidget {
               _PressableScale(child: icon),
               if (showLabel) ...[
                 const SizedBox(height: 6),
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    shadows: [Shadow(color: Color(0x80000000), blurRadius: 4)],
+                // A long name shrinks a little to fit, as on a phone.
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      shadows: [
+                        Shadow(color: Color(0x80000000), blurRadius: 4),
+                      ],
+                    ),
                   ),
                 ),
               ],

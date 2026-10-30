@@ -8,6 +8,7 @@ import '../apps/appshop/appshop_app.dart';
 import '../apps/appshop/store_catalog.dart';
 import '../apps/bank/bank_app.dart';
 import '../apps/board/board_app.dart';
+import '../apps/calculator/calculator_app.dart';
 import '../apps/calendar/calendar_app.dart';
 import '../apps/camera/camera_app.dart';
 import '../apps/clock/clock_app.dart';
@@ -112,6 +113,13 @@ const List<List<AppIcon>> _pages = [
       iconData: Icons.newspaper_rounded,
       colors: [Color(0xFFFF5A5F), Color(0xFFD70015)],
       badgeCount: newArticleCount,
+    ),
+    AppIcon(
+      title: "Hesap Makinesi",
+      app: CalculatorApp(),
+      iconData: Icons.calculate_rounded,
+      colors: [Color(0xFF3A3A3C), Color(0xFF1C1C1E)],
+      glyphColor: Color(0xFFFF9F0A),
     ),
     AppIcon(
       title: "Settings",
