@@ -210,17 +210,44 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 
 ## Yayın
 
-### Alpha demo (arkadaşlara APK) — sonra
+### Alpha demo (arkadaşlara APK)
+
+Kapsam kararları (31 Ekim):
+
+- **Tüm oyun:** Bölüm I–VI, savcıya ifade ve epilog.
+- **Gizli son kapalı ama işaretleri açık.** Ters dönen saat, "Behzat Amirim"
+  ve "BEN DELİ DEĞİLİM" mailleri ile sağlık izleri kalıyor. Finaldeki gizli
+  seçenek demoda çıkmıyor.
+- **Oyun içi form yok.** Geri bildirimi oyuncu kendisi topluyor.
+- **Tempo seçimini oyuncu yapıyor.** Settings › Tempo: 1×, 2× ya da 3×.
+  Demoda varsayılan 2×, çünkü süreler henüz ayarlanmadı. Harita görevleri,
+  süreli olaylar ve ipuçları bu hıza uyuyor.
+- **Epilogdan sonra kısa bir slayt.** Slaytın içeriği [ÖNERİ], sayfa sayfa:
+  1. **Senin hikâyen.** Oyun süresi, verilen büyük kararlar, bulunan
+     deliller (x/y), okunan mail ve haber sayısı.
+  2. **Bunu da yapabilirdin.** Seçilmeyen ikilem kolları ve kaçırılan yan
+     işler: rüşveti iade, şifreli satır, Orhun'un borcu, avukat.
+  3. **Diğer sonlar.** Her sonun tek cümlelik özeti. Gizli sondan sadece
+     "Bir de gizli son var." diye söz ediliyor; ipucu ya da ayrıntı yok.
+  4. **Fark ettin mi?** Gizli sona işaret etmeyen küçük ayrıntılar
+     (takvimdeki bayramlar, Şifre Çözücü, Spam) ve fun fact'ler. Fun
+     fact'lerdeki sayılar oyunun verisinden okunuyor: stoktaki mail, haber,
+     mesaj, karakter ve uygulama sayısı.
+  5. **Geliştirme aşamasında.** Bu bir alpha sürümü. Gelecek özellikler
+     [ÖNERİ]: profil fotoğrafları, gerçek görseller, ses kayıtları,
+     senaryolu telefon aramaları, ekibin kişisel hikâyeleri.
+
+Teknik:
 
 - [ ] Sürüm `0.5.0-alpha` (şu an Flutter'ın varsayılanı `1.0.0+1`).
+- [ ] Paket adı (`com.example.ledective` yerine kalıcı bir ad) ve
+      telefondaki adı "Ledective".
 - [ ] Android APK (`flutter build apk --release`), imzalama anahtarı.
-- [ ] Kapsam: demo nerede bitecek? Bölüm VI yazıldıktan sonra karar ver;
-      sonuna "Demo sonu, teşekkürler" ekranı.
 - [ ] Test görselleri kalabilir ama belli olsun: üzerine küçük bir "TEST
       GÖRSELİ" etiketi.
 - [ ] Yazar ayarlarını (Hızlı görevler, Hikâye durumu) demoda gizle.
-- [ ] Geri bildirim bağlantısı (ör. form) ve "nerede takıldın?" sorusu.
+- [ ] Uygulama ikonu (1024×1024; şu an Flutter'ın varsayılanı).
 
-- [ ] `chore/modernize-codebase` branch'ini GitHub'a gönder (onay bekliyor).
+- [x] `chore/modernize-codebase` branch'ini GitHub'a gönder; `main` de aynı yerde.
 - [ ] GitHub'da eski bir commit'in SHA ile hâlâ açılabilmesi: destek talebi ya
   da depoyu yeniden oluşturmak.

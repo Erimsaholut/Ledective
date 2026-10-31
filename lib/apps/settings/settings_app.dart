@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/game_state.dart';
 import '../../data/wallpaper.dart';
+import '../../story/demo.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/avatar.dart';
@@ -138,26 +139,53 @@ class SettingsApp extends StatelessWidget {
                 ],
               ),
               GroupedSection(
-                header: "Hikâye yazarı",
+                header: "Tempo",
                 footer:
-                    "Hızlı görevler, harita görevlerini ve süreli olayları "
-                    "30 kat hızlı bitirir.",
+                    "Harita görevleri, süreli olaylar ve gündelik mail ile "
+                    "haberler bu hızla akar. Süreler henüz ayarlanıyor; "
+                    "2× önerilir.",
                 children: [
                   ListenableBuilder(
                     listenable: StoryProgress.instance,
-                    builder: (context, _) => SwitchListTile.adaptive(
-                      title: const Text("Hızlı görevler"),
-                      value: StoryProgress.instance.fastMissions,
-                      onChanged: StoryProgress.instance.setFastMissions,
+                    builder: (context, _) => Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: SegmentedButton<int>(
+                        segments: const [
+                          ButtonSegment(value: 1, label: Text("1×")),
+                          ButtonSegment(value: 2, label: Text("2×")),
+                          ButtonSegment(value: 3, label: Text("3×")),
+                        ],
+                        selected: {StoryProgress.instance.tempo},
+                        showSelectedIcon: false,
+                        onSelectionChanged: (s) =>
+                            StoryProgress.instance.setTempo(s.first),
+                      ),
                     ),
-                  ),
-                  ListTile(
-                    title: const Text("Hikâye durumu"),
-                    trailing: const Icon(Icons.chevron_right_rounded),
-                    onTap: () => _push(context, const StoryStatePage()),
                   ),
                 ],
               ),
+              if (!demoBuild)
+                GroupedSection(
+                  header: "Hikâye yazarı",
+                  footer:
+                      "Hızlı görevler, harita görevlerini ve süreli olayları "
+                      "30 kat hızlı bitirir.",
+                  children: [
+                    ListenableBuilder(
+                      listenable: StoryProgress.instance,
+                      builder: (context, _) => SwitchListTile.adaptive(
+                        title: const Text("Hızlı görevler"),
+                        value: StoryProgress.instance.fastMissions,
+                        onChanged: StoryProgress.instance.setFastMissions,
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text("Hikâye durumu"),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => _push(context, const StoryStatePage()),
+                    ),
+                  ],
+                ),
               GroupedSection(
                 footer: "Starts the story from the beginning.",
                 children: [

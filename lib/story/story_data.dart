@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'demo.dart';
 import 'dialogue.dart';
 
 /// All of the game's story content, read from the JSON files in
@@ -103,6 +104,7 @@ class StoryData {
       for (final file in files)
         file: jsonDecode(await read('$directory/$file')),
     };
+    if (demoBuild) closeSecret(json);
     return current = StoryData.fromJson(json);
   }
 

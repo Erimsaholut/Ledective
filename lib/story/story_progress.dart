@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../data/game_clock.dart';
 import '../theme/turkish_text.dart';
 import 'breakdown.dart';
+import 'demo.dart';
 import 'dialogue.dart';
 import 'drip_feed.dart';
 import 'news_feed.dart';
@@ -215,6 +216,13 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /// Divides mission durations, so story writers can test quickly.
   bool fastMissions = false;
 
+  /// How fast play time passes for missions, timers and everyday mail and
+  /// news, as the player picks in Settings › Tempo: 1, 2 or 3.
+  int tempo = demoBuild ? 2 : 1;
+
+  /// What durations are divided by right now.
+  int get speed => fastMissions ? 30 : tempo;
+
   /// Whether hints (state.json › `hints`) raise alerts.
   bool hintsOn = true;
 
@@ -337,6 +345,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     _breakdownDone.clear();
     alerts.clear();
     fastMissions = prefs.getBool('fastMissions') ?? false;
+    tempo = prefs.getInt('tempo') ?? tempo;
     hintsOn = prefs.getBool('hints') ?? true;
 
     final stored = prefs.getString(_prefsKey);
@@ -437,6 +446,13 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('fastMissions', value);
+  }
+
+  Future<void> setTempo(int value) async {
+    tempo = value;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('tempo', value);
   }
 
   Future<void> setHints(bool value) async {
@@ -1027,9 +1043,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   int get unreadReports =>
       reports.where((m) => !hasSeen('report:${m.taskId}')).length;
 
-  /// How long [task] takes right now, with [fastMissions] taken into account.
-  Duration durationOf(MissionTask task) =>
-      fastMissions ? task.duration ~/ 30 : task.duration;
+  /// How long [task] takes right now, with [speed] taken into account.
+  Duration durationOf(MissionTask task) => task.duration ~/ speed;
 
   /// Sends [officer] to do [task]. Returns false if they're busy or the
   /// task was already done or started.
@@ -1127,10 +1142,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     }
   }
 
-  /// How long [timer] runs right now, with [fastMissions] taken into
-  /// account.
-  Duration timerDuration(StoryTimer timer) =>
-      fastMissions ? timer.duration ~/ 30 : timer.duration;
+  /// How long [timer] runs right now, with [speed] taken into account.
+  Duration timerDuration(StoryTimer timer) => timer.duration ~/ speed;
 
   /// Ids of the timers that are running.
   Iterable<String> get runningTimers => _timers.keys;
@@ -1220,7 +1233,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
       if (after <= Duration.zero || _waited.contains(key)) return;
       if (!meets(requires)) return;
       final ran = (_waiting[key] ?? 0) + elapsed.inMilliseconds;
-      final due = fastMissions ? after ~/ 30 : after;
+      final due = after ~/ speed;
       if (ran < due.inMilliseconds) {
         _waiting[key] = ran;
         return;
@@ -1239,13 +1252,13 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     return arrived;
   }
 
-  /// A random gap between everyday items, shorter with [fastMissions].
+  /// A random gap between everyday items, shorter with [speed].
   int _gap(int minMinutes, int maxMinutes, int salt) {
     final low = minMinutes < 1 ? 1 : minMinutes;
     final high = maxMinutes < low ? low : maxMinutes;
     final minutes = low + Random(_seed * 31 + salt).nextInt(high - low + 1);
     final ms = minutes * 60000;
-    return fastMissions ? ms ~/ 30 : ms;
+    return ms ~/ speed;
   }
 
   List<String> get _mailIds => [for (final m in _story.mailPool.mails) m.id];
