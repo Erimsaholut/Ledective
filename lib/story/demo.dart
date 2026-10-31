@@ -37,3 +37,11 @@ void closeSecret(Map<String, Object?> files) {
 
   visit(files['chats.json']);
 }
+
+/// [text] without the writer's leading "[Taslak]" mark, for the demo.
+String withoutDraftMark(String text) =>
+    text.replaceFirst(RegExp(r'^\s*\[Taslak\]\s*'), '');
+
+/// Whether [text] only says a part isn't written yet, which the demo
+/// leaves out ("Özge için hikâye henüz yazılmadı.").
+bool isUnwritten(String text) => text.contains('henüz yazılmadı');

@@ -109,11 +109,13 @@ void main() {
     const firstPage = [
       'Mail', 'Photos', 'Camera', 'Calendar', 'Clock', 'Poltel', 'Harita',
       'Pano', 'Notes', 'Sinstagram', 'ZaferBank', 'Kayıtlar', 'News', //
-      'Hesap Makinesi', 'Settings',
+      'Settings',
       // The dock.
       'Phone', 'Messages', 'MatesApp', 'Contacts',
     ];
-    const secondPage = ['Games', 'Music', 'Shopper', 'AppShop'];
+    const secondPage = [
+      'Games', 'Music', 'Shopper', 'AppShop', 'Hesap Makinesi', //
+    ];
 
     Finder icon(String title) => find
         .byWidgetPredicate((w) => w is AppIcon && w.title == title)

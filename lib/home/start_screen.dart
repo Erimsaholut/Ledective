@@ -116,13 +116,6 @@ const List<List<AppIcon>> _pages = [
       badgeCount: newArticleCount,
     ),
     AppIcon(
-      title: "Hesap Makinesi",
-      app: CalculatorApp(),
-      iconData: Icons.calculate_rounded,
-      colors: [Color(0xFF3A3A3C), Color(0xFF1C1C1E)],
-      glyphColor: Color(0xFFFF9F0A),
-    ),
-    AppIcon(
       title: "Settings",
       app: SettingsApp(),
       iconData: Icons.settings_rounded,
@@ -154,6 +147,13 @@ const List<List<AppIcon>> _pages = [
       app: AppShopApp(),
       iconData: Icons.apps_rounded,
       colors: [Color(0xFF5AC8FA), Color(0xFF007AFF)],
+    ),
+    AppIcon(
+      title: "Hesap Makinesi",
+      app: CalculatorApp(),
+      iconData: Icons.calculate_rounded,
+      colors: [Color(0xFF3A3A3C), Color(0xFF1C1C1E)],
+      glyphColor: Color(0xFFFF9F0A),
     ),
   ],
 ];

@@ -254,8 +254,8 @@ Teknik:
 - [x] Test görselleri: demoda görünen test görseli yok (`bozulma_*` sadece
       kapalı gizli sonda). Gizli son açılınca etiket gerekecek.
 - [x] Yazar ayarları (Hızlı görevler, Hikâye durumu) demoda gizli.
-- [ ] [?] Epilogda ekip için hâlâ "[Taslak] … için hikâye henüz
-      yazılmadı." satırları var; demoda gizlensin mi?
+- [x] Demoda epilog "[Taslak]" etiketsiz; "… için hikâye henüz
+      yazılmadı." bölümleri hiç gösterilmiyor.
 - [ ] Uygulama ikonu (1024×1024; şu an Flutter'ın varsayılanı). Getirince
       bağlarım.
 

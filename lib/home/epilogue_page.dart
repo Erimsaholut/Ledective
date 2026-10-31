@@ -35,10 +35,24 @@ class _EpiloguePageState extends State<EpiloguePage>
         ),
       ];
     }
-    return [
+    final parts = [
       for (final section in endings.sections)
         if (StoryProgress.instance.ending(section) case final variant?)
           (section, variant),
+    ];
+    if (!demoBuild) return parts;
+    // Friends see the text without the writer's marks and parts that
+    // aren't written yet.
+    return [
+      for (final (section, variant) in parts)
+        if (!isUnwritten(variant.text))
+          (
+            section,
+            EndingVariant(
+              title: variant.title,
+              text: withoutDraftMark(variant.text),
+            ),
+          ),
     ];
   }
 

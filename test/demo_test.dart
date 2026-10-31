@@ -10,6 +10,13 @@ import 'package:ledective/story/story_data.dart';
 void main() {
   demoEndTests();
 
+  test('the demo drops draft marks and unwritten parts', () {
+    expect(withoutDraftMark('[Taslak] Dosya kapandı.'), 'Dosya kapandı.');
+    expect(withoutDraftMark('Dosya kapandı.'), 'Dosya kapandı.');
+    expect(isUnwritten('[Taslak] Özge için hikâye henüz yazılmadı.'), isTrue);
+    expect(isUnwritten('[Taslak] Görevine devam ediyor.'), isFalse);
+  });
+
   test('the demo closes the hidden ending but keeps option places', () {
     final files = {
       for (final f in StoryData.files)
