@@ -1,6 +1,19 @@
 {
   "requires": "final:ready",
   "title": "Dosya Kapandı",
+  "secret": {
+    "requires": "twist:never-abroad",
+    "finale": "twist:caregiver",
+    "endsWith": "twist:end",
+    "title": "Hiç Gitmediniz",
+    "text": [
+      "[Taslak] Hiçbir yere gitmemiştiniz.",
+      "Otel yoktu, uçak yoktu, deniz kenarında bir masa yoktu. Bir oda vardı, perdeleri hep kapalı; komodinde haftalık ilaç kutusu.",
+      "Özge, Orhun, Atakan... Telefonunuzdaki herkes, gece boyunca uyumadığınız saatlerde sizinle konuştu. Gece üçte bir gazeteyi arayan da sizdiniz.",
+      "Berat Yılmaz’ın dosyası haberlerdeydi. Gerisini siz kurdunuz.",
+      "[?] Ne kadarı gerçekti? Bkz. bible 01 › Gizli son."
+    ]
+  },
   "sections": [
     {
       "id": "case",
@@ -86,10 +99,6 @@
       "id": "career",
       "title": "Komiser",
       "variants": [
-        {
-          "requires": "twist:never-abroad",
-          "text": "[Taslak] Hiçbir yere gitmemiştiniz. (Gizli son: telefon bozulur; bkz. bible 01 › Gizli son.)"
-        },
         {"requires": "legal:warrant-issued", "text": "[Taslak] Hakkında yakalama kararı çıkarıldı."},
         {"requires": "status:dismissed", "text": "[Taslak] Meslekten çıkarıldı."},
         {"requires": "status:suspended", "text": "[Taslak] Görevden uzaklaştırıldı."},

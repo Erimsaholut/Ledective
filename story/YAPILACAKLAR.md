@@ -114,9 +114,16 @@ Gerçek kesinleşti (`bible/01-ana-gizem.md`); oyunda henüz yok:
 - [x] Milletvekiliyle son yüzleşme (son teklif)
 - [x] Final soruşturması: savcıya ifade, `final:ready`; gizli seçenek
   (`doubt >= 3`).
-- [ ] **Gizli son: telefon bozulur.** `twist:never-abroad` açılınca sayılar,
-  galeri, mail, sohbetler ve son ses kaydı (`bible/01-ana-gizem.md`).
-  Görseller ve hasta bakıcının kaydı gerekiyor.
+- [x] **Gizli son: telefon bozulur.** Saat, rozetler, banka, galeri, "SEN DELİ
+  DEĞİLSİN" mailleri, silinen sohbetler, hasta bakıcının kaydı, gizli final
+  ekranı (`bible/01-ana-gizem.md`).
+  - [ ] Galeri için 6 gerçek görsel (`bozulma_*.jpg`, şimdi TEST GÖRSELİ).
+  - [ ] Hasta bakıcının ses kaydı: `assets/story/audio/hasta_bakici.mp3`
+    olarak koy, bağlarım (şimdilik metin taslak).
+  - [ ] [?] Gizli sonun metni ve "her şeyi uydurmuş"un kapsamı.
+  - [x] Yaklaştıkça işaretler: ters dönen saat, "Behzat Amirim" ve "BEN
+    DELİ DEĞİLİM" mailleri (ikinci bakışta normal mail).
+  - [ ] [?] Başka işaretler: değişen kişi adı, haberde komiserin adı, ses notu.
 
 ## Açık sorular (önce karar)
 

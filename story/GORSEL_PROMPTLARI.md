@@ -204,6 +204,48 @@ Landscape image (4:3). A night photo of a cheap narrow guesthouse in a back stre
 
 ---
 
+### Gizli son: bozulan galeri (4:3)
+
+Oyuncu gizli sona girince komiserin galerisindeki kareler bunlarla yer değiştirir. Korku filmi değil: sessiz, sıradan, rahatsız edici.
+
+#### `bozulma_ilaclar.jpg` — İlaç kutuları · 4:3
+
+```
+Landscape image (4:3). A phone photo looking down at a bedside table covered with several plain unbranded medicine boxes and opened blister packs, a glass of water, a crumpled tissue, morning light through closed curtains. Style: candid smartphone photo, realistic, dim natural light, slight sensor noise, muted desaturated cold colors, documentary look, quiet and unsettling, not horror. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, flags, celebrity likeness, real person, cartoon, illustration, 3D render, CGI, oversaturated colors, HDR, gore, blood, restraints, horror-movie look, visible faces.
+```
+
+#### `bozulma_koridor.jpg` — Hastane koridoru · 4:3
+
+```
+Landscape image (4:3). A long empty hospital ward corridor with pale green walls and fluorescent ceiling lights, closed doors with small windows, a lone wheelchair by the wall, quiet and clinical. Style: candid smartphone photo, realistic, dim natural light, slight sensor noise, muted desaturated cold colors, documentary look, quiet and unsettling, not horror. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, flags, celebrity likeness, real person, cartoon, illustration, 3D render, CGI, oversaturated colors, HDR, gore, blood, restraints, horror-movie look, visible faces.
+```
+
+#### `bozulma_pencere.jpg` — Parmaklıklı pencere · 4:3
+
+```
+Landscape image (4:3). View from inside a plain room towards a window with simple white metal bars, soft daylight outside, a bare tree beyond, thin curtains half drawn. Style: candid smartphone photo, realistic, dim natural light, slight sensor noise, muted desaturated cold colors, documentary look, quiet and unsettling, not horror. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, flags, celebrity likeness, real person, cartoon, illustration, 3D render, CGI, oversaturated colors, HDR, gore, blood, restraints, horror-movie look, visible faces.
+```
+
+#### `bozulma_ilac_kutusu.jpg` — Haftalık ilaç kutusu · 4:3
+
+```
+Landscape image (4:3). Close-up of a seven-day plastic pill organizer on a bedside table, some compartments empty, some full, in a dim room with closed curtains. Style: candid smartphone photo, realistic, dim natural light, slight sensor noise, muted desaturated cold colors, documentary look, quiet and unsettling, not horror. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, flags, celebrity likeness, real person, cartoon, illustration, 3D render, CGI, oversaturated colors, HDR, gore, blood, restraints, horror-movie look, visible faces.
+```
+
+#### `bozulma_bileklik.jpg` — Hasta bilekliği · 4:3
+
+```
+Landscape image (4:3). Close-up of a man's wrist resting on a white hospital blanket, wearing a plain hospital wristband whose printed details are blurred and unreadable, no face. Style: candid smartphone photo, realistic, dim natural light, slight sensor noise, muted desaturated cold colors, documentary look, quiet and unsettling, not horror. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, flags, celebrity likeness, real person, cartoon, illustration, 3D render, CGI, oversaturated colors, HDR, gore, blood, restraints, horror-movie look, visible faces.
+```
+
+#### `bozulma_oda.jpg` — Kapalı perdeli oda · 4:3
+
+```
+Landscape image (4:3). A small single room in a care facility with heavy curtains closed during the day, an unmade single bed, a plain chair, a smartphone face down on the blanket. Style: candid smartphone photo, realistic, dim natural light, slight sensor noise, muted desaturated cold colors, documentary look, quiet and unsettling, not horror. All people are fictional. Avoid: readable text, letters, words, numbers, watermark, logo, brand names, flags, celebrity likeness, real person, cartoon, illustration, 3D render, CGI, oversaturated colors, HDR, gore, blood, restraints, horror-movie look, visible faces.
+```
+
+---
+
 ## Nasıl kullanılır
 
 1. **Stil eki:** Her prompt'un sonuna aşağıdaki stil ekini ekle. (Bazı

@@ -268,6 +268,7 @@ class Mail {
     this.after = Duration.zero,
     this.unlocksOnView = const [],
     this.spam = false,
+    this.then,
   }) : _id = id;
 
   final String? _id;
@@ -282,6 +283,13 @@ class Mail {
   /// A scam the phone's filter catches: it goes straight to Spam, with no
   /// banner.
   final bool spam;
+
+  /// What the mail turns out to be once the player has read it and looks
+  /// again, as if they had misread it: a hidden-ending omen.
+  final Mail? then;
+
+  /// The mail as it shows now: [then] once it has been [read].
+  Mail shown({required bool read}) => read ? then ?? this : this;
 
   /// Play time the mail takes to arrive once [requires] holds.
   final Duration after;
@@ -930,12 +938,36 @@ class EndingsData {
     this.requires = Condition.always,
     this.title = '',
     this.sections = const [],
+    this.secret,
   });
 
   /// When the game ends. With no sections the game never does.
   final Condition requires;
   final String title;
   final List<EndingSection> sections;
+
+  /// The hidden ending, which takes the place of all the sections.
+  final SecretEnding? secret;
+}
+
+/// The hidden ending. Once [requires] holds the phone falls apart for a
+/// while (see `Breakdown`), then [finale] is set, which the last recording
+/// waits for; listening to it sets [endsWith] and the game ends with
+/// [paragraphs] alone.
+class SecretEnding {
+  const SecretEnding({
+    required this.requires,
+    required this.finale,
+    required this.endsWith,
+    this.title = '',
+    this.paragraphs = const [],
+  });
+
+  final Condition requires;
+  final String finale;
+  final String endsWith;
+  final String title;
+  final List<String> paragraphs;
 }
 
 /* ---------- Parsing ---------- */
@@ -1130,6 +1162,15 @@ Mail _mail(_Reader r) => Mail(
   after: _after(r),
   unlocksOnView: r.stringsOr('unlocksOnView'),
   spam: r.boolOr('spam'),
+  then: switch (r.optional('then')) {
+    null => null,
+    final t => Mail(
+      id: r.textOr('id'),
+      sender: t.text('sender'),
+      subject: t.textOr('subject') ?? '',
+      body: t.text('body'),
+    ),
+  },
 );
 
 MailPool _mailPool(_Reader r) => MailPool(
@@ -1457,6 +1498,16 @@ Article _article(_Reader a) => Article(
 EndingsData _endings(_Reader r) => EndingsData(
   requires: r.condition(),
   title: r.textOr('title') ?? '',
+  secret: switch (r.optional('secret')) {
+    null => null,
+    final s => SecretEnding(
+      requires: s.condition(),
+      finale: s.text('finale'),
+      endsWith: s.text('endsWith'),
+      title: s.textOr('title') ?? '',
+      paragraphs: s.stringsOr('text'),
+    ),
+  },
   sections:
       r
           .optional('sections')

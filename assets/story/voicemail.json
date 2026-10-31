@@ -35,5 +35,17 @@
     "seconds": 12,
     "requires": "part1Done",
     "transcript": "Berat'ın telefonu olay yerinde yok. Kimde? Son aranan numaraları iste."
+  },
+  {
+    "id": "caregiver",
+    "kind": "memo",
+    "from": "Hasta Bakıcı",
+    "daysAgo": 0,
+    "seconds": 38,
+    "requires": "twist:caregiver",
+    "transcript": "[Taslak] Günaydın. Bugün nasılız bakalım? ... Telefonu yine elinizden bırakmamışsınız. Biliyorum, bütün gece yine dosyalarla uğraştınız. Özge Hanım da yazdı mı? ... Telefonda kimse yok, biliyorsunuz değil mi? Sadece biz varız. Hadi, ilaç saati. Perdeyi biraz açayım mı? Dışarısı bugün çok güzel.",
+    "unlocksOnListen": [
+      "twist:end"
+    ]
   }
 ]

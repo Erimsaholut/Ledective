@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../story/breakdown.dart';
 import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
@@ -54,9 +55,19 @@ class _MailAppState extends State<MailApp> {
     StoryProgress progress, {
     required bool spam,
   }) => [
+    // In the hidden ending one message fills every folder.
+    for (var i = (progress.breakdown?.madMails ?? 0) - 1; i >= 0; i--)
+      (_madMail(i), DateTime.now()),
     for (final entry in spam ? progress.spam : progress.inboxFolder)
       if (!_deleted.contains(entry.$1.id)) entry,
   ];
+
+  static Mail _madMail(int i) => Mail(
+    id: 'breakdown#$i',
+    sender: '—',
+    subject: Breakdown.madLine,
+    body: List.filled(40, Breakdown.madLine).join(' '),
+  );
 
   Future<void> _setDeleted(Mail mail, bool deleted) async {
     setState(() {
@@ -87,13 +98,15 @@ class _MailAppState extends State<MailApp> {
 
   void _open(Mail mail, DateTime time) {
     final progress = StoryProgress.instance;
+    // The first time, a mail shows as it came; after that as it "really" is.
+    final shown = mail.shown(read: progress.hasSeen('mail:${mail.id}'));
     progress.markSeen('mail:${mail.id}', mail.unlocksOnView);
     final inSpam = _showSpam;
     Navigator.push(
       context,
       MaterialPageRoute<void>(
         builder: (_) => _MailPage(
-          mail: mail,
+          mail: shown,
           time: time,
           onDelete: () => _delete(mail),
           onNotSpam: inSpam
@@ -176,6 +189,8 @@ class _MailAppState extends State<MailApp> {
                 itemBuilder: (context, index) {
                   final (mail, time) = inbox[index];
                   final unread = !progress.hasSeen('mail:${mail.id}');
+                  // An omen reads differently once it has been opened.
+                  final shown = mail.shown(read: !unread);
                   return Dismissible(
                     key: ValueKey(mail.id),
                     direction: DismissDirection.endToStart,
@@ -206,7 +221,7 @@ class _MailAppState extends State<MailApp> {
                                 : null,
                           ),
                           Avatar(
-                            name: mail.sender,
+                            name: shown.sender,
                             icon: Icons.alternate_email_rounded,
                           ),
                         ],
@@ -215,7 +230,7 @@ class _MailAppState extends State<MailApp> {
                         children: [
                           Expanded(
                             child: Text(
-                              mail.sender,
+                              shown.sender,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -238,9 +253,9 @@ class _MailAppState extends State<MailApp> {
                       subtitle: Text.rich(
                         TextSpan(
                           children: [
-                            if (mail.subject.isNotEmpty)
+                            if (shown.subject.isNotEmpty)
                               TextSpan(
-                                text: '${mail.subject}\n',
+                                text: '${shown.subject}\n',
                                 style: TextStyle(
                                   color: AppColors.label,
                                   fontWeight: unread
@@ -248,10 +263,10 @@ class _MailAppState extends State<MailApp> {
                                       : FontWeight.normal,
                                 ),
                               ),
-                            TextSpan(text: mail.body),
+                            TextSpan(text: shown.body),
                           ],
                         ),
-                        maxLines: mail.subject.isEmpty ? 2 : 3,
+                        maxLines: shown.subject.isEmpty ? 2 : 3,
                         overflow: TextOverflow.ellipsis,
                       ),
                       onTap: () => _open(mail, time),

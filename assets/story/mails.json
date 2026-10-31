@@ -734,6 +734,41 @@
       "body": "Ben Emre’nin ablasıyım. Hastanede yanındayım. Konuşmuyor ama bir ara gözlerini açıp \"polis abi geldi mi\" diye sordu. Geldi dedim. Sağ olun.",
       "requires": "emre:rescued",
       "afterMinutes": 8
+    },
+    {
+      "id": "behzat",
+      "sender": "Behzat Amirim",
+      "subject": "Sen deli değilsin oğlum",
+      "body": "Oğlum, sen deli değilsin. Ben biliyorum. Herkes sana deli diyecek; inanma. Bana bile inanma.",
+      "requires": "doubt >= 3",
+      "afterMinutes": 4,
+      "unlocksOnView": [
+        "seen:behzat-mail"
+      ],
+      "then": {
+        "sender": "dizifilm.tv",
+        "subject": "Kaldığın yerden devam et",
+        "body": "Behzat Ç. · 3. sezon 7. bölüm. 41 dakikası kaldı. İzlemeye devam etmek ister misin?"
+      }
+    },
+    {
+      "id": "not-mad",
+      "sender": "komiser@emniyet.gov.tr",
+      "subject": "BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM",
+      "body": "BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM",
+      "requires": [
+        "doubt >= 4",
+        "seen:behzat-mail"
+      ],
+      "afterMinutes": 6,
+      "unlocksOnView": [
+        "seen:not-mad-mail"
+      ],
+      "then": {
+        "sender": "randevu@ruhsagligi-poliklinigi.gov.tr",
+        "subject": "Randevu hatırlatma",
+        "body": "Sayın hastamız, yarın saat 10.30’da kontrol randevunuz bulunmaktadır. Lütfen kullandığınız ilaçları yanınızda getiriniz. Dr. S. Arıkan"
+      }
     }
   ]
 }

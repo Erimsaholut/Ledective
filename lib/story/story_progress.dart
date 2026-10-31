@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/game_clock.dart';
 import '../theme/turkish_text.dart';
+import 'breakdown.dart';
 import 'dialogue.dart';
 import 'drip_feed.dart';
 import 'news_feed.dart';
@@ -206,6 +207,11 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   final DripFeed _mailDrip = DripFeed();
   final DripFeed _newsDrip = DripFeed();
 
+  /// Play time, in milliseconds, at which the hidden ending's breakdown
+  /// began, and what of it has happened.
+  int? _breakdownFrom;
+  final Set<String> _breakdownDone = {};
+
   /// Divides mission durations, so story writers can test quickly.
   bool fastMissions = false;
 
@@ -253,7 +259,44 @@ class StoryProgress extends ChangeNotifier implements StoryState {
 
   /// True once the conditions in `endings.json` hold.
   bool get isOver =>
-      _story.endings.sections.isNotEmpty && meets(_story.endings.requires);
+      _story.endings.sections.isNotEmpty &&
+      meets(_story.endings.requires) &&
+      // The hidden ending waits for the phone to finish falling apart.
+      !(breakingDown && !has(_story.endings.secret!.endsWith));
+
+  /// Whether the hidden ending has begun (endings.json › `secret`).
+  bool get breakingDown {
+    final secret = _story.endings.secret;
+    return secret != null && meets(secret.requires);
+  }
+
+  /// How far the phone has fallen apart, or null outside the hidden
+  /// ending.
+  Breakdown? get breakdown => breakingDown
+      ? Breakdown(Duration(milliseconds: _playMs - (_breakdownFrom ?? _playMs)))
+      : null;
+
+  /// Moves the hidden ending's breakdown on. Returns whether it is under
+  /// way, so the apps redraw.
+  bool _advanceBreakdown() {
+    if (!breakingDown) return false;
+    _breakdownFrom ??= _playMs;
+    final b = breakdown!;
+    if (b.madMails > 0 && _breakdownDone.add('mail')) {
+      alerts.pushAll([
+        for (var i = 0; i < 4; i++)
+          StoryAlert(
+            app: 'Mail',
+            title: Breakdown.madLine,
+            body: List.filled(3, Breakdown.madLine).join(' '),
+          ),
+      ]);
+    }
+    if (b.finale && _breakdownDone.add('finale')) {
+      _apply([_story.endings.secret!.finale]);
+    }
+    return true;
+  }
 
   /// How [section] of the ending turns out for this player.
   EndingVariant? ending(EndingSection section) =>
@@ -290,6 +333,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     _waited.clear();
     _mailDrip.clear();
     _newsDrip.clear();
+    _breakdownFrom = null;
+    _breakdownDone.clear();
     alerts.clear();
     fastMissions = prefs.getBool('fastMissions') ?? false;
     hintsOn = prefs.getBool('hints') ?? true;
@@ -340,6 +385,10 @@ class StoryProgress extends ChangeNotifier implements StoryState {
       _waited.addAll((data['waited'] as List? ?? const []).cast());
       _mailDrip.load(data['mailDrip'] as Map<String, dynamic>?);
       _newsDrip.load(data['newsDrip'] as Map<String, dynamic>?);
+      _breakdownFrom = data['breakdown'] as int?;
+      _breakdownDone.addAll(
+        (data['breakdownDone'] as List? ?? const []).cast(),
+      );
     }
     notifyListeners();
   }
@@ -376,6 +425,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
         'waiting': _waiting,
         'waited': _waited.toList(),
         'mailDrip': _mailDrip.toJson(),
+        'breakdown': _breakdownFrom,
+        'breakdownDone': _breakdownDone.toList(),
         'newsDrip': _newsDrip.toJson(),
       }),
     );
@@ -1143,6 +1194,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     if (elapsed > Duration.zero) {
       _playMs += elapsed.inMilliseconds;
       changed |= _announce(() => _advanceWaits(elapsed) | _drip(time));
+      changed |= _advanceBreakdown();
       // Play time is worth keeping even when nothing else changed.
       await _save();
     }

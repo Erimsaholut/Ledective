@@ -34,6 +34,15 @@ class _MatesAppState extends State<MatesApp> {
     Navigator.push(context, MaterialPageRoute<void>(builder: (_) => page));
   }
 
+  /// [person]'s chat as far as it has come in. In the hidden ending it
+  /// erases itself and leaves the list once every message is gone.
+  List<ChatEntry> _transcript(String person) {
+    final transcript = _progress.transcriptOf(person);
+    final breakdown = _progress.breakdown;
+    if (breakdown == null) return transcript;
+    return breakdown.gone(transcript) ? const [] : breakdown.erase(transcript);
+  }
+
   String _preview(List<ChatEntry> transcript) {
     for (final entry in transcript.reversed) {
       switch (entry) {
@@ -180,7 +189,7 @@ class _MatesAppState extends State<MatesApp> {
               : 2;
           final story = [
             for (final person in people)
-              if (_progress.transcriptOf(person) case final transcript
+              if (_transcript(person) case final transcript
                   when transcript.isNotEmpty)
                 (person, transcript),
           ];

@@ -162,3 +162,5 @@ yapıştır" bölümünde, her biri tek başına yapıştırılabilir. Getirdikl
 | `kampus_kafe.jpg`, `universite.jpg` | Harita | 4:3 | Sonra |
 | `vakif_bina.jpg` | Harita (ya da `haber_vakif.jpg` kullanılır) | 4:3 | İsteğe bağlı |
 | `aydin_evi.jpg`, `soguk_hava_deposu.jpg`, `ciftlik_evi.jpg`, `pansiyon.jpg` | Harita | 4:3 | Sonra |
+| `bozulma_ilaclar.jpg`, `bozulma_koridor.jpg`, `bozulma_pencere.jpg` | Gizli son: bozulan galeri | 4:3 | Sonra |
+| `bozulma_ilac_kutusu.jpg`, `bozulma_bileklik.jpg`, `bozulma_oda.jpg` | Gizli son: bozulan galeri | 4:3 | Sonra |

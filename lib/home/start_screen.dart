@@ -33,6 +33,7 @@ import '../apps/sinstagram/sinstagram_app.dart';
 import '../data/contacts_repository.dart';
 import '../data/installed_games.dart';
 import '../data/wallpaper.dart';
+import '../story/breakdown.dart';
 import '../story/story_progress.dart';
 import '../theme/turkish_dates.dart';
 import 'app_icon.dart';
@@ -377,15 +378,31 @@ class _ClockWidgetState extends State<_ClockWidget> {
     const shadow = [Shadow(color: Color(0x66000000), blurRadius: 12)];
     return Column(
       children: [
-        Text(
-          clockTime(_now),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 76,
-            fontWeight: FontWeight.w200,
-            height: 1.05,
-            shadows: shadow,
-            fontFeatures: [FontFeature.tabularFigures()],
+        // In the hidden ending the clock stops making sense; on the way
+        // there it now and then turns upside down.
+        ListenableBuilder(
+          listenable: StoryProgress.instance,
+          builder: (context, _) => RotatedBox(
+            quarterTurns:
+                Omens.clockFlipped(
+                      StoryProgress.instance.value('doubt'),
+                      DateTime.now(),
+                    ) &&
+                    !StoryProgress.instance.breakingDown
+                ? 2
+                : 0,
+            child: Text(
+              StoryProgress.instance.breakdown?.clock(DateTime.now()) ??
+                  clockTime(_now),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 76,
+                fontWeight: FontWeight.w200,
+                height: 1.05,
+                shadows: shadow,
+                fontFeatures: [FontFeature.tabularFigures()],
+              ),
+            ),
           ),
         ),
         Text(

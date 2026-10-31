@@ -130,9 +130,11 @@ class AppIcon extends StatelessWidget {
           // A locked app has nothing to show.
           final progress = StoryProgress.instance;
           final value = progress.lockOf(title) == null ? count(progress) : 0;
+          // In the hidden ending the badges count nothing at all.
+          final broken = progress.breakdown?.badge(title.length * 3);
           return Badge(
-            isLabelVisible: value > 0,
-            label: Text('$value'),
+            isLabelVisible: broken != null || value > 0,
+            label: Text(broken ?? '$value'),
             textStyle: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,

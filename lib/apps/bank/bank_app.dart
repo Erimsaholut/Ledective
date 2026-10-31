@@ -189,7 +189,8 @@ class _BankAppState extends State<BankApp> {
                       style: TextStyle(color: Colors.white70),
                     ),
                     Text(
-                      formatLira(BankAccount.instance.balance(_progress)),
+                      _progress.breakdown?.money(0) ??
+                          formatLira(BankAccount.instance.balance(_progress)),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 30,

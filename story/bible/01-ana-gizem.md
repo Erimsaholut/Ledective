@@ -270,8 +270,33 @@ kayıtlarında hasta bakıcının ses kaydı eklenebilir."
 Yani gizli son normal finallerle birleşmez; onların **yerine** geçer ve
 oynanan her şeyi geri dönüp yalanlar.
 
-**Oyundaki karşılığı [ÖNERİ, taslak]:** Final soruşturmasında gizli seçenek
-seçilince (`twist:never-abroad`) telefon birkaç dakika içinde dağılır:
+**Oyundaki karşılığı [KANON, taslak; oyunda 31.10.2026]:** Savcıya ifadede
+gizli seçenek seçilince (`twist:never-abroad`) oyun hemen bitmez; telefon
+oyun süresiyle yaklaşık bir buçuk dakikada dağılır (`lib/story/breakdown.dart`):
+- 0 sn: saat (88:88, 03:00, --:--), rozetler (999+, 7777...), banka bakiyesi.
+- 15 sn: galeri, altı saniyede bir kare değişir.
+- 35 sn: Mail'in her klasörü "SEN DELİ DEĞİLSİN" mailleriyle dolar, bildirim de gelir.
+- 55 sn: sohbet mesajları en eskiden başlayarak "Bu mesaj silindi" olur;
+  tamamen silinen sohbet listeden düşer, liste sonunda boş kalır.
+- 90 sn: Kayıtlar'a hasta bakıcının kaydı gelir (`twist:caregiver`).
+  Dinlenince (`twist:end`) final ekranı açılır ve sadece gizli son metni
+  görünür (endings.json › `secret`).
+
+**Yaklaştıkça işaretler [KARAR 31.10.2026, metinler taslak]:** Bozulma sadece
+gizli seçenekten sonra değil, oyuncu o yolda birkaç adım attıktan sonra
+(`doubt`) ara ara da görünür; oyunun ortasında rastgele değil:
+- `doubt >= 2`: ana ekran saati bazen birkaç saniye ters döner (dört
+  dakikada bir; `doubt >= 4` ile iki dakikada bir).
+- `doubt >= 3`: "Behzat Amirim"den mail: "Sen deli değilsin oğlum."
+  Okuduktan sonra tekrar bakınca dizi platformunun "Behzat Ç. · kaldığın
+  yerden devam et" bildirimine dönüşmüştür.
+- `doubt >= 4` ve Behzat maili okunduysa: komiserin kendi adresinden
+  "BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM". Tekrar bakınca Dr. Arıkan'ın
+  randevu hatırlatmasıdır.
+- [ÖNERİ] Başka işaretler eklenebilir: bir kişinin adı bir an başka görünür,
+  bir haberde komiserin adı, Kayıtlar'da tanımadığı bir ses notu.
+
+İlk planlanan adımlar:
 1. Sayılar: banka bakiyesi, saat, rozet sayıları anlamsızlaşır (999+, 88:88,
    eksi bakiyeler); takvim günleri karışır.
 2. Galeri: komiserin kareleri birer birer ilaç kutuları, hastane koridoru,
@@ -281,7 +306,8 @@ seçilince (`twist:never-abroad`) telefon birkaç dakika içinde dağılır:
 4. Sohbetler: ekibin mesajları teker teker "Bu mesaj silindi"ye döner;
    sohbet listesinde tek bir kişi kalır. [?] Kim? (Dr. Arıkan?)
 5. Kayıtlar: en sonda yeni bir ses kaydı: hasta bakıcı. [Kullanıcı kendisi
-   kaydedecek.] Ne söylediği: [?]
+   kaydedecek.] Şimdilik voicemail.json › `caregiver` içinde taslak metin var
+   ve kayıt metniyle "oynuyor"; ses dosyası gelince bağlanır.
 6. Son ekran: [?]
 
 [?] "Her şeyi uydurmuş olacak" ne kadarını kapsıyor?

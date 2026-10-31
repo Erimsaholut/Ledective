@@ -16,11 +16,29 @@ class EpiloguePage extends StatefulWidget {
 
 class _EpiloguePageState extends State<EpiloguePage>
     with SingleTickerProviderStateMixin {
-  late final List<(EndingSection, EndingVariant)> _parts = [
-    for (final section in StoryData.current.endings.sections)
-      if (StoryProgress.instance.ending(section) case final variant?)
-        (section, variant),
-  ];
+  late final List<(EndingSection, EndingVariant)> _parts = _partsNow();
+
+  /// The parts of the ending; the hidden ending takes the place of all.
+  static List<(EndingSection, EndingVariant)> _partsNow() {
+    final endings = StoryData.current.endings;
+    final secret = endings.secret;
+    if (secret != null && StoryProgress.instance.breakingDown) {
+      return [
+        (
+          const EndingSection(id: 'secret', title: 'Gerçek', variants: []),
+          EndingVariant(
+            title: secret.title,
+            text: secret.paragraphs.join('\n\n'),
+          ),
+        ),
+      ];
+    }
+    return [
+      for (final section in endings.sections)
+        if (StoryProgress.instance.ending(section) case final variant?)
+          (section, variant),
+    ];
+  }
 
   late final AnimationController _reveal = AnimationController(
     vsync: this,

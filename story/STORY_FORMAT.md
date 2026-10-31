@@ -550,6 +550,9 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
     Kanon mailler hiç düşmez: `story` mailleri ve havuzda `requires` ya da
     `unlocksOnView` taşıyanlar (ör. gizli son ipuçları). Oyuncu spamdaki bir
     maili açıp "Spam değil" diyebilir.
+  - `then`: mail okunduktan sonra tekrar bakınca başka bir şey görünür
+    (`sender`, `subject`, `body`). Gizli son işaretleri için: "Behzat Amirim"
+    maili, ikinci bakışta dizi platformunun bildirimi olur.
   - `story`: hikâyenin mailleri, `requires` açılınca gelir. `afterMinutes`
     ile koşuldan o kadar dakika oyun süresi sonra gelir.
   - `subject` listede ve bildirimde görünür; `id` verilmezse gönderen ve

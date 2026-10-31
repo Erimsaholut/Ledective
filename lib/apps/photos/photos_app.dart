@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../data/camera_roll.dart';
 import '../../data/game_data.dart';
+import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
 
 /// A photo from the camera roll (bytes) or the bundled gallery (asset).
@@ -29,12 +30,19 @@ class PhotosApp extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListenableBuilder(
-        listenable: CameraRoll.instance,
+        listenable: Listenable.merge([
+          CameraRoll.instance,
+          StoryProgress.instance,
+        ]),
         builder: (context, _) {
+          // In the hidden ending the photos turn into what was really there.
+          final gallery =
+              StoryProgress.instance.breakdown?.gallery(galleryImages) ??
+              galleryImages;
           final photos = <Photo>[
             for (final bytes in CameraRoll.instance.photos)
               (asset: null, bytes: bytes),
-            for (final asset in galleryImages) (asset: asset, bytes: null),
+            for (final asset in gallery) (asset: asset, bytes: null),
           ];
           return CustomScrollView(
             slivers: [

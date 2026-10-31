@@ -6,6 +6,7 @@ import 'package:ledective/apps/store_apps/cipher/ciphers.dart';
 import 'package:ledective/apps/news/news_app.dart';
 import 'package:ledective/apps/poltel/poltel_app.dart';
 import 'package:ledective/apps/sinstagram/sinstagram_app.dart';
+import 'package:ledective/story/breakdown.dart';
 import 'package:ledective/story/dialogue.dart';
 import 'package:ledective/story/drip_feed.dart';
 import 'package:ledective/story/news_feed.dart';
@@ -938,6 +939,35 @@ void main() {
         await say(prosecutor, 'Bilmiyorum.');
         await say(prosecutor, '...Nerede olduğumu bilmiyorum.');
         expect(progress().has('twist:never-abroad'), isTrue);
+        // The phone falls apart before the game ends.
+        expect(progress().isOver, isFalse);
+        expect(progress().breakingDown, isTrue);
+        var clock = DateTime(2026, 3, 2, 10);
+        Future<void> play(Duration time) async {
+          final end = clock.add(time);
+          while (clock.isBefore(end)) {
+            clock = clock.add(const Duration(seconds: 2));
+            await progress().tick(now: clock);
+          }
+        }
+
+        await play(const Duration(seconds: 40));
+        final breakdown = progress().breakdown!;
+        expect(breakdown.brokenPhotos, greaterThan(0));
+        expect(breakdown.madMails, greaterThan(0));
+        expect(
+          progress().alerts.items.where((a) => a.title == Breakdown.madLine),
+          isNotEmpty,
+        );
+        expect(progress().has('twist:caregiver'), isFalse);
+        await play(const Duration(seconds: 55));
+        expect(progress().has('twist:caregiver'), isTrue);
+        final caregiver = StoryData.current.recordings.firstWhere(
+          (r) => r.id == 'caregiver',
+        );
+        expect(progress().meets(caregiver.requires), isTrue);
+        expect(progress().isOver, isFalse, reason: 'not listened to yet');
+        await progress().markSeen('rec:caregiver', caregiver.unlocksOnListen);
         expect(progress().isOver, isTrue);
       });
     });
@@ -1233,6 +1263,55 @@ void main() {
     });
   });
 
+  group('Breakdown', () {
+    test('things go wrong one after another', () {
+      const start = Breakdown(Duration.zero);
+      expect(start.brokenPhotos, 0);
+      expect(start.madMails, 0);
+      expect(start.erasedMessages, 0);
+      expect(start.finale, isFalse);
+      const late = Breakdown(Duration(seconds: 100));
+      expect(late.brokenPhotos, greaterThan(0));
+      expect(late.madMails, greaterThan(100));
+      expect(late.erasedMessages, greaterThan(100));
+      expect(late.finale, isTrue);
+    });
+
+    test('photos are swapped and chats erased from the oldest', () {
+      const b = Breakdown(Duration(seconds: 22));
+      final gallery = b.gallery(['a.jpg', 'b.jpg', 'c.jpg']);
+      expect(gallery.first, Breakdown.photos.first);
+      expect(gallery.last, 'c.jpg');
+      const chats = Breakdown(Duration(seconds: 56));
+      final erased = chats.erase(const [
+        IncomingMessage('bir'),
+        OutgoingMessage('iki'),
+        IncomingMessage('üç'),
+        IncomingMessage('dört'),
+        IncomingMessage('beş'),
+      ]);
+      final texts = [
+        for (final e in erased)
+          if (e is IncomingMessage) e.text else (e as OutgoingMessage).text,
+      ];
+      expect(texts.first, Breakdown.erased);
+      expect(texts.last, 'beş');
+    });
+  });
+
+  group('Omens', () {
+    test('the clock only turns over once doubt has grown', () {
+      final at = DateTime(2026, 3, 2, 10, 1, 5);
+      expect(Omens.clockFlipped(1, at), isFalse);
+      expect(Omens.clockFlipped(2, at), isTrue);
+      expect(
+        Omens.clockFlipped(2, at.add(const Duration(minutes: 1))),
+        isFalse,
+      );
+      expect(Omens.clockFlipped(4, at.add(const Duration(minutes: 2))), isTrue);
+    });
+  });
+
   group('AlertQueue', () {
     test('spaces out a burst, one app at a time', () {
       final queue = AlertQueue()..spacing = const Duration(seconds: 2);
@@ -1415,6 +1494,34 @@ void main() {
       expect(everyday(), hasLength(filler.keep));
       expect(progress.archivedNews, hasLength(total - filler.keep));
     });
+
+    test(
+      'omen mails come with doubt and read normal the second time',
+      () async {
+        final progress = StoryProgress.instance;
+        await progress.tick(now: clock);
+        Mail? arrived(String id) => [
+          for (final (m, _) in progress.inbox)
+            if (m.id == id) m,
+        ].firstOrNull;
+        await progress.discover(['doubt = 2']);
+        await play(const Duration(minutes: 5));
+        expect(arrived('behzat'), isNull, reason: 'not enough doubt');
+        await progress.discover(['doubt = 3']);
+        await play(const Duration(minutes: 5));
+        final behzat = arrived('behzat')!;
+        expect(behzat.shown(read: false).sender, 'Behzat Amirim');
+        await progress.markSeen('mail:behzat', behzat.unlocksOnView);
+        expect(behzat.shown(read: true).sender, 'dizifilm.tv');
+        expect(arrived('not-mad'), isNull);
+        await progress.discover(['doubt = 4']);
+        await play(const Duration(minutes: 7));
+        final notMad = arrived('not-mad')!;
+        expect(notMad.subject, 'BEN DELİ DEĞİLİM BEN DELİ DEĞİLİM');
+        expect(notMad.shown(read: true).subject, 'Randevu hatırlatma');
+        expect(progress.isCanonMail(notMad), isTrue, reason: 'never spam');
+      },
+    );
 
     test('wait while the player doesn\'t open Mail or News', () async {
       final progress = StoryProgress.instance;

@@ -395,6 +395,15 @@ List<StoryIssue> validateStory(
 
   // Endings.
   final endings = story.endings;
+  if (endings.secret case final secret?) {
+    const where = 'endings.json › secret';
+    uses(secret.requires, where);
+    // The breakdown sets the finale; listening to the last recording sets
+    // the flag that ends the game.
+    sets([secret.finale], '$where (bozulma bitince)');
+    uses(Condition(all: [secret.endsWith]), '$where (oyunu bitirir)');
+    if (secret.paragraphs.isEmpty) warn(where, 'gizli sonun metni yok');
+  }
   if (endings.sections.isNotEmpty) {
     uses(endings.requires, 'endings.json');
     if (endings.requires.isAlways) {

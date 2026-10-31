@@ -84,8 +84,13 @@ class _ChatPageState extends State<ChatPage> {
     return saved.length > seen ? saved.sublist(seen) : const [];
   }
 
+  /// The chat as it shows: in the hidden ending, erasing itself.
+  List<ChatEntry> get _shown =>
+      _progress.breakdown?.erase(_entries) ?? _entries;
+
   /// Shows what arrived while the chat is open.
   void _sync() {
+    if (mounted && _progress.breakingDown) setState(() {});
     if (!mounted || _sending || _typing) return;
     final entries = _dialogue.replay(_unfollowed);
     if (entries.isEmpty) return;
@@ -161,8 +166,9 @@ class _ChatPageState extends State<ChatPage> {
   };
 
   Widget _buildEntry(int index) {
-    final entry = _entries[index];
-    final previous = index > 0 ? _side(_entries[index - 1]) : null;
+    final shown = _shown;
+    final entry = shown[index];
+    final previous = index > 0 ? _side(shown[index - 1]) : null;
     return switch (entry) {
       IncomingMessage(:final text) => ChatBubble(
         text: text,
