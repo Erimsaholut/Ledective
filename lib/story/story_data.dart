@@ -696,14 +696,34 @@ class Recording {
 }
 
 /// A calendar entry: either [dayOffset] days from the first launch, or a
-/// yearly date.
+/// date: every year, or only in [year] for holidays that move, such as
+/// the religious ones.
 class StoryEvent {
-  const StoryEvent({required this.title, this.dayOffset, this.month, this.day});
+  const StoryEvent({
+    required this.title,
+    this.dayOffset,
+    this.month,
+    this.day,
+    this.year,
+    this.days = 1,
+    this.holiday = false,
+    this.halfDay = false,
+  });
 
   final String title;
   final int? dayOffset;
   final int? month;
   final int? day;
+  final int? year;
+
+  /// How many days in a row it lasts, e.g. 4 for Kurban Bayramı.
+  final int days;
+
+  /// An official holiday: the day shows in red.
+  final bool holiday;
+
+  /// An official half-day off, such as the eve of a bayram.
+  final bool halfDay;
 }
 
 /// A number the story keeps, such as a character's trust in the player.
@@ -1363,6 +1383,10 @@ StoryEvent _event(_Reader r) => StoryEvent(
   dayOffset: r.optional('dayOffset')?.integer,
   month: r.optional('month')?.integer,
   day: r.optional('day')?.integer,
+  year: r.optional('year')?.integer,
+  days: r.intOr('days', 1),
+  holiday: r.boolOr('holiday'),
+  halfDay: r.boolOr('halfDay'),
 );
 
 Duration _minutes(_Reader r) =>

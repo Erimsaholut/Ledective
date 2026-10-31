@@ -14,6 +14,8 @@ class CalendarEvent {
     required this.date,
     required this.title,
     this.userAdded = false,
+    this.holiday = false,
+    this.halfDay = false,
   });
 
   final DateTime date;
@@ -21,22 +23,38 @@ class CalendarEvent {
 
   /// Events the player created; only these can be deleted.
   final bool userAdded;
+
+  /// An official holiday, or half a day off.
+  final bool holiday;
+  final bool halfDay;
 }
 
-/// Story events from `calendar.json`, placed relative to the day the game
-/// was first opened, with yearly dates repeated around [year].
+/// Story events and holidays from `calendar.json`, placed relative to the
+/// day the game was first opened, with yearly dates repeated around [year].
+/// An event lasting several days appears on each, numbered.
 List<CalendarEvent> storyEvents(GameClock clock, {int? year}) {
   final y = year ?? DateTime.now().year;
+  Iterable<CalendarEvent> span(StoryEvent event, DateTime first) sync* {
+    for (var i = 0; i < event.days; i++) {
+      yield CalendarEvent(
+        date: DateTime(first.year, first.month, first.day + i),
+        title: event.days > 1 ? '${event.title} (${i + 1}. gün)' : event.title,
+        holiday: event.holiday,
+        halfDay: event.halfDay,
+      );
+    }
+  }
+
   return [
     for (final event in StoryData.current.calendar)
       if (event.dayOffset case final offset?)
-        CalendarEvent(
-          date: clock.daysBeforeFirstOpen(-offset),
-          title: event.title,
-        )
+        ...span(event, clock.daysBeforeFirstOpen(-offset))
       else if ((event.month, event.day) case (final int m, final int d))
-        for (final year in [y - 1, y, y + 1])
-          CalendarEvent(date: DateTime(year, m, d), title: event.title),
+        if (event.year case final only?)
+          ...span(event, DateTime(only, m, d))
+        else
+          for (final year in [y - 1, y, y + 1])
+            ...span(event, DateTime(year, m, d)),
   ];
 }
 
@@ -163,6 +181,8 @@ class _CalendarAppState extends State<CalendarApp> {
             lastDay: DateTime.utc(now.year + 10, 12, 31),
             selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
             eventLoader: _eventsOn,
+            // Official holidays show in red, as on a phone's calendar.
+            holidayPredicate: (day) => _eventsOn(day).any((e) => e.holiday),
             onDaySelected: (day, focused) => setState(() {
               _selectedDay = day;
               _focusedDay = focused;
@@ -212,6 +232,8 @@ class _CalendarAppState extends State<CalendarApp> {
                 fontSize: 17,
                 color: AppColors.secondaryLabel,
               ),
+              holidayTextStyle: TextStyle(fontSize: 17, color: red),
+              holidayDecoration: BoxDecoration(shape: BoxShape.circle),
               markerDecoration: BoxDecoration(
                 color: AppColors.secondaryLabel,
                 shape: BoxShape.circle,
@@ -253,12 +275,22 @@ class _CalendarAppState extends State<CalendarApp> {
                             children: [
                               Container(
                                 width: 4,
-                                color: event.userAdded ? AppColors.blue : red,
+                                color: event.userAdded
+                                    ? AppColors.blue
+                                    : event.holiday || event.halfDay
+                                    ? AppColors.green
+                                    : red,
                               ),
                               Expanded(
                                 child: ListTile(
                                   title: Text(event.title),
-                                  subtitle: const Text("tüm gün"),
+                                  subtitle: Text(
+                                    event.holiday
+                                        ? "Resmî tatil · tüm gün"
+                                        : event.halfDay
+                                        ? "Yarım gün tatil"
+                                        : "tüm gün",
+                                  ),
                                   trailing: event.userAdded
                                       ? IconButton(
                                           tooltip: "Delete",

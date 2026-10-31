@@ -1299,6 +1299,25 @@ void main() {
     });
   });
 
+  group('Calendar', () {
+    test('holidays move with the year and bayrams span their days', () {
+      final events = StoryData.current.calendar;
+      final kurban2026 = events.firstWhere(
+        (e) => e.title == 'Kurban Bayramı' && e.year == 2026,
+      );
+      expect((kurban2026.month, kurban2026.day, kurban2026.days), (5, 27, 4));
+      expect(kurban2026.holiday, isTrue);
+      final republic = events.firstWhere(
+        (e) => e.title == 'Cumhuriyet Bayramı',
+      );
+      expect((republic.month, republic.day, republic.year), (10, 29, null));
+      expect(
+        events.where((e) => e.halfDay).map((e) => e.title),
+        contains('Cumhuriyet Bayramı Arifesi'),
+      );
+    });
+  });
+
   group('Omens', () {
     test('the clock only turns over once doubt has grown', () {
       final at = DateTime(2026, 3, 2, 10, 1, 5);
