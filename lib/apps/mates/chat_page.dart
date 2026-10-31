@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 import '../../story/dialogue.dart';
@@ -9,6 +10,7 @@ import '../../widgets/avatar.dart';
 import '../../widgets/chat_bubble.dart';
 import '../../widgets/day_divider.dart';
 import '../phone/call_screen.dart';
+import '../photos/photos_app.dart';
 import 'mates_style.dart';
 
 /// A story conversation in MatesApp. The player answers by picking one of
@@ -90,10 +92,12 @@ class _ChatPageState extends State<ChatPage> {
 
   /// Shows what arrived while the chat is open.
   void _sync() {
-    if (mounted && _progress.breakingDown) setState(() {});
-    if (!mounted || _sending || _typing) return;
+    if (!mounted) return;
+    // The replies on offer follow the story, so a flag set anywhere else
+    // can open them up: always rebuild.
+    if (_sending || _typing) return _rebuild();
     final entries = _dialogue.replay(_unfollowed);
-    if (entries.isEmpty) return;
+    if (entries.isEmpty) return _rebuild();
     if (_progress.paceMessages) {
       _reveal(entries);
       setState(() {});
@@ -101,6 +105,19 @@ class _ChatPageState extends State<ChatPage> {
     }
     setState(() => _entries.addAll(entries));
     _progress.markRead(widget.person);
+  }
+
+  /// Rebuilds now, or after the frame if the change came in the middle of
+  /// one, such as another chat opening on top of this one.
+  void _rebuild() {
+    final binding = SchedulerBinding.instance;
+    if (binding.schedulerPhase != SchedulerPhase.persistentCallbacks) {
+      setState(() {});
+      return;
+    }
+    binding.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
@@ -147,6 +164,15 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {});
   }
 
+  void _openPhoto(String asset) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => PhotoViewer(photos: [(asset: asset, bytes: null)]),
+      ),
+    );
+  }
+
   void _call() {
     final number = widget.number;
     if (number == null) return;
@@ -171,7 +197,9 @@ class _ChatPageState extends State<ChatPage> {
     final previous = index > 0 ? _side(shown[index - 1]) : null;
     return switch (entry) {
       IncomingMessage(:final text) => ChatBubble(
-        text: text,
+        text: messageText(text),
+        photo: messagePhoto(text),
+        onPhotoTap: () => _openPhoto(messagePhoto(text)!),
         outgoing: false,
         outgoingColor: MatesColors.outgoing,
         tail: previous != false,
@@ -269,26 +297,52 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildReplies() {
     final options = _dialogue.options;
+    // One of the story's big decisions shows in red, so it doesn't pass
+    // as just another reply.
+    final decision = _dialogue.isDecision;
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(8, 4, 8, 0),
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: decision ? const Color(0xFFFFF1F0) : Colors.white,
         borderRadius: BorderRadius.circular(16),
+        border: decision
+            ? Border.all(color: MatesColors.decision, width: 1.5)
+            : null,
         boxShadow: const [BoxShadow(color: Color(0x1A000000), blurRadius: 6)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            "Önerilen yanıtlar",
-            style: TextStyle(
-              color: MatesColors.secondaryText,
-              fontSize: 12.5,
-              fontWeight: FontWeight.w600,
+          if (decision)
+            const Row(
+              children: [
+                Icon(
+                  Icons.call_split_rounded,
+                  size: 16,
+                  color: MatesColors.decision,
+                ),
+                SizedBox(width: 4),
+                Text(
+                  "Karar ver · bu seçim hikâyeyi değiştirir",
+                  style: TextStyle(
+                    color: MatesColors.decision,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            )
+          else
+            const Text(
+              "Önerilen yanıtlar",
+              style: TextStyle(
+                color: MatesColors.secondaryText,
+                fontSize: 12.5,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
           const SizedBox(height: 6),
           for (var i = 0; i < options.length; i++)
             Padding(
@@ -296,8 +350,15 @@ class _ChatPageState extends State<ChatPage> {
               child: OutlinedButton(
                 onPressed: () => _send(i),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: MatesColors.header,
-                  side: const BorderSide(color: Color(0xFFB9DFD5)),
+                  foregroundColor: decision
+                      ? MatesColors.decision
+                      : MatesColors.header,
+                  backgroundColor: decision ? Colors.white : null,
+                  side: BorderSide(
+                    color: decision
+                        ? MatesColors.decision
+                        : const Color(0xFFB9DFD5),
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -311,7 +372,8 @@ class _ChatPageState extends State<ChatPage> {
                   options[i].label,
                   style: TextStyle(
                     fontSize: 15,
-                    color: MatesColors.text,
+                    color: decision ? MatesColors.decision : MatesColors.text,
+                    fontWeight: decision ? FontWeight.w600 : null,
                     fontStyle: options[i].silent ? FontStyle.italic : null,
                   ),
                 ),

@@ -224,13 +224,20 @@ List<StoryIssue> validateStory(
     uses(t.requires, 'sms.json › ${t.sender}');
     sets(t.unlocksOnView, 'sms.json › ${t.sender}');
   }
+  final smsIds = {for (final t in story.smsThreads) t.id};
+  if (smsIds.length != story.smsThreads.length) {
+    error('sms.json', 'aynı göndericinin iki mesajı var; birine "id" ver');
+  }
   for (final t in story.bank.transactions) {
     uses(t.requires, 'bank.json › ${t.id}');
   }
   for (final p in story.bank.payees) {
     final where = 'bank.json › payees › ${p.id}';
     uses(p.requires, where);
-    sets(p.unlocks, where);
+    for (final t in p.tiers) {
+      uses(t.requires, where);
+      sets(t.unlocks, where);
+    }
     // Set by every transfer; fine if nothing waits for it.
     set.putIfAbsent('sent:${p.id}', () => '');
   }
@@ -314,8 +321,22 @@ List<StoryIssue> validateStory(
     if (inspection == null) continue;
     sets(inspection.unlocks, '$where › inspection');
     switch (inspection) {
-      case JigsawInspection() || UvInspection() when e.image == null:
+      case JigsawInspection() ||
+              UvInspection() ||
+              EnhanceInspection() ||
+              LuminolInspection() ||
+              DifferencesInspection()
+          when e.image == null:
         error(where, 'bu inceleme için "image" gerekli');
+      case PatternInspection(:final pattern)
+          when pattern.length < 4 ||
+              pattern.toSet().length != pattern.length ||
+              pattern.any((d) => d < 0 || d > 8):
+        error(where, 'desen 0–8 arası, tekrarsız en az 4 noktadan oluşmalı');
+      case InkInspection(:final lines, :final order)
+          when (List.of(order)..sort()).join(',') !=
+              List.generate(lines.length, (i) => i).join(','):
+        error(where, '"order" her satırı bir kez saymalı');
       case FingerprintInspection(:final options, :final answer)
           when !options.contains(answer):
         error(where, 'cevap "$answer" seçenekler arasında yok');

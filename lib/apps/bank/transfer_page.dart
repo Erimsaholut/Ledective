@@ -81,11 +81,24 @@ class _TransferPageState extends State<TransferPage> {
       );
       return;
     }
-    await _progress.recordTransfer(payee, amount);
+    final refunded = await _progress.recordTransfer(payee, amount);
+    if (refunded > 0) {
+      await BankAccount.instance.receive(
+        payee.name,
+        "Gelen EFT · İade",
+        refunded,
+      );
+    }
     if (!mounted) return;
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("${formatLira(amount)} gönderildi.")),
+      SnackBar(
+        content: Text(
+          refunded > 0
+              ? "${formatLira(amount)} gönderildi, ${payee.name} geri gönderdi."
+              : "${formatLira(amount)} gönderildi.",
+        ),
+      ),
     );
   }
 

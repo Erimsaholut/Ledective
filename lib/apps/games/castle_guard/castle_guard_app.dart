@@ -23,6 +23,12 @@ class CastleGuardApp extends StatefulWidget {
   /// record.
   static const bestKey = 'castleGuard.best';
 
+  /// Whether the game runs at double speed, kept between games.
+  static const fastKey = 'castleGuard.fast';
+
+  /// Whether the next wave starts by itself, kept between games.
+  static const autoKey = 'castleGuard.auto';
+
   /// A game to start in instead of the menu; tests pass one with a known
   /// state.
   final CastleDefense? initialGame;
@@ -54,6 +60,13 @@ class _CastleGuardAppState extends State<CastleGuardApp>
   /// The tower shown on [_selected] before it is built.
   TowerKind? _preview;
   bool _fast = false;
+
+  /// Waves start by themselves a few seconds after the last one is beaten.
+  bool _auto = false;
+
+  /// Seconds until the next wave starts by itself, while [_auto] counts.
+  double? _autoIn;
+  static const _autoDelay = 4.0;
   double _sinceSave = 0;
   ({List<CastleAchievement> earned, bool newBest})? _result;
 
@@ -106,6 +119,8 @@ class _CastleGuardAppState extends State<CastleGuardApp>
     setState(() {
       _profile = profile;
       if (widget.initialGame == null) _saved = saved;
+      _fast = prefs.getBool(CastleGuardApp.fastKey) ?? false;
+      _auto = prefs.getBool(CastleGuardApp.autoKey) ?? false;
       _loaded = true;
     });
   }
@@ -141,9 +156,9 @@ class _CastleGuardAppState extends State<CastleGuardApp>
     final dt = min((elapsed - _lastTick).inMicroseconds / 1e6, 0.05);
     _lastTick = elapsed;
     final game = _game;
-    if (game == null ||
-        game.isOver ||
-        (!game.waveRunning && game.shots.isEmpty)) {
+    if (game == null || game.isOver) return;
+    if (!game.waveRunning && game.shots.isEmpty) {
+      _countDown(game, dt);
       return;
     }
     final wasRunning = game.waveRunning;
@@ -162,7 +177,48 @@ class _CastleGuardAppState extends State<CastleGuardApp>
     }
   }
 
+  /// Moves the automatic start on, and sends the wave when it's time.
+  void _countDown(CastleDefense game, double dt) {
+    final left = _autoIn;
+    if (!_auto || left == null) return;
+    setState(() {
+      _autoIn = left - dt * (_fast ? 2 : 1);
+      if (_autoIn! <= 0) _startWave(game);
+    });
+  }
+
+  /// Starts the automatic countdown if the next wave can come.
+  void _queueWave(CastleDefense game) {
+    final canStart =
+        !game.isOver &&
+        !game.waveRunning &&
+        game.wave > 0 &&
+        (game.endless || game.wave < CastleDefense.waves);
+    _autoIn = _auto && canStart ? _autoDelay : null;
+  }
+
+  void _startWave(CastleDefense game) {
+    _autoIn = null;
+    game.startWave();
+  }
+
+  Future<void> _setFast(bool on) async {
+    setState(() => _fast = on);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(CastleGuardApp.fastKey, on);
+  }
+
+  Future<void> _setAuto(bool on) async {
+    setState(() {
+      _auto = on;
+      if (_game case final game?) _queueWave(game);
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(CastleGuardApp.autoKey, on);
+  }
+
   void _waveBeaten(CastleDefense game) {
+    setState(() => _queueWave(game));
     _announce(_profile.unlock(game));
     _saveGame();
     _saveProfile();
@@ -235,6 +291,8 @@ class _CastleGuardAppState extends State<CastleGuardApp>
       _preview = null;
       _result = null;
       _sinceSave = 0;
+      // A continued game between waves carries on by itself, too.
+      _queueWave(game);
     });
     _runTicker();
     _saveGame();
@@ -347,6 +405,25 @@ class _CastleGuardAppState extends State<CastleGuardApp>
         backgroundColor: _background,
         foregroundColor: Colors.white,
         actions: [
+          _Toggle(
+            key: const ValueKey('auto-wave'),
+            on: _auto,
+            icon: Icons.autorenew_rounded,
+            label: "Oto",
+            tooltip: _auto
+                ? "Dalgalar kendiliğinden başlıyor"
+                : "Dalgaları kendiliğinden başlat",
+            onTap: () => _setAuto(!_auto),
+          ),
+          const SizedBox(width: 6),
+          _Toggle(
+            key: const ValueKey('speed'),
+            on: _fast,
+            icon: Icons.fast_forward_rounded,
+            label: _fast ? "2×" : "1×",
+            tooltip: _fast ? "Normal hıza dön" : "İki kat hız",
+            onTap: () => _setFast(!_fast),
+          ),
           IconButton(
             key: const ValueKey('castle-game-stats'),
             tooltip: "Bu oyunun istatistikleri",
@@ -386,8 +463,16 @@ class _CastleGuardAppState extends State<CastleGuardApp>
                             key: const ValueKey('castle-board'),
                             onTapUp: (d) =>
                                 _tapBoard(game, d.localPosition, tile),
-                            child: CustomPaint(
-                              painter: _BoardPainter(game, _selected, _preview),
+                            // Enemies walk in from off the board; the clip
+                            // keeps them and their bars off the HUD.
+                            child: ClipRect(
+                              child: CustomPaint(
+                                painter: _BoardPainter(
+                                  game,
+                                  _selected,
+                                  _preview,
+                                ),
+                              ),
                             ),
                           ),
                           if (game.isOver && result != null)
@@ -483,11 +568,15 @@ class _CastleGuardAppState extends State<CastleGuardApp>
       );
     }
     final next = game.wave + 1;
+    final autoIn = _autoIn;
     return _Panel(
       title: game.waveRunning
           ? "${game.wave}. dalga saldırıyor!"
           : game.wave == 0
           ? "Yolun yanındaki bir kareye dokunup kule kur."
+          : autoIn != null
+          ? "${game.wave}. dalga püskürtüldü. $next. dalga "
+                "${autoIn.ceil()} sn içinde geliyor."
           : "${game.wave}. dalga püskürtüldü. Kulelerini güçlendir.",
       children: [
         Expanded(
@@ -495,24 +584,81 @@ class _CastleGuardAppState extends State<CastleGuardApp>
             key: const ValueKey('start-wave'),
             onPressed: game.waveRunning || game.isOver
                 ? null
-                : () => setState(game.startWave),
+                : () => setState(() => _startWave(game)),
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xFFC0392B),
             ),
             child: Text(
-              game.waveRunning ? "Savaş sürüyor…" : "$next. dalgayı başlat",
+              game.waveRunning
+                  ? "Savaş sürüyor…"
+                  : autoIn != null
+                  ? "$next. dalgayı şimdi başlat (${autoIn.ceil()})"
+                  : "$next. dalgayı başlat",
             ),
           ),
         ),
-        const SizedBox(width: 10),
-        IconButton.filledTonal(
-          key: const ValueKey('speed'),
-          tooltip: _fast ? "Normal hız" : "İki kat hız",
-          isSelected: _fast,
-          onPressed: () => setState(() => _fast = !_fast),
-          icon: const Icon(Icons.fast_forward_rounded),
-        ),
       ],
+    );
+  }
+}
+
+/// A switch in the game's bar that shows plainly whether it's on: lit up
+/// gold when on, a faint outline when off.
+class _Toggle extends StatelessWidget {
+  const _Toggle({
+    super.key,
+    required this.on,
+    required this.icon,
+    required this.label,
+    required this.tooltip,
+    required this.onTap,
+  });
+
+  final bool on;
+  final IconData icon;
+  final String label;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    const gold = Color(0xFFFFC107);
+    return Tooltip(
+      message: tooltip,
+      child: Semantics(
+        button: true,
+        toggled: on,
+        child: GestureDetector(
+          onTap: onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: on ? gold : Colors.transparent,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: on ? gold : Colors.white38),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  size: 18,
+                  color: on ? Colors.black87 : Colors.white60,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: on ? Colors.black87 : Colors.white60,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

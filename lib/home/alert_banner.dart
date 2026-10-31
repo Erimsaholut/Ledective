@@ -94,12 +94,14 @@ class _AlertBannerState extends State<AlertBanner> {
     final top = MediaQuery.paddingOf(context).top;
     return Stack(
       children: [
-        // Pulling down from the top edge opens the notification centre.
+        // Pulling down from the top edge opens the notification centre. The
+        // strip reaches a little under the status bar, so a pull needn't
+        // start on the edge that the phone itself listens to.
         Positioned(
           top: 0,
           left: 0,
           right: 0,
-          height: top + 14,
+          height: top + 30,
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onVerticalDragStart: (_) => _drag = 0,

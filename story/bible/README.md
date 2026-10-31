@@ -18,6 +18,7 @@ verilir, orada yazılır.
 | [07-dagitim.md](07-dagitim.md) | Hangi bilgi hangi uygulamada, alternatif yollar | 7 |
 | [08-finaller.md](08-finaller.md) | Final katmanları | 6 |
 | [09-kontrol.md](09-kontrol.md) | Tutarlılık ve oynanabilirlik kontrol listesi | 9 |
+| [10-oyun-testi.md](10-oyun-testi.md) | İlk oyun testinden çıkan öneriler: para, kısmi ödeme, sohbet fotoğrafları, seçim hissi | 9 |
 
 8. adım (sahne, sohbet ve belge yazımı) doğrudan JSON dosyalarında yapılır;
 biçim için `story/STORY_FORMAT.md`.

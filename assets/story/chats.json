@@ -31,11 +31,11 @@
           {
             "label": "Neymiş bu kadar önemli olan durum",
             "replies": [
-              "3 gün önce akşam saatlerinde bir üniversite öğrencisinin kendini astığı ihbarı geldi. Olay yeri incelemesi ve otopsiden sonra olayın cinayet olduğu açığa çıktı. Maktül öldükten sonra asılmış ve her yerinde boğuşma izleri var",
+              "3 gün önce akşam saatlerinde bir üniversite öğrencisinin kendini astığı ihbarı geldi. Olay yeri incelemesi ve otopsiden sonra olayın cinayet olduğu açığa çıktı. Maktül öldükten sonra asılmış ve her yerinde boğuşma izleri var", "[foto: sohbet_olay_yeri_iz.jpg] [Taslak] Olay yerinden. Kapının önündeki ayakkabı izi bizimkilerin hiçbirine uymuyor.",
               "Olaydan haberimiz olduktan yarım saat sonra şube müdürümüzden bir telefon geldi. Kendisini de il emniyet müdürü aramış. Maktulün bir milletvekilinin oğlu olduğunu ve diğer davaları askıya alıp hepimizin bu davaya odaklanması söyledi.",
               "Size de ulaşmaya çalışmış ama telefonunuz kapalıymış"
             ],
-            "next": "questions",
+            "next": "comeBack",
             "traits": ["merak"]
           }
         ]
@@ -45,10 +45,55 @@
           {
             "label": "Neymiş bu kadar önemli olan durum",
             "replies": [
-              "3 gün önce akşam saatlerinde bir üniversite öğrencisinin kendini astığı ihbarı geldi. Olay yeri incelemesi ve otopsiden sonra olayın cinayet olduğu açığa çıktı. Maktül öldükten sonra asılmış ve her yerinde boğuşma izleri var",
+              "3 gün önce akşam saatlerinde bir üniversite öğrencisinin kendini astığı ihbarı geldi. Olay yeri incelemesi ve otopsiden sonra olayın cinayet olduğu açığa çıktı. Maktül öldükten sonra asılmış ve her yerinde boğuşma izleri var", "[foto: sohbet_olay_yeri_iz.jpg] [Taslak] Olay yerinden. Kapının önündeki ayakkabı izi bizimkilerin hiçbirine uymuyor.",
               "Olaydan haberimiz olduktan yarım saat sonra şube müdürümüzden bir telefon geldi. Kendisini de il emniyet müdürü aramış. Maktulün bir milletvekilinin oğlu olduğunu ve diğer davaları askıya alıp hepimizin bu davaya odaklanması söyledi.",
               "Size de ulaşmaya çalışmış ama telefonunuz kapalıymış"
             ],
+            "next": "comeBack"
+          }
+        ]
+      },
+      "comeBack": {
+        "decision": true,
+        "incoming": [
+          "[Taslak] Amirim dönebilir misiniz? Ekip sizsiz dağılıyor, Erdi Müdürüm de her saat arıyor."
+        ],
+        "options": [
+          {
+            "label": "Hemen dönüyorum. İlk uçakla oradayım.",
+            "replies": ["[Taslak] Sağ olun amirim! Ekibe söylüyorum, herkes rahatladı."],
+            "traits": ["cesur"],
+            "unlocks": ["vacation:cut", "trust:Özge += 10"],
+            "next": "suicideReport"
+          },
+          {
+            "label": "Buradan yöneteceğim. Telefonum açık.",
+            "replies": ["[Taslak] Peki amirim... Ama herkes kendi bildiğini okumaya başlar, haberiniz olsun."],
+            "traits": ["temkinli"],
+            "unlocks": ["vacation:remote", "trust:Özge -= 5"],
+            "next": "suicideReport"
+          }
+        ]
+      },
+      "suicideReport": {
+        "decision": true,
+        "incoming": [
+          "[Taslak] Amirim bir şey daha. Müdürlük, otopsi basına sızmadan tutanağı \"intihar\" diye kapatmamızı istiyor.",
+          "İmzanızı bekliyorlar. Ne diyeyim?"
+        ],
+        "options": [
+          {
+            "label": "İmzala. Şimdilik sessiz kalsın.",
+            "replies": ["[Taslak] Peki amirim. Ama Behram Amirim duyarsa hiç hoşuna gitmeyecek."],
+            "traits": ["temkinli"],
+            "unlocks": ["report:signed", "report:decided", "integrity -= 5", "trust:Behram -= 10"],
+            "next": "questions"
+          },
+          {
+            "label": "Hayır. Cinayet bu, öyle yazılacak.",
+            "replies": ["[Taslak] Anlaşıldı amirim. Bu yukarıda birilerini kızdıracak ama."],
+            "traits": ["cesur"],
+            "unlocks": ["report:refused", "report:decided", "integrity += 5"],
             "next": "questions"
           }
         ]
@@ -297,7 +342,11 @@
             "next": "ozgeTox"
           },
           {
-            "requires": ["case:internal-investigation", "!ozge:audit"],
+            "requires": ["vacation:cut", "part1Done", "!ozge:flight"],
+            "next": "ozgeFlight"
+          },
+          {
+            "requires": ["audit:bribe", "!ozge:audit"],
             "next": "ozgeAudit"
           },
           {
@@ -467,7 +516,11 @@
             "next": "ozgeTox2"
           },
           {
-            "requires": ["case:internal-investigation", "!ozge:audit"],
+            "requires": ["vacation:cut", "part1Done", "!ozge:flight"],
+            "next": "ozgeFlight2"
+          },
+          {
+            "requires": ["audit:bribe", "!ozge:audit"],
             "next": "ozgeAudit2"
           },
           {
@@ -503,6 +556,25 @@
           }
         ]
       },
+      "ozgeFlight": {
+        "incoming": [
+          "[Taslak] Amirim uçağınız ne zaman iniyor? Atakan'ı havaalanına göndereyim."
+        ],
+        "options": [
+          {
+            "label": "Uçuş ertelendi. Haber veririm.",
+            "replies": ["[Taslak] Yine mi? Peki amirim."],
+            "unlocks": ["ozge:flight", "doubt += 1"],
+            "next": "afterMezbaha"
+          },
+          {
+            "label": "Gerek yok, ben gelirim.",
+            "replies": ["[Taslak] Peki amirim. Ama dün de böyle demiştiniz."],
+            "unlocks": ["ozge:flight", "doubt += 1"],
+            "next": "afterMezbaha"
+          }
+        ]
+      },
       "ozgeTox": {
         "incoming": [
           "Amirim toksikoloji geldi. Çocuğu önce bayıltmışlar.",
@@ -522,6 +594,25 @@
             "traits": ["temkinli"],
             "next": "afterMezbaha",
             "unlocks": ["ozge:tox"]
+          }
+        ]
+      },
+      "ozgeFlight2": {
+        "incoming": [
+          "[Taslak] Amirim uçağınız ne zaman iniyor? Atakan'ı havaalanına göndereyim."
+        ],
+        "options": [
+          {
+            "label": "Uçuş ertelendi. Haber veririm.",
+            "replies": ["[Taslak] Yine mi? Peki amirim."],
+            "unlocks": ["ozge:flight", "doubt += 1"],
+            "next": "later"
+          },
+          {
+            "label": "Gerek yok, ben gelirim.",
+            "replies": ["[Taslak] Peki amirim. Ama dün de böyle demiştiniz."],
+            "unlocks": ["ozge:flight", "doubt += 1"],
+            "next": "later"
           }
         ]
       },
@@ -548,6 +639,7 @@
         ]
       },
       "ozgeAudit": {
+        "decision": true,
         "incoming": [
           "Amirim iç denetimden aradılar. Sizi sordular.",
           "Hesabınıza para yatmış, bilip bilmediğimi sordular. Yarın ifademi alacaklar."
@@ -575,6 +667,7 @@
         ]
       },
       "ozgeAudit2": {
+        "decision": true,
         "incoming": [
           "Amirim iç denetimden aradılar. Sizi sordular.",
           "Hesabınıza para yatmış, bilip bilmediğimi sordular. Yarın ifademi alacaklar."
@@ -602,6 +695,7 @@
         ]
       },
       "meetOzge": {
+        "decision": true,
         "incoming": [
           "Amirim buluştum. Elim hâlâ titriyor.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -667,6 +761,7 @@
         ]
       },
       "meetOzge2": {
+        "decision": true,
         "incoming": [
           "Amirim buluştum. Elim hâlâ titriyor.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -732,6 +827,7 @@
         ]
       },
       "ozgeTapes": {
+        "decision": true,
         "incoming": [
           "Amirim telefondaki kayıtları dinledim. Üç saat var.",
           "Danışmanın adı Halit Yener. Adil’e \"Cumaya kadar borcunu kapatmayanı çiftliğe götür\" diyor. Emre’nin adı geçiyor: \"Emre’yi Halit Bey’in çiftliğine götürün.\"",
@@ -794,6 +890,7 @@
         ]
       },
       "ozgeTapes2": {
+        "decision": true,
         "incoming": [
           "Amirim telefondaki kayıtları dinledim. Üç saat var.",
           "Danışmanın adı Halit Yener. Adil’e \"Cumaya kadar borcunu kapatmayanı çiftliğe götür\" diyor. Emre’nin adı geçiyor: \"Emre’yi Halit Bey’in çiftliğine götürün.\"",
@@ -856,6 +953,7 @@
         ]
       },
       "ozgeEmre": {
+        "decision": true,
         "incoming": [
           "Amirim hastanede biri Emre’yi soruyormuş. Behram’ın adamı görmüş.",
           "Emre’yi ne yapalım? Neye karar verirsek hemen yapmam lazım."
@@ -927,6 +1025,7 @@
         ]
       },
       "ozgeEmre2": {
+        "decision": true,
         "incoming": [
           "Amirim hastanede biri Emre’yi soruyormuş. Behram’ın adamı görmüş.",
           "Emre’yi ne yapalım? Neye karar verirsek hemen yapmam lazım."
@@ -998,6 +1097,7 @@
         ]
       },
       "ozgeHakanHurt": {
+        "decision": true,
         "incoming": [
           "Amirim... Hakan Emre’ye ulaşmış.",
           "Çocuğu bıçaklamış ama derin değil, yaşıyor. Hakan kaçmamış; koridorda oturmuş, polisi beklemiş.",
@@ -1076,6 +1176,7 @@
         ]
       },
       "ozgeHakanHurt2": {
+        "decision": true,
         "incoming": [
           "Amirim... Hakan Emre’ye ulaşmış.",
           "Çocuğu bıçaklamış ama derin değil, yaşıyor. Hakan kaçmamış; koridorda oturmuş, polisi beklemiş.",
@@ -1154,6 +1255,7 @@
         ]
       },
       "ozgeHakan": {
+        "decision": true,
         "incoming": [
           "Hakan Demir elimizde amirim. Hiç direnmedi.",
           "Babası olacak yaşta bir adam amirim. Ağladı.",
@@ -1230,6 +1332,7 @@
         ]
       },
       "ozgeHakan2": {
+        "decision": true,
         "incoming": [
           "Hakan Demir elimizde amirim. Hiç direnmedi.",
           "Babası olacak yaşta bir adam amirim. Ağladı.",
@@ -1365,6 +1468,7 @@
         ]
       },
       "afterStatement": {
+        "decision": true,
         "waitFor": "plate:mv",
         "incoming": [
           "Amirim çay ocağındaki makam aracının plakasını ben sorgulattım.",
@@ -1594,6 +1698,7 @@
         ]
       },
       "orhunVisit": {
+        "decision": true,
         "incoming": [
           "Amirim size bir şey söylemem lazım. Telefonda olmaz demiştim ama artık bekleyemem.",
           "Dün akşam biri evime geldi. Borçlarımı biliyordu, icrayı bile.",
@@ -1622,6 +1727,7 @@
         ]
       },
       "orhunVisit2": {
+        "decision": true,
         "incoming": [
           "Amirim size bir şey söylemem lazım. Telefonda olmaz demiştim ama artık bekleyemem.",
           "Dün akşam biri evime geldi. Borçlarımı biliyordu, icrayı bile.",
@@ -1650,6 +1756,7 @@
         ]
       },
       "orhunBlood": {
+        "decision": true,
         "incoming": [
           "Amirim olay yeri ekibiyle mezbahadaydım.",
           "Kanın bir kısmı aylar öncesine ait. Burası yıllardır kullanılıyor."
@@ -1766,6 +1873,7 @@
         ]
       },
       "orhunOffer": {
+        "decision": true,
         "incoming": [
           "Amirim size bir şey söylemem lazım.",
           "O takım elbiseli adam yine geldi. Borcumu kapatacaklarmış. Tek istedikleri Emre’nin nerede olduğu.",
@@ -1832,6 +1940,7 @@
         ]
       },
       "orhunOffer2": {
+        "decision": true,
         "incoming": [
           "Amirim size bir şey söylemem lazım.",
           "O takım elbiseli adam yine geldi. Borcumu kapatacaklarmış. Tek istedikleri Emre’nin nerede olduğu.",
@@ -1971,7 +2080,7 @@
       "idle": {
         "waitFor": "ev:cctv",
         "incoming": [
-          "Amirim kafe kamerasındaki deri ceketli adamı yüz tanımadan geçirdim. Sistemde eşleşme yok.",
+          "Amirim kafe kamerasındaki deri ceketli adamı yüz tanımadan geçirdim. Sistemde eşleşme yok.", "[foto: kamera_karesi.jpg] [Taslak] Kare bu.",
           "Ama boynunda bir yaka kartı asılı. Bulanık, okunmuyor. Bir kurumda çalışıyor olabilir."
         ],
         "options": [
@@ -2207,6 +2316,7 @@
         ]
       },
       "atakanMatch": {
+        "decision": true,
         "incoming": [
           "Amirim, Kerem Aydın’ın ehliyet fotoğrafını kamera karesiyle karşılaştırdım.",
           "Aynı adam. Berat’ın peşinden çıkan oydu."
@@ -2229,6 +2339,7 @@
         ]
       },
       "atakanMatch2": {
+        "decision": true,
         "incoming": [
           "Amirim, Kerem Aydın’ın ehliyet fotoğrafını kamera karesiyle karşılaştırdım.",
           "Aynı adam. Berat’ın peşinden çıkan oydu."
@@ -2251,6 +2362,7 @@
         ]
       },
       "meetAtakan": {
+        "decision": true,
         "incoming": [
           "Amirim buluştum. Beni tanıyormuş gibi baktı, garip.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -2316,6 +2428,7 @@
         ]
       },
       "meetAtakan2": {
+        "decision": true,
         "incoming": [
           "Amirim buluştum. Beni tanıyormuş gibi baktı, garip.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -2487,6 +2600,7 @@
         ]
       },
       "raid": {
+        "decision": true,
         "waitFor": "ev:torn-map",
         "incoming": [
           "Komiserim, çay ocağına baskın yapmışsınız. Adil kaçtı.",
@@ -2619,6 +2733,7 @@
         ]
       },
       "meetBehram": {
+        "decision": true,
         "incoming": [
           "Komiserim buluştum. Adil’in adını duyunca gözleri değişti.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -2684,6 +2799,7 @@
         ]
       },
       "meetBehram2": {
+        "decision": true,
         "incoming": [
           "Komiserim buluştum. Adil’in adını duyunca gözleri değişti.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -2945,6 +3061,7 @@
         ]
       },
       "inancRecords": {
+        "decision": true,
         "incoming": [
           "Amirim, Erdi Müdürüm sızıntı yüzünden herkesin telefon kayıtlarını istedi.",
           "Sizinkini de.",
@@ -2994,6 +3111,7 @@
         ]
       },
       "meetInanc": {
+        "decision": true,
         "incoming": [
           "Amirim buluşma tamam. Kurala uydum, silahsız gittim.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -3059,6 +3177,7 @@
         ]
       },
       "meetInanc2": {
+        "decision": true,
         "incoming": [
           "Amirim buluşma tamam. Kurala uydum, silahsız gittim.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -3289,7 +3408,7 @@
           {
             "label": "Berat malı kimden alıyordu?",
             "replies": [
-              "Furkan: \"Adil diye biri var, herkes Adil abi der. Berat ona borçlandığını söylemişti geçen hafta.\""
+              "Furkan: \"Adil diye biri var, herkes Adil abi der. Berat ona borçlandığını söylemişti geçen hafta.\"", "[foto: sohbet_furkan_ekran.jpg] [Taslak] Furkan'ın telefonundan aldım amirim. Adil'in ona attığı son mesaj."
             ],
             "next": "adil",
             "traits": ["merak"],
@@ -3298,7 +3417,7 @@
           {
             "label": "Berat'ın başı birileriyle dertte miydi?",
             "replies": [
-              "Furkan: \"Adil abiye borcu vardı. Ödemezse başım yanar diyordu. Gülüyordu ama korkuyordu bence.\""
+              "Furkan: \"Adil abiye borcu vardı. Ödemezse başım yanar diyordu. Gülüyordu ama korkuyordu bence.\"", "[foto: sohbet_furkan_ekran.jpg] [Taslak] Furkan'ın telefonundan aldım amirim. Adil'in ona attığı son mesaj."
             ],
             "next": "adil",
             "traits": ["temkinli"],
@@ -3329,6 +3448,7 @@
         ]
       },
       "furkanFate": {
+        "decision": true,
         "waitFor": "adil:warns",
         "incoming": [
           "Amirim Furkan’ı ne yapalım? Gözaltı süresi doluyor, ailesi kapıda.",
@@ -3481,6 +3601,7 @@
         ]
       },
       "meetDoga": {
+        "decision": true,
         "incoming": [
           "Amirim buluştum. Çok yorgun görünüyordu, bir çocuk gibi.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -3546,6 +3667,7 @@
         ]
       },
       "meetDoga2": {
+        "decision": true,
         "incoming": [
           "Amirim buluştum. Çok yorgun görünüyordu, bir çocuk gibi.",
           "Yalnız geldi, sırtında bir çanta vardı. Berat’ı öldürdüğünü söyledi. Gözünü kırpmadan.",
@@ -3755,6 +3877,14 @@
             ]
           },
           {
+            "label": "Müdürüm, iç denetim neden benim telefonuma bakıyor?",
+            "requires": ["leak:traced", "!audit:bribe"],
+            "replies": [
+              "[Taslak] Gazeteyi gece üçte senin numaran aramış. Üç ayrı gece.",
+              "Parayı iade ettin, biliyorum. O dosyada temizsin. Bu başka bir dosya."
+            ]
+          },
+          {
             "label": "Sızıntıyı araştıran var mı?",
             "requiresAny": ["leak:hunt", "leak:defended", "leak:sources"],
             "replies": ["Var. Ben. Ve listenin başında sen varsın."]
@@ -3783,7 +3913,7 @@
             "next": "warning"
           },
           {
-            "requires": ["case:internal-investigation", "!erdi:audit"],
+            "requires": ["audit:bribe", "!erdi:audit"],
             "next": "erdiAudit"
           },
           {
@@ -4060,10 +4190,39 @@
       }
     }
   },
+  "Nevin Yılmaz": {
+    "start": "start",
+    "nodes": {
+      "start": {
+        "waitFor": "report:decided",
+        "decision": true,
+        "incoming": [
+          "[Taslak] Komiser Bey, numaranızı Özge Hanım verdi. Ben Berat'ın annesiyim.",
+          "Kimse bana bir şey söylemiyor. Babası \"karışma\" diyor.",
+          "Oğlum kendini mi öldürdü? Lütfen doğruyu söyleyin."
+        ],
+        "options": [
+          {
+            "label": "Hayır. Oğlunuz öldürüldü. Kim yaptıysa bulacağız.",
+            "replies": ["[Taslak] ...", "Biliyordum. Benim oğlum bunu yapmazdı.", "Teşekkür ederim. Babasına söylemeyeceğim, sizden duyduğumu."],
+            "traits": ["merhamet"],
+            "unlocks": ["family:told-truth", "integrity += 5"]
+          },
+          {
+            "label": "Soruşturma sürüyor. Şimdilik bir şey söyleyemem.",
+            "replies": ["[Taslak] Siz de babası gibi konuşuyorsunuz.", "Bir şey daha... Geçen hafta sizi bizim sokakta gördüm sandım. Tatildeydiniz, değil mi?"],
+            "traits": ["temkinli"],
+            "unlocks": ["family:told-nothing", "doubt += 1"]
+          }
+        ]
+      }
+    }
+  },
   "Kaymakam": {
     "start": "start",
     "nodes": {
       "start": {
+        "decision": true,
         "waitFor": "kaymakam:calls",
         "incoming": [
           "Komiser Bey merhaba, ben Kaymakam Cevdet Arslan. Numaranızı müdürünüzden aldım, kusura bakmayın.",
@@ -4301,6 +4460,7 @@
         ]
       },
       "mpLast": {
+        "decision": true,
         "incoming": [
           "Bir daha yazmayacağım demiştim.",
           "Çiftliğe girmişsiniz. Halit’in orada ne yaptığını ben de sizin kadar yeni öğrendim. Bunu bilin.",
@@ -4461,6 +4621,7 @@
         ]
       },
       "selinFamilies": {
+        "decision": true,
         "incoming": [
           "Komiser Bey, mezbahadaki fotoğraflardan birinin kayıp ilanını ben yazmıştım.",
           "Ailesi benimle konuşuyor. Yarın haberi yayımlayacağım.",
@@ -4745,6 +4906,7 @@
     "start": "start",
     "nodes": {
       "start": {
+        "decision": true,
         "waitFor": "leak:traced",
         "incoming": [
           "Komiser Bey merhaba, Nesrin Kaya. Avukatım. Numaranızı Selin Aras verdi.",
@@ -4843,6 +5005,7 @@
         ]
       },
       "killer": {
+        "decision": true,
         "incoming": [
           "Berat Yılmaz’ı kim öldürdü?"
         ],
@@ -4884,6 +5047,7 @@
         ]
       },
       "network": {
+        "decision": true,
         "incoming": [
           "Bu ölümün ve kayıp öğrencilerin arkasında kim var?"
         ],
@@ -4929,6 +5093,7 @@
         ]
       },
       "leak": {
+        "decision": true,
         "incoming": [
           "Soruşturma boyunca basına bilgi sızdı. Sızdıran kim?"
         ],

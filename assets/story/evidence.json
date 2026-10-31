@@ -36,7 +36,17 @@
     "description": "Kafenin dış kamerası, 23.41. Berat'ın arkasından çıkan deri ceketli adam.",
     "image": "assets/story/images/kamera_karesi.jpg",
     "requires": "ev:cctv",
-    "links": ["glass"]
+    "links": ["glass"],
+    "inspection": {
+      "type": "enhance",
+      "focus": 0.68,
+      "light": 0.32,
+      "instructions": "Netlik ve ışık ayarlarını değiştirerek kareyi netleştir, sonra kaydet.",
+      "result": "[Taslak] Kare netleşti. Adamın boynundaki kartın üst kenarında turuncu bir şerit ve bir logo seçiliyor; yazı hâlâ okunmuyor. Atakan kartın rengini not aldı.",
+      "unlocks": [
+        "lab:cctv"
+      ]
+    }
   },
   {
     "id": "notebook",
@@ -76,7 +86,42 @@
     "image": "assets/story/images/olay_yeri.jpg",
     "requires": "part1Done",
     "description": "Berat’ın salonu. Devrilmiş sehpa, kırık bardaklar, yerdeki lamba hâlâ yanıyor. Kapı aralık bulunmuş.",
-    "links": ["glass", "torn-photo"]
+    "links": ["glass", "torn-photo"],
+    "inspection": {
+      "type": "luminol",
+      "sprays": 14,
+      "spots": [
+        [
+          0.22,
+          0.7
+        ],
+        [
+          0.34,
+          0.62
+        ],
+        [
+          0.47,
+          0.66
+        ],
+        [
+          0.6,
+          0.58
+        ],
+        [
+          0.72,
+          0.52
+        ],
+        [
+          0.84,
+          0.44
+        ]
+      ],
+      "instructions": "Işıklar kapalı. Luminolü salona sık; parlayan yerler izin yakın olduğunu gösterir.",
+      "result": "[Taslak] Luminol salondan kapıya uzanan, silinmiş bir iz gösterdi. Berat salonda öldürülmüş, sonra sürüklenip asılmış. Biri izi temizlemeye çalışmış ama acele etmiş.",
+      "unlocks": [
+        "lab:scene"
+      ]
+    }
   },
   {
     "id": "car",
@@ -84,7 +129,16 @@
     "image": "assets/story/images/makam_araci.jpg",
     "requires": "plate:mv",
     "description": "06 MV 1907. Meclis otoparkına kayıtlı, milletvekilinin danışmanına zimmetli. Çay ocağında Adil’le görüştü.",
-    "links": ["glass"]
+    "links": ["glass"],
+    "inspection": {
+      "type": "tread",
+      "angle": 37,
+      "instructions": "Aracın lastik desenini döndürerek çay ocağının önündeki izle hizala, sonra karşılaştır.",
+      "result": "[Taslak] Çay ocağının önündeki çamurda kalan iz, makam aracının lastikleriyle uyumlu. Araç orada durmuş.",
+      "unlocks": [
+        "lab:car"
+      ]
+    }
   },
   {
     "id": "chair",
@@ -100,7 +154,37 @@
     "image": "assets/story/images/mezbaha_duvar.jpg",
     "requires": "mezbaha-found",
     "description": "Berat’ın ve iki öğrencinin fotoğrafları, paslı çivilerle duvara çakılmış. Altlarındaki tarihler nemden dağılmış; biri önümüzdeki cuma.",
-    "links": ["missing-1", "missing-2"]
+    "links": ["missing-1", "missing-2"],
+    "inspection": {
+      "type": "differences",
+      "spots": [
+        [
+          0.18,
+          0.3
+        ],
+        [
+          0.41,
+          0.22
+        ],
+        [
+          0.63,
+          0.4
+        ],
+        [
+          0.8,
+          0.27
+        ],
+        [
+          0.52,
+          0.74
+        ]
+      ],
+      "instructions": "Üstteki kayıttaki fotoğraf, alttaki duvarda bulunan. Duvardakinin üzerinde oynanmış yerlere dokun.",
+      "result": "[Taslak] Fotoğraflar kayıp ilanlarındaki karelerle aynı. Biri üstlerine sonradan işaretler eklemiş: her birinin köşesinde aynı kalemle atılmış küçük bir çarpı ve bir tarih.",
+      "unlocks": [
+        "lab:wall-photos"
+      ]
+    }
   },
   {
     "id": "missing-1",
@@ -122,20 +206,67 @@
     "image": "assets/story/images/burs_sozlesmesi.jpg",
     "requires": "heard:kerem-board",
     "description": "Ece’nin odasındaki panoda asılıydı. \"Geri ödeme\" maddesinin altı iki kez çizilmiş: bursu bırakan öğrenci aldığının üç katını öder.",
-    "links": ["missing-1", "missing-2"]
+    "links": ["missing-1", "missing-2"],
+    "inspection": {
+      "type": "ink",
+      "lines": [
+        "Madde 1 — Vakıf, öğrenciye eğitimi süresince aylık burs öder.",
+        "Madde 2 — Öğrenci her dönem başarı belgesini vakfa teslim eder.",
+        "Madde 3 — Bursu bırakan öğrenci, aldığı bursun üç katını geri öder.",
+        "Madde 4 — Öğrenci, vakfın etkinliklerine gönüllü olarak katılır."
+      ],
+      "order": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "instructions": "Lab lambası altında eski mürekkep kahverengiye döner. Maddelere en eskiden en yeniye doğru dokun.",
+      "result": "[Taslak] Mürekkepler aynı yaşta değil: üç kat geri ödeme maddesi, sözleşme imzalandıktan aylar sonra eklenmiş. Ece bu maddeyi imzalamamış olabilir.",
+      "unlocks": [
+        "lab:contract"
+      ]
+    }
   },
   {
     "id": "berat-phone",
     "name": "Berat’ın Telefonu",
     "requires": "ev:berat-phone",
     "description": "Kerem’in çantasından çıktı. Berat babasıyla, danışmanla ve Adil’le konuşmalarını kaydetmiş. Son kayıt kendi sesi: \"Kerem’e yarın her şeyi vereceğim.\"",
-    "links": ["scene", "contract"]
+    "links": ["scene", "contract"],
+    "inspection": {
+      "type": "pattern",
+      "pattern": [
+        0,
+        1,
+        2,
+        4,
+        6,
+        7,
+        8
+      ],
+      "instructions": "Telefon kilitli. Ekrandaki parmak lekelerini takip ederek deseni çiz.",
+      "result": "[Taslak] Kilit açıldı. Telefonda \"Kayıtlar\" adında gizli bir klasör var; en eskisi dört ay önce.",
+      "unlocks": [
+        "lab:berat-phone"
+      ]
+    }
   },
   {
     "id": "tapes",
     "name": "Halit Yener’in Sesi",
     "requires": "heard:danisman",
     "description": "Berat’ın kayıtlarından: \"Cumaya kadar borcunu kapatmayanı çiftliğe götür.\" Adil’in listesindeki \"H.Y.\" bu adam.",
-    "links": ["berat-phone", "car"]
+    "links": ["berat-phone", "car"],
+    "inspection": {
+      "type": "voice",
+      "offset": 0.63,
+      "suspect": "Halit Yener (vakıf açılışı)",
+      "instructions": "Kayıttaki sesi kaydırarak Halit Yener'in konuşmasıyla hizala, sonra karşılaştır.",
+      "result": "[Taslak] Kayıttaki ses, Halit Yener'in vakıf açılışındaki konuşmasıyla %94 eşleşti. Kayıt sahte değil.",
+      "unlocks": [
+        "lab:tapes"
+      ]
+    }
   }
 ]

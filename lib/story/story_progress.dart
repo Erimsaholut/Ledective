@@ -484,7 +484,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     },
     'sms': {
       for (final t in _story.smsThreads)
-        if (meets(t.requires)) t.sender,
+        if (meets(t.requires)) t.id,
     },
     'mail': {for (final (m, _) in inbox) m.id},
     'bank': {
@@ -678,6 +678,8 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     'map': 'yeni konum',
     'voice': 'yeni kayıt',
     'bank': 'yeni hesap hareketi',
+    'mail': 'yeni mail',
+    'news': 'yeni haber',
   };
 
   /// [batch] as a single notification that names them all, for the kinds
@@ -733,7 +735,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
           StoryAlert(
             app: 'MatesApp',
             title: person,
-            body: incoming[shown - 1],
+            body: messagePreview(incoming[shown - 1]),
             thread: person,
           ),
         );
@@ -801,7 +803,7 @@ class StoryProgress extends ChangeNotifier implements StoryState {
           StoryAlert(
             app: 'MatesApp',
             title: person,
-            body: text,
+            body: messagePreview(text),
             thread: person,
           ),
     ];
@@ -831,17 +833,17 @@ class StoryProgress extends ChangeNotifier implements StoryState {
         final l = _story.map.locations.firstWhere((l) => l.id == item);
         return StoryAlert(app: 'Harita', title: 'Yeni konum', body: l.name);
       case 'sms':
-        final t = _story.smsThreads.firstWhere((t) => t.sender == item);
+        final t = _story.smsThreads.firstWhere((t) => t.id == item);
         return StoryAlert(
           app: 'Messages',
           title: t.sender,
-          body: t.messages.last,
+          body: messagePreview(t.messages.last),
           thread: t.sender,
         );
       case 'mail':
-        final m =
-            _story.storyMails.where((m) => m.id == item).firstOrNull ??
-            _poolMail(item);
+        // Everyday mail only shows on the badge: with the story's own,
+        // a banner for each was too many.
+        final m = _story.storyMails.where((m) => m.id == item).firstOrNull;
         // The filter catches scams before they ring.
         if (m == null || (m.spam && !isCanonMail(m))) return null;
         return StoryAlert(
@@ -868,12 +870,13 @@ class StoryProgress extends ChangeNotifier implements StoryState {
         );
       case 'news':
         final id = item.split('#').first;
-        final filler = _fillerArticle(id);
-        final a = filler ?? _story.news.articles.firstWhere((a) => a.id == id);
+        // Everyday news only shows on the badge, like everyday mail.
+        if (_fillerArticle(id) != null) return null;
+        final a = _story.news.articles.firstWhere((a) => a.id == id);
         return StoryAlert(
           app: 'News',
           source: _story.news.outlet(a.outlet).name,
-          title: filler == null ? 'Son dakika' : 'Gündem',
+          title: 'Son dakika',
           body: a.title,
         );
     }
@@ -957,6 +960,10 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /// Whether [person] asked something the player hasn't answered yet.
   bool awaitsReply(String person) =>
       !isTyping(person) && restore(person).$1.expectsReply;
+
+  /// Whether what [person] waits for is one of the story's big decisions.
+  bool awaitsDecision(String person) =>
+      !isTyping(person) && restore(person).$1.isDecision;
 
   /// Chats with unread messages or a question waiting for an answer.
   int get chatsNeedingAttention => _story.conversations.keys
@@ -1095,6 +1102,17 @@ class StoryProgress extends ChangeNotifier implements StoryState {
     await _save();
   }
 
+  /// Photos that came in chats and text messages, oldest first, for the
+  /// Photos app.
+  List<String> get receivedPhotos => [
+    for (final person in _story.conversations.keys)
+      for (final entry in transcriptOf(person))
+        if (entry case IncomingMessage(:final text)) ?messagePhoto(text),
+    for (final t in _story.smsThreads)
+      if (meets(t.requires))
+        for (final m in t.messages) ?messagePhoto(m),
+  ];
+
   /* ---------- Evidence ---------- */
 
   bool isInspected(String evidenceId) => _inspected.contains(evidenceId);
@@ -1110,17 +1128,30 @@ class StoryProgress extends ChangeNotifier implements StoryState {
   /* ---------- Money ---------- */
 
   /// Records [amount] kuruş sent to [payee] (the bank has already taken
-  /// it). Adds to `paid:<id>` and applies the payee's effects if the
-  /// amount is enough.
-  Future<void> recordTransfer(Payee payee, int amount) async {
+  /// it). Adds to `paid:<id>` and applies every tier of the payee the total
+  /// has reached, each once. Returns the kuruş that came straight back.
+  Future<int> recordTransfer(Payee payee, int amount) async {
     final key = 'paid:${payee.id}';
-    _values[key] = value(key) + amount ~/ 100;
-    _apply([
-      if (amount >= payee.minAmount) ...payee.unlocks,
-      'sent:${payee.id}',
-    ]);
+    var total = value(key) * 100 + amount;
+    var refunded = 0;
+    _apply(['sent:${payee.id}']);
+    for (final (i, tier) in payee.tiers.indexed) {
+      final done = 'tier:${payee.id}:$i';
+      if (value(done) > 0 || !tier.fits(total) || !meets(tier.requires)) {
+        continue;
+      }
+      _apply(tier.unlocks);
+      if (tier.refund) {
+        refunded += amount;
+        total -= amount;
+      } else {
+        _values[done] = 1;
+      }
+    }
+    _values[key] = total ~/ 100;
     notifyListeners();
     await _save();
+    return refunded;
   }
 
   /* ---------- Timers ---------- */

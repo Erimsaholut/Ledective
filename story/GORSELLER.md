@@ -76,6 +76,8 @@ Bunlar şu an oyunda görünüyor ve kullanılamaz.
 | `makam_araci.jpg` | Gece, uzaktan çekilmiş siyah bir sedan; plaka okunmuyor. | Kare | Sonra |
 | `burs_sozlesmesi.jpg` | Kâğıt bir sözleşme sayfası, "geri ödeme" maddesinin altı çizilmiş. (İstersen ben de üretebilirim.) | 3:4 | Sonra |
 | `kayip_ilani_1.jpg`, `kayip_ilani_2.jpg` | Duvara yapıştırılmış, eskimiş kayıp ilanları; birer öğrenci fotoğrafı. | 3:4 | Sonra |
+| `sohbet_olay_yeri_iz.jpg` | **Özge'nin sohbetten attığı kare.** Berat'ın kapısının önünde, parkede çamurlu bir ayakkabı izi; yanında ölçek cetveli, telefon flaşıyla çekilmiş. Şu an yerinde TEST GÖRSELİ var. | Kare | Şimdi |
+| `sohbet_furkan_ekran.jpg` | **Doğa'nın attığı ekran görüntüsü.** Furkan'ın telefonundaki bir mesajlaşma ekranı: "Adil abi" adlı kişiden "Cumaya kadar." mesajı. Uygulama markası görünmesin. Şu an yerinde TEST GÖRSELİ var. | 9:16 ya da kare | Şimdi |
 
 Not: `city_map.png`, `notebook_page.png` ve `torn_map.png` görsellerini ben
 ürettim ve telif sorunları yok. İstersen gerçek fotoğraflarla

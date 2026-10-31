@@ -26,7 +26,7 @@ class _SpaceRunnerAppState extends State<SpaceRunnerApp>
     with SingleTickerProviderStateMixin {
   static const _background = Color(0xFF0B0A24);
 
-  late final Ticker _ticker = createTicker(_onTick);
+  late final Ticker _ticker;
   SpaceRun? _run;
   Duration _lastTick = Duration.zero;
   int _best = 0;
@@ -35,6 +35,9 @@ class _SpaceRunnerAppState extends State<SpaceRunnerApp>
   @override
   void initState() {
     super.initState();
+    // Made here, not on first use: closing the game before a run would
+    // otherwise make it in dispose, where it can't be made.
+    _ticker = createTicker(_onTick);
     _loadBest();
   }
 

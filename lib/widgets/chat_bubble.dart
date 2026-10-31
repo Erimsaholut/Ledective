@@ -7,6 +7,8 @@ class ChatBubble extends StatelessWidget {
     super.key,
     required this.text,
     required this.outgoing,
+    this.photo,
+    this.onPhotoTap,
     this.outgoingColor = const Color(0xFFD9FDD3),
     this.incomingColor = Colors.white,
     this.outgoingTextColor = const Color(0xFF111B21),
@@ -15,6 +17,10 @@ class ChatBubble extends StatelessWidget {
   });
 
   final String text;
+
+  /// An asset shown above [text], which may then be empty.
+  final String? photo;
+  final VoidCallback? onPhotoTap;
 
   /// True for messages the player sent.
   final bool outgoing;
@@ -53,14 +59,42 @@ class ChatBubble extends StatelessWidget {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 15.5,
-                  height: 1.3,
-                  color: outgoing ? outgoingTextColor : incomingTextColor,
-                ),
+              padding: photo == null
+                  ? const EdgeInsets.symmetric(horizontal: 12, vertical: 8)
+                  : const EdgeInsets.all(4),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (photo case final photo?)
+                    GestureDetector(
+                      onTap: onPhotoTap,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Image.asset(
+                          photo,
+                          width: maxWidth,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  if (text.isNotEmpty)
+                    Padding(
+                      padding: photo == null
+                          ? EdgeInsets.zero
+                          : const EdgeInsets.fromLTRB(8, 6, 8, 4),
+                      child: Text(
+                        text,
+                        style: TextStyle(
+                          fontSize: 15.5,
+                          height: 1.3,
+                          color: outgoing
+                              ? outgoingTextColor
+                              : incomingTextColor,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),

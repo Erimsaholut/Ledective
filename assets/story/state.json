@@ -13,6 +13,7 @@
   },
   "flags": {
     "case:internal-investigation": "Komiser hakkında idari inceleme başladı",
+    "audit:bribe": "İnceleme iade edilmeyen parayla ilgili (sızıntı yolu bunu açmaz)",
     "status:suspended": "Komiser görevden uzaklaştırıldı",
     "status:dismissed": "Komiser meslekten çıkarıldı",
     "legal:warrant-issued": "Komiser hakkında yakalama kararı var",
@@ -29,6 +30,21 @@
     "twist:caregiver": "Gizli son: telefon bozuldu, hasta bakıcının kaydı gelir",
     "twist:end": "Gizli son: hasta bakıcının kaydı dinlendi, oyun biter",
     "part1Done": "Özge ile ilk konuşma bitti; ifadeler ve otopsi Poltel’de",
+    "vacation:cut": "Komiser Özge’ye hemen döneceğini söyledi (dönmeyecek)",
+    "vacation:remote": "Komiser dosyayı tatilden yöneteceğini söyledi",
+    "ozge:flight": "Özge uçağın ne zaman ineceğini sordu",
+    "report:signed": "Komiser intihar tutanağını imzalattı",
+    "report:refused": "Komiser intihar tutanağını reddetti",
+    "report:decided": "İntihar tutanağı kararı verildi",
+    "family:told-truth": "Berat’ın annesine cinayet olduğu söylendi",
+    "family:told-nothing": "Berat’ın annesine bir şey söylenmedi",
+    "lab:cctv": "Kamera karesi laboratuvarda netleştirildi",
+    "lab:scene": "Olay yerinde luminol incelemesi yapıldı",
+    "lab:berat-phone": "Berat’ın telefonunun kilidi açıldı",
+    "lab:tapes": "Ses kaydı Halit Yener’le eşleştirildi",
+    "lab:wall-photos": "Duvardaki fotoğraflardaki işaretler bulundu",
+    "lab:contract": "Burs sözleşmesindeki sonradan eklenen madde bulundu",
+    "lab:car": "Makam aracının lastik izi eşleştirildi",
     "orhunDone": "Orhun şüpheliyi bulduklarını söyledi",
     "inancDone": "İnanç sorguyu ayarladı; Doğa sorgu odasında",
     "furkanStatement": "Furkan’ın ifadesi tutanağa geçti",
@@ -65,6 +81,8 @@
     "decoded:notebook": "Berat'ın defterindeki şifreli satır çözüldü",
     "told:notebook-code": "Defterdeki şifre Özge'ye anlatıldı",
     "bribe:returned": "Para gönderene iade edildi",
+    "bribe:partial": "Paranın sadece bir kısmı iade edildi (kalanı tutulmuş sayılır)",
+    "bribe:donated": "İade edilirken fazlası gönderildi; vakıf bağış saydı",
     "adil:warns": "Büroya \"Çocuk bir şey bilmez\" telefonu geldi",
     "furkan:released": "Furkan serbest bırakıldı",
     "furkan:held": "Furkan gözaltında tutuldu",
@@ -80,7 +98,10 @@
     "press:held": "Selin Aras haberi bekletti",
     "orhun:approached": "Orhun’a borcu üzerinden yaklaşıldığını anlattı",
     "heard:orhun-debt": "Orhun’un 80.000 TL icra borcu öğrenildi",
-    "orhun:helped": "Komiser Orhun’un borcuna para gönderdi",
+    "orhun:helped": "Komiser Orhun’un borcunun tamamını gönderdi",
+    "orhun:helped-partly": "Komiser Orhun’un borcuna bir kısım para gönderdi",
+    "orhun:sent-back": "Orhun küçük bir ödemeyi geri gönderdi",
+    "orhun:paid-dirty": "Orhun’un borcu rüşvet parasıyla kapandı",
     "behram:helps": "Behram Adil’i aramaya yardım ediyor",
     "heard:witness": "Korkmuş tanığın sesli mesajı dinlendi",
     "kerem:same-man": "Yırtık fotoğraftaki ve kameradaki adam aynı kişi",
@@ -138,6 +159,7 @@
     "leak:traced": "Sızıntı komiserin numarasına çıktı",
     "lawyer:offer": "Avukat Nesrin Kaya yazdı",
     "lawyer:hired": "Avukata ücret gönderildi",
+    "lawyer:underpaid": "Avukata ücretin bir kısmı gönderildi",
     "lawyer:declined": "Komiser avukatın teklifini reddetti",
     "status:warned": "Komiser kınama cezası aldı, görevde kaldı",
     "danisman:fled": "Halit Yener haberden sonra kaçtı",
@@ -200,6 +222,12 @@
       "unlocks": ["kaymakam:calls"]
     },
     {
+      "id": "kaymakam-early",
+      "when": ["pressure:erdi", "report:refused"],
+      "minutes": 2,
+      "unlocks": ["kaymakam:calls"]
+    },
+    {
       "id": "mp-writes",
       "when": "pressure:kaymakam",
       "whenAny": ["plate:mv", "notebook-read"],
@@ -210,8 +238,8 @@
       "id": "bribe-kept",
       "when": "mp:wrote",
       "minutes": 45,
-      "unless": "sent:bribe-return",
-      "unlocks": ["integrity -= 15", "pressure += 10", "case:internal-investigation"]
+      "unless": "bribe:returned",
+      "unlocks": ["integrity -= 15", "pressure += 10", "case:internal-investigation", "audit:bribe"]
     },
     {
       "id": "adil-warns",
@@ -469,7 +497,7 @@
       "minutes": 10,
       "unless": "sent:bribe-return",
       "app": "ZaferBank",
-      "title": "Hesabınıza 50.000 TL geldi",
+      "title": "Hesabınıza 250.000 TL geldi",
       "body": "Beklemediğiniz bir ödeme mi? Para Gönder › Gönderene iade ile tutarı gönderen hesaba geri gönderebilirsiniz."
     },
     {

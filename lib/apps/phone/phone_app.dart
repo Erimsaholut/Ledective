@@ -123,108 +123,119 @@ class _PhoneAppState extends State<PhoneApp> {
     }
 
     final match = _contactFor(_digits);
-    // Scales down on small screens instead of overflowing.
-    return SafeArea(
-      child: Center(
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 90,
-                width: 330,
+    // Scales down on small screens instead of overflowing. The bar on top
+    // is only there for its way out.
+    return Column(
+      children: [
+        AppBar(backgroundColor: Colors.white),
+        Expanded(
+          child: SafeArea(
+            top: false,
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: FittedBox(
-                        child: Text(
-                          formatPhoneNumber(_digits),
-                          style: const TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.label,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      match?.name ?? '',
-                      style: const TextStyle(
-                        color: AppColors.blue,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              for (final row in const [
-                ['1', '2', '3'],
-                ['4', '5', '6'],
-                ['7', '8', '9'],
-                ['*', '0', '#'],
-              ])
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      for (final digit in row)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
-                          child: key(digit),
-                        ),
-                    ],
-                  ),
-                ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(width: 106),
-                  Material(
-                    color: AppColors.green,
-                    shape: const CircleBorder(),
-                    child: InkWell(
-                      customBorder: const CircleBorder(),
-                      onTap: _callDialedNumber,
-                      child: const SizedBox.square(
-                        dimension: 78,
-                        child: Icon(
-                          Icons.phone_rounded,
-                          color: Colors.white,
-                          size: 36,
-                          semanticLabel: "Ara",
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 106,
-                    child: _digits.isEmpty
-                        ? null
-                        : GestureDetector(
-                            onLongPress: _clearNumber,
-                            child: IconButton(
-                              tooltip: "Sil",
-                              onPressed: _deleteDigit,
-                              icon: const Icon(
-                                Icons.backspace_outlined,
-                                color: Color(0xFFAEAEB2),
+                    SizedBox(
+                      height: 90,
+                      width: 330,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: FittedBox(
+                              child: Text(
+                                formatPhoneNumber(_digits),
+                                style: const TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.label,
+                                ),
                               ),
                             ),
                           ),
-                  ),
-                ],
+                          Text(
+                            match?.name ?? '',
+                            style: const TextStyle(
+                              color: AppColors.blue,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    for (final row in const [
+                      ['1', '2', '3'],
+                      ['4', '5', '6'],
+                      ['7', '8', '9'],
+                      ['*', '0', '#'],
+                    ])
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            for (final digit in row)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                ),
+                                child: key(digit),
+                              ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 106),
+                        Material(
+                          color: AppColors.green,
+                          shape: const CircleBorder(),
+                          child: InkWell(
+                            customBorder: const CircleBorder(),
+                            onTap: _callDialedNumber,
+                            child: const SizedBox.square(
+                              dimension: 78,
+                              child: Icon(
+                                Icons.phone_rounded,
+                                color: Colors.white,
+                                size: 36,
+                                semanticLabel: "Ara",
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 106,
+                          child: _digits.isEmpty
+                              ? null
+                              : GestureDetector(
+                                  onLongPress: _clearNumber,
+                                  child: IconButton(
+                                    tooltip: "Sil",
+                                    onPressed: _deleteDigit,
+                                    icon: const Icon(
+                                      Icons.backspace_outlined,
+                                      color: Color(0xFFAEAEB2),
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
               ),
-              const SizedBox(height: 16),
-            ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 

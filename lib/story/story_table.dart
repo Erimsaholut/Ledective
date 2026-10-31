@@ -341,6 +341,13 @@ class _TableWriter {
           JigsawInspection() => 'Yapboz',
           FingerprintInspection(:final answer) => 'Parmak izi (cevap: $answer)',
           UvInspection() => 'UV lamba',
+          EnhanceInspection() => 'Görüntü netleştirme',
+          LuminolInspection() => 'Luminol',
+          PatternInspection() => 'Desen kilidi',
+          VoiceInspection() => 'Ses izi',
+          DifferencesInspection() => 'Fark bulma',
+          InkInspection() => 'Mürekkep yaşı',
+          TreadInspection() => 'Lastik izi',
         }} | ${i == null ? '—' : _effects(i.unlocks)} |',
       );
     }
@@ -364,18 +371,30 @@ class _TableWriter {
     if (story.bank.payees.isNotEmpty) {
       _line('**Para gönderilebilecekler**');
       _line();
-      _line('| Alıcı | Ne zaman | En az | Sonuç |');
+      _line('| Alıcı | Ne zaman | Toplam gönderilen | Sonuç |');
       _line('| --- | --- | --- | --- |');
       for (final p in story.bank.payees) {
         final at = 'ZaferBank › ${p.name} hesabına para gönder';
         _uses(p.requires, '$at (görünür)');
-        _sets([...p.unlocks, 'sent:${p.id}'], at);
-        _line(
-          '| ${_cell('${p.name} (${p.note})')} | ${_condition(p.requires)} '
-          '| ${(p.minAmount / 100).toStringAsFixed(0)} TL '
-          '| ${_effects(p.unlocks)}; her gönderim `sent:${p.id}` ve `paid:${p.id}` |',
-        );
+        _sets(['sent:${p.id}'], at);
+        for (final t in p.tiers) {
+          _uses(t.requires, at);
+          _sets(t.unlocks, at);
+          final range = t.below == null
+              ? '${_lira(t.min)} ve üstü'
+              : '${_lira(t.min)} – ${_lira(t.below! - 100)}';
+          final when = t.requires.isAlways ? '' : ', ${_condition(t.requires)}';
+          _line(
+            '| ${_cell('${p.name} (${p.note})')} | ${_condition(p.requires)} '
+            '| $range$when '
+            '| ${_effects(t.unlocks)}${t.refund ? '; para geri gelir' : ''} |',
+          );
+        }
       }
+      _line();
+      _line(
+        'Her gönderim `sent:<alıcı>` açar ve `paid:<alıcı>` toplamına eklenir.',
+      );
       _line();
     }
   }
@@ -568,3 +587,5 @@ class _TableWriter {
     _line();
   }
 }
+
+String _lira(int kurus) => '${(kurus / 100).toStringAsFixed(0)} TL';

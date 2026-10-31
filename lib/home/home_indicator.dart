@@ -40,10 +40,12 @@ class HomeIndicator extends StatelessWidget {
           valueListenable: observer.depth,
           builder: (context, depth, _) {
             if (depth <= 1) return const SizedBox.shrink();
+            // It rides on top of the keyboard, so an app is never stuck
+            // behind one.
             return Positioned(
               left: 0,
               right: 0,
-              bottom: 0,
+              bottom: MediaQuery.viewInsetsOf(context).bottom,
               child: Center(
                 child: Semantics(
                   button: true,

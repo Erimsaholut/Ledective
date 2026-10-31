@@ -19,29 +19,54 @@ class SettingsApp extends StatelessWidget {
   }
 
   Future<void> _resetProgress(BuildContext context) async {
+    var clearGames = false;
     final confirmed = await showCupertinoDialog<bool>(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: const Text("Reset Game Progress"),
-        content: const Text(
-          "Messages, mails, photos, notes and contacts will start over.",
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => CupertinoAlertDialog(
+          title: const Text("Reset Game Progress"),
+          content: Column(
+            children: [
+              const Text(
+                "Messages, mails, photos, notes and contacts will start over.",
+              ),
+              const SizedBox(height: 12),
+              // The two games are games of their own; they stay unless
+              // the player says otherwise.
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      "Kale Muhafızı ve Bereket Çiftliği kayıtlarını da sil",
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  CupertinoSwitch(
+                    key: const ValueKey('reset-games'),
+                    value: clearGames,
+                    onChanged: (on) => setState(() => clearGames = on),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Cancel"),
+            ),
+            CupertinoDialogAction(
+              isDestructiveAction: true,
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("Reset"),
+            ),
+          ],
         ),
-        actions: [
-          CupertinoDialogAction(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text("Cancel"),
-          ),
-          CupertinoDialogAction(
-            isDestructiveAction: true,
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text("Reset"),
-          ),
-        ],
       ),
     );
     if (confirmed != true) return;
 
-    await resetGameState();
+    await resetGameState(keepGames: !clearGames);
     if (context.mounted) Navigator.popUntil(context, (route) => route.isFirst);
   }
 

@@ -5,6 +5,7 @@ import '../../data/game_clock.dart';
 import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/glow.dart';
 import 'document_pages.dart';
 import 'document_tile.dart';
 import 'lab/inspection_page.dart';
@@ -224,18 +225,32 @@ class _LabTab extends StatelessWidget {
                       horizontal: 14,
                       vertical: 6,
                     ),
-                    leading: Container(
-                      width: 44,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE8EDF7),
-                        borderRadius: BorderRadius.circular(6),
+                    // Evidence waiting for the lab glows, to lead the
+                    // player to its minigame.
+                    leading: Glow(
+                      on: !progress.isInspected(e.id),
+                      radius: 18,
+                      child: Container(
+                        width: 44,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE8EDF7),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Icon(switch (e.inspection!) {
+                          JigsawInspection() => Icons.extension_rounded,
+                          FingerprintInspection() => Icons.fingerprint_rounded,
+                          UvInspection() => Icons.flashlight_on_rounded,
+                          EnhanceInspection() =>
+                            Icons.center_focus_strong_rounded,
+                          LuminolInspection() => Icons.water_drop_rounded,
+                          PatternInspection() => Icons.pattern_rounded,
+                          VoiceInspection() => Icons.graphic_eq_rounded,
+                          DifferencesInspection() => Icons.compare_rounded,
+                          InkInspection() => Icons.history_edu_rounded,
+                          TreadInspection() => Icons.tire_repair_rounded,
+                        }, color: poltelNavy),
                       ),
-                      child: Icon(switch (e.inspection!) {
-                        JigsawInspection() => Icons.extension_rounded,
-                        FingerprintInspection() => Icons.fingerprint_rounded,
-                        UvInspection() => Icons.flashlight_on_rounded,
-                      }, color: poltelNavy),
                     ),
                     title: Text(
                       e.name,

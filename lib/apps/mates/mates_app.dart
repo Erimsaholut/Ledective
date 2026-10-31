@@ -47,7 +47,7 @@ class _MatesAppState extends State<MatesApp> {
     for (final entry in transcript.reversed) {
       switch (entry) {
         case IncomingMessage(:final text):
-          return text;
+          return messagePreview(text);
         case OutgoingMessage(:final text):
           return "Sen: $text";
         case DayMarker():
@@ -63,8 +63,10 @@ class _MatesAppState extends State<MatesApp> {
     required VoidCallback onTap,
     int unread = 0,
     bool awaitsReply = false,
+    bool decision = false,
   }) {
     final waiting = awaitsReply && unread == 0;
+    final color = decision ? MatesColors.decision : MatesColors.accent;
     return ListTile(
       tileColor: Colors.white,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -80,12 +82,12 @@ class _MatesAppState extends State<MatesApp> {
       subtitle: Row(
         children: [
           if (waiting)
-            const Padding(
-              padding: EdgeInsets.only(right: 4),
+            Padding(
+              padding: const EdgeInsets.only(right: 4),
               child: Icon(
-                Icons.reply_rounded,
+                decision ? Icons.call_split_rounded : Icons.reply_rounded,
                 size: 16,
-                color: MatesColors.accent,
+                color: color,
               ),
             ),
           Expanded(
@@ -125,13 +127,13 @@ class _MatesAppState extends State<MatesApp> {
           ? Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                border: Border.all(color: MatesColors.accent),
+                border: Border.all(color: color),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
-                'Yanıt bekliyor',
+              child: Text(
+                decision ? 'Karar bekliyor' : 'Yanıt bekliyor',
                 style: TextStyle(
-                  color: MatesColors.accent,
+                  color: color,
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
                 ),
@@ -207,6 +209,7 @@ class _MatesAppState extends State<MatesApp> {
                     : _preview(transcript),
                 unread: _progress.unreadCount(person),
                 awaitsReply: _progress.awaitsReply(person),
+                decision: _progress.awaitsDecision(person),
                 onTap: () =>
                     _open(ChatPage(person: person, number: numbers[person])),
               ),

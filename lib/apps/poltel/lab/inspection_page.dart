@@ -5,9 +5,16 @@ import '../../../story/story_data.dart';
 import '../../../story/story_progress.dart';
 import '../../../theme/app_theme.dart';
 import '../document_pages.dart' show poltelNavy;
+import 'differences_game.dart';
+import 'enhance_game.dart';
 import 'fingerprint_game.dart';
+import 'ink_game.dart';
 import 'jigsaw_game.dart';
+import 'luminol_game.dart';
+import 'pattern_game.dart';
+import 'tread_game.dart';
 import 'uv_game.dart';
+import 'voice_game.dart';
 
 /// Poltel's forensic lab: the minigame for one piece of evidence and, once
 /// it's solved, the lab's findings.
@@ -47,6 +54,41 @@ class _InspectionPageState extends State<InspectionPage> {
       UvInspection(:final hiddenText) => UvGame(
         image: image,
         hiddenText: hiddenText,
+        onSolved: _solved,
+      ),
+      EnhanceInspection(:final focus, :final light) => EnhanceGame(
+        image: image,
+        focus: focus,
+        light: light,
+        onSolved: _solved,
+      ),
+      LuminolInspection(:final spots, :final sprays) => LuminolGame(
+        image: image,
+        spots: spots,
+        sprays: sprays,
+        onSolved: _solved,
+      ),
+      PatternInspection(:final pattern) => PatternGame(
+        pattern: pattern,
+        onSolved: _solved,
+      ),
+      VoiceInspection(:final offset, :final suspect) => VoiceGame(
+        offset: offset,
+        suspect: suspect,
+        onSolved: _solved,
+      ),
+      DifferencesInspection(:final spots) => DifferencesGame(
+        image: image,
+        spots: spots,
+        onSolved: _solved,
+      ),
+      InkInspection(:final lines, :final order) => InkGame(
+        lines: lines,
+        order: order,
+        onSolved: _solved,
+      ),
+      TreadInspection(:final angle) => TreadGame(
+        angle: angle,
         onSolved: _solved,
       ),
     };

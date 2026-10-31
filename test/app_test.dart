@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' show PointerDeviceKind;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/bank/transfer_page.dart';
@@ -17,6 +18,7 @@ import 'package:ledective/apps/games/sudoku/sudoku_game.dart';
 import 'package:ledective/apps/games/sudoku/sudoku_puzzle.dart';
 import 'package:ledective/apps/map/map_app.dart';
 import 'package:ledective/apps/news/news_app.dart';
+import 'package:ledective/apps/settings/settings_app.dart';
 import 'package:ledective/apps/settings/story_state_page.dart';
 import 'package:ledective/apps/poltel/lab/inspection_page.dart';
 import 'package:ledective/apps/poltel/lab/jigsaw_game.dart';
@@ -34,6 +36,7 @@ import 'package:ledective/main.dart';
 import 'package:ledective/story/dialogue.dart';
 import 'package:ledective/story/news_feed.dart';
 import 'package:ledective/story/story_progress.dart';
+import 'package:ledective/widgets/glow.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _pumpApp(WidgetTester tester) async {
@@ -153,12 +156,18 @@ void main() {
     await tester.tap(find.text('Neymiş bu kadar önemli olan durum'));
     await tester.pump();
 
-    // The first of Özge's three replies arrives after a second.
+    // The first of Özge's four replies arrives after a second.
     expect(find.textContaining('3 gün önce akşam saatlerinde'), findsNothing);
     await tester.pump(const Duration(seconds: 1));
     expect(find.textContaining('3 gün önce akşam saatlerinde'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
+    // The second is a photo from the scene.
+    expect(find.textContaining('ayakkabı izi'), findsOneWidget);
     await tester.pump(const Duration(seconds: 2));
-    expect(find.text('Yakınlarının ifadesini aldınız mı ?'), findsOneWidget);
+    // Then she asks the first big decision, in red.
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.textContaining('Karar ver'), findsOneWidget);
+    expect(find.text('Buradan yöneteceğim. Telefonum açık.'), findsOneWidget);
 
     expect(StoryProgress.instance.choicesFor('Özge'), [1]);
     expect(StoryProgress.instance.trait(Trait.curiosity), 1);
@@ -167,7 +176,7 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     await tester.pumpWidget(const MaterialApp(home: ChatPage(person: 'Özge')));
     await tester.pumpAndSettle();
-    expect(find.textContaining('3 gün önce akşam saatlerinde'), findsOneWidget);
+    expect(find.textContaining('dönebilir misiniz'), findsOneWidget);
   });
 
   testWidgets('a call hangs up by itself and is added to recents', (
@@ -220,8 +229,12 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: MapApp()));
     await tester.pump();
 
+    // New places glow until they are looked at, so the map never settles.
+    expect(find.byWidgetPredicate((w) => w is Glow && w.on), findsWidgets);
     await tester.tap(find.text("Berat'ın Evi"), kind: PointerDeviceKind.mouse);
-    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(StoryProgress.instance.hasSeen('place:berat-home'), isTrue);
     expect(find.text("Olay yerini yeniden ara"), findsOneWidget);
     // The place's photo is above its tasks.
     expect(
@@ -235,7 +248,8 @@ void main() {
     );
 
     await tester.tap(find.widgetWithText(FilledButton, 'Gönder').first);
-    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
     await tester.tap(find.text('Doğa').last);
     await tester.pump();
     expect(StoryProgress.instance.missionOf('Doğa'), isNotNull);
@@ -327,7 +341,7 @@ void main() {
     );
     final before = BankAccount.instance.balance(StoryProgress.instance);
     await tester.tap(find.text('Gönderene iade'));
-    await tester.enterText(find.byType(TextField).first, '50.000');
+    await tester.enterText(find.byType(TextField).first, '250.000');
     await tester.pump();
     await tester.tap(find.widgetWithText(FilledButton, 'Gönder'));
     await tester.pumpAndSettle();
@@ -339,7 +353,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       BankAccount.instance.balance(StoryProgress.instance),
-      before - 5000000,
+      before - 25000000,
     );
     expect(StoryProgress.instance.has('bribe:returned'), isTrue);
   });
@@ -465,6 +479,12 @@ void main() {
           )
           .first,
     );
+    // Clear of the home bar along the bottom edge.
+    await tester.drag(
+      find.byKey(const ValueKey('uninstall')),
+      const Offset(0, -150),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('uninstall')));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, 'Sil'));
@@ -970,6 +990,107 @@ void main() {
     expect(find.textContaining('⛏️ Altın Madeni · Seviye 1'), findsOneWidget);
     expect(find.textContaining('dalga sonu +'), findsOneWidget);
     expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('starting over keeps the two games unless asked not to', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      CastleGuardApp.gameKey: '{}',
+      CastleGuardApp.fastKey: true,
+      FarmApp.saveKey: '{}',
+      'installedGames': ['castle-guard', 'farm', 'sudoku'],
+      'storyProgress': 'x',
+    });
+    await tester.runAsync(loadGameState);
+    await tester.runAsync(resetGameState.call);
+    var prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(CastleGuardApp.gameKey), isNull);
+    expect(InstalledGames.ids.value, isEmpty);
+
+    SharedPreferences.setMockInitialValues({
+      CastleGuardApp.gameKey: '{}',
+      CastleGuardApp.fastKey: true,
+      FarmApp.saveKey: '{}',
+      'installedGames': ['castle-guard', 'farm', 'sudoku'],
+      'storyProgress': 'x',
+    });
+    await tester.runAsync(loadGameState);
+    await tester.runAsync(() => resetGameState(keepGames: true));
+    prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(CastleGuardApp.gameKey), '{}');
+    expect(prefs.getBool(CastleGuardApp.fastKey), isTrue);
+    expect(prefs.getString(FarmApp.saveKey), '{}');
+    expect(prefs.getString('storyProgress'), isNull);
+    expect(InstalledGames.ids.value, ['castle-guard', 'farm']);
+  });
+
+  testWidgets('the reset dialog asks about the two games', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+    await tester.runAsync(loadGameState);
+    await tester.pumpWidget(const MaterialApp(home: SettingsApp()));
+    await tester.scrollUntilVisible(
+      find.text('Reset Game Progress'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Reset Game Progress'));
+    await tester.pumpAndSettle();
+    final toggle = find.byKey(const ValueKey('reset-games'));
+    expect(tester.widget<CupertinoSwitch>(toggle).value, isFalse);
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(tester.widget<CupertinoSwitch>(toggle).value, isTrue);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('double speed and automatic waves stay on between games', (
+    tester,
+  ) async {
+    _phoneSize(tester);
+    SharedPreferences.setMockInitialValues({});
+    // Between the first and the second wave.
+    final game = CastleDefense(random: Random(1))..wave = 1;
+    await tester.pumpWidget(
+      MaterialApp(home: CastleGuardApp(initialGame: game)),
+    );
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
+    await tester.pump();
+    expect(find.text('1×'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('speed')));
+    await tester.pump();
+    expect(find.text('2×'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('auto-wave')));
+    await tester.pump();
+    expect(find.textContaining('sn içinde geliyor'), findsOneWidget);
+    for (var i = 0; i < 60 && !game.waveRunning; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(game.wave, 2, reason: 'the second wave came by itself');
+
+    // Both are remembered the next time the game opens.
+    await tester.pumpWidget(const SizedBox());
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool(CastleGuardApp.fastKey), isTrue);
+    expect(prefs.getBool(CastleGuardApp.autoKey), isTrue);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CastleGuardApp(initialGame: CastleDefense(random: Random(2))),
+      ),
+    );
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
+    await tester.pump();
+    expect(find.text('2×'), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
 

@@ -6,6 +6,7 @@ import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/avatar.dart';
+import '../../widgets/glow.dart';
 
 /// Reports the player hasn't read yet, for the home screen badge.
 int unreadReportCount(StoryProgress progress) => progress.unreadReports;
@@ -45,7 +46,34 @@ class _MapAppState extends State<MapApp> {
     super.dispose();
   }
 
+  List<MissionTask> _tasksNow(MapLocation location) => [
+    for (final t in location.tasks)
+      if (_progress.meets(t.requires)) t,
+  ];
+
+  /// Every task here has been reported on, for now.
+  bool _isDone(MapLocation location) {
+    final tasks = _tasksNow(location);
+    return tasks.isNotEmpty &&
+        tasks.every((t) => _progress.finishedMission(t.id) != null);
+  }
+
+  /// The player hasn't looked at the place, or at a task that opened there
+  /// since: it glows until they do.
+  bool _isFresh(MapLocation location) =>
+      !_progress.hasSeen('place:${location.id}') ||
+      _tasksNow(location).any(
+        (t) =>
+            !_progress.hasSeen('task:${t.id}') &&
+            _progress.finishedMission(t.id) == null &&
+            _progress.activeMission(t.id) == null,
+      );
+
   void _openLocation(MapLocation location) {
+    _progress.markSeen('place:${location.id}');
+    for (final t in _tasksNow(location)) {
+      _progress.markSeen('task:${t.id}');
+    }
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -100,6 +128,8 @@ class _MapAppState extends State<MapApp> {
                                 busy: location.tasks.any(
                                   (t) => _progress.activeMission(t.id) != null,
                                 ),
+                                done: _isDone(location),
+                                fresh: _isFresh(location),
                                 onTap: () => _openLocation(location),
                               ),
                             ),
@@ -231,10 +261,22 @@ class _GlassButton extends StatelessWidget {
 }
 
 class _Pin extends StatelessWidget {
-  const _Pin({required this.location, required this.busy, required this.onTap});
+  const _Pin({
+    required this.location,
+    required this.busy,
+    required this.done,
+    required this.fresh,
+    required this.onTap,
+  });
 
   final MapLocation location;
   final bool busy;
+
+  /// Nothing left to do here, for now: a tick on the pin.
+  final bool done;
+
+  /// New, or with a new task: the pin glows.
+  final bool fresh;
   final VoidCallback onTap;
 
   @override
@@ -258,17 +300,49 @@ class _Pin extends StatelessWidget {
               location.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11.5,
                 fontWeight: FontWeight.w600,
+                color: done && !busy ? AppColors.secondaryLabel : null,
               ),
             ),
           ),
-          Icon(
-            busy ? Icons.local_police_rounded : Icons.location_on_rounded,
-            size: 36,
-            color: busy ? AppColors.blue : AppColors.red,
-            shadows: const [Shadow(color: Color(0x66000000), blurRadius: 6)],
+          Glow(
+            on: fresh && !busy,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(
+                  busy ? Icons.local_police_rounded : Icons.location_on_rounded,
+                  size: 36,
+                  color: busy
+                      ? AppColors.blue
+                      : done
+                      ? const Color(0xFF8E8E93)
+                      : AppColors.red,
+                  shadows: const [
+                    Shadow(color: Color(0x66000000), blurRadius: 6),
+                  ],
+                ),
+                if (done && !busy)
+                  const Positioned(
+                    right: -4,
+                    top: -2,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.check_circle_rounded,
+                        key: ValueKey('place-done'),
+                        size: 18,
+                        color: AppColors.green,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),

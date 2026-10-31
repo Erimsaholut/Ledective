@@ -28,10 +28,47 @@ Future<void> loadGameState() async {
   await CameraRoll.instance.load();
 }
 
-/// Erases all saved progress and starts the game over.
-Future<void> resetGameState() async {
+/// The games from AppShop that are games of their own, with the prefix of
+/// their saved data and their AppShop id. Starting the story over can keep
+/// them.
+const separateGames = [
+  (prefix: 'castleGuard.', id: 'castle-guard'),
+  (prefix: 'farm.', id: 'farm'),
+];
+
+/// Erases all saved progress and starts the game over. With [keepGames]
+/// the [separateGames] stay installed and keep their progress.
+Future<void> resetGameState({bool keepGames = false}) async {
   final prefs = await SharedPreferences.getInstance();
+  final kept = <String, Object>{
+    if (keepGames)
+      for (final key in prefs.getKeys())
+        if (separateGames.any((g) => key.startsWith(g.prefix)))
+          key: prefs.get(key)!,
+  };
+  final installed = [
+    if (keepGames)
+      for (final g in separateGames)
+        if (InstalledGames.isInstalled(g.id)) g.id,
+  ];
   await prefs.clear();
+  for (final MapEntry(:key, :value) in kept.entries) {
+    switch (value) {
+      case final String v:
+        await prefs.setString(key, v);
+      case final int v:
+        await prefs.setInt(key, v);
+      case final bool v:
+        await prefs.setBool(key, v);
+      case final double v:
+        await prefs.setDouble(key, v);
+      case final List<String> v:
+        await prefs.setStringList(key, v);
+    }
+  }
   await CameraRoll.instance.clear();
   await loadGameState();
+  for (final id in installed) {
+    await InstalledGames.install(id);
+  }
 }

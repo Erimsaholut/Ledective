@@ -214,12 +214,16 @@ Future<void> openAlert(NavigatorState navigator, StoryAlert alert) async {
   );
 }
 
-/// The home screen icon of the app called [title].
-AppIcon? homeIcon(String title) => [
+/// Every app on the home screen and the dock, installed games included.
+List<AppIcon> get homeIcons => [
   ..._pages.expand((page) => page),
   ..._dock,
   for (final game in storeItemsWithIds(InstalledGames.ids.value)) game.homeIcon,
-].where((icon) => icon.title == title).firstOrNull;
+];
+
+/// The home screen icon of the app called [title].
+AppIcon? homeIcon(String title) =>
+    homeIcons.where((icon) => icon.title == title).firstOrNull;
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});

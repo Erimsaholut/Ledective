@@ -3,7 +3,7 @@
   "owner": "Komiser",
   "iban": "TR12 0006 2000 0001 2345 6789 01",
   "card": "4821",
-  "balance": 1245075,
+  "balance": 3120000,
   "transactions": [
     {
       "id": "grocery",
@@ -38,7 +38,7 @@
       "id": "bribe",
       "title": "Gelen EFT",
       "detail": "Gönderen: Y. Eğitim Vakfı Danışmanlık · Açıklama: 'Geçmiş olsun'",
-      "amount": 5000000,
+      "amount": 25000000,
       "daysAgo": 0,
       "requires": "mp:wrote"
     }
@@ -50,8 +50,11 @@
       "iban": "TR40 0001 5001 5800 7301 9846 12",
       "note": "'Geçmiş olsun' açıklamalı EFT'nin geldiği hesap",
       "requires": "mp:wrote",
-      "minAmount": 5000000,
-      "unlocks": ["integrity += 10", "pressure += 15", "bribe:returned"]
+      "tiers": [
+        {"min": 1, "below": 25000000, "unlocks": ["bribe:partial", "integrity -= 5"]},
+        {"min": 25000000, "unlocks": ["integrity += 10", "pressure += 15", "bribe:returned"]},
+        {"min": 25000100, "unlocks": ["bribe:donated"]}
+      ]
     },
     {
       "id": "orhun-debt",
@@ -59,8 +62,12 @@
       "iban": "TR71 0004 6007 1188 8000 0427 33",
       "note": "Orhun’un icra borcu (80.000 TL)",
       "requires": "heard:orhun-debt",
-      "minAmount": 2000000,
-      "unlocks": ["orhun:helped", "trust:Orhun += 20", "integrity -= 5"]
+      "tiers": [
+        {"min": 1, "below": 2000000, "refund": true, "unlocks": ["orhun:sent-back", "trust:Orhun += 3"]},
+        {"min": 2000000, "below": 8000000, "unlocks": ["orhun:helped-partly", "trust:Orhun += 10"]},
+        {"min": 8000000, "requires": ["mp:wrote", "!bribe:returned"], "unlocks": ["orhun:paid-dirty", "integrity -= 15"]},
+        {"min": 8000000, "unlocks": ["orhun:helped", "trust:Orhun += 20", "integrity -= 5"]}
+      ]
     },
     {
       "id": "lawyer",
@@ -68,8 +75,10 @@
       "iban": "TR22 0006 4000 0011 2223 3344 55",
       "note": "Avukatlık ücreti (15.000 TL)",
       "requires": "lawyer:offer",
-      "minAmount": 1500000,
-      "unlocks": ["lawyer:hired"]
+      "tiers": [
+        {"min": 1, "below": 1500000, "unlocks": ["lawyer:underpaid"]},
+        {"min": 1500000, "unlocks": ["lawyer:hired"]}
+      ]
     },
     {
       "id": "hakan-wife",

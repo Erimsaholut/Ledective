@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/game_clock.dart';
+import '../../story/dialogue.dart';
 import '../../story/story_data.dart';
 import '../../story/story_progress.dart';
 import '../../theme/app_theme.dart';
@@ -23,10 +24,7 @@ class MessagesApp extends StatelessWidget {
       body: ListenableBuilder(
         listenable: progress,
         builder: (context, _) {
-          final threads = [
-            for (final thread in StoryData.current.smsThreads.reversed)
-              if (progress.meets(thread.requires)) thread,
-          ];
+          final threads = smsConversations(progress);
           return CustomScrollView(
             slivers: [
               const SliverAppBar.large(
@@ -37,8 +35,11 @@ class MessagesApp extends StatelessWidget {
                 itemCount: threads.length,
                 separatorBuilder: (_, _) => const Divider(indent: 76),
                 itemBuilder: (context, index) {
-                  final thread = threads[index];
-                  final unread = !progress.hasSeen('sms:${thread.sender}');
+                  final parts = threads[index];
+                  final sender = parts.first.sender;
+                  final unread = parts.any(
+                    (t) => !progress.hasSeen('sms:${t.id}'),
+                  );
                   return ListTile(
                     tileColor: Colors.white,
                     contentPadding: const EdgeInsets.fromLTRB(4, 4, 16, 4),
@@ -56,33 +57,32 @@ class MessagesApp extends StatelessWidget {
                               : null,
                         ),
                         Avatar(
-                          name: thread.sender,
-                          icon: _isPerson(thread.sender)
+                          name: sender,
+                          icon: _isPerson(sender)
                               ? null
                               : Icons.business_rounded,
                         ),
                       ],
                     ),
                     title: Text(
-                      thread.sender,
+                      sender,
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     subtitle: Text(
-                      thread.messages.last,
+                      messagePreview(parts.last.messages.last),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     onTap: () {
-                      progress.markSeen(
-                        'sms:${thread.sender}',
-                        thread.unlocksOnView,
-                      );
+                      for (final t in parts) {
+                        progress.markSeen('sms:${t.id}', t.unlocksOnView);
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
                           builder: (_) => _ThreadPage(
-                            thread: thread,
-                            isPerson: _isPerson(thread.sender),
+                            parts: parts,
+                            isPerson: _isPerson(sender),
                           ),
                         ),
                       );
@@ -99,13 +99,16 @@ class MessagesApp extends StatelessWidget {
 }
 
 class _ThreadPage extends StatelessWidget {
-  const _ThreadPage({required this.thread, required this.isPerson});
+  const _ThreadPage({required this.parts, required this.isPerson});
 
-  final SmsThread thread;
+  /// One sender's threads, oldest first.
+  final List<SmsThread> parts;
   final bool isPerson;
 
   @override
   Widget build(BuildContext context) {
+    final thread = parts.first;
+    final messages = [for (final t in parts) ...t.messages];
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -138,13 +141,14 @@ class _ThreadPage extends StatelessWidget {
               ),
             ),
           ),
-          for (var i = 0; i < thread.messages.length; i++)
+          for (var i = 0; i < messages.length; i++)
             ChatBubble(
-              text: thread.messages[i],
+              text: messageText(messages[i]),
+              photo: messagePhoto(messages[i]),
               outgoing: false,
               incomingColor: const Color(0xFFE9E9EB),
               incomingTextColor: Colors.black,
-              tail: i == thread.messages.length - 1,
+              tail: i == messages.length - 1,
             ),
           const Padding(
             padding: EdgeInsets.all(16),
@@ -160,9 +164,22 @@ class _ThreadPage extends StatelessWidget {
   }
 }
 
-/// Threads the player hasn't opened yet, for the home screen badge.
-int unreadSmsCount(StoryProgress progress) => StoryData.current.smsThreads
-    .where(
-      (t) => progress.meets(t.requires) && !progress.hasSeen('sms:${t.sender}'),
-    )
-    .length;
+/// The threads that have come, one list per sender (oldest thread first),
+/// the sender with the newest thread first.
+List<List<SmsThread>> smsConversations(StoryProgress progress) {
+  final bySender = <String, List<SmsThread>>{};
+  for (final t in StoryData.current.smsThreads) {
+    if (progress.meets(t.requires)) (bySender[t.sender] ??= []).add(t);
+  }
+  final order = [
+    for (final (i, t) in StoryData.current.smsThreads.indexed)
+      if (bySender[t.sender]?.last == t) (i, t.sender),
+  ]..sort((a, b) => b.$1.compareTo(a.$1));
+  return [for (final (_, sender) in order) bySender[sender]!];
+}
+
+/// Conversations with something the player hasn't opened yet, for the home
+/// screen badge.
+int unreadSmsCount(StoryProgress progress) => smsConversations(
+  progress,
+).where((parts) => parts.any((t) => !progress.hasSeen('sms:${t.id}'))).length;

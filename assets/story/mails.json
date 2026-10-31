@@ -680,8 +680,22 @@
       "id": "internal-investigation",
       "sender": "icdenetim.emniyet.gov.tr",
       "subject": "İdari inceleme başlatılması",
-      "body": "İç Denetim Şube Müdürlüğü: Banka hesabınıza 'Y. Eğitim Vakfı Danışmanlık' unvanlı hesaptan yapılan ve iade edilmeyen 50.000,00 TL tutarındaki EFT hakkında idari inceleme başlatılmıştır. Savunmanızı yedi gün içinde yazılı olarak bildiriniz.",
-      "requires": "case:internal-investigation"
+      "body": "İç Denetim Şube Müdürlüğü: Banka hesabınıza 'Y. Eğitim Vakfı Danışmanlık' unvanlı hesaptan yapılan ve iade edilmeyen 250.000,00 TL tutarındaki EFT hakkında idari inceleme başlatılmıştır. Savunmanızı yedi gün içinde yazılı olarak bildiriniz.",
+      "requires": ["audit:bribe", "!bribe:partial"]
+    },
+    {
+      "id": "internal-investigation-partial",
+      "sender": "icdenetim.emniyet.gov.tr",
+      "subject": "İdari inceleme başlatılması",
+      "body": "[Taslak] İç Denetim Şube Müdürlüğü: Banka hesabınıza 'Y. Eğitim Vakfı Danışmanlık' unvanlı hesaptan yapılan 250.000,00 TL tutarındaki EFT'nin yalnızca bir kısmının iade edilmesi hakkında idari inceleme başlatılmıştır. Savunmanızı yedi gün içinde yazılı olarak bildiriniz.",
+      "requires": ["audit:bribe", "bribe:partial"]
+    },
+    {
+      "id": "internal-investigation-leak",
+      "sender": "icdenetim.emniyet.gov.tr",
+      "subject": "İdari inceleme başlatılması",
+      "body": "[Taslak] İç Denetim Şube Müdürlüğü: Adınıza kayıtlı hattan Şehir Postası gazetesinin numarasının üç ayrı gece aranması ve soruşturma bilgilerinin basına sızması hakkında idari inceleme başlatılmıştır. Savunmanızı yedi gün içinde yazılı olarak bildiriniz.",
+      "requires": ["leak:traced", "!audit:bribe"]
     },
     {
       "id": "suspension",
@@ -715,7 +729,7 @@
       "id": "foundation-receipt",
       "sender": "muhasebe@yilmazvakfi.org",
       "subject": "Ödeme kaydı",
-      "body": "Y. Eğitim Vakfı Muhasebe: Hesabınıza yapılan 50.000,00 TL ödeme \"danışmanlık hizmeti\" olarak kayda geçmiştir. Fatura kesmenize gerek yoktur. Geçmiş olsun.",
+      "body": "Y. Eğitim Vakfı Muhasebe: Hesabınıza yapılan 250.000,00 TL ödeme \"danışmanlık hizmeti\" olarak kayda geçmiştir. Fatura kesmenize gerek yoktur. Geçmiş olsun.",
       "requires": ["mp:wrote", "!bribe:returned"],
       "afterMinutes": 12
     },

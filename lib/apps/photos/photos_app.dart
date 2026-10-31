@@ -39,10 +39,15 @@ class PhotosApp extends StatelessWidget {
           final gallery =
               StoryProgress.instance.breakdown?.gallery(galleryImages) ??
               galleryImages;
+          // Photos people sent in chats are saved here too, newest first.
+          final received = StoryProgress.instance.receivedPhotos.reversed
+              .toSet();
           final photos = <Photo>[
             for (final bytes in CameraRoll.instance.photos)
               (asset: null, bytes: bytes),
-            for (final asset in gallery) (asset: asset, bytes: null),
+            for (final asset in received) (asset: asset, bytes: null),
+            for (final asset in gallery)
+              if (!received.contains(asset)) (asset: asset, bytes: null),
           ];
           return CustomScrollView(
             slivers: [

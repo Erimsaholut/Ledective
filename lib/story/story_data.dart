@@ -328,13 +328,17 @@ class MailPool {
 
 class SmsThread {
   const SmsThread({
+    String? id,
     required this.sender,
     required this.messages,
     this.daysAgo = 0,
     this.requires = Condition.always,
     this.unlocksOnView = const [],
-  });
+  }) : id = id ?? sender;
 
+  /// Tells apart threads of the same [sender], which show as one
+  /// conversation, oldest first. Defaults to the sender.
+  final String id;
   final String sender;
   final List<String> messages;
 
@@ -593,6 +597,108 @@ class UvInspection extends Inspection {
   final String hiddenText;
 }
 
+/// Bring a blurred camera still into focus with two dials, each to its
+/// right place (0–1).
+class EnhanceInspection extends Inspection {
+  const EnhanceInspection({
+    required super.instructions,
+    required super.result,
+    super.unlocks,
+    required this.focus,
+    required this.light,
+  });
+
+  final double focus;
+  final double light;
+}
+
+/// Spray luminol over the scene with a few sprays and find the hidden
+/// stains ([spots], as fractions of the image).
+class LuminolInspection extends Inspection {
+  const LuminolInspection({
+    required super.instructions,
+    required super.result,
+    super.unlocks,
+    required this.spots,
+    this.sprays = 14,
+  });
+
+  final List<(double, double)> spots;
+  final int sprays;
+}
+
+/// Draw a phone's unlock pattern by following the smudges on its screen.
+/// [pattern] is dots 0–8, row by row.
+class PatternInspection extends Inspection {
+  const PatternInspection({
+    required super.instructions,
+    required super.result,
+    super.unlocks,
+    required this.pattern,
+  });
+
+  final List<int> pattern;
+}
+
+/// Slide a recording's voice print until it lines up with the suspect's;
+/// [offset] (0–1) is where it does.
+class VoiceInspection extends Inspection {
+  const VoiceInspection({
+    required super.instructions,
+    required super.result,
+    super.unlocks,
+    required this.offset,
+    this.suspect = '',
+  });
+
+  final double offset;
+
+  /// Whose voice print the recording is compared with.
+  final String suspect;
+}
+
+/// Find what was changed between a copy of the image and the original
+/// ([spots], as fractions of the image).
+class DifferencesInspection extends Inspection {
+  const DifferencesInspection({
+    required super.instructions,
+    required super.result,
+    super.unlocks,
+    required this.spots,
+  });
+
+  final List<(double, double)> spots;
+}
+
+/// Put a document's lines in the order they were written, oldest first,
+/// by the age of their ink. [lines] are in the order shown; [order] gives
+/// their indexes oldest first.
+class InkInspection extends Inspection {
+  const InkInspection({
+    required super.instructions,
+    required super.result,
+    super.unlocks,
+    required this.lines,
+    required this.order,
+  });
+
+  final List<String> lines;
+  final List<int> order;
+}
+
+/// Turn a tyre's tread over a print until they line up; [angle] is in
+/// degrees.
+class TreadInspection extends Inspection {
+  const TreadInspection({
+    required super.instructions,
+    required super.result,
+    super.unlocks,
+    required this.angle,
+  });
+
+  final double angle;
+}
+
 class BankData {
   const BankData({
     required this.bank,
@@ -620,8 +726,8 @@ class BankData {
 }
 
 /// Someone the player can send money to. Every transfer adds to the
-/// number `paid:<id>` (in lira); [unlocks] apply once a transfer of at
-/// least [minAmount] goes through.
+/// number `paid:<id>` (in lira) and sets `sent:<id>`; what it does depends
+/// on how much has been sent in all, see [tiers].
 class Payee {
   const Payee({
     required this.id,
@@ -629,8 +735,7 @@ class Payee {
     required this.iban,
     this.note = '',
     this.requires = Condition.always,
-    this.minAmount = 0,
-    this.unlocks = const [],
+    this.tiers = const [],
   });
 
   final String id;
@@ -641,9 +746,34 @@ class Payee {
   final String note;
   final Condition requires;
 
-  /// In kuruş.
-  final int minAmount;
+  /// What sending money does, in order. After each transfer every tier the
+  /// total has reached applies, each once.
+  final List<PayeeTier> tiers;
+}
+
+/// What a [Payee] does once the money sent to them reaches [min].
+class PayeeTier {
+  const PayeeTier({
+    required this.min,
+    this.below,
+    this.requires = Condition.always,
+    this.unlocks = const [],
+    this.refund = false,
+  });
+
+  /// Total sent so far, in kuruş, from which this tier applies.
+  final int min;
+
+  /// If set, the tier only applies while the total is under this (kuruş):
+  /// "less than the whole amount".
+  final int? below;
+  final Condition requires;
   final List<String> unlocks;
+
+  /// The money comes straight back; the tier can apply again next time.
+  final bool refund;
+
+  bool fits(int total) => total >= min && (below == null || total < below!);
 }
 
 class BankTransaction {
@@ -1047,6 +1177,15 @@ class _Reader {
   bool boolOr(String key) => optional(key)?.boolean ?? false;
   List<String> stringsOr(String key) => optional(key)?.strings ?? const [];
 
+  /// [[x, y], ...] as fractions of an image.
+  List<(double, double)> points(String key) => field(key).list((p) {
+    final xy = p.list((n) => n.number);
+    if (xy.length != 2) p.fail('expected [x, y]');
+    return (xy[0], xy[1]);
+  });
+
+  List<int> integers(String key) => field(key).list((n) => n.integer);
+
   /// A flag name or a list of flag names.
   List<String> _flags(String key) {
     final r = optional(key);
@@ -1107,6 +1246,7 @@ DialogueNode _node(_Reader r) => DialogueNode(
             (e) => DialogueEvent(next: e.text('next'), requires: e.condition()),
           ) ??
       const [],
+  decision: r.boolOr('decision'),
 );
 
 DialogueOption _option(_Reader r) => DialogueOption(
@@ -1211,6 +1351,7 @@ Duration _after(_Reader r) => switch (r.optional('afterMinutes')) {
 };
 
 SmsThread _sms(_Reader r) => SmsThread(
+  id: r.textOr('id'),
   sender: r.text('sender'),
   messages: r.field('messages').strings,
   daysAgo: r.intOr('daysAgo', 0),
@@ -1323,6 +1464,52 @@ Evidence _evidence(_Reader r) => Evidence(
         unlocks: i.stringsOr('unlocks'),
         hiddenText: i.text('hiddenText'),
       ),
+      'enhance' => EnhanceInspection(
+        instructions: i.text('instructions'),
+        result: i.text('result'),
+        unlocks: i.stringsOr('unlocks'),
+        focus: i.field('focus').number,
+        light: i.field('light').number,
+      ),
+      'luminol' => LuminolInspection(
+        instructions: i.text('instructions'),
+        result: i.text('result'),
+        unlocks: i.stringsOr('unlocks'),
+        spots: i.points('spots'),
+        sprays: i.intOr('sprays', 14),
+      ),
+      'pattern' => PatternInspection(
+        instructions: i.text('instructions'),
+        result: i.text('result'),
+        unlocks: i.stringsOr('unlocks'),
+        pattern: i.integers('pattern'),
+      ),
+      'voice' => VoiceInspection(
+        instructions: i.text('instructions'),
+        result: i.text('result'),
+        unlocks: i.stringsOr('unlocks'),
+        offset: i.field('offset').number,
+        suspect: i.textOr('suspect') ?? '',
+      ),
+      'differences' => DifferencesInspection(
+        instructions: i.text('instructions'),
+        result: i.text('result'),
+        unlocks: i.stringsOr('unlocks'),
+        spots: i.points('spots'),
+      ),
+      'ink' => InkInspection(
+        instructions: i.text('instructions'),
+        result: i.text('result'),
+        unlocks: i.stringsOr('unlocks'),
+        lines: i.field('lines').strings,
+        order: i.integers('order'),
+      ),
+      'tread' => TreadInspection(
+        instructions: i.text('instructions'),
+        result: i.text('result'),
+        unlocks: i.stringsOr('unlocks'),
+        angle: i.field('angle').number,
+      ),
       final type => i.fail('unknown inspection type "$type"'),
     },
   },
@@ -1356,8 +1543,25 @@ BankData _bank(_Reader r) => BankData(
               iban: p.textOr('iban') ?? '',
               note: p.textOr('note') ?? '',
               requires: p.condition(),
-              minAmount: p.intOr('minAmount', 0),
-              unlocks: p.stringsOr('unlocks'),
+              tiers: [
+                // The short form: one tier from "minAmount".
+                if (p.optional('unlocks') != null)
+                  PayeeTier(
+                    min: p.intOr('minAmount', 0),
+                    unlocks: p.stringsOr('unlocks'),
+                  ),
+                ...?p
+                    .optional('tiers')
+                    ?.list(
+                      (t) => PayeeTier(
+                        min: t.intOr('min', 0),
+                        below: t.optional('below')?.integer,
+                        requires: t.condition(),
+                        unlocks: t.stringsOr('unlocks'),
+                        refund: t.boolOr('refund'),
+                      ),
+                    ),
+              ],
             ),
           ) ??
       const [],

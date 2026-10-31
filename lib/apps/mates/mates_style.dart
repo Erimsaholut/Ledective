@@ -8,6 +8,9 @@ abstract final class MatesColors {
   static const outgoing = Color(0xFFD9FDD3);
   static const text = Color(0xFF111B21);
   static const secondaryText = Color(0xFF667781);
+
+  /// One of the story's big decisions.
+  static const decision = Color(0xFFD32F2F);
 }
 
 /// The text field-like bar at the bottom of a chat.

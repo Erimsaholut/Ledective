@@ -5,7 +5,8 @@
       "title": "Rüşvet",
       "requires": "mp:wrote",
       "choices": [
-        {"requires": "sent:bribe-return", "text": "Milletvekilinin yatırdığı 50.000 TL'yi iade ettin."},
+        {"requires": "bribe:returned", "text": "Milletvekilinin yatırdığı 250.000 TL'yi iade ettin."},
+        {"requires": "bribe:partial", "text": "Milletvekilinin yatırdığı paranın bir kısmını iade ettin; kalanı sende kaldı."},
         {"text": "Milletvekilinin yatırdığı parayı hesapta tuttun."}
       ]
     },
@@ -107,7 +108,7 @@
     }
   ],
   "missed": [
-    {"requires": ["mp:wrote", "!sent:bribe-return"], "text": "Milletvekilinin yatırdığı parayı ZaferBank › Gönderene iade ile geri gönderebilirdin."},
+    {"requires": ["mp:wrote", "!bribe:returned"], "text": "Milletvekilinin yatırdığı parayı ZaferBank › Gönderene iade ile geri gönderebilirdin."},
     {"requires": ["ev:notebook", "!decoded:notebook"], "text": "Berat'ın defterindeki anlamsız satır, AppShop'taki Şifre Çözücü ile okunabiliyordu."},
     {"requires": ["heard:orhun-debt", "!sent:orhun-debt"], "text": "Orhun'un borcuna ZaferBank'tan destek olabilirdin."},
     {"requires": ["lawyer:offer", "!sent:lawyer", "!lawyer:declined"], "text": "Avukat Nesrin Kaya'yı tutabilirdin."},

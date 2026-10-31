@@ -60,13 +60,22 @@ class BankAccount extends ChangeNotifier {
   /// Pays [amount] kuruş. Returns false if the balance is too low.
   Future<bool> pay(String title, String detail, int amount) async {
     if (amount > balance(StoryProgress.instance)) return false;
+    await _add(title, detail, -amount);
+    return true;
+  }
+
+  /// Takes in [amount] kuruş, e.g. a payment sent back.
+  Future<void> receive(String title, String detail, int amount) =>
+      _add(title, detail, amount);
+
+  Future<void> _add(String title, String detail, int amount) async {
     _payments.insert(
       0,
       BankTransaction(
         id: 'pay-${DateTime.now().microsecondsSinceEpoch}',
         title: title,
         detail: detail,
-        amount: -amount,
+        amount: amount,
       ),
     );
     notifyListeners();
@@ -83,6 +92,5 @@ class BankAccount extends ChangeNotifier {
           },
       ]),
     );
-    return true;
   }
 }

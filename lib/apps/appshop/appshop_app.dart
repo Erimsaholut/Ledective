@@ -22,6 +22,8 @@ class _AppShopAppState extends State<AppShopApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Only there for its way out; the tabs have big titles of their own.
+      appBar: AppBar(backgroundColor: Colors.white, toolbarHeight: 44),
       body: SafeArea(
         bottom: false,
         child: switch (_tab) {

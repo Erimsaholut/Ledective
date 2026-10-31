@@ -67,7 +67,7 @@ Bayrak açanlar:
 | Haber okununca | `unlocksOnRead` |
 | Mail açılınca | mails.json › `unlocksOnView` |
 | SMS konuşması açılınca | sms.json › `unlocksOnView` |
-| Para gönderilince | bank.json › `payees` › `unlocks` |
+| Para gönderilince | bank.json › `payees` › `tiers` › `unlocks` |
 | Süreli olayın süresi dolunca | state.json › `timers` › `unlocks` |
 
 Açılınca, dinlenince ya da okununca açılanlar sadece **ilk seferde**
@@ -166,6 +166,14 @@ Anahtar kişinin rehberdeki adıdır (`assets/contacts/contacts.json`).
 - `next` yoksa sohbet o seçenekte biter. Sonra devam edecekse, `next` ile
   `waitFor`'lu bir düğüme bağla (örnek: Özge'nin `afterMezbaha` düğümü).
 - `options` olmayan düğüm sadece mesajlarını gönderir ve biter.
+- **Fotoğraf:** gelen bir mesaj (`incoming`, `replies`, SMS) `[foto:
+  dosya.jpg]` ile başlarsa fotoğraf olarak görünür, ardından gelen metin
+  altına yazılır: `"[foto: kamera_karesi.jpg] Kare bu."` Dosya
+  `assets/story/images/` içinde olmalı. Gelen fotoğraflar Photos'a da düşer.
+- `"decision": true`: düğümün seçenekleri hikâyenin büyük kararlarından
+  biri; her cevap başka bir yola götürür. Sohbette kırmızı "Karar ver"
+  paneliyle gösterilir. Sadece gerçekten yol ayıran düğümlere koy, yoksa
+  kırmızının anlamı kalmaz.
 - `traits`: kişilik puanı. `öfke`, `merhamet`, `merak`, `cesur`,
   `umursamaz`, `temkinli`.
 - `silent: true`: hiçbir şey göndermez, ör. `"label": "(Cevap verme)"`.
@@ -334,6 +342,15 @@ değerlendirmesi yanlış, önyargılı ya da kasıtlı olabilir.
 | `jigsaw` | Yırtık parçaları yer değiştirerek birleştir | `rows`, `cols` (varsayılan 3), `image` gerekli |
 | `fingerprint` | Olay yeri izini kayıtlı izlerle eşleştir | `options`, `answer` |
 | `uv` | UV lambayla gizli yazıyı bul | `hiddenText`, `image` gerekli |
+| `enhance` | Netlik ve ışık ayarıyla kareyi netleştir | `focus`, `light` (0–1, doğru yer), `image` gerekli |
+| `luminol` | Sınırlı luminolle gizli izleri bul | `spots` (`[[x, y], ...]`, görselin oranı olarak), `sprays` (varsayılan 14), `image` gerekli |
+| `pattern` | Ekrandaki lekelerden desen kilidini çiz | `pattern` (0–8 arası noktalar, satır satır; tekrarsız, en az 4) |
+| `voice` | Kaydın ses izini şüphelininkiyle hizala | `offset` (0–1), `suspect` (karşılaştırılan ses) |
+| `differences` | Kopya ile orijinal arasındaki farkları bul | `spots` (`[[x, y], ...]`), `image` gerekli |
+| `ink` | Satırları mürekkep yaşına göre sırala | `lines`, `order` (en eskiden en yeniye satır sıraları) |
+| `tread` | Lastik desenini döndürüp izle hizala | `angle` (derece) |
+
+Laboratuvarı bekleyen deliller Poltel'de parlar.
 
 `links`: panoda kırmızı iple bağlanacak diğer deliller.
 
@@ -561,14 +578,25 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
   - Yazarın hata ayıklama sayfasında (Ayarlar › Hikâye durumu) sıradaki
     maili ya da haberi beklemeden getiren düğmeler var.
 - **sms.json**: `sender`, `messages`, `daysAgo`, isteğe bağlı `requires` ya da
-  `requiresAny`, `unlocksOnView`.
+  `requiresAny`, `unlocksOnView`. Aynı göndericiden birden çok giriş tek
+  konuşmada, sırayla birleşir; o zaman her birine ayrı bir `id` ver.
 - **bank.json**: tutarlar **kuruş** cinsindendir (`5000000` = 50.000,00 TL),
   eksi değer ödemedir. `requires` taşıyan işlemler hikâyede gelir ve bakiyeyi
   değiştirir; taşımayanlar başlangıç bakiyesine dahildir.
   `payees` oyuncunun **Para Gönder** ile para yollayabileceği alıcılardır
-  (`id`, `name`, `iban`, `note`, `requires`, `minAmount`, `unlocks`). Her
-  transfer `paid:<id>` sayısına eklenir ve `sent:<id>` bayrağını açar;
-  `unlocks` ise sadece en az `minAmount` kuruşluk bir transferde uygulanır.
+  (`id`, `name`, `iban`, `note`, `requires`, `tiers`). Her transfer
+  `paid:<id>` toplamına eklenir ve `sent:<id>` bayrağını açar. `tiers`
+  sırayla bakılan basamaklardır: toplam `min` kuruşa ulaşınca (ve varsa
+  `below`'un altındayken, `requires` tutuyorsa) `unlocks` bir kez uygulanır.
+  `"refund": true` parayı hemen geri gönderir ve basamak bir dahaki sefere
+  yine çalışabilir. Kısa yazım: tek basamak için `minAmount` + `unlocks`.
+
+  ```json
+  "tiers": [
+    {"min": 1, "below": 25000000, "unlocks": ["bribe:partial"]},
+    {"min": 25000000, "unlocks": ["bribe:returned"]}
+  ]
+  ```
   Transferler geri alınamaz, bakiye gerçek bir kaynaktır ve oyuncunun
   yazdığı açıklama hesap hareketlerinde kalır.
 - **voicemail.json**: `kind` `voicemail` ya da `memo`; `transcript` dinlerken

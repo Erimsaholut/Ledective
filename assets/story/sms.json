@@ -23,6 +23,15 @@
     ]
   },
   {
+    "id": "annem-foto",
+    "sender": "Annem",
+    "requires": "part1Done",
+    "messages": [
+      "[foto: tatil.jpg] [Taslak] Bu fotoğrafı telefonda buldum, sen mi göndermiştin?",
+      "Neresiydi burası? Hiç anlatmadın."
+    ]
+  },
+  {
     "sender": "e-Devlet",
     "messages": [
       "Adınıza düzenlenmiş yeni bir tebligat bulunmaktadır. Detaylar için turkiye.gov.tr adresini ziyaret ediniz."
@@ -32,6 +41,39 @@
     "sender": "Gizli Numara",
     "requires": "bribe:returned",
     "messages": ["Paranı geri göndermişsin komiser.", "Demek bu işi zor yoldan çözeceğiz."]
+  },
+  {
+    "sender": "Bilinmeyen Numara",
+    "requires": "bribe:partial",
+    "messages": ["[Taslak] Bir kısmını geri göndermişsiniz komiser.", "Kalanı sizde kalsın. Anlaştık demek."]
+  },
+  {
+    "sender": "Y. Eğitim Vakfı",
+    "requires": "bribe:donated",
+    "messages": ["[Taslak] Vakfımıza yaptığınız fazladan ödeme bağış olarak kaydedilmiştir. Bursiyerlerimiz adına teşekkür ederiz."]
+  },
+  {
+    "id": "orhun-sent-back",
+    "sender": "Orhun",
+    "requires": "orhun:sent-back",
+    "messages": ["[Taslak] Abi parayı geri gönderdim.", "Buna gerek yok, bu beni kurtarmaz. Ama düşündüğün için sağ ol."]
+  },
+  {
+    "id": "orhun-partly",
+    "sender": "Orhun",
+    "requires": "orhun:helped-partly",
+    "messages": ["[Taslak] Abi gördüm. Faizine yetti, sağ ol.", "Gerisi hâlâ duruyor ama bir nefes aldım."]
+  },
+  {
+    "id": "orhun-dirty",
+    "sender": "Orhun",
+    "requires": "orhun:paid-dirty",
+    "messages": ["[Taslak] Abi bu kadar para nereden?", "Maaşını biliyorum. Sorma dersen sormam. Ama bilmiş ol, biliyorum."]
+  },
+  {
+    "sender": "Av. Nesrin Kaya",
+    "requires": ["lawyer:underpaid", "!lawyer:hired"],
+    "messages": ["[Taslak] Ödemeniz ulaştı ama eksik. Ücretin tamamı yatınca dosyanızı teslim alırım."]
   },
   {
     "sender": "SIFA ECZ",

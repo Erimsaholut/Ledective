@@ -246,6 +246,49 @@ void main() {
     expect(errors, isEmpty, reason: errors.join('\n'));
   });
 
+  test('photos sent in chats and texts exist', () {
+    final texts = <String>[
+      for (final chat in StoryData.current.conversations.values) ...[
+        for (final node
+            in chat.dialogue?.nodes.values ?? const <DialogueNode>[]) ...[
+          ...node.incoming,
+          for (final o in [...node.options, ...node.ask]) ...o.replies,
+        ],
+      ],
+      for (final t in StoryData.current.smsThreads) ...t.messages,
+    ];
+    final photos = [for (final t in texts) ?messagePhoto(t)];
+    expect(photos.length, greaterThanOrEqualTo(4));
+    for (final photo in photos) {
+      expect(File(photo).existsSync(), isTrue, reason: photo);
+    }
+    expect(messagePreview('[foto: a.jpg] Bu adam.'), '📷 Bu adam.');
+    expect(messageText('[foto: a.jpg] Bu adam.'), 'Bu adam.');
+  });
+
+  test('decisions are real forks: each answer does something else', () {
+    var decisions = 0;
+    for (final MapEntry(key: person, value: chat)
+        in StoryData.current.conversations.entries) {
+      for (final MapEntry(key: id, value: node)
+          in chat.dialogue?.nodes.entries ??
+              <MapEntry<String, DialogueNode>>[]) {
+        if (!node.decision) continue;
+        decisions++;
+        final outcomes = {
+          for (final o in node.options) (o.unlocks.toSet(), o.next),
+        };
+        expect(node.options.length, greaterThan(1), reason: '$person/$id');
+        expect(
+          outcomes.map((o) => o.$1).where((u) => u.isNotEmpty).length,
+          greaterThan(1),
+          reason: '$person/$id',
+        );
+      }
+    }
+    expect(decisions, greaterThan(10));
+  });
+
   test('the story table covers every chat and milestone', () {
     final table = storyTable(StoryData.current);
     for (final person in StoryData.current.conversations.keys) {
@@ -364,6 +407,10 @@ void main() {
       expect(progress.restore('Orhun').$1.canReply, isFalse);
 
       await say('Özge', 'Neymiş bu kadar önemli olan durum');
+
+      await say('Özge', 'Buradan yöneteceğim. Telefonum açık.');
+
+      await say('Özge', 'Hayır. Cinayet bu, öyle yazılacak.');
       await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
       await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
       expect(progress.has(StoryFlags.part1Done), isTrue);
@@ -681,6 +728,8 @@ void main() {
       Future<void> meetKerem() async {
         await progress().discover([StoryFlags.part1Done]);
         await say('Özge', 'Neymiş bu kadar önemli olan durum');
+        await say('Özge', 'Buradan yöneteceğim. Telefonum açık.');
+        await say('Özge', 'Hayır. Cinayet bu, öyle yazılacak.');
         await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
         await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
         await progress().discover(['kerem:identified']);
@@ -774,6 +823,8 @@ void main() {
       Future<void> ozgeAtDesk() async {
         await progress().discover([StoryFlags.part1Done]);
         await say('Özge', 'Neymiş bu kadar önemli olan durum');
+        await say('Özge', 'Buradan yöneteceğim. Telefonum açık.');
+        await say('Özge', 'Hayır. Cinayet bu, öyle yazılacak.');
         await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
         await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
       }
@@ -848,12 +899,68 @@ void main() {
       });
     });
 
+    group('money', () {
+      StoryProgress progress() => StoryProgress.instance;
+      Payee payee(String id) =>
+          StoryData.current.bank.payees.firstWhere((p) => p.id == id);
+
+      test('a partial bribe return counts as keeping the rest', () async {
+        await progress().discover(['mp:wrote']);
+        await progress().recordTransfer(payee('bribe-return'), 1000000);
+        expect(progress().has('bribe:partial'), isTrue);
+        expect(progress().has('bribe:returned'), isFalse);
+        await progress().advanceTimers(const Duration(minutes: 45));
+        expect(progress().has('audit:bribe'), isTrue);
+      });
+
+      test('the whole bribe back stops the audit; more is a gift', () async {
+        await progress().discover(['mp:wrote']);
+        await progress().recordTransfer(payee('bribe-return'), 25000000);
+        expect(progress().has('bribe:returned'), isTrue);
+        expect(progress().has('bribe:partial'), isFalse);
+        expect(progress().has('bribe:donated'), isFalse);
+        await progress().recordTransfer(payee('bribe-return'), 500000);
+        expect(progress().has('bribe:donated'), isTrue);
+        await progress().advanceTimers(const Duration(minutes: 45));
+        expect(progress().has('audit:bribe'), isFalse);
+      });
+
+      test('the leak audit never talks about the money', () async {
+        await progress().discover(['mp:wrote']);
+        await progress().recordTransfer(payee('bribe-return'), 25000000);
+        await progress().discover([
+          'case:internal-investigation',
+          'leak:traced',
+        ]);
+        final subjects = [for (final (m, _) in progress().inbox) m.id];
+        expect(subjects, contains('internal-investigation-leak'));
+        expect(subjects, isNot(contains('internal-investigation')));
+      });
+
+      test('Orhun sends a little back, takes part, and asks about '
+          'bribe money', () async {
+        await progress().discover(['heard:orhun-debt', 'mp:wrote']);
+        final orhun = payee('orhun-debt');
+        expect(await progress().recordTransfer(orhun, 500000), 500000);
+        expect(progress().has('orhun:sent-back'), isTrue);
+        expect(progress().value('paid:orhun-debt'), 0);
+        expect(await progress().recordTransfer(orhun, 3000000), 0);
+        expect(progress().has('orhun:helped-partly'), isTrue);
+        expect(progress().has('orhun:helped'), isFalse);
+        await progress().recordTransfer(orhun, 5000000);
+        expect(progress().has('orhun:helped'), isTrue);
+        expect(progress().has('orhun:paid-dirty'), isTrue);
+      });
+    });
+
     group('chapter VI', () {
       StoryProgress progress() => StoryProgress.instance;
 
       Future<void> emreRescued() async {
         await progress().discover([StoryFlags.part1Done]);
         await say('Özge', 'Neymiş bu kadar önemli olan durum');
+        await say('Özge', 'Buradan yöneteceğim. Telefonum açık.');
+        await say('Özge', 'Hayır. Cinayet bu, öyle yazılacak.');
         await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
         await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
         await progress().discover(['emre:rescued', 'farm:entered']);
@@ -882,7 +989,7 @@ void main() {
           (p) => p.id == 'hakan-wife',
         );
         expect(progress().meets(payee.requires), isTrue);
-        await progress().recordTransfer(payee, payee.minAmount);
+        await progress().recordTransfer(payee, payee.tiers.first.min);
         expect(progress().has('hakan:wife-paid'), isTrue);
         expect(
           StoryData.current.smsThreads
@@ -1026,7 +1133,8 @@ void main() {
       await progress.recordTransfer(payee, 1000000);
       expect(progress.value('paid:bribe-return'), 10000);
       expect(progress.has('bribe:returned'), isFalse, reason: 'too little');
-      await progress.recordTransfer(payee, 5000000);
+      // What was sent before counts towards the whole amount.
+      await progress.recordTransfer(payee, 24000000);
       expect(progress.has('bribe:returned'), isTrue);
       await progress.advanceTimers(const Duration(hours: 2));
       expect(progress.has('case:internal-investigation'), isFalse);
@@ -1077,6 +1185,8 @@ void main() {
       var clock = DateTime(2026, 3, 2, 10);
       await progress.tick(now: clock);
       await say('Özge', 'Neymiş bu kadar önemli olan durum');
+      await say('Özge', 'Buradan yöneteceğim. Telefonum açık.');
+      await say('Özge', 'Hayır. Cinayet bu, öyle yazılacak.');
       await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
       await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
       expect(progress.isTyping('Özge'), isFalse, reason: 'the open chat');
@@ -1116,6 +1226,8 @@ void main() {
       addTearDown(() => progress.paceMessages = false);
       await progress.tick(now: DateTime(2026, 3, 2, 10));
       await say('Özge', 'Neymiş bu kadar önemli olan durum');
+      await say('Özge', 'Buradan yöneteceğim. Telefonum açık.');
+      await say('Özge', 'Hayır. Cinayet bu, öyle yazılacak.');
       await say('Özge', 'Yakınlarının ifadesini aldınız mı ?');
       await say('Özge', 'İfadeleri bana poltel üzerinden gönder');
       final person = StoryData.current.conversations.keys.firstWhere(
@@ -1143,7 +1255,7 @@ void main() {
         await progress.advanceTimers(const Duration(minutes: 9));
         expect(bankAlerts(), isEmpty);
         await progress.advanceTimers(const Duration(minutes: 1));
-        expect(bankAlerts(), ['Hesabınıza 50.000 TL geldi']);
+        expect(bankAlerts(), ['Hesabınıza 250.000 TL geldi']);
         expect(progress.flags.toSet(), {...flags, 'mp:wrote'});
         await progress.advanceTimers(const Duration(minutes: 30));
         expect(bankAlerts(), hasLength(1), reason: 'only once');
@@ -1155,7 +1267,7 @@ void main() {
         final payee = StoryData.current.bank.payees.firstWhere(
           (p) => p.id == 'bribe-return',
         );
-        await progress.recordTransfer(payee, 5000000);
+        await progress.recordTransfer(payee, 25000000);
         await progress.discover(['lawyer:offer', 'lawyer:declined']);
         await progress.advanceTimers(const Duration(minutes: 20));
         expect(bankAlerts(), isEmpty);
@@ -1429,7 +1541,7 @@ void main() {
       expect(progress.alerts.items, isEmpty);
     });
 
-    test('more come as the player plays, each with a banner', () async {
+    test('more come as the player plays, on the badge only', () async {
       final progress = StoryProgress.instance;
       await progress.tick(now: clock);
       final before = progress.inbox.length;
@@ -1437,8 +1549,9 @@ void main() {
         Duration(minutes: StoryData.current.mailPool.maxMinutes * 2 + 6),
       );
       expect(progress.inbox.length, greaterThan(before));
-      expect(progress.alerts.items.map((a) => a.app), contains('Mail'));
-      expect(progress.alerts.items.map((a) => a.app), contains('News'));
+      // A banner for each was too many next to the story's own.
+      expect(progress.alerts.items.map((a) => a.app), isNot(contains('Mail')));
+      expect(progress.alerts.items.map((a) => a.app), isNot(contains('News')));
       // Mail that waits for the story doesn't come before it.
       expect(
         progress.inbox.map((e) => e.$1.id),
@@ -1550,22 +1663,26 @@ void main() {
       final pool = {for (final m in StoryData.current.mailPool.mails) m.id};
       int everydayMail() =>
           progress.inbox.where((e) => pool.contains(e.$1.id)).length;
-      int newsAlerts() =>
-          progress.alerts.items.where((a) => a.app == 'News').length;
+      final filler = StoryData.current.news.filler;
+      int everydayNews() => progress
+          .newsFeedAt()
+          .where((i) => filler.articles.contains(i.article))
+          .length;
       final mailAtStart = everydayMail();
+      final newsAtStart = everydayNews();
       final mailPause = StoryData.current.mailPool.pauseAfter;
       final newsPause = StoryData.current.news.filler.pauseAfter;
 
       await play(const Duration(minutes: 15));
       expect(everydayMail(), mailAtStart + mailPause);
-      expect(newsAlerts(), newsPause);
+      expect(everydayNews(), newsAtStart + newsPause);
 
       // Opening the apps lets them come again.
       await progress.lookedAt();
       await progress.lookedAt(mail: false);
       await play(const Duration(minutes: 5));
       expect(everydayMail(), greaterThan(mailAtStart + mailPause));
-      expect(newsAlerts(), greaterThan(newsPause));
+      expect(everydayNews(), greaterThan(newsAtStart + newsPause));
     });
   });
 }

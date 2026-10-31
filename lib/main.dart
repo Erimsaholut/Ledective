@@ -98,7 +98,12 @@ class _LedectiveAppState extends State<LedectiveApp> {
       navigatorObservers: [_routes],
       builder: (context, child) => Stack(
         children: [
-          HomeIndicator(observer: _routes, child: child!),
+          // A tap anywhere but on a text field puts the keyboard away.
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: HomeIndicator(observer: _routes, child: child!),
+          ),
           Positioned.fill(
             child: AlertBanner(
               alerts: StoryProgress.instance.alerts,

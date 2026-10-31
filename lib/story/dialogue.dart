@@ -9,7 +9,29 @@ sealed class ChatEntry {
 
 class IncomingMessage extends ChatEntry {
   const IncomingMessage(this.text);
+
+  /// As written in the story, photo mark included (see [messagePhoto]).
   final String text;
+}
+
+final _photoMark = RegExp(r'^\[foto:\s*([^\]]+?)\s*\]\s*');
+
+/// The photo a message carries, as an asset path, or null. A message
+/// carries one when it starts with a mark: "[foto: kamera_karesi.jpg] Bu
+/// adam mı?" (the file is in `assets/story/images/`).
+String? messagePhoto(String text) {
+  final name = _photoMark.firstMatch(text)?.group(1);
+  return name == null ? null : 'assets/story/images/$name';
+}
+
+/// [text] without its photo mark: what the bubble says under the photo.
+String messageText(String text) => text.replaceFirst(_photoMark, '');
+
+/// [text] for a notification or a chat list: "📷 Fotoğraf" for a photo.
+String messagePreview(String text) {
+  if (messagePhoto(text) == null) return text;
+  final caption = messageText(text);
+  return caption.isEmpty ? '📷 Fotoğraf' : '📷 $caption';
 }
 
 class OutgoingMessage extends ChatEntry {
@@ -128,6 +150,7 @@ class DialogueNode {
     this.waitFor = Condition.always,
     this.ask = const [],
     this.events = const [],
+    this.decision = false,
   });
 
   /// Messages the other person sends when the conversation reaches this
@@ -149,6 +172,10 @@ class DialogueNode {
   /// once: Erdi writing when the press gets hold of something. Their
   /// [DialogueEvent.next] nodes usually lead back here.
   final List<DialogueEvent> events;
+
+  /// Whether [options] are one of the story's big decisions, where each
+  /// answer takes it somewhere else. The chat shows them in red.
+  final bool decision;
 }
 
 class Dialogue {
@@ -270,6 +297,10 @@ class DialogueState {
   /// not just when the player could ask a question of their own.
   bool get expectsReply =>
       _answering && _node!.options.any((o) => o.requires.isMetBy(_state));
+
+  /// True when the player is to make one of the story's big decisions
+  /// (see [DialogueNode.decision]).
+  bool get isDecision => expectsReply && _node!.decision;
 
   /// True when the conversation has reached its end.
   bool get isFinished => _node == null || (_arrived && _node!.options.isEmpty);

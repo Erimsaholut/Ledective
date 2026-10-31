@@ -100,7 +100,7 @@ class _NewsAppState extends State<NewsApp> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -117,62 +117,102 @@ class _NewsAppState extends State<NewsApp> {
               fontWeight: FontWeight.w900,
             ),
           ),
-          bottom: const TabBar(
-            labelColor: _ink,
-            unselectedLabelColor: AppColors.secondaryLabel,
-            indicatorColor: _ink,
-            tabs: [
-              Tab(text: "Gündem"),
-              Tab(text: "Arşiv"),
-            ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kTextTabBarHeight),
+            child: ListenableBuilder(
+              listenable: _progress,
+              builder: (context, _) {
+                final (story, everyday) = _split();
+                return TabBar(
+                  labelColor: _ink,
+                  unselectedLabelColor: AppColors.secondaryLabel,
+                  indicatorColor: _ink,
+                  tabs: [
+                    _tab("Manşet", _unread(story)),
+                    _tab("Gündem", _unread(everyday)),
+                    const Tab(text: "Arşiv"),
+                  ],
+                );
+              },
+            ),
           ),
         ),
         body: ListenableBuilder(
           listenable: _progress,
-          builder: (context, _) => TabBarView(children: [_feed(), _archive()]),
+          builder: (context, _) {
+            final (story, everyday) = _split();
+            return TabBarView(
+              children: [
+                _list(
+                  story,
+                  empty: "Dosyayla ilgili henüz haber yok",
+                  headline: true,
+                ),
+                _list(everyday, empty: "Henüz haber yok"),
+                _archive(),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _feed() {
-    final articles = currentNews(_progress);
-    if (articles.isEmpty) {
-      return const Center(
-        child: Text(
-          "Henüz haber yok",
-          style: TextStyle(color: AppColors.secondaryLabel),
-        ),
-      );
-    }
-    // The case on top, so the everyday news doesn't bury it.
+  /// The current news: the case's own (the headlines) and the everyday.
+  (List<NewsItem>, List<NewsItem>) _split() {
     final everyday = {
       for (final a in StoryData.current.news.filler.articles) a.id,
     };
-    final story = [
-      for (final item in articles)
-        if (!everyday.contains(item.article.id)) item,
-    ];
-    final other = [
-      for (final item in articles)
-        if (everyday.contains(item.article.id)) item,
-    ];
-    List<Widget> section(String title, List<NewsItem> items) => [
-      _SectionHeader(title),
-      for (final (i, item) in items.indexed) ...[
-        if (i > 0) const Divider(indent: 16, endIndent: 16),
-        _ArticleTile(
-          item: item,
-          headline: i == 0 && identical(items, story),
-          isNew: !_progress.hasSeen('news:${item.key}'),
-        ),
+    final articles = currentNews(_progress);
+    return (
+      [
+        for (final item in articles)
+          if (!everyday.contains(item.article.id)) item,
       ],
-    ];
+      [
+        for (final item in articles)
+          if (everyday.contains(item.article.id)) item,
+      ],
+    );
+  }
+
+  int _unread(List<NewsItem> items) =>
+      items.where((i) => !_progress.hasSeen('news:${i.key}')).length;
+
+  Widget _tab(String title, int unread) => Tab(
+    child: Badge(
+      isLabelVisible: unread > 0,
+      label: Text('$unread'),
+      offset: const Offset(14, -6),
+      child: Text(title),
+    ),
+  );
+
+  /// [items] newest first; with [headline], the first one large.
+  Widget _list(
+    List<NewsItem> items, {
+    required String empty,
+    bool headline = false,
+  }) {
+    if (items.isEmpty) {
+      return Center(
+        child: Text(
+          empty,
+          style: const TextStyle(color: AppColors.secondaryLabel),
+        ),
+      );
+    }
     return ListView(
       padding: const EdgeInsets.only(bottom: 16),
       children: [
-        if (story.isNotEmpty) ...section("Manşet", story),
-        if (other.isNotEmpty) ...section("Diğer haberler", other),
+        for (final (i, item) in items.indexed) ...[
+          if (i > 0) const Divider(indent: 16, endIndent: 16),
+          _ArticleTile(
+            item: item,
+            headline: headline && i == 0,
+            isNew: !_progress.hasSeen('news:${item.key}'),
+          ),
+        ],
       ],
     );
   }
