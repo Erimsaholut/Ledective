@@ -2,7 +2,7 @@ name: ledective
 description: Bir telefonun içinde geçen dedektif oyunu.
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 0.5.0-alpha+1
 
 environment:
   sdk: ^3.9.0

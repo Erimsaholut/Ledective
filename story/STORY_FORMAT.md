@@ -576,6 +576,19 @@ kısa metinle yüzlerce farklı final birleşimi çıkar.
   (`pubspec.yaml`'daki assets listesine eklemeyi unutma).
 - **calendar.json**: `dayOffset` (ilk açılıştan gün farkı) ya da her yıl
   tekrar eden `month` + `day`.
+- **demo.json**: sadece demo derlemesinde (`tool/build_demo.sh`), epilogdan
+  sonra gelen slaytlar. Hikâye dosyalarından ayrı okunur.
+  - `decisions`: büyük kararlar. Her birinin `title`'ı, isteğe bağlı
+    `requires`'ı ve `choices` listesi var; koşulu tutan **ilk** seçenek
+    oyuncunun yaptığıdır. Hiçbiri tutmazsa karar gösterilmez.
+  - `missed`: kaçırılan yan işler. `requires` tutarsa gösterilir; "yapmadı"
+    için `!bayrak` yaz (`["mp:wrote", "!sent:bribe-return"]`).
+  - `endings`: `section` (endings.json'daki bölüm), her sonun `title`'ına
+    göre tek cümlelik `summaries`, gizli son için tek cümle `secret`.
+  - `noticed`, `about`, `coming`, `thanks`: düz metinler. Mail, haber,
+    delil ve mesaj sayıları oyunun verisinden sayılır.
+  - Testler, burada geçen her bayrağın state.json'da (ya da `sent:<alıcı>`
+    olarak) tanımlı olduğuna ve her sonun özeti olduğuna bakar.
 
 Görseller için yeni bir klasör kullanacaksan onu da `pubspec.yaml`'daki
 `assets:` listesine ekle.

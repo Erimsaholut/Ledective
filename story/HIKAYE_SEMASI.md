@@ -847,7 +847,7 @@ Bir yolu açmak için: o bayrağın "Nasıl açılır" sütunundaki yollardan **
 | `kerem:wanted` |  | Atakan › "Bütün birimlere bildir. Yakalama kararı…" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `kerem:wants-meeting` |  | 0543 112 07 21 › "Kız nerede Kerem?" | _henüz hiçbir şey (ileride bağlanacak)_ |
 | `lawyer:alibi` |  | Av. Nesrin Kaya › "Tatil fotoğrafını gönderiyorum."<br>Av. Nesrin Kaya › "Banka kayıtlarım var."<br>Av. Nesrin Kaya › "Bana inanmanız yeterli." | Av. Nesrin Kaya › desk (kendiliğinden yazar) |
-| `lawyer:declined` |  | Av. Nesrin Kaya › "Kendim hallederim." | İpucu › hint-lawyer gelmez |
+| `lawyer:declined` | Komiser avukatın teklifini reddetti | Av. Nesrin Kaya › "Kendim hallederim." | İpucu › hint-lawyer gelmez |
 | `lawyer:hired` | Avukata ücret gönderildi | ZaferBank › Av. Nesrin Kaya hesabına para gönder | Av. Nesrin Kaya › desk (kendiliğinden yazar)<br>Süreli olay › suspension iptal olur |
 | `lawyer:offer` | Avukat Nesrin Kaya yazdı | Av. Nesrin Kaya › "Tamam. Gönderiyorum."<br>Av. Nesrin Kaya › "Kendim hallederim." | Av. Nesrin Kaya › soru "Görevden alınırsam ne olur?"<br>ZaferBank › Av. Nesrin Kaya hesabına para gönder (görünür)<br>İpucu › hint-lawyer başlar |
 | `leak:admitted` | Komiser aramaların kendi numarasından yapıldığını kabul etti | Savcı Leyla Koç › "Aramalar benim numaramdan yapılmış. Ama…" | _henüz hiçbir şey (ileride bağlanacak)_ |

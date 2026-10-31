@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../story/demo.dart';
 import '../story/story_data.dart';
 import '../story/story_progress.dart';
 import '../theme/turkish_text.dart';
+import 'demo_end_page.dart';
 
 /// The end of the game: how the case, the detective and everyone around
 /// them turned out, one part at a time.
@@ -133,10 +135,18 @@ class _EpiloguePageState extends State<EpiloguePage>
               const SizedBox(height: 16),
               Center(
                 child: TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    "Telefona dön",
-                    style: TextStyle(color: Colors.white54),
+                  // The demo goes on to a few slides about the player's run.
+                  onPressed: demoBuild
+                      ? () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => const DemoEndPage(),
+                          ),
+                        )
+                      : () => Navigator.pop(context),
+                  child: Text(
+                    demoBuild ? "Devam" : "Telefona dön",
+                    style: const TextStyle(color: Colors.white54),
                   ),
                 ),
               ),

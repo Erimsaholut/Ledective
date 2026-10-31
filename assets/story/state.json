@@ -138,6 +138,7 @@
     "leak:traced": "Sızıntı komiserin numarasına çıktı",
     "lawyer:offer": "Avukat Nesrin Kaya yazdı",
     "lawyer:hired": "Avukata ücret gönderildi",
+    "lawyer:declined": "Komiser avukatın teklifini reddetti",
     "status:warned": "Komiser kınama cezası aldı, görevde kaldı",
     "danisman:fled": "Halit Yener haberden sonra kaçtı",
     "hakan:seen": "Hastanede Emre’yi soran yabancı görüldü",

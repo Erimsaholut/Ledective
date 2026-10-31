@@ -1,0 +1,146 @@
+{
+  "title": "Demo sonu",
+  "decisions": [
+    {
+      "title": "Rüşvet",
+      "requires": "mp:wrote",
+      "choices": [
+        {"requires": "sent:bribe-return", "text": "Milletvekilinin yatırdığı 50.000 TL'yi iade ettin."},
+        {"text": "Milletvekilinin yatırdığı parayı hesapta tuttun."}
+      ]
+    },
+    {
+      "title": "Furkan",
+      "choices": [
+        {"requires": "furkan:protected", "text": "Furkan için tanık koruma istedin."},
+        {"requires": "furkan:held", "text": "Furkan'ı gözaltında tuttun."},
+        {"requires": "furkan:released", "text": "Furkan'ı serbest bıraktın."}
+      ]
+    },
+    {
+      "title": "Basın",
+      "choices": [
+        {"requires": "press:held", "text": "Selin Aras haberi senin için bekletti."},
+        {"requires": "press:anonymous", "text": "Kayıp öğrenci haberi isimsiz çıktı."},
+        {"requires": "press:named", "text": "Kayıp öğrencilerin adları yayımlandı."}
+      ]
+    },
+    {
+      "title": "Kerem",
+      "choices": [
+        {"requires": "kerem:arrested", "text": "Kerem'i gözaltına aldın."},
+        {"requires": "kerem:deal", "text": "Kerem'e savcılık koruması sözü verdin."},
+        {"requires": "kerem:escaped-ambush", "text": "Pusu bozuldu, Kerem kaçtı."},
+        {"requires": "kerem:escaped", "text": "Kerem'in gitmesine göz yumdun."}
+      ]
+    },
+    {
+      "title": "Melis",
+      "choices": [
+        {"requires": "girl:rescued", "text": "Melis'i cumadan önce kurtardın."},
+        {"requires": "girl:found-dead", "text": "Melis'e yetişemedin."}
+      ]
+    },
+    {
+      "title": "Berat'ın kayıtları",
+      "choices": [
+        {"requires": "phone:prosecutor", "text": "Kayıtları savcılığa teslim ettin."},
+        {"requires": "phone:press", "text": "Kayıtları Selin Aras'a verdin."},
+        {"requires": "phone:kept", "text": "Kayıtları kasada tuttun."}
+      ]
+    },
+    {
+      "title": "Emre",
+      "choices": [
+        {"requires": ["emre:rescued", "ev:farm-tainted"], "text": "Emre'yi kararsız bir baskınla kurtardın."},
+        {"requires": "emre:rescued", "text": "Emre'yi arama kararıyla kurtardın."},
+        {"requires": "emre:moved", "text": "Emre'yi çiftlikten götürdüler."}
+      ]
+    },
+    {
+      "title": "Emre'nin korunması",
+      "choices": [
+        {"requires": "emre:guarded", "text": "Emre'ye resmî koruma verdin."},
+        {"requires": "emre:hidden", "text": "Emre'yi kayıt dışı bir güvenli eve taşıdın."},
+        {"requires": "emre:bait", "text": "Emre'yi tuzakta yem yaptın."}
+      ]
+    },
+    {
+      "title": "Hakan Demir",
+      "choices": [
+        {"requires": "hakan:released", "text": "Hakan'ı serbest bıraktın."},
+        {"requires": "hakan:testimony", "text": "Hakan emir zincirini teşhis etti."},
+        {"requires": "hakan:charged", "text": "Hakan için yasal süreç başlattın."}
+      ]
+    },
+    {
+      "title": "Milletvekili",
+      "choices": [
+        {"requires": "mp:deal", "text": "Son teklifini kabul ettin."},
+        {"requires": "mp:refused", "text": "Son teklifini reddettin."}
+      ]
+    },
+    {
+      "title": "Sızıntı",
+      "choices": [
+        {"requires": "leak:blamed-atakan", "text": "Sızıntı için Atakan'ı suçladın."},
+        {"requires": "leak:blamed-orhun", "text": "Sızıntı için Orhun'u suçladın."},
+        {"requires": "leak:admitted", "text": "Aramaların kendi numarandan yapıldığını kabul ettin."},
+        {"requires": "leak:unknown", "text": "Sızıntı için kimseyi suçlamadın."}
+      ]
+    },
+    {
+      "title": "Savcıya ifade",
+      "choices": [
+        {"requires": "final:killer-kerem", "text": "Fail olarak Kerem'i gösterdin."},
+        {"requires": "final:killer-adil", "text": "Fail olarak Adil'i gösterdin."},
+        {"requires": "final:killer-unknown", "text": "Failin bilinmediğini söyledin."}
+      ]
+    },
+    {
+      "title": "Emri veren",
+      "choices": [
+        {"requires": "final:named-mp", "text": "Milletvekilini suçladın."},
+        {"requires": "final:named-yener", "text": "Halit Yener'i suçladın."},
+        {"requires": "final:named-none", "text": "Bir isim vermedin."}
+      ]
+    }
+  ],
+  "missed": [
+    {"requires": ["mp:wrote", "!sent:bribe-return"], "text": "Milletvekilinin yatırdığı parayı ZaferBank › Gönderene iade ile geri gönderebilirdin."},
+    {"requires": ["ev:notebook", "!decoded:notebook"], "text": "Berat'ın defterindeki anlamsız satır, AppShop'taki Şifre Çözücü ile okunabiliyordu."},
+    {"requires": ["heard:orhun-debt", "!sent:orhun-debt"], "text": "Orhun'un borcuna ZaferBank'tan destek olabilirdin."},
+    {"requires": ["lawyer:offer", "!sent:lawyer", "!lawyer:declined"], "text": "Avukat Nesrin Kaya'yı tutabilirdin."},
+    {"requires": ["hakan:wife-help", "!sent:hakan-wife"], "text": "Hakan'ın eşinin tedavi payını ödeyebilirdin."},
+    {"requires": "!girl:rescued", "text": "Melis'e cumadan önce yetişmenin bir yolu vardı."},
+    {"requires": ["emre:rescued", "ev:farm-tainted"], "text": "Arama kararını bekleseydin Emre'nin ifadesi mahkemede geçerli olurdu."},
+    {"requires": "!selin:talked", "text": "Gazeteci Selin Aras'la konuşabilirdin."}
+  ],
+  "endings": {
+    "section": "case",
+    "summaries": {
+      "Yanlış İnsan": "Deliller yanlış okunur, yanlış kişi suçlanır.",
+      "Adaletin Bedeli": "Fail de örtbas edenler de ortaya çıkar; bedelini ekip öder.",
+      "Kirli Eller": "Dosya çözülür ama kurallar çiğnenmiştir.",
+      "Sessiz Zafer": "Fail yakalanır, emri verenler dokunulmaz kalır.",
+      "Çözülemeyen Dosya": "Dosya faili meçhul olarak kapanır."
+    },
+    "secret": "Ve bir de gizli son var."
+  },
+  "noticed": [
+    "Takvimde bayramlar ve resmî tatiller gerçek tarihleriyle duruyor.",
+    "AppShop'taki Şifre Çözücü yalnızca bir oyuncak değil.",
+    "Dolandırıcılık mailleri kendiliğinden Spam'e düşüyor; \"Spam değil\" ile geri alınabiliyor.",
+    "Mail ve haberlere bakmazsan akış duruyor, açınca kaldığı yerden sürüyor.",
+    "Hesap Makinesi'nde ekrandaki sayıyı kaydırınca son rakam siliniyor."
+  ],
+  "about": "Ledective geliştirme aşamasında. Bu, 0.5.0 alpha sürümü: hikâye baştan sona oynanabiliyor ama metinler taslak, bazı görseller geçici ve süreler henüz ayarlanmadı.",
+  "coming": [
+    "Karakterlerin profil fotoğrafları, geçici görsellerin yerine gerçekleri",
+    "Seslendirilmiş sesli mesajlar ve kayıtlar",
+    "Senaryolu telefon aramaları: avukat, gazeteci, tanıklar",
+    "Ekibin kişisel hikâyeleri: Atakan, Doğa ve eski bir dosya",
+    "Daha fazla şifreli ipucu"
+  ],
+  "thanks": "Oynadığın için teşekkürler."
+}

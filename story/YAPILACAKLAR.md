@@ -231,22 +231,33 @@ Kapsam kararları (31 Ekim):
      "Bir de gizli son var." diye söz ediliyor; ipucu ya da ayrıntı yok.
   4. **Fark ettin mi?** Gizli sona işaret etmeyen küçük ayrıntılar
      (takvimdeki bayramlar, Şifre Çözücü, Spam) ve fun fact'ler. Fun
-     fact'lerdeki sayılar oyunun verisinden okunuyor: stoktaki mail, haber,
-     mesaj, karakter ve uygulama sayısı.
+     fact'lerdeki sayılar oyunun verisinden okunuyor: stoktaki mail ve
+     haberler (kaçı okundu), sohbetlerdeki kişi ve mesaj sayısı.
   5. **Geliştirme aşamasında.** Bu bir alpha sürümü. Gelecek özellikler
      [ÖNERİ]: profil fotoğrafları, gerçek görseller, ses kayıtları,
      senaryolu telefon aramaları, ekibin kişisel hikâyeleri.
 
 Teknik:
 
-- [ ] Sürüm `0.5.0-alpha` (şu an Flutter'ın varsayılanı `1.0.0+1`).
-- [ ] Paket adı (`com.example.ledective` yerine kalıcı bir ad) ve
-      telefondaki adı "Ledective".
-- [ ] Android APK (`flutter build apk --release`), imzalama anahtarı.
-- [ ] Test görselleri kalabilir ama belli olsun: üzerine küçük bir "TEST
-      GÖRSELİ" etiketi.
-- [ ] Yazar ayarlarını (Hızlı görevler, Hikâye durumu) demoda gizle.
-- [ ] Uygulama ikonu (1024×1024; şu an Flutter'ın varsayılanı).
+- [x] Demo derlemesi: `tool/build_demo.sh` (`--dart-define=DEMO=true`).
+      Gizli final seçeneği kapalı, yazar ayarları gizli, tempo 2×. Çıktı:
+      `build/ledective-<sürüm>.apk`.
+- [x] Epilogdan sonra beş slayt (`assets/story/demo.json`, metinler
+      [Taslak]).
+- [x] Sürüm `0.5.0-alpha+1`; paket adı `com.erimsah.ledective`, telefonda
+      "Ledective". Yeni sürümde `pubspec.yaml`'daki `+1`'i artır, yoksa
+      telefon güncellemeyi kabul etmez.
+- [x] İmza anahtarı: `android/app/upload-keystore.jks` ve şifreleri
+      `android/key.properties` (ikisi de git'e girmez). **Yedekle:**
+      kaybolursa sonraki APK'lar eskisinin üstüne kurulmaz, arkadaşların
+      silip yeniden kurmak zorunda kalır.
+- [x] Test görselleri: demoda görünen test görseli yok (`bozulma_*` sadece
+      kapalı gizli sonda). Gizli son açılınca etiket gerekecek.
+- [x] Yazar ayarları (Hızlı görevler, Hikâye durumu) demoda gizli.
+- [ ] [?] Epilogda ekip için hâlâ "[Taslak] … için hikâye henüz
+      yazılmadı." satırları var; demoda gizlensin mi?
+- [ ] Uygulama ikonu (1024×1024; şu an Flutter'ın varsayılanı). Getirince
+      bağlarım.
 
 - [x] `chore/modernize-codebase` branch'ini GitHub'a gönder; `main` de aynı yerde.
 - [ ] GitHub'da eski bir commit'in SHA ile hâlâ açılabilmesi: destek talebi ya

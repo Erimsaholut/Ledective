@@ -1,1 +1,0 @@
-{"version":"0.0.1","configurations":[{"name":"webcheck","runtimeExecutable":"python3","runtimeArgs":["-m","http.server","8766","--directory","/private/tmp/claude-501/-Users-erimsaholut-Downloads-ledective/c764bc5a-c7ae-4173-898f-16bedf752536/scratchpad/webcheck/build/web"],"port":8766,"autoPort":false}]}

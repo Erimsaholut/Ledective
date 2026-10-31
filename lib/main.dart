@@ -60,15 +60,29 @@ class _LedectiveAppState extends State<LedectiveApp> {
 
   /// Plays the epilogue once, as soon as the story is over.
   void _showEnding() {
-    if (!_progress.isOver || _progress.hasSeen('ending')) return;
-    _progress.markSeen('ending');
-    _navigator.currentState?.push(
-      MaterialPageRoute<void>(
-        fullscreenDialog: true,
-        builder: (_) => const EpiloguePage(),
-      ),
-    );
+    if (!_progress.isOver || _progress.hasSeen('ending') || _endingQueued) {
+      return;
+    }
+    // The change may come in the middle of a build, where pushing a route
+    // fails, so the epilogue waits for the end of the frame.
+    _endingQueued = true;
+    WidgetsBinding.instance
+      ..addPostFrameCallback((_) {
+        _endingQueued = false;
+        final navigator = _navigator.currentState;
+        if (navigator == null || _progress.hasSeen('ending')) return;
+        _progress.markSeen('ending');
+        navigator.push(
+          MaterialPageRoute<void>(
+            fullscreenDialog: true,
+            builder: (_) => const EpiloguePage(),
+          ),
+        );
+      })
+      ..scheduleFrame();
   }
+
+  bool _endingQueued = false;
 
   @override
   Widget build(BuildContext context) {
