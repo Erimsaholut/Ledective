@@ -1,79 +1,28 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-import '../pian/note_player.dart';
-import 'songs.dart';
+import 'music_player.dart';
+import 'tracks.dart';
 
-/// A music player whose songs are played on the Pian app's notes.
-class MusicApp extends StatefulWidget {
-  const MusicApp({super.key});
+const _accent = Color(0xFFFA233B);
+const _grey = Color(0xFF8E8E93);
 
-  @override
-  State<MusicApp> createState() => _MusicAppState();
-}
+/// A music player for the bundled tracks. Playback lives in [MusicPlayer],
+/// so it carries on after this screen is closed.
+class MusicApp extends StatelessWidget {
+  const MusicApp({super.key, this.player});
 
-class _MusicAppState extends State<MusicApp> {
-  NotePlayer? _notes;
-  Timer? _timer;
+  /// Defaults to [MusicPlayer.instance].
+  final MusicPlayer? player;
 
-  int _songIndex = 0;
-  int _step = 0;
-  bool _playing = false;
-
-  Song get _song => songs[_songIndex];
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _notes?.dispose();
-    super.dispose();
-  }
-
-  void _playStep() {
-    final steps = _song.steps;
-    if (_step >= steps.length) {
-      // Move on to the next song, like a playlist.
-      _select((_songIndex + 1) % songs.length, autoplay: true);
-      return;
-    }
-    final step = steps[_step];
-    final note = step.note;
-    if (note != null) (_notes ??= NotePlayer()).play(note);
-    _timer = Timer(_song.durationOf(step), () {
-      if (!mounted) return;
-      setState(() => _step++);
-      _playStep();
-    });
-  }
-
-  void _togglePlay() {
-    setState(() => _playing = !_playing);
-    if (_playing) {
-      _playStep();
-    } else {
-      _timer?.cancel();
-    }
-  }
-
-  void _select(int index, {bool autoplay = false}) {
-    _timer?.cancel();
-    setState(() {
-      _songIndex = index;
-      _step = 0;
-      _playing = autoplay || _playing;
-    });
-    if (_playing) _playStep();
-  }
-
-  String _format(Duration d) =>
+  static String _format(Duration d) =>
       '${d.inMinutes}:${(d.inSeconds % 60).toString().padLeft(2, '0')}';
 
   static const _artworks = [
     [Color(0xFF1D2B64), Color(0xFFF8CDDA)],
-    [Color(0xFFFF512F), Color(0xFFDD2476)],
-    [Color(0xFF11998E), Color(0xFF38EF7D)],
-    [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
+    [Color(0xFF232526), Color(0xFF8E0E00)],
+    [Color(0xFF0F2027), Color(0xFF2C5364)],
+    [Color(0xFF3A1C71), Color(0xFFD76D77)],
+    [Color(0xFF141E30), Color(0xFF6B7A8F)],
   ];
 
   Widget _artwork(int index, double size) {
@@ -107,12 +56,7 @@ class _MusicAppState extends State<MusicApp> {
 
   @override
   Widget build(BuildContext context) {
-    const accent = Color(0xFFFA233B);
-    final steps = _song.steps;
-    final elapsed = steps
-        .take(_step)
-        .map(_song.durationOf)
-        .fold(Duration.zero, (a, b) => a + b);
+    final music = player ?? MusicPlayer.instance;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -122,104 +66,162 @@ class _MusicAppState extends State<MusicApp> {
           "Listen Now",
           style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
         ),
+        actions: [
+          IconButton(
+            tooltip: "Hakkında",
+            icon: const Icon(Icons.info_outline_rounded),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const MusicCredits()),
+            ),
+          ),
+        ],
+      ),
+      body: ListenableBuilder(
+        listenable: music,
+        builder: (context, _) {
+          final track = music.track;
+          final elapsed = music.position > track.duration
+              ? track.duration
+              : music.position;
+          return ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            children: [
+              const SizedBox(height: 8),
+              Center(
+                child: AnimatedScale(
+                  scale: music.playing ? 1 : 0.85,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutBack,
+                  child: _artwork(music.index, 260),
+                ),
+              ),
+              const SizedBox(height: 28),
+              Text(
+                track.title,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                track.artist,
+                style: const TextStyle(fontSize: 18, color: _accent),
+              ),
+              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(3),
+                child: LinearProgressIndicator(
+                  value:
+                      elapsed.inMilliseconds / track.duration.inMilliseconds,
+                  minHeight: 5,
+                  backgroundColor: const Color(0xFFE5E5EA),
+                  color: _grey,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _format(elapsed),
+                    style: const TextStyle(color: _grey, fontSize: 12),
+                  ),
+                  Text(
+                    "-${_format(track.duration - elapsed)}",
+                    style: const TextStyle(color: _grey, fontSize: 12),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    iconSize: 44,
+                    tooltip: "Previous",
+                    onPressed: music.previous,
+                    icon: const Icon(Icons.fast_rewind_rounded),
+                  ),
+                  IconButton(
+                    iconSize: 64,
+                    tooltip: music.playing ? "Pause" : "Play",
+                    onPressed: music.toggle,
+                    icon: Icon(
+                      music.playing
+                          ? Icons.pause_rounded
+                          : Icons.play_arrow_rounded,
+                    ),
+                  ),
+                  IconButton(
+                    iconSize: 44,
+                    tooltip: "Next",
+                    onPressed: music.next,
+                    icon: const Icon(Icons.fast_forward_rounded),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                "Çalma Listesi",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 4),
+              for (var i = 0; i < tracks.length; i++)
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: _artwork(i, 48),
+                  ),
+                  title: Text(
+                    tracks[i].title,
+                    style: TextStyle(
+                      fontWeight: i == music.index ? FontWeight.w700 : null,
+                      color: i == music.index ? _accent : null,
+                    ),
+                  ),
+                  subtitle: Text("${tracks[i].artist} · ${tracks[i].style}"),
+                  trailing: i == music.index && music.playing
+                      ? const Icon(Icons.graphic_eq_rounded, color: _accent)
+                      : Text(_format(tracks[i].duration)),
+                  onTap: () => music.select(i, autoplay: true),
+                ),
+              const SizedBox(height: 24),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Music › Hakkında: the credits CC BY 4.0 asks for.
+class MusicCredits extends StatelessWidget {
+  const MusicCredits({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text("Hakkında"),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
         children: [
-          const SizedBox(height: 8),
-          Center(
-            child: AnimatedScale(
-              scale: _playing ? 1 : 0.85,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOutBack,
-              child: _artwork(_songIndex, 260),
-            ),
-          ),
-          const SizedBox(height: 28),
-          Text(
-            _song.title,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-          ),
-          Text(
-            _song.artist,
-            style: const TextStyle(fontSize: 18, color: accent),
-          ),
-          const SizedBox(height: 16),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(3),
-            child: LinearProgressIndicator(
-              value: steps.isEmpty ? 0 : _step / steps.length,
-              minHeight: 5,
-              backgroundColor: const Color(0xFFE5E5EA),
-              color: const Color(0xFF8E8E93),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                _format(elapsed),
-                style: const TextStyle(color: Color(0xFF8E8E93), fontSize: 12),
-              ),
-              Text(
-                "-${_format(_song.duration - elapsed)}",
-                style: const TextStyle(color: Color(0xFF8E8E93), fontSize: 12),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                iconSize: 44,
-                tooltip: "Previous",
-                onPressed: () => _select((_songIndex - 1) % songs.length),
-                icon: const Icon(Icons.fast_rewind_rounded),
-              ),
-              IconButton(
-                iconSize: 64,
-                tooltip: _playing ? "Pause" : "Play",
-                onPressed: _togglePlay,
-                icon: Icon(
-                  _playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                ),
-              ),
-              IconButton(
-                iconSize: 44,
-                tooltip: "Next",
-                onPressed: () => _select((_songIndex + 1) % songs.length),
-                icon: const Icon(Icons.fast_forward_rounded),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
           const Text(
-            "Çalma Listesi",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            "Bu uygulamadaki müziklerin hepsi Kevin MacLeod'a ait ve "
+            "Creative Commons Atıf 4.0 (CC BY 4.0) lisansıyla kullanılıyor.",
+            style: TextStyle(fontSize: 15, height: 1.4),
           ),
-          const SizedBox(height: 4),
-          for (var i = 0; i < songs.length; i++)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: _artwork(i, 48),
-              ),
-              title: Text(
-                songs[i].title,
-                style: TextStyle(
-                  fontWeight: i == _songIndex ? FontWeight.w700 : null,
-                  color: i == _songIndex ? accent : null,
-                ),
-              ),
-              subtitle: Text(songs[i].artist),
-              trailing: i == _songIndex && _playing
-                  ? const Icon(Icons.graphic_eq_rounded, color: accent)
-                  : Text(_format(songs[i].duration)),
-              onTap: () => _select(i, autoplay: true),
+          const SizedBox(height: 20),
+          for (final track in tracks) ...[
+            SelectableText(
+              track.credit,
+              style: const TextStyle(fontSize: 13, height: 1.4, color: _grey),
             ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 16),
+          ],
         ],
       ),
     );

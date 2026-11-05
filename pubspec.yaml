@@ -25,6 +25,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/apps/music/
     - assets/apps/notesApp/notesAppNotes.json
     - assets/apps/pian/pian_notes/
     - assets/apps/photosApp/images/

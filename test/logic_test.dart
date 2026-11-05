@@ -3,9 +3,7 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/games/memory_board.dart';
 import 'package:ledective/apps/games/puzzle_board.dart';
-import 'package:ledective/apps/music/songs.dart';
 import 'package:ledective/apps/phone/phone_number.dart';
-import 'package:ledective/apps/pian/note_player.dart';
 import 'package:ledective/apps/poltel/lab/jigsaw_game.dart';
 import 'package:ledective/apps/shopper/shopper_app.dart';
 import 'package:ledective/data/game_clock.dart';
@@ -137,22 +135,6 @@ void main() {
 
     test('rejects cards without a pair', () {
       expect(() => MemoryBoard([0, 0, 1]), throwsArgumentError);
-    });
-  });
-
-  group('songs', () {
-    test('melody notation', () {
-      final steps = parseMelody('c d- e. r');
-      expect(steps.map((s) => s.note), [Note.c, Note.d, Note.e, null]);
-      expect(steps.map((s) => s.beats), [1, 2, 0.5, 1]);
-      expect(() => parseMelody('x'), throwsFormatException);
-    });
-
-    test('every song parses', () {
-      for (final song in songs) {
-        expect(song.steps, isNotEmpty, reason: song.title);
-        expect(song.duration, greaterThan(Duration.zero));
-      }
     });
   });
 
