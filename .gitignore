@@ -47,3 +47,7 @@ app.*.map.json
 
 # Original generated pictures; the game uses the cropped copies in assets/story/images.
 /assets/pics/
+
+# Firebase Hosting
+.firebase/
+firebase-debug.log
