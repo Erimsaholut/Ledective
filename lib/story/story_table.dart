@@ -145,6 +145,7 @@ class _TableWriter {
     }
     _map();
     _lab();
+    _board();
     _money();
     _timers();
     _hints();
@@ -349,6 +350,49 @@ class _TableWriter {
           InkInspection() => 'Mürekkep yaşı',
           TreadInspection() => 'Lastik izi',
         }} | ${i == null ? '—' : _effects(i.unlocks)} |',
+      );
+    }
+    _line();
+  }
+
+  void _board() {
+    final board = story.board;
+    if (board.pins.isEmpty) return;
+    _line('## Pano');
+    _line();
+    _line(
+      'Kişiler, notlar ve olay gecesinin saatleri. "Görünür" kartın panoya '
+      'ne zaman asıldığını, "Adı açılır" soru işaretinin ne zaman kalktığını '
+      'gösterir.',
+    );
+    _line();
+    _line('| Kart | Görünür | Adı açılır | Damgalar |');
+    _line('| --- | --- | --- | --- |');
+    for (final p in board.pins) {
+      final name = switch (p.kind) {
+        PinKind.person => p.name,
+        PinKind.time => '${p.time} (saat)',
+        PinKind.note => 'Not: ${_cell(p.role, 40)}',
+      };
+      _uses(p.requires, 'Pano › $name görünür');
+      if (!p.known.isAlways) _uses(p.known, 'Pano › $name adı açılır');
+      for (final line in [...p.stamps, ...p.facts]) {
+        _uses(line.requires, 'Pano › $name');
+      }
+      for (final link in p.links) {
+        _uses(link.requires, 'Pano › $name ipi');
+      }
+      final unknown = p.known.isAlways
+          ? '—'
+          : '${_condition(p.known)} (önce: ${_cell(p.kind == PinKind.person ? '${p.unknownName} · ${p.unknownRole}' : p.unknownRole, 50)})';
+      final stamps = p.stamps.isEmpty
+          ? '—'
+          : p.stamps
+                .map((s) => '${s.text}: ${_condition(s.requires)}')
+                .join('; ');
+      _line(
+        '| ${_cell(name)} | ${_condition(p.requires)} | $unknown '
+        '| ${_cell(stamps)} |',
       );
     }
     _line();

@@ -352,7 +352,8 @@ değerlendirmesi yanlış, önyargılı ya da kasıtlı olabilir.
 
 Laboratuvarı bekleyen deliller Poltel'de parlar.
 
-`links`: panoda kırmızı iple bağlanacak diğer deliller.
+`links`: panoda kırmızı iple bağlanacak diğer deliller. Delillerin panodaki
+yeri ve kişilere giden ipler `board.json`'da.
 
 ### Şifreli satır (`code`)
 
@@ -376,6 +377,68 @@ açılabilir: "Şifreyi çözdüm".
   satırı kopyalayıp Şifre Çözücü'ye yapıştırabilir.
 - Oyuncu uygulamayı bilmiyor olabilir: state.json › `hints` ile AppShop'tan
   bir hatırlatma gönder (`hint-cipher`).
+
+## board.json: Pano
+
+Delillerin dışında panoda asılı olan her şey: kişiler, notlar, olay gecesinin
+saatleri, aralarındaki etiketli kırmızı ipler ve her kartın yeri. Pano büyük
+bir mantar tahta; oyuncu iki yönde kaydırır ve yakınlaştırır.
+
+`size` panonun en büyük hâli. Oyunda mantar tahta yalnızca asılı kartları
+(ve görünen bölge etiketlerini) çevreleyecek kadar çizilir; kartlar geldikçe
+bu sınıra kadar büyür. Böylece boş alan oyuncuya ne kadar şey kaldığını ele
+vermez.
+
+```json
+{
+  "title": "BERAT YILMAZ CİNAYETİ — SORUŞTURMA PANOSU",
+  "size": [2600, 1900],
+  "zones": [{"label": "ŞÜPHELİLER", "at": [460, 60], "requires": "part1Done"}],
+  "evidence": {"glass": [780, 640]},
+  "pins": [
+    {
+      "id": "adil", "name": "Adil Karaca", "tag": "ŞÜPHELİ",
+      "role": "Tahsildar · sabıkalı", "at": [460, 470],
+      "requiresAny": ["heard:adil", "print:adil"],
+      "knownAny": ["print:adil", "furkanStatement"],
+      "unknownName": "“ADİL ABİ”", "unknownRole": "Berat o gece kime yalvardı?",
+      "stamps": [{"text": "ARANIYOR", "requires": "print:adil"}],
+      "facts": [{"text": "Bardakta onun parmak izi var.", "requires": "print:adil"}],
+      "links": [{"to": "glass", "label": "parmak izi", "requires": "print:adil"}]
+    }
+  ]
+}
+```
+
+- Koordinatlar pano pikseli; `at` kartın tepesindeki iğnenin yeri. Kart
+  genişlikleri: kişi ve delil 150, not 170, saat 180. Bir kişi kartı
+  yaklaşık 240, delil 200 piksel boyunda.
+- `evidence`: her delilin yeri. Yeri yazılmayan delil panonun altına sıra
+  sıra asılır ve doğrulayıcı uyarır.
+- `zones`: panonun bölümlerine yapıştırılmış siyah bant etiketleri.
+  `requires` ile sonradan çıkar, böylece "MEZBAHA" etiketi mezbaha
+  bulunmadan bir şey ele vermez.
+- `kind`: `person` (varsayılan), `note` (sarı not kâğıdı) ya da `time`
+  (olay gecesi şeridinde saat kartı; `time` alanı gerekli). Saat kartları
+  soldan sağa siyah bir iple bağlanır. İp bulunmuş ilk ve son saat arasında
+  uzanır; aradaki henüz bulunmamış anların yerinde boş bir çentik durur.
+- `requires` / `requiresAny`: kart ne zaman asılır.
+- `known` / `knownAny`: soru işareti ne zaman kalkar. O zamana kadar kart
+  `unknownName` (varsayılan "?") ve `unknownRole` gösterir, fotoğraf yerine
+  siluet. Notlar ve saatlerde `role` metindir, `unknownRole` önceki hâli.
+- `image`, `focus`, `zoom`: kişinin fotoğrafı, yüzün görseldeki yeri
+  (`[x, y]`, 0–1) ve ne kadar yakınlaşılacağı. Bir görselden iki kişi
+  kırpılabilir (Berat ve babası aynı karede). `unknownImage`: adı
+  bilinmeden önce gösterilecek fotoğraf, ör. kayıp ilanı.
+- `stamps`: kartın üstündeki kırmızı damga; koşulu tutanların **sonuncusu**
+  görünür, bu yüzden hafiften ağıra doğru sırala.
+- `facts`: karta dokununca açılan dosyadaki satırlar. Henüz açılmamış satır
+  sayısı "N şey daha var, henüz bilmiyoruz" diye görünür.
+- `links`: başka bir karta ya da delile kırmızı ip; `label` ipin üstündeki
+  etiket. İpler iki ucu da panodayken görünür. Dosyada iki yönlü listelenir;
+  dokununca pano oraya kayar.
+- Kart yeni asılınca ve adı açılınca Pano simgesinde sayılır (`board:<id>`,
+  `board:<id>:known`). Baştan asılı olanlar (koşulsuz) sayılmaz.
 
 ## sinstagram.json
 

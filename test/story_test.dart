@@ -392,6 +392,32 @@ void main() {
       await progress.choose(person, state, index);
     }
 
+    test('the board counts people as they turn up and get a name', () async {
+      final progress = StoryProgress.instance;
+      final board = StoryData.current.board;
+      // The victim and his father hang there from the start, not as news.
+      expect(
+        visiblePins(progress).map((p) => p.id),
+        containsAll(['berat', 'haluk']),
+      );
+      expect(newBoardCount(progress), 0);
+
+      await progress.discover(['heard:adil']);
+      final adil = board.pin('adil')!;
+      expect(visiblePins(progress), contains(adil));
+      expect(progress.meets(adil.known), isFalse, reason: 'still “Adil abi”');
+      // Adil's question mark and the 02.00 card on the timeline.
+      expect(newBoardCount(progress), 2);
+
+      await progress.markSeen('board:adil');
+      await progress.markSeen('board:night-0200');
+      expect(newBoardCount(progress), 0);
+      await progress.discover(['print:adil']);
+      expect(progress.meets(adil.known), isTrue);
+      // His name is news again, and so is the 00.30 card.
+      expect(newBoardCount(progress), 2);
+    });
+
     test('a full playthrough unlocks every part of the case', () async {
       final progress = StoryProgress.instance;
       Iterable<StoryDocument> caseFiles() => deliveredDocuments(
@@ -1689,6 +1715,11 @@ void main() {
 
 Object _emptyFile(String file) => switch (file) {
   'chats.json' => <String, Object>{},
+  'board.json' => {
+    'size': [100, 100],
+    'evidence': <String, Object>{},
+    'pins': [],
+  },
   'mails.json' => {'story': []},
   'sinstagram.json' => {'feed': []},
   'map.json' => {

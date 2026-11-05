@@ -1,0 +1,485 @@
+{
+  "title": "BERAT YILMAZ CİNAYETİ — SORUŞTURMA PANOSU",
+  "size": [2600, 1900],
+  "zones": [
+    {"label": "EMRİ VEREN", "at": [1300, 50], "requiresAny": ["plate:mv", "mezbaha-found", "mp:wrote"]},
+    {"label": "ŞÜPHELİLER", "at": [460, 60], "requires": "part1Done"},
+    {"label": "TANIKLAR", "at": [2200, 60], "requires": "part1Done"},
+    {"label": "MEZBAHA", "at": [2200, 410], "requires": "mezbaha-found"},
+    {"label": "KAYIPLAR", "at": [2240, 740], "requires": "mezbaha-found"},
+    {"label": "MAKTUL", "at": [1300, 720]},
+    {"label": "OLAY GECESİ", "at": [1100, 1590], "requiresAny": ["cafe:witness", "print:adil", "heard:adil", "toxicology", "heard:phone-signal", "part1Done"]}
+  ],
+  "evidence": {
+    "notebook": [200, 170],
+    "torn-map": [460, 170],
+    "glass": [780, 640],
+    "cctv": [780, 930],
+    "torn-photo": [200, 1000],
+    "car": [1000, 440],
+    "tapes": [1640, 440],
+    "scene": [1640, 780],
+    "berat-phone": [1300, 1140],
+    "wall-photos": [2060, 460],
+    "chair": [2340, 460],
+    "missing-1": [1960, 790],
+    "missing-2": [2240, 790],
+    "contract": [1640, 1380]
+  },
+  "pins": [
+    {
+      "id": "berat",
+      "name": "Berat Yılmaz",
+      "tag": "MAKTUL",
+      "role": "Üniversite öğrencisi · milletvekili oğlu",
+      "at": [1300, 770],
+      "image": "assets/story/images/berat_babasi.jpg",
+      "focus": [0.26, 0.28],
+      "zoom": 2.4,
+      "stamps": [
+        {"text": "İNTİHAR?", "requires": "!part1Done"},
+        {"text": "CİNAYET", "requires": "part1Done"}
+      ],
+      "facts": [
+        "Evinde asılı bulundu; ilk değerlendirme intihar.",
+        {"text": "Ölüm sebebi kalbe tek bıçak darbesi; asma sonradan yapılmış.", "requires": "part1Done"},
+        {"text": "Öldürülmeden önce içkisine karıştırılan sakinleştiriciyle bayıltılmış.", "requires": "toxicology"},
+        {"text": "Luminol: salonda öldürülmüş, sonra sürüklenip asılmış.", "requires": "lab:scene"},
+        {"text": "Derslere girmiyor ama yoklamada “var” görünüyor.", "requires": "part1Done"},
+        {"text": "Defter: Adil’e 40.000 TL borç. “Ödemezsem mezbahaya.”", "requires": "notebook-read"},
+        {"text": "Adı Yılmaz Vakfı’nın burs listesinde.", "requires": "mezbaha-found"},
+        {"text": "Ece Aydın’ın öldüğü gece mezbahadaydı.", "requires": "kerem:met"},
+        {"text": "Pişmandı; kanıtları ertesi gün Kerem’e verecekti.", "requires": "heard:berat-repentant"},
+        {"text": "Telefonunda gizli bir “Kayıtlar” klasörü var.", "requires": "lab:berat-phone"}
+      ],
+      "links": [
+        {"to": "haluk", "label": "babası"},
+        {"to": "deniz", "label": "kuzeni · cesedi buldu", "requires": "part1Done"},
+        {"to": "furkan", "label": "paket verdi", "requires": "part1Done"},
+        {"to": "adil", "label": "“Adil abi, ödeyeceğim”", "requires": "heard:adil"},
+        {"to": "kerem", "label": "peşinden çıktı", "requires": "cafe:witness"},
+        {"to": "ece", "label": "o gece oradaydı", "requires": "kerem:met"}
+      ]
+    },
+    {
+      "id": "haluk",
+      "name": "Haluk Yılmaz",
+      "tag": "MİLLETVEKİLİ",
+      "role": "Berat’ın babası · Yılmaz Vakfı kurucusu",
+      "at": [1300, 110],
+      "image": "assets/story/images/berat_babasi.jpg",
+      "focus": [0.78, 0.26],
+      "zoom": 2.4,
+      "stamps": [
+        {"text": "ÖRTBAS", "requires": "heard:mp-tape"}
+      ],
+      "facts": [
+        "Yılmaz Vakfı’nın kurucusu.",
+        {"text": "Gizli numaradan yazdı: “Oğlum oraya hiç gitmedi… ben biliyorum.”", "requires": "mp:wrote"},
+        {"text": "Berat ölmeden önce ondan para istemiş, vermemiş.", "requires": "mp:wrote"},
+        {"text": "Kayıt: “Bu çocuğu susturun ama ona zarar vermeyin.”", "requires": "heard:mp-tape"},
+        {"text": "Son teklifi: dosyayı Kerem’le kapat, vakfı unut.", "requires": "mp:last-offer"}
+      ],
+      "links": [
+        {"to": "yener", "label": "danışmanı", "requires": "heard:danisman"},
+        {"to": "ece", "label": "örtbas ettirdi", "requires": "heard:mp-tape"}
+      ]
+    },
+    {
+      "id": "kaymakam",
+      "name": "Cevdet Arslan",
+      "tag": "KAYMAKAM",
+      "role": "Milletvekilinin ilçesinin kaymakamı",
+      "at": [1640, 110],
+      "requiresAny": ["pressure:kaymakam", "kaymakam:informed", "pressure:refused"],
+      "facts": [
+        "“Gelişmeleri önce benimle paylaşın, aileye ben ileteyim.”",
+        {"text": "Bir sonraki seçimde Yılmaz’ın koltuğuna aday olacak.", "requires": "heard:kaymakam-rival"}
+      ],
+      "links": [
+        {"to": "haluk", "label": "rakibi", "requires": "heard:kaymakam-rival"}
+      ]
+    },
+    {
+      "id": "yener",
+      "name": "Halit Yener",
+      "tag": "AĞ",
+      "role": "Vakıf genel müdürü · milletvekilinin danışmanı",
+      "at": [1300, 440],
+      "requiresAny": ["plate:mv", "mezbaha-found", "mp:wrote"],
+      "known": "heard:danisman",
+      "unknownRole": "Mezbahanın arkasında kim var?",
+      "stamps": [
+        {"text": "KAÇTI", "requires": "danisman:fled"},
+        {"text": "OPERASYON", "requires": "coverup:exposed"}
+      ],
+      "facts": [
+        {"text": "06 MV 1907 ona zimmetli; araç çay ocağında Adil’le görüştü.", "requires": "plate:mv"},
+        {"text": "Lastik izi: araç çay ocağının önünde durmuş.", "requires": "lab:car"},
+        {"text": "250.000 TL “Y. Eğitim Vakfı Danışmanlık”tan geldi.", "requires": "mp:wrote"},
+        {"text": "Adil’in listesindeki “H.Y.” o.", "requires": "heard:danisman"},
+        {"text": "Ses kaydı %94 onunla eşleşti.", "requires": "lab:tapes"},
+        {"text": "Emre’yi çiftliğe götürttü.", "requires": "heard:farm"},
+        {"text": "Hakan’ı şoförü ayarladı.", "requires": "heard:hakan-handler"}
+      ],
+      "links": [
+        {"to": "car", "label": "zimmetli", "requires": "plate:mv"},
+        {"to": "adil", "label": "çay ocağında görüştü", "requires": "plate:mv"},
+        {"to": "tapes", "label": "sesi"},
+        {"to": "emre", "label": "çiftlik", "requires": "heard:farm"},
+        {"to": "hakan", "label": "şoförü ayarladı", "requires": "heard:hakan-handler"}
+      ]
+    },
+    {
+      "id": "adil",
+      "name": "Adil Karaca",
+      "tag": "ŞÜPHELİ",
+      "role": "Tahsildar · uyuşturucu ve gasp sabıkalı",
+      "at": [460, 470],
+      "requiresAny": ["heard:adil", "furkanStatement", "print:adil"],
+      "knownAny": ["print:adil", "furkanStatement"],
+      "unknownName": "“ADİL ABİ”",
+      "unknownRole": "Berat o gece kime yalvardı?",
+      "stamps": [
+        {"text": "ARANIYOR", "requires": "print:adil"},
+        {"text": "YAKALANDI", "requires": "adil:caught"},
+        {"text": "ÖLDÜ", "requires": "adil:dead"}
+      ],
+      "facts": [
+        {"text": "Komşu olay gecesi “Adil abi, ödeyeceğim” diye yalvarıldığını duydu.", "requires": "heard:adil"},
+        {"text": "Bardakta onun parmak izi var.", "requires": "print:adil"},
+        {"text": "Berat ondan 40.000 TL borçluydu.", "requires": "notebook-read"},
+        {"text": "Çay ocağında makam aracındaki biriyle görüştü, sonra kaçtı.", "requires": "plate:mv"},
+        {"text": "Narkotiğin muhbiri.", "requires": "behram:guilt"},
+        {"text": "Bir pansiyonda saklanıyor.", "requires": "heard:pension"}
+      ],
+      "links": [
+        {"to": "glass", "label": "parmak izi", "requires": "print:adil"},
+        {"to": "notebook", "label": "40.000 TL", "requires": "notebook-read"},
+        {"to": "furkan", "label": "paketler", "requires": "furkanStatement"},
+        {"to": "chair", "label": "cuma geceleri", "requires": "furkan:friday"}
+      ]
+    },
+    {
+      "id": "kerem",
+      "name": "Kerem Aydın",
+      "tag": "ŞÜPHELİ",
+      "role": "Ece’nin ağabeyi",
+      "at": [460, 1010],
+      "requiresAny": ["cafe:witness", "ev:cctv"],
+      "known": "heard:kerem",
+      "unknownRole": "Deri ceketli adam",
+      "image": "assets/story/images/kerem_gizli.jpg",
+      "focus": [0.47, 0.36],
+      "zoom": 2.6,
+      "stamps": [
+        {"text": "ŞÜPHELİ", "requires": "kerem:identified"},
+        {"text": "İTİRAF ETTİ", "requires": "kerem:met"},
+        {"text": "GÖZALTINDA", "requires": "kerem:arrested"},
+        {"text": "SAVCILIKLA ANLAŞTI", "requires": "kerem:deal"},
+        {"text": "KAÇTI", "requiresAny": ["kerem:escaped", "kerem:escaped-ambush"]}
+      ],
+      "facts": [
+        {"text": "23.40’ta kafede Berat’ın peşinden kalktı.", "requires": "cafe:witness"},
+        {"text": "Boynunda vakfın gönüllü kartı.", "requires": "heard:volunteer-card"},
+        {"text": "Netleştirilen karede kartta turuncu şerit ve logo.", "requires": "lab:cctv"},
+        {"text": "Yırtık fotoğraftaki adamla aynı kişi.", "requires": "kerem:same-man"},
+        {"text": "Ece Aydın’ın ağabeyi.", "requires": "heard:kerem"},
+        {"text": "Yılmaz Vakfı’nda gönüllü.", "requires": "kerem:volunteer"},
+        {"text": "Berat’ı öldürdüğünü itiraf etti.", "requires": "kerem:met"},
+        {"text": "Adil’in peşine düştü.", "requires": "kerem:hunting"}
+      ],
+      "links": [
+        {"to": "cctv", "label": "kameradaki adam"},
+        {"to": "torn-photo", "label": "aynı adam", "requires": "kerem:same-man"},
+        {"to": "ece", "label": "ağabeyi", "requires": "heard:kerem"},
+        {"to": "melis", "label": "yerini biliyor", "requires": "kerem:contact"},
+        {"to": "adil", "label": "peşinde", "requires": "kerem:hunting"}
+      ]
+    },
+    {
+      "id": "furkan",
+      "name": "Furkan Şahin",
+      "tag": "ŞÜPHELİ",
+      "role": "Öğrenci · Berat’tan paket aldı",
+      "at": [800, 1250],
+      "requires": "part1Done",
+      "stamps": [
+        {"text": "GÖZALTINDA", "requires": "furkan:held"},
+        {"text": "SERBEST", "requires": "furkan:released"},
+        {"text": "TANIK KORUMA", "requires": "furkan:protected"},
+        {"text": "KAYIP", "requires": "furkan:missing"}
+      ],
+      "facts": [
+        "Yusuf’a göre Berat’tan paket alırken görüldü.",
+        {"text": "Sorguda Adil’i anlattı.", "requires": "furkanStatement"},
+        {"text": "Cuma gecelerini anlattı.", "requires": "furkan:friday"},
+        {"text": "Serbest kaldıktan sonra kayboldu.", "requires": "furkan:missing"}
+      ]
+    },
+    {
+      "id": "deniz",
+      "name": "Deniz Yılmaz",
+      "tag": "TANIK",
+      "role": "Kuzeni · cesedi buldu",
+      "at": [2060, 120],
+      "requires": "part1Done",
+      "facts": [
+        "Cesedi iki gün sonra buldu; kapı aralıktı.",
+        "Ev dağınıktı, kavga izi vardı.",
+        "Berat babasından isteyemeyeceği bir borçtan bahsetmiş."
+      ]
+    },
+    {
+      "id": "yusuf",
+      "name": "Yusuf Kasap",
+      "tag": "TANIK",
+      "role": "Okuldan arkadaşı",
+      "at": [2340, 120],
+      "requires": "part1Done",
+      "facts": [
+        "Berat’ın Furkan’a paket verdiğini gördüğünü söyledi."
+      ],
+      "links": [
+        {"to": "furkan", "label": "işaret etti"}
+      ]
+    },
+    {
+      "id": "ece",
+      "name": "Ece Aydın",
+      "tag": "ÖLÜ",
+      "role": "Üç yıl önce mezbahada öldü · burslu",
+      "at": [1640, 1100],
+      "requiresAny": ["heard:ece", "news:old-case-found"],
+      "known": "heard:ece",
+      "unknownRole": "Takipsizlikle kapanan ölüm",
+      "stamps": [
+        {"text": "TAKİPSİZLİK"}
+      ],
+      "facts": [
+        "Üniversiteli genç bir kadın; ölümü “intihar” denip kapatıldı.",
+        {"text": "Hattı hâlâ kullanılıyor.", "requires": "heard:witness"},
+        {"text": "Burs sözleşmesine üç kat geri ödeme maddesi sonradan eklenmiş.", "requires": "lab:contract"}
+      ],
+      "links": [
+        {"to": "contract", "label": "sözleşmesi"}
+      ]
+    },
+    {
+      "id": "melis",
+      "name": "Melis",
+      "tag": "KAYIP",
+      "role": "Burslu öğrenci",
+      "at": [1960, 1110],
+      "requires": "mezbaha-found",
+      "knownAny": ["kerem:told-location", "kerem:met", "storage:entered"],
+      "unknownRole": "Fotoğrafı mezbahanın duvarında",
+      "image": "assets/story/images/kayip_ilani_1.jpg",
+      "unknownImage": "assets/story/images/kayip_ilani_1.jpg",
+      "focus": [0.67, 0.42],
+      "zoom": 2.8,
+      "stamps": [
+        {"text": "KURTARILDI", "requires": "girl:rescued"},
+        {"text": "ÖLÜ BULUNDU", "requires": "girl:found-dead"}
+      ],
+      "facts": [
+        "Geçen ay kayboldu.",
+        {"text": "Duvardaki fotoğrafının köşesine sonradan bir çarpı atılmış.", "requires": "lab:wall-photos"},
+        {"text": "Kerem: “Kızlardan biri hâlâ hayatta. Cumaya kadar.”", "requires": "kerem:contact"},
+        {"text": "Soğuk hava deposunda tutuluyor.", "requiresAny": ["kerem:told-location", "heard:cold-storage"]}
+      ],
+      "links": [
+        {"to": "missing-1", "label": "kayıp ilanı"},
+        {"to": "wall-photos", "label": "duvarda"}
+      ]
+    },
+    {
+      "id": "emre",
+      "name": "Emre",
+      "tag": "KAYIP",
+      "role": "Burslu öğrenci",
+      "at": [2240, 1110],
+      "requires": "mezbaha-found",
+      "knownAny": ["melis:statement", "heard:farm"],
+      "unknownRole": "Ailesi kaçtığına inanmıyor",
+      "image": "assets/story/images/kayip_ilani_2.jpg",
+      "unknownImage": "assets/story/images/kayip_ilani_2.jpg",
+      "focus": [0.62, 0.42],
+      "zoom": 2.8,
+      "stamps": [
+        {"text": "GÖTÜRÜLDÜ", "requires": "emre:moved"},
+        {"text": "KURTARILDI", "requires": "emre:rescued"},
+        {"text": "KORUMADA", "requiresAny": ["emre:guarded", "emre:hidden"]},
+        {"text": "YARALANDI", "requires": "emre:hurt"}
+      ],
+      "facts": [
+        "Geçen ay kayboldu.",
+        {"text": "Duvardaki fotoğrafının köşesine sonradan bir çarpı atılmış.", "requires": "lab:wall-photos"},
+        {"text": "Melis: iki hafta önce götürüldü.", "requires": "melis:statement"},
+        {"text": "Bir çiftlikte tutuluyor.", "requires": "heard:farm"},
+        {"text": "Vakfa karşı ifade verecek.", "requires": "emre:rescued"}
+      ],
+      "links": [
+        {"to": "missing-2", "label": "kayıp ilanı"},
+        {"to": "wall-photos", "label": "duvarda"}
+      ]
+    },
+    {
+      "id": "hakan",
+      "name": "Hakan Demir",
+      "tag": "ŞÜPHELİ",
+      "role": "İşsiz · eşi kanser tedavisinde",
+      "at": [2500, 1110],
+      "requires": "hakan:seen",
+      "known": "heard:hakan",
+      "unknownRole": "Hastanede Emre’yi soran yabancı",
+      "stamps": [
+        {"text": "TAKİPTE", "requires": "hakan:watched"},
+        {"text": "YAKALANDI", "requires": "hakan:caught"},
+        {"text": "TESLİM OLDU", "requires": "hakan:surrendered"},
+        {"text": "SERBEST", "requires": "hakan:released"}
+      ],
+      "facts": [
+        "Hastanede Emre’yi soran biri görüldü.",
+        {"text": "Sabıkasız. Eşi kanser tedavisinde, borç içinde.", "requires": "heard:hakan"},
+        {"text": "Emir zincirini teşhis etti.", "requires": "hakan:testimony"}
+      ],
+      "links": [
+        {"to": "emre", "label": "hedefi"}
+      ]
+    },
+    {
+      "id": "friday",
+      "kind": "note",
+      "role": "Yanık harita: “Cuma 03:00”. Eski mezbaha.",
+      "at": [200, 430],
+      "requires": "map-restored",
+      "links": [
+        {"to": "torn-map"},
+        {"to": "chair", "requires": "mezbaha-found"}
+      ]
+    },
+    {
+      "id": "narcotics",
+      "kind": "note",
+      "role": "Narkotik cuma gecelerine göz yumdu. Adil muhbirdi.",
+      "at": [200, 720],
+      "requires": "behram:guilt",
+      "links": [
+        {"to": "adil", "label": "muhbir"}
+      ]
+    },
+    {
+      "id": "bribe",
+      "kind": "note",
+      "role": "250.000 TL · “Y. Eğitim Vakfı Danışmanlık” · “Geçmiş olsun”",
+      "at": [980, 130],
+      "requires": "mp:wrote",
+      "stamps": [
+        {"text": "KISMEN İADE", "requires": "bribe:partial"},
+        {"text": "İADE EDİLDİ", "requires": "bribe:returned"}
+      ],
+      "links": [
+        {"to": "yener", "label": "gönderen"}
+      ]
+    },
+    {
+      "id": "leak",
+      "kind": "note",
+      "role": "Şehir Postası’nı gece 03.00’te arayan numara: komiserin kendi numarası.",
+      "at": [1000, 1170],
+      "requiresAny": ["pressure:erdi", "leak:hunt", "leak:defended", "leak:sources"],
+      "known": "leak:traced",
+      "unknownRole": "Basına kim sızdırıyor? Toksikoloji, plaka, mezbaha…"
+    },
+    {
+      "id": "witness",
+      "kind": "note",
+      "role": "Korkmuş tanık Ece Aydın’ın hattından arıyor.",
+      "at": [1900, 1420],
+      "requires": "heard:witness",
+      "known": "heard:ece",
+      "unknownRole": "Korkmuş tanık arıyor. Hat üç yıl önce ölmüş bir kadına kayıtlı.",
+      "links": [
+        {"to": "ece", "label": "Ece’nin hattı", "requires": "heard:ece"},
+        {"to": "kerem", "label": "aynı kişi", "requires": "kerem:contact"}
+      ]
+    },
+    {
+      "id": "night-2340",
+      "kind": "time",
+      "time": "23.40",
+      "role": "Berat kafeden aceleyle çıkar. Deri ceketli biri peşinden kalkar.",
+      "at": [200, 1660],
+      "requires": "cafe:witness",
+      "links": [
+        {"to": "cctv"}
+      ]
+    },
+    {
+      "id": "night-0030",
+      "kind": "time",
+      "time": "~00.30",
+      "role": "Adil eve gelir, içerler. Bardakta onun izi kalır.",
+      "at": [500, 1660],
+      "requires": "print:adil",
+      "links": [
+        {"to": "glass"}
+      ]
+    },
+    {
+      "id": "night-0200",
+      "kind": "time",
+      "time": "~02.00",
+      "role": "Komşu duyar: “Adil abi, yemin ederim ödeyeceğim.” Adil gider.",
+      "at": [800, 1660],
+      "requires": "heard:adil"
+    },
+    {
+      "id": "night-0205",
+      "kind": "time",
+      "time": "~02.05",
+      "role": "Kapıyı Kerem çalar. Berat’ın içkisine sakinleştirici karıştırır.",
+      "at": [1100, 1660],
+      "requires": "toxicology",
+      "known": "kerem:met",
+      "unknownRole": "Kapıyı biri çalar mı? Berat’ın içkisine sakinleştirici karıştırılır.",
+      "links": [
+        {"to": "kerem", "requires": "kerem:met"}
+      ]
+    },
+    {
+      "id": "night-0220",
+      "kind": "time",
+      "time": "~02.20",
+      "role": "Kalbe tek bıçak darbesi. Asma sonradan: intihar süsü.",
+      "at": [1400, 1660],
+      "requires": "part1Done",
+      "links": [
+        {"to": "scene"}
+      ]
+    },
+    {
+      "id": "night-0240",
+      "kind": "time",
+      "time": "02.40",
+      "role": "Berat’ın telefonu sanayi bölgesinde kapanır.",
+      "at": [1700, 1660],
+      "requires": "heard:phone-signal",
+      "links": [
+        {"to": "berat-phone"}
+      ]
+    },
+    {
+      "id": "night-found",
+      "kind": "time",
+      "time": "+2 gün",
+      "role": "Deniz cesedi bulur. Kapı aralık.",
+      "at": [2000, 1660],
+      "requires": "part1Done",
+      "links": [
+        {"to": "deniz"}
+      ]
+    }
+  ]
+}

@@ -19,6 +19,7 @@ verilir, orada yazılır.
 | [08-finaller.md](08-finaller.md) | Final katmanları | 6 |
 | [09-kontrol.md](09-kontrol.md) | Tutarlılık ve oynanabilirlik kontrol listesi | 9 |
 | [10-oyun-testi.md](10-oyun-testi.md) | İlk oyun testinden çıkan öneriler: para, kısmi ödeme, sohbet fotoğrafları, seçim hissi | 9 |
+| [11-pano.md](11-pano.md) | Soruşturma panosu: kim ne zaman asılır, soru işaretleri ne zaman kalkar | 7 |
 
 8. adım (sahne, sohbet ve belge yazımı) doğrudan JSON dosyalarında yapılır;
 biçim için `story/STORY_FORMAT.md`.

@@ -149,6 +149,7 @@ yapıştır" bölümünde, her biri tek başına yapıştırılabilir. Getirdikl
 | --- | --- | --- | --- |
 | `ece_mulakat.jpg`, `ece_burs.jpg`, `ece_son.jpg` | Ece'nin 3 Sinstagram gönderisi | 1:1 | Şimdi |
 | `berat_telefon.jpg` | Pano › Berat'ın Telefonu | 1:1 | Şimdi |
+| `portre_adil.jpg`, `portre_yener.jpg`, `portre_furkan.jpg`, `portre_deniz.jpg`, `portre_yusuf.jpg`, `portre_ece.jpg`, `portre_hakan.jpg`, `portre_kaymakam.jpg` | Pano › kişi kartları. Şu an siluet ve "FOTOĞRAF YOK" var. Sabıka ya da kimlik fotoğrafı gibi, düz arka plan, yüz ortada. Görünüşler yukarıda (3. Kişiler). Danışmanın yüzü yukarıdaki gibi tam görünmeyebilir. | 1:1 | Sonra |
 | `haber_gozalti.jpg` | Haber: Kerem gözaltında | 16:9 | Şimdi |
 | `haber_depo.jpg` | Haber: Melis (iki sonda da) | 16:9 | Şimdi |
 | `haber_ciftlik.jpg` | Haber: Emre kurtarıldı | 16:9 | Şimdi |

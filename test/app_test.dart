@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ledective/apps/bank/transfer_page.dart';
+import 'package:ledective/apps/board/board_app.dart';
 import 'package:ledective/apps/games/castle_guard/castle_defense.dart';
 import 'package:ledective/apps/games/castle_guard/castle_guard_app.dart';
 import 'package:ledective/apps/games/castle_guard/castle_profile.dart';
@@ -256,6 +257,98 @@ void main() {
 
     // Close everything so the map's ticker stops.
     await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the board names suspects as the case goes on', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+    await tester.runAsync(loadGameState);
+    final progress = StoryProgress.instance;
+    await progress.discover(['part1Done', 'heard:adil', 'cafe:witness']);
+    await tester.pumpWidget(const MaterialApp(home: BoardApp()));
+    await tester.pump();
+
+    Finder on(String pin, String text) => find.descendant(
+      of: find.byKey(ValueKey('pin-$pin')),
+      matching: find.text(text),
+    );
+    expect(on('adil', '“ADİL ABİ”'), findsOneWidget);
+    expect(on('kerem', '?'), findsWidgets);
+    expect(on('kerem', 'Deri ceketli adam'), findsOneWidget);
+    expect(find.text('peşinden çıktı'), findsOneWidget);
+    expect(find.byKey(const ValueKey('pin-yener')), findsNothing);
+
+    await progress.discover(['print:adil']);
+    await tester.pump();
+    expect(on('adil', 'ADİL KARACA'), findsOneWidget);
+    expect(on('adil', 'ARANIYOR'), findsOneWidget);
+    expect(find.text('parmak izi'), findsNothing, reason: 'no glass yet');
+
+    // The board pans sideways as well as up and down.
+    final viewer = find.byKey(const ValueKey('board-viewer'));
+    final berat = find.byKey(const ValueKey('pin-berat'));
+    final before = tester.getCenter(berat);
+    await tester.drag(viewer, const Offset(-150, -100));
+    await tester.pumpAndSettle();
+    expect(tester.getCenter(berat).dx, lessThan(before.dx - 50));
+    expect(tester.getCenter(berat).dy, lessThan(before.dy - 50));
+    await tester.tap(find.byKey(const ValueKey('board-fit')));
+    await tester.pumpAndSettle();
+    expect(tester.getRect(berat).width, lessThan(80), reason: 'zoomed out');
+
+    // A case file lists what is known and flies to whoever is tied in.
+    await tester.tap(berat);
+    await tester.pumpAndSettle();
+    expect(find.text('DOSYA NOTLARI'), findsOneWidget);
+    expect(find.textContaining('kalbe tek bıçak'), findsOneWidget);
+    expect(find.textContaining('henüz bilmiyoruz'), findsOneWidget);
+    await tester.tap(find.widgetWithText(ListTile, 'Adil Karaca'));
+    await tester.pumpAndSettle();
+    final screen = tester.view.physicalSize / tester.view.devicePixelRatio;
+    final adil = tester.getRect(find.byKey(const ValueKey('pin-adil')));
+    expect((Offset.zero & screen).contains(adil.center), isTrue);
+
+    await tester.tap(find.byKey(const ValueKey('pin-adil')));
+    await tester.pumpAndSettle();
+    expect(progress.hasSeen('board:adil:known'), isTrue);
+  });
+
+  testWidgets('the board grows as cards turn up', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+    await tester.runAsync(loadGameState);
+    final progress = StoryProgress.instance;
+    await tester.pumpWidget(const MaterialApp(home: BoardApp()));
+    await tester.pump();
+
+    Size surface() =>
+        tester.getSize(find.byKey(const ValueKey('board-surface')));
+    final whole = Size(
+      StoryData.current.board.width,
+      StoryData.current.board.height,
+    );
+    final start = surface();
+    expect(start.width, lessThan(whole.width / 2), reason: 'no spoilers');
+    expect(start.height, lessThan(whole.height * 0.7));
+    expect(find.text('OLAY GECESİ'), findsNothing);
+
+    // The victim stays put on screen while the board grows around him.
+    final berat = find.byKey(const ValueKey('pin-berat'));
+    final before = tester.getCenter(berat);
+    await progress.discover(['part1Done', 'heard:adil', 'cafe:witness']);
+    await tester.pump();
+    final grown = surface();
+    expect(grown.width, greaterThan(start.width));
+    expect(grown.height, greaterThan(start.height));
+    expect(find.text('OLAY GECESİ'), findsOneWidget);
+    expect((tester.getCenter(berat) - before).distance, lessThan(1));
+
+    await progress.discover(['mezbaha-found', 'hakan:seen']);
+    await tester.pump();
+    expect(surface().width, greaterThan(grown.width));
+    expect(surface().width, lessThanOrEqualTo(whole.width));
   });
 
   testWidgets('lab minigames complete their inspections', (tester) async {

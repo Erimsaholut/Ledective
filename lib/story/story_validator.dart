@@ -344,6 +344,58 @@ List<StoryIssue> validateStory(
     }
   }
 
+  // Board.
+  final board = story.board;
+  final pinIds = <String>{};
+  for (final pin in board.pins) {
+    final where = 'board.json › ${pin.id}';
+    if (!pinIds.add(pin.id) || evidenceIds.contains(pin.id)) {
+      error(where, 'bu id iki kez kullanılmış');
+    }
+    if (pin.x < 0 || pin.y < 0 || pin.x > board.width || pin.y > board.height) {
+      error(where, 'pano dışında (${board.width} x ${board.height})');
+    }
+    if (pin.kind == PinKind.person && pin.name.isEmpty) {
+      error(where, 'kişinin adı ("name") yok');
+    }
+    if (pin.kind == PinKind.time && pin.time.isEmpty) {
+      error(where, 'zaman kartının saati ("time") yok');
+    }
+    if (!pin.known.isAlways && pin.unknownRole.isEmpty) {
+      warn(where, '"known" var ama soru işaretliyken ne yazacağı yok');
+    }
+    uses(pin.requires, where);
+    uses(pin.known, '$where (adı açılır)');
+    asset(pin.image, where);
+    asset(pin.unknownImage, where);
+    for (final line in [...pin.stamps, ...pin.facts]) {
+      uses(line.requires, where);
+    }
+  }
+  for (final pin in board.pins) {
+    for (final link in pin.links) {
+      uses(link.requires, 'board.json › ${pin.id}');
+      if (!pinIds.contains(link.to) && !evidenceIds.contains(link.to)) {
+        error('board.json › ${pin.id}', '"${link.to}" diye bir kart yok');
+      }
+    }
+  }
+  for (final z in board.zones) {
+    uses(z.requires, 'board.json › zones › ${z.label}');
+  }
+  for (final id in board.places.keys) {
+    if (!evidenceIds.contains(id)) {
+      error('board.json › evidence', '"$id" diye bir delil yok');
+    }
+  }
+  if (board.pins.isNotEmpty) {
+    for (final e in story.evidence) {
+      if (!board.places.containsKey(e.id)) {
+        warn('board.json › evidence', '"${e.id}" panoda yerleştirilmemiş');
+      }
+    }
+  }
+
   // News.
   final outletIds = {for (final o in story.news.outlets) o.id};
   final articleIds = <String>{};

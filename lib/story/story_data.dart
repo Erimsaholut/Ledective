@@ -19,6 +19,7 @@ class StoryData {
     required this.profiles,
     required this.map,
     required this.evidence,
+    this.board = BoardData.empty,
     required this.bank,
     required this.recordings,
     required this.calendar,
@@ -35,6 +36,7 @@ class StoryData {
     'sinstagram.json',
     'map.json',
     'evidence.json',
+    'board.json',
     'bank.json',
     'voicemail.json',
     'calendar.json',
@@ -86,6 +88,9 @@ class StoryData {
   final List<Profile> profiles;
   final MapData map;
   final List<Evidence> evidence;
+
+  /// The people, notes and strings on the evidence board.
+  final BoardData board;
   final BankData bank;
   final List<Recording> recordings;
   final List<StoryEvent> calendar;
@@ -138,6 +143,9 @@ class StoryData {
       ),
       map: parse('map.json', _map),
       evidence: parse('evidence.json', (r) => r.list(_evidence)),
+      board: files['board.json'] == null
+          ? BoardData.empty
+          : parse('board.json', _board),
       bank: parse('bank.json', _bank),
       recordings: parse('voicemail.json', (r) => r.list(_recording)),
       calendar: parse('calendar.json', (r) => r.list(_event)),
@@ -519,6 +527,141 @@ class Evidence {
   /// A line on it written in a cipher, which Şifre Çözücü recognises once
   /// the player reads it back.
   final HiddenCode? code;
+}
+
+/// What the evidence board shows besides the evidence itself: the people in
+/// the case, notes and the night's timeline, red string between them, and
+/// where everything hangs. Coordinates are in board pixels.
+class BoardData {
+  const BoardData({
+    this.title = '',
+    this.width = 0,
+    this.height = 0,
+    this.zones = const [],
+    this.pins = const [],
+    this.places = const {},
+  });
+
+  static const empty = BoardData();
+
+  final String title;
+  final double width;
+  final double height;
+
+  /// Labels taped over parts of the board, such as "ŞÜPHELİLER".
+  final List<BoardZone> zones;
+  final List<BoardPin> pins;
+
+  /// Where each piece of evidence hangs, by evidence id.
+  final Map<String, (double, double)> places;
+
+  BoardPin? pin(String id) => pins.where((p) => p.id == id).firstOrNull;
+}
+
+class BoardZone {
+  const BoardZone(
+    this.label,
+    this.x,
+    this.y, {
+    this.requires = Condition.always,
+  });
+
+  final String label;
+  final double x;
+  final double y;
+
+  /// When the label goes up, so it doesn't give away what's to come.
+  final Condition requires;
+}
+
+enum PinKind {
+  /// A person, with a photo once they are known.
+  person,
+
+  /// A handwritten note.
+  note,
+
+  /// A card on the timeline of the night, with its time.
+  time,
+}
+
+/// A person, note or moment of the night on the board. It shows up once
+/// [requires] holds, and stays a question mark until [known] holds.
+class BoardPin {
+  const BoardPin({
+    required this.id,
+    required this.kind,
+    required this.name,
+    required this.x,
+    required this.y,
+    this.role = '',
+    this.tag = '',
+    this.time = '',
+    this.image,
+    this.focus = (0.5, 0.5),
+    this.zoom = 1,
+    this.requires = Condition.always,
+    this.known = Condition.always,
+    this.unknownName = '?',
+    this.unknownRole = '',
+    this.unknownImage,
+    this.stamps = const [],
+    this.facts = const [],
+    this.links = const [],
+  });
+
+  final String id;
+  final PinKind kind;
+  final String name;
+  final double x;
+  final double y;
+
+  /// A person's place in the case, or a note's text.
+  final String role;
+
+  /// A label on a person's card, such as "ŞÜPHELİ".
+  final String tag;
+
+  /// When a timeline card happened, such as "23.40".
+  final String time;
+  final String? image;
+
+  /// The point of [image] to show, as fractions, and how far to zoom in on
+  /// it.
+  final (double, double) focus;
+  final double zoom;
+  final Condition requires;
+  final Condition known;
+  final String unknownName;
+  final String unknownRole;
+
+  /// A photo to show before the person is known, such as a missing poster.
+  final String? unknownImage;
+
+  /// Rubber stamps; the last one that holds is on the card.
+  final List<BoardLine> stamps;
+
+  /// What the case file says about the pin, line by line.
+  final List<BoardLine> facts;
+  final List<BoardLink> links;
+}
+
+/// A line of text that shows once [requires] holds.
+class BoardLine {
+  const BoardLine(this.text, {this.requires = Condition.always});
+
+  final String text;
+  final Condition requires;
+}
+
+/// Red string from a pin to another pin or a piece of evidence, with a
+/// label on it.
+class BoardLink {
+  const BoardLink(this.to, {this.label = '', this.requires = Condition.always});
+
+  final String to;
+  final String label;
+  final Condition requires;
 }
 
 /// A line hidden in a cipher. The evidence's description shows it
@@ -1424,6 +1567,82 @@ MapData _map(_Reader r) => MapData(
         ),
       ),
 );
+
+BoardData _board(_Reader r) {
+  (double, double) xy(_Reader p) {
+    final n = p.list((v) => v.number);
+    if (n.length != 2) p.fail('expected [x, y]');
+    return (n[0], n[1]);
+  }
+
+  BoardLine line(_Reader l) => l.value is String
+      ? BoardLine(l.string)
+      : BoardLine(l.text('text'), requires: l.condition());
+
+  final size = xy(r.field('size'));
+  final places = r.field('evidence');
+  return BoardData(
+    title: r.textOr('title') ?? '',
+    width: size.$1,
+    height: size.$2,
+    zones:
+        r.optional('zones')?.list((z) {
+          final at = xy(z.field('at'));
+          return BoardZone(
+            z.text('label'),
+            at.$1,
+            at.$2,
+            requires: z.condition(),
+          );
+        }) ??
+        const [],
+    places: {
+      for (final MapEntry(:key) in places.map.entries)
+        key: xy(places.field(key)),
+    },
+    pins: r.field('pins').list((p) {
+      final at = xy(p.field('at'));
+      final kind = PinKind.values
+          .where((k) => k.name == (p.textOr('kind') ?? 'person'))
+          .firstOrNull;
+      if (kind == null) p.fail('kind must be person, note or time');
+      final focus = p.optional('focus');
+      return BoardPin(
+        id: p.text('id'),
+        kind: kind,
+        name: p.textOr('name') ?? '',
+        x: at.$1,
+        y: at.$2,
+        role: p.textOr('role') ?? '',
+        tag: p.textOr('tag') ?? '',
+        time: p.textOr('time') ?? '',
+        image: p.textOr('image'),
+        focus: focus == null ? (0.5, 0.5) : xy(focus),
+        zoom: p.optional('zoom')?.number ?? 1,
+        requires: p.condition(),
+        known: p.condition('known'),
+        unknownName: p.textOr('unknownName') ?? '?',
+        unknownRole: p.textOr('unknownRole') ?? '',
+        unknownImage: p.textOr('unknownImage'),
+        stamps: p.optional('stamps')?.list(line) ?? const [],
+        facts: p.optional('facts')?.list(line) ?? const [],
+        links:
+            p
+                .optional('links')
+                ?.list(
+                  (l) => l.value is String
+                      ? BoardLink(l.string)
+                      : BoardLink(
+                          l.text('to'),
+                          label: l.textOr('label') ?? '',
+                          requires: l.condition(),
+                        ),
+                ) ??
+            const [],
+      );
+    }),
+  );
+}
 
 Evidence _evidence(_Reader r) => Evidence(
   id: r.text('id'),

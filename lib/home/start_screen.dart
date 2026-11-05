@@ -78,7 +78,7 @@ const List<List<AppIcon>> _pages = [
       app: BoardApp(),
       iconData: Icons.push_pin_rounded,
       colors: [Color(0xFFC8955F), Color(0xFF8A5A2F)],
-      badgeCount: newEvidenceCount,
+      badgeCount: newBoardCount,
     ),
     AppIcon(
       title: "Notes",
